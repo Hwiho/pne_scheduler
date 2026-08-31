@@ -387,7 +387,7 @@ than offline file generation and they depend on unresolved schemas.
 | Experiment modules | **prototype** | expand implemented for Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED, etc. |
 | Binary compiler | **spike** | Packs only some fields; does not write core fields such as mode, loop, DCR, and sampling |
 | SCH writer | **Incomplete/guarded** | Uses a 512-byte placeholder header; CLI output now requires explicit experimental acknowledgement and remains offline-only |
-| Round-trip validator | **Incomplete** | Validation is impossible without an external parser, and currently only the step count is compared |
+| Round-trip validator | **Incomplete** | The repository can re-read output, but currently compares only step count and has no independent semantic field comparison |
 | GUI | **Partially complete** | Viewer/resume/bulk editor exist; flow editor is a placeholder |
 | Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 86 tests |
 
@@ -399,8 +399,8 @@ than offline file generation and they depend on unresolved schemas.
 | A2 | Establish the test command and CI baseline | All `python -m pytest tests/ -q` tests pass, and the actual pass count matches the README |
 | A3 | Add fixture inventory tests | Automatically verify the SCH counts in the ZIPs (8, 93) and the presence of the HPPC fixture |
 
-Until this gate is complete, neither the existing “65+ passed” statement nor module
-completion statuses may be used as release evidence.
+Gate A is complete for local development. Hosted CI remains a separate release requirement
+under F6; local pass counts alone are not equipment-compatibility evidence.
 
 **Progress record**
 - A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
@@ -425,7 +425,8 @@ manifest and golden tests are authoritative.
 
 **Progress record**
 - B1 partially complete: `schema/fields.py` records known offsets with explicit evidence
-  confidence, while unknown and late version-specific fields remain intentionally opaque
+  confidence and validates dtype, size, overlap, bounds, and writable confidence; unknown
+  and late version-specific fields remain intentionally opaque
 - B3 complete: `example/fixtures/catalog.json` locks SHA-256, version, payload offset,
   step size, step count, and equipment provenance for all 102 checked-in fixtures
 - Layout detection now uses the v2/v3/v4 registry first and retains structural scanning

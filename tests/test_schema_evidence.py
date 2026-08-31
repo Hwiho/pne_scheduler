@@ -8,6 +8,7 @@ from pne_scheduler.schema.fields import (
     FieldConfidence,
     get_step_field,
     get_step_fields,
+    validate_step_field_registry,
 )
 from pne_scheduler.schema.layouts import SCH_LAYOUTS
 from pne_scheduler.tools.compare_sch import compare_sch_files
@@ -30,6 +31,8 @@ FORMATION_696 = (
 
 
 def test_partial_field_registry_is_valid_for_each_layout() -> None:
+    assert validate_step_field_registry() == ()
+
     for version, layout in SCH_LAYOUTS.items():
         fields = get_step_fields(version)
         assert fields

@@ -30,6 +30,7 @@ from .fields import (
     SchFieldDefinition,
     get_step_field,
     get_step_fields,
+    validate_step_field_registry,
 )
 
 __all__ = [
@@ -63,4 +64,5 @@ __all__ = [
     "get_step_field",
     "get_step_fields",
     "get_sch_layout",
+    "validate_step_field_registry",
 ]
