@@ -50,7 +50,8 @@ PNE 사이클러용 `.sch` 바이너리 스케줄 파일을 **직접 편집기 �
 
 **1차 타깃 버전:** `0x00010003` + `step_size=612`  
 → ASSB converter가 이미 layout policy·DCIR SOC rule·current condition mapping을 이 조합에 맞춰 구현함.  
-**2차:** `0x00010007` (EIS 실험 필요 시).
+**2차:** corpus의 90%를 차지하는 `0x00010004` + `step_size=696`.  
+**후속:** `0x00010007` (EIS 실험 필요 시).
 
 ### 2.3 바이너리 레이아웃 (4개 섹션)
 
@@ -119,14 +120,21 @@ CTS StepNo = SCH StepNo + 1
 
 ASSB `cell_c_rate_reference.py`와 `pne_converter.py` 모두 이 mapping을 전제로 current condition을 검증한다. Writer도 반드시 동일 규칙을 지켜야 한다.
 
-### 2.5 Step record 크기
+### 2.5 검증된 layout registry
 
-| step_size | 대응 버전 | ASSB 지원 |
-|-----------|-----------|-----------|
-| **612 bytes** | `0x00010003` | ✅ primary (`SCH_V0X00010003_STEP612`) |
-| **696 bytes** | 신규 장비/버전 | layout detection only |
+| `nFileVersion` | Header / payload offset | Step record | Fixture 수 |
+|----------------|-------------------------:|------------:|-----------:|
+| `0x00010002` | 1632 | 612 | 6 |
+| `0x00010003` | 1760 | 612 | 4 |
+| `0x00010004` | 1844 | 696 | 92 |
 
-Writer 1차 구현은 **612-byte fixed layout**으로 고정하고, round-trip test로 offset 검증 후 696 확장.
+102개 corpus에서는 버전과 framing이 위 세 조합으로 완전히 일치하고 footer가
+없다. 이는 현재 표본의 불변 조건이며, 보지 못한 producer까지 같은 구조라고
+가정하지 않는다. Writer는 layout registry를 통해 버전별 schema를 선택하고
+unknown/reserved bytes를 보존해야 한다.
+
+696-byte record는 단순히 612-byte 뒤에 84 bytes를 붙인 구조가 아니다. 비교
+가능한 schedule에서 후반 필드가 8 bytes 이동하므로 별도 field map이 필요하다.
 
 ### 2.6 핵심 Step 필드 (실험 모듈 설계에 필요)
 
@@ -480,6 +488,7 @@ run_pne_scheduler.py             # 루트 launcher
 |------|------|------|
 | editable install 후 package import 실패 | **해결됨** | editable install과 wheel clean-target import 회귀 검증 |
 | parser/schema/compiler 종료조건 offset 불일치 | **내부 정합 완료** | `fEndV=28`, `fEndI=32`, `fEndC=36`; `fEndC` 비영 원본/외부 parser 대조는 B2에서 계속 |
+| LOOP goto/count offset 오해 | **해결됨** | corpus로 `+48/+52` 확인; 기존 `+84/+88` 수정과 612/696 golden test 추가 |
 | lab 형식과 writer 타깃 불일치 | **확인됨** | 93개 중 89개가 `0x10004/696`; 612 검증 직후 Gate C6 진행 |
 | 612 vs 696 byte step size 자동 선택 | 부분 파악 | 확보한 102개 실측 sch로 version→size 매핑 검증 |
 | PNE raw current 단위 (mA vs A) | ini range 의존 | Cell range profile + ASSB `unit_scale` 대조 |
