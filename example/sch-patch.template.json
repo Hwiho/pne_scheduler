@@ -1,0 +1,12 @@
+{
+  "schema": "pne_scheduler.sch_patch/v1",
+  "template_sha256": "replace-with-the-exact-template-sha256",
+  "expected_version": "0x00010003",
+  "patches": [
+    {
+      "step_no": 6,
+      "field": "fEndV",
+      "value": 3123.0
+    }
+  ]
+}
