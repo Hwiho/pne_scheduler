@@ -4,7 +4,7 @@ Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` sch
 The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
 QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-113%20passed-brightgreen)](#tests)
+[![Tests](https://img.shields.io/badge/tests-125%20passed-brightgreen)](#tests)
 
 > [!WARNING]
 > The from-scratch SCH writer still uses a placeholder header. Its output is not validated
@@ -159,9 +159,23 @@ python run_pne_scheduler_flow.py
 python -m pne_scheduler flow example/example.schproj
 ```
 
-The first GUI version supports adding/removing modules, explicit connections, automatic
-linear chaining, JSON property editing, Cell Profile editing, graph validation, `.schproj`
-load/save, and expanded step preview. It intentionally does not send files to equipment.
+The flow editor shows **charge / discharge / rest units inside each module**.
+QPEED, HPPC, formation, cycle life, and sequence modules ship with named
+**presets**; pick one, then edit the units directly (or rebuild from the preset
+and knobs). Primitive `charge`, `discharge`, and `rest` modules remain
+single-step. Recipes expand to analysis-only step intents — they are not
+equipment-ready SCH.
+
+Default QPEED preset `qpeed.full_3318` matches the checked-in QPEED-2 topology:
+1C condition to **3.318 V**, then 1.5C to 4.2 V, repeated. `qpeed.soc_fraction`
+and `hppc.soc_90_50_10` are generator templates, not fixture matches.
+
+```powershell
+python run_pne_scheduler_flow.py
+# or
+python -m pne_scheduler flow example/qpeed.schproj
+python -m pne_scheduler flow example/example.schproj
+```
 
 ## Resume interrupted experiment
 
@@ -202,7 +216,7 @@ pne_scheduler/
 ├── schema/          # SCH binary fields and enums
 ├── ir/              # Schedule IR (.schproj)
 ├── engine/          # C-rate engine and compiler
-├── modules/         # Formation, cycle life, RPT, DC-IR, QPEED, and others
+├── modules/         # Formation, cycle life, RPT, DC-IR, QPEED, recipes, presets
 ├── protocol/        # Lab protocol defaults and inference
 ├── stack/           # FP, L-level, xMyU, and capacity inference
 ├── classify/        # Filename classification
@@ -218,6 +232,8 @@ pne_scheduler/
 
 ## Example data
 
+- `example/example.schproj` — formation + cycle-life project
+- `example/qpeed.schproj` — QPEED full 3.318 V preset (editable recipe)
 - `example/fixtures/capacheck_zip/` — 8 capacheck/QPEED/RPT fixtures
 - `example/fixtures/sch_lab_zip/` — 93 lab SCH fixtures
 - `example/fixtures/hppc/` — 1 HPPC fixture

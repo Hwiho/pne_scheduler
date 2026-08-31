@@ -8,6 +8,9 @@ from typing import Any
 from ..ir.project import ModuleConnection, ModuleNode, ScheduleProject
 from ..ir.step_intent import StepIntent
 from ..modules.base import get_module_class, list_module_types
+from ..modules.composable import apply_recipe, has_editable_recipe, summarize_instance
+from ..modules.presets import presets_for
+from ..modules.recipe import ModuleRecipe
 
 
 @dataclass(frozen=True, slots=True)
@@ -109,6 +112,47 @@ class FlowProjectModel:
                 self.project.modules[1:],
             )
         ]
+
+    def instantiate(self, module_id: str) -> Any:
+        node = self.get_module(module_id)
+        cls = get_module_class(node.module_type)
+        if cls is None:
+            raise ValueError(f"Unknown module type: {node.module_type}")
+        return cls.from_params(node.params)
+
+    def persist_instance(self, module_id: str, instance: Any) -> None:
+        if not is_dataclass(instance):
+            raise ValueError(f"Module {module_id} does not expose dataclass parameters")
+        errors = instance.validate(self.project.cell_profile)
+        if errors:
+            raise ValueError("; ".join(errors))
+        self.get_module(module_id).params = asdict(instance)
+
+    def apply_preset(self, module_id: str, preset_key: str) -> None:
+        instance = self.instantiate(module_id)
+        if not hasattr(instance, "apply_preset"):
+            raise ValueError(f"Module {module_id} does not support presets")
+        instance.apply_preset(preset_key)
+        self.persist_instance(module_id, instance)
+
+    def set_recipe(self, module_id: str, recipe: ModuleRecipe) -> None:
+        instance = self.instantiate(module_id)
+        if not has_editable_recipe(instance):
+            raise ValueError(f"Module {module_id} does not have an editable recipe")
+        apply_recipe(instance, recipe)
+        self.persist_instance(module_id, instance)
+
+    def card_lines(self, module_id: str, *, limit: int = 8) -> list[str]:
+        try:
+            instance = self.instantiate(module_id)
+        except (TypeError, ValueError):
+            node = self.get_module(module_id)
+            return [node.module_type]
+        return summarize_instance(instance, limit=limit)
+
+    def available_presets(self, module_id: str):
+        node = self.get_module(module_id)
+        return presets_for(node.module_type)
 
     def get_module(self, module_id: str) -> ModuleNode:
         node = next(

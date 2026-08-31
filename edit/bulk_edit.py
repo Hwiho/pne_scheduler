@@ -85,7 +85,10 @@ def list_editable_params(module_type: str) -> tuple[str, ...]:
     cls = get_module_class(module_type)
     if cls is None:
         return ()
-    return tuple(cls.__dataclass_fields__.keys())
+    skip = {"setup", "repeat", "after"}
+    return tuple(
+        key for key in cls.__dataclass_fields__ if key not in skip
+    )
 
 
 def common_bulk_params() -> tuple[str, ...]:
