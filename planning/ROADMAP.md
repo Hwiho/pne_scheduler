@@ -389,7 +389,7 @@ than offline file generation and they depend on unresolved schemas.
 | SCH writer | **Incomplete/guarded** | Uses a 512-byte placeholder header; CLI output now requires explicit experimental acknowledgement and remains offline-only |
 | Round-trip validator | **Incomplete** | The repository can re-read output, but currently compares only step count and has no independent semantic field comparison |
 | GUI | **Partially complete** | Viewer/resume/bulk editor exist; flow editor is a placeholder |
-| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 86 tests |
+| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 90 tests |
 
 ### 6.2 Gate A — Restore the Development Baseline (Highest Priority)
 
@@ -405,13 +405,14 @@ under F6; local pass counts alone are not equipment-compatibility evidence.
 **Progress record**
 - A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
 - A3 complete: automatically verified that the two ZIPs match the 8-file and 93-file extracted directory listings, for a total of 102 files including HPPC
-- A2 complete locally: confirmed `86 passed` and synchronized the README test badge;
+- A2 complete locally: confirmed `90 passed` and synchronized the README test badge;
   adding a hosted CI workflow remains a separate repository-infrastructure task
 
 ### 6.3 Gate B — Establish the Binary Schema as the Single Source of Truth
 
 | # | Task | Completion criteria |
 |---|------|---------------------|
+| B0 | Define PNE raw-unit/profile mapping | Resolve mV/mA scaling, offset `+12` mode value, L-level encoding at `+16`, and INI current-range behavior per target profile |
 | B1 | Create header/step field tables for the 612/696 layouts | Manage offset, dtype, size, and version source in one place in the code |
 | B2 | Resolve parser/schema/compiler offset discrepancies | In particular, compare `fEndV`, `fEndI`, and `fEndC` against originals, Excel, and ASSB results |
 | B3 | Read regression over all 102 original files | Detect version, payload offset, step size/count for all 8 + 93 + HPPC files |
@@ -425,8 +426,10 @@ manifest and golden tests are authoritative.
 
 **Progress record**
 - B1 partially complete: `schema/fields.py` records known offsets with explicit evidence
-  confidence and validates dtype, size, overlap, bounds, and writable confidence; unknown
+  confidence and validates dtype, size, overlap, bounds, and writer-ready confidence; unknown
   and late version-specific fields remain intentionally opaque
+- The evidence registry is now the canonical source for shared offsets, including LOOP
+  target/count; legacy 612-byte exports are derived from it to prevent parallel-map drift
 - B3 complete: `example/fixtures/catalog.json` locks SHA-256, version, payload offset,
   step size, step count, and equipment provenance for all 102 checked-in fixtures
 - Layout detection now uses the v2/v3/v4 registry first and retains structural scanning
@@ -463,6 +466,8 @@ output as “equipment-executable.”
 
 | Priority | Module | Validation fixture / criteria |
 |----------|--------|-------------------------------|
+| P0 | Integration harness | `expand → compile → internal parse → semantic compare`, with no external parser required |
+| P0 | Capacity model contract | A given Cell Profile produces the same Q_nom/current in viewer inference and writer compilation |
 | P0 | Formation, Cycle Life, Rest | Compare step topology, current, voltage, and loop semantics with representative originals |
 | P0 | RPT, DC-IR | Semantic diff of SOC reference, DCR window, and goto relationships |
 | P1 | HPPC | Compare the SOC staircase and bidirectional pulses in `HPPC_Full range.sch` |
@@ -560,6 +565,8 @@ tests to be skipped.
 | Mismatch between lab format and writer target | **Confirmed** | 89 of 93 files use `0x10004/696`; proceed with Gate C6 immediately after 612 validation |
 | Automatic selection of 612 vs 696 byte step size | Partially understood | Validate version→size mapping against the 102 secured measured sch files |
 | PNE raw current unit (mA vs A) | Depends on ini range | Compare Cell range profile with ASSB `unit_scale` |
+| PNE voltage/L-level encoding | **Blocking writer** | Controlled pairs must distinguish offset `+12` mV setpoints from the legacy `fVref` slot at `+16` |
+| Dual capacity models | **Blocking writer** | Reconcile explicit `CellProfile.nominal_capacity_mAh` with stack/L-level inferred Q_nom before compiling current |
 | Internal structure of `FILE_GRADE`, `STRUCT_EIS_SET` | Only names are present in Excel | Defer 0x00010007 to Phase 4 |
 | Recommended Δt/ΔV/ΔQ values | UNKNOWN in cyclediag | Reverse-extract from internal standard sch samples |
 | Writer validation on physical equipment | Not started | PNE PC load test is mandatory in Gate C5 |
@@ -569,6 +576,7 @@ tests to be skipped.
 | Binary changes after parsed END ignored by diff | **Resolved** | Compare and report unparsed tails in addition to header and step records |
 | Equipment profile inferred from filenames | **Prohibited** | Require explicit provenance/profile metadata and retain unknown when unavailable |
 | Controlled-pair metadata is incomplete or inconsistent | Open | Add schema validation before evidence promotion (B5) |
+| Resume renumbers steps without proven goto remapping | Open safety issue | Detect nonzero reference fields and block or remap only after controlled semantic confirmation |
 | Documentation language/status drift | Partially resolved | README and user guide are English; audit remaining public docs and derive test status in CI |
 
 ---
@@ -580,12 +588,13 @@ tests to be skipped.
 3. ✅ **Resolve internal offset conflict** — unified parser/schema/compiler locations for `fEndV/fEndI/fEndC`
 4. **Validate intake metadata** — make controlled before/after pairs reject incomplete equipment, CTSPro, and changed-value provenance
 5. ✅ **Full reader regression test** — locked layout, step count, hash, and EOF geometry for all 102 files
-6. **Externally confirm field semantics** — prioritize nonzero `fEndC`, current scaling, sampling, DCR, and goto controlled pairs
-7. **Implement safe patch vertical slice** — approved 612-byte template, allowlisted field, exact preservation report
-8. **Implement writer header** — complete the from-scratch schema/writer vertical slice for `0x00010003/612`
-9. **696-byte lab parity** — extend patching/writing for `0x00010004/696`, which accounts for 89/93 lab fixtures
-10. **End-to-end module validation** — Formation → Cycle Life → RPT/DC-IR order
-11. **Release-gated PNE test** — reopen, exact hash, target profile, and approved equipment procedure
+6. **Resolve the raw-unit/capacity contract** — offset `+12`, `+16`, mV/mA scaling, INI range, and one Q_nom source
+7. **Externally confirm field semantics** — prioritize nonzero `fEndC`, sampling, DCR, and goto controlled pairs
+8. **Implement safe patch vertical slice** — approved 612-byte template, allowlisted field, exact preservation report
+9. **Implement writer header** — complete the from-scratch schema/writer vertical slice for `0x00010003/612`
+10. **696-byte lab parity** — extend patching/writing for `0x00010004/696`, which accounts for 89/93 lab fixtures
+11. **End-to-end module validation** — Formation → Cycle Life → RPT/DC-IR order
+12. **Release-gated PNE test** — reopen, exact hash, target profile, and approved equipment procedure
 
 ---
 

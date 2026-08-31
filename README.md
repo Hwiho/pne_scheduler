@@ -4,7 +4,7 @@ Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` sch
 The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
 QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-86%20passed-brightgreen)](#tests)
+[![Tests](https://img.shields.io/badge/tests-90%20passed-brightgreen)](#tests)
 
 > [!WARNING]
 > The from-scratch SCH writer still uses a placeholder header. Its output is not validated
