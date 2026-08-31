@@ -100,9 +100,15 @@ def apply_sch_patch(
     plan: SchPatchPlan,
     output_path: str | Path,
     *,
+    allow_analysis_output: bool = False,
     allow_unverified_fields: bool = False,
 ) -> SchPatchResult:
     """Write a byte-preserving clone with only declared field ranges changed."""
+    if not allow_analysis_output:
+        raise ValueError(
+            "Analysis-only output was not acknowledged; explicitly allow it "
+            "before writing"
+        )
     template = Path(template_path)
     output = Path(output_path)
     if template.resolve() == output.resolve():

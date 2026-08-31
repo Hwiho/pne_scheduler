@@ -389,7 +389,7 @@ than offline file generation and they depend on unresolved schemas.
 | SCH writer | **Incomplete/guarded** | Uses a 512-byte placeholder header; CLI output now requires explicit experimental acknowledgement and remains offline-only |
 | Round-trip validator | **Incomplete** | The repository can re-read output, but currently compares only step count and has no independent semantic field comparison |
 | GUI | **Partially complete** | Viewer/resume/bulk editor exist; first flow editor supports module connections, graph validation, property editing, save/load, and step preview |
-| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 98 tests |
+| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 100 tests |
 
 ### 6.2 Gate A — Restore the Development Baseline (Highest Priority)
 
@@ -405,7 +405,7 @@ under F6; local pass counts alone are not equipment-compatibility evidence.
 **Progress record**
 - A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
 - A3 complete: automatically verified that the two ZIPs match the 8-file and 93-file extracted directory listings, for a total of 102 files including HPPC
-- A2 complete locally: confirmed `98 passed` and synchronized the README test badge;
+- A2 complete locally: confirmed `100 passed` and synchronized the README test badge;
   adding a hosted CI workflow remains a separate repository-infrastructure task
 
 ### 6.3 Gate B — Establish the Binary Schema as the Single Source of Truth
@@ -461,7 +461,8 @@ output as “equipment-executable.”
   and has regression coverage for both blocked and acknowledged paths
 - C0.2 partially complete: `patch-sch` verifies the exact template SHA-256, preserves header,
   file length, topology, and undeclared bytes, re-reads output structurally, and emits a
-  provenance report; semantic fields remain blocked unless explicitly enabled for offline work
+  provenance report; every write requires explicit analysis-only acknowledgement, and
+  semantic fields remain blocked unless separately enabled for offline work
 - Controlled diff reports now include source SHA-256, parsed geometry, change totals, and
   unparsed-tail detection so evidence cannot silently ignore bytes after END
 

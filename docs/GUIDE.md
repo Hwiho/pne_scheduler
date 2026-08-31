@@ -44,12 +44,13 @@ python run_pne_scheduler_resume.py
 2. Obtain its SHA-256 from a `compare` report.
 3. Copy `example/sch-patch.template.json` and set the hash, expected version, step number,
    field, and raw value.
-4. Run `patch-sch`.
+4. Run `patch-sch ... --allow-analysis-output`.
 5. Review the generated `.report.json`.
 
 The default path rejects fields that are not marked writer-ready. At present, semantic
 fields still require controlled CTSPro evidence, so `--allow-unverified-fields` is strictly
-for offline reverse-engineering. It does not make a file safe to execute.
+for offline reverse-engineering. Every write separately requires `--allow-analysis-output`.
+Neither acknowledgement makes a file safe to execute.
 
 ## Module flow editor
 

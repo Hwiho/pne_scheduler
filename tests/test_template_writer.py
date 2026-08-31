@@ -41,7 +41,12 @@ def test_template_writer_blocks_unverified_field_by_default(tmp_path: Path) -> N
     output = tmp_path / "blocked.sch"
 
     with pytest.raises(ValueError, match="not writer-ready"):
-        apply_sch_patch(TEMPLATE, _plan(), output)
+        apply_sch_patch(
+            TEMPLATE,
+            _plan(),
+            output,
+            allow_analysis_output=True,
+        )
 
     assert not output.exists()
 
@@ -52,6 +57,7 @@ def test_template_writer_preserves_every_undeclared_byte(tmp_path: Path) -> None
         TEMPLATE,
         _plan(),
         output,
+        allow_analysis_output=True,
         allow_unverified_fields=True,
     )
 
@@ -75,8 +81,25 @@ def test_template_writer_requires_exact_template_hash(tmp_path: Path) -> None:
             TEMPLATE,
             _plan(template_sha256="0" * 64),
             output,
+            allow_analysis_output=True,
             allow_unverified_fields=True,
         )
+
+
+def test_template_writer_requires_analysis_output_acknowledgement(
+    tmp_path: Path,
+) -> None:
+    output = tmp_path / "not-acknowledged.sch"
+
+    with pytest.raises(ValueError, match="not acknowledged"):
+        apply_sch_patch(
+            TEMPLATE,
+            _plan(),
+            output,
+            allow_unverified_fields=True,
+        )
+
+    assert not output.exists()
 
 
 def test_patch_cli_writes_report_and_warns(tmp_path: Path, capsys) -> None:
@@ -101,6 +124,7 @@ def test_patch_cli_writes_report_and_warns(tmp_path: Path, capsys) -> None:
             str(plan_path),
             "-o",
             str(output),
+            "--allow-analysis-output",
             "--allow-unverified-fields",
         ]
     )

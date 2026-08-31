@@ -4,7 +4,7 @@ Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` sch
 The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
 QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-98%20passed-brightgreen)](#tests)
+[![Tests](https://img.shields.io/badge/tests-100%20passed-brightgreen)](#tests)
 
 > [!WARNING]
 > The from-scratch SCH writer still uses a placeholder header. Its output is not validated
@@ -112,12 +112,14 @@ byte outside declared field ranges, then emits a JSON provenance report.
 python -m pne_scheduler compare template.sch template.sch
 # Copy example/sch-patch.template.json and insert the reported SHA-256.
 
-python -m pne_scheduler patch-sch template.sch patch.json -o patched.sch
+python -m pne_scheduler patch-sch template.sch patch.json -o patched.sch `
+  --allow-analysis-output
 ```
 
 No current semantic field is marked writer-ready because controlled CTSPro reopen evidence
-has not been supplied. `--allow-unverified-fields` enables offline research output only and
-always prints an equipment warning.
+has not been supplied. `--allow-unverified-fields` enables unresolved fields only for offline
+research. The separate `--allow-analysis-output` acknowledgement is required for every write,
+and the command always prints an equipment warning.
 
 ## Module flow editor
 

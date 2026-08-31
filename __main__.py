@@ -80,6 +80,11 @@ def _build_parser() -> argparse.ArgumentParser:
     patch.add_argument("-o", "--output", type=Path, required=True, help="Output .sch path")
     patch.add_argument("--report", type=Path, help="Patch report JSON path")
     patch.add_argument(
+        "--allow-analysis-output",
+        action="store_true",
+        help="Acknowledge that the output is not approved for equipment execution",
+    )
+    patch.add_argument(
         "--allow-unverified-fields",
         action="store_true",
         help="Allow offline patching of fields that are not writer-ready",
@@ -215,6 +220,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.template,
                 plan,
                 args.output,
+                allow_analysis_output=args.allow_analysis_output,
                 allow_unverified_fields=args.allow_unverified_fields,
             )
         except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
