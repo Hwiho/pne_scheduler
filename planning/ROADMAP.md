@@ -7,6 +7,7 @@
 | 2026-08-31 | Initial draft: documented the structure based on `sch_file_structure_20250211.xlsx`, ASSB_Analyzer_dev, and the Ensol PNE converter; established the roadmap for a visual modular schedule builder |
 | 2026-08-31 | Created the `pne_scheduler/` package — IR, C-rate, module stubs, CLI, and example `.schproj` |
 | 2026-08-31 | Reassessed repository status — secured the original SCH archive and reprioritized implementation and validation |
+| 2026-08-31 | Distinguished must-do lab-writer and validation work from later UX, EIS, and integration features |
 
 ---
 
@@ -365,7 +366,10 @@ from-scratch binary generation.
 | P1 | **Versioned protocol templates** | Makes Formation/Cycle/RPT/HPPC defaults reviewable and traceable by equipment profile | Golden module fixtures |
 | P2 | **Parameter sweep and batch export** | Produces controlled variants after one template is verified | Safe patcher and manifest |
 | P2 | **Approval/audit bundle** | Packages SCH hash, human-readable step table, diff report, screenshots, and operator approval | Stable export workflow |
-| P3 | **Visual flow editor** | Improves composition UX after the underlying semantic and safety contracts are reliable | Gates C, D, and release gate |
+| P3 | **Richer flow-editor UX** | Free-form drag, typed property widgets, and undo improve composition after semantic and safety contracts are reliable | Gates C, D, and release gate |
+
+A first LabVIEW-style linear flow editor already exists. Remaining GUI polish is not a
+must-do item for equipment-safe SCH generation.
 
 Features that should not be prioritized yet are direct hardware control, automatic upload to
 cycler PCs, and broad 0x00010007/EIS generation. Their failure modes are harder to inspect
@@ -374,6 +378,59 @@ than offline file generation and they depend on unresolved schemas.
 ---
 
 ## 6. Implementation Roadmap
+
+### 6.0 Must-Do Work
+
+This list is the current required path to a lab-usable schedule. Items below it remain
+useful, but they do not unblock Formation/Cycle/RPT/HPPC generation on PNE02/16/21/22.
+
+#### Blocking without new user data
+
+These cannot be closed from the current 102-file corpus alone.
+
+| ID | Must-do | Why it is required | Needed from the user |
+|----|---------|--------------------|----------------------|
+| M1 | Controlled before/after SCH pairs | No semantic field is `writer_ready`; current/voltage/time/loop writes would guess | One-field CTSPro pairs per target cycler; screenshots of both values |
+| M2 | CTSPro version and channel INI/range | Raw units depend on the selected profile, not the filename | About-screen version plus the channel-range/INI actually used |
+| M3 | Nonzero capacity-termination example | `fEndC` is unused in the corpus, so SOC/partial-cycle writes are blocked | One schedule with a real capacity end condition |
+| M4 | Sampling, DCR, and goto pairs | RPT/DC-IR/HPPC cannot be compiled or patched without those slots | One pair each for Δt/ΔV/ΔI, DCR window, and a nonzero goto |
+| M5 | CTSPro reopen of the exact patched hash | Byte-preserving output can still be rejected by CTSPro | Open the reported SHA-256 file and record pass/fail |
+
+#### Must implement in the repository next
+
+These can start now, but several remain incomplete until M1–M5 arrive.
+
+| ID | Must-do | Gate | Completion criteria |
+|----|---------|------|---------------------|
+| M6 | Raw-unit and capacity contract | B0 | One mapping for offset `+12` vs `+16`, mV/mA, INI range, and a single Q_nom used by viewer and writer |
+| M7 | Intake metadata validator | B5 | Reject incomplete equipment, CTSPro, changed-field, and screenshot provenance before confidence promotion |
+| M8 | Semantic golden tests | B4 | Formation, Cycle, RPT, QPEED, and HPPC fixtures lock step type plus core values |
+| M9 | Writer-ready allowlist | C0.2 | Promote a field only after two controlled values, no extra byte drift, and M5 reopen |
+| M10 | 696-byte lab patch parity | C6 | The same allowlisted patch works on `0x00010004/696`, the dominant lab layout |
+| M11 | Pre-export safety linter | D / E | Block missing END, illegal loops, V/I outside the Cell Profile, and implausible duration |
+| M12 | Resume goto safety | Risks | Refuse splice when unverified reference fields are nonzero, or remap them only after M4 |
+| M13 | Hosted CI | F6 | Packaging, fixture, schema, and documentation checks run on every pull request |
+| M14 | Remaining public-docs language pass | Risks | Translate leftover GitHub-facing Korean docs except preserved filenames |
+
+#### Must complete before any equipment-ready claim
+
+| ID | Must-do | Gate | Completion criteria |
+|----|---------|------|---------------------|
+| M15 | Target-profile export record | F1 | Every artifact names PNE unit, current range, CTSPro version, layout, and unresolved assumptions |
+| M16 | Exact-hash reopen and smoke test | C5, F2–F4 | The tested SHA-256 equals the released SHA-256; empty-channel or approved dummy-cell procedure is recorded |
+| M17 | Status labels | F5 | CLI/UI distinguish `analysis-only`, `CTSPro-reopen-verified`, and `equipment-verified` |
+
+No GUI, template, or CLI path may display “equipment-ready” until M15–M17 pass for that exact file and profile.
+
+#### Not must-do yet
+
+Do not treat these as current blockers:
+
+- From-scratch header/body writer (`C1`) before the template-preserving path is proven
+- Free-form drag layout, undo/redo, or richer property widgets
+- `0x00010007` / EIS, Pattern/`.pat`, chiller, and conditional branching
+- Direct cycler upload or hardware control
+- pne_studio integration
 
 ### 6.1 Repository Assessment Results as of 2026-08-31
 
@@ -558,7 +615,7 @@ pne_scheduler/                   # main package (repo root)
 │   ├── schedule_viewer.py
 │   ├── project_editor.py
 │   ├── resume_wizard.py
-│   └── flow_editor.py           # placeholder
+│   └── flow_editor.py           # linear LabVIEW-style module canvas
 ├── tools/                       # batch fixture analysis
 ├── docs/
 └── tests/
@@ -601,18 +658,20 @@ tests to be skipped.
 
 ## 9. Immediate Next Actions
 
+Do these in order. Later Gates C1/EIS/pne_studio are not current must-do work.
+
 1. ✅ **Restore packaging** — completed editable install and clean-target wheel import validation
 2. ✅ **Add automatic fixture checks** — established 101 archive/extracted files + 1 HPPC file as test inputs
 3. ✅ **Resolve internal offset conflict** — unified parser/schema/compiler locations for `fEndV/fEndI/fEndC`
-4. **Validate intake metadata** — make controlled before/after pairs reject incomplete equipment, CTSPro, and changed-value provenance
-5. ✅ **Full reader regression test** — locked layout, step count, hash, and EOF geometry for all 102 files
-6. **Resolve the raw-unit/capacity contract** — offset `+12`, `+16`, mV/mA scaling, INI range, and one Q_nom source
-7. **Externally confirm field semantics** — prioritize nonzero `fEndC`, sampling, DCR, and goto controlled pairs
-8. **Implement safe patch vertical slice** — approved 612-byte template, allowlisted field, exact preservation report
-9. **Implement writer header** — complete the from-scratch schema/writer vertical slice for `0x00010003/612`
-10. **696-byte lab parity** — extend patching/writing for `0x00010004/696`, which accounts for 89/93 lab fixtures
-11. **End-to-end module validation** — Formation → Cycle Life → RPT/DC-IR order
-12. **Release-gated PNE test** — reopen, exact hash, target profile, and approved equipment procedure
+4. ✅ **Full reader regression test** — locked layout, step count, hash, and EOF geometry for all 102 files
+5. ✅ **Template-preserving patch engine** — hash, topology, and undeclared-byte preservation exist; fields are still not writer-ready
+6. **Collect M1–M5 evidence** — controlled pairs, CTSPro/INI, nonzero `fEndC`, sampling/DCR/goto, and reopen of an exact hash
+7. **M6 raw-unit/capacity contract** — offset `+12` vs `+16`, mV/mA, INI range, one Q_nom
+8. **M7–M8 intake validator and semantic goldens** — reject incomplete provenance; lock Formation/Cycle/RPT/HPPC values
+9. **M9–M10 writer-ready 612 and 696 patches** — promote only reopened, byte-clean fields
+10. **M11–M12 safety linter and resume goto guard**
+11. **M13 hosted CI**
+12. **M15–M17 release-gated PNE test** — profile record, exact-hash reopen, smoke test, status labels
 
 ---
 
