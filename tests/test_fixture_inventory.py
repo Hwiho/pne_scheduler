@@ -1,4 +1,5 @@
 from pathlib import Path
+from pathlib import PurePosixPath
 from zipfile import ZipFile
 
 import pytest
@@ -9,6 +10,10 @@ ARCHIVE_ROOT = EXAMPLE_ROOT / "archives"
 EXPECTED_ARCHIVE_COUNTS = {
     "9)Bimodal_SJ1300_6040_NCN_capacheck.zip": 8,
     "sch.zip": 93,
+}
+EXTRACTED_DIR_BY_ARCHIVE = {
+    "9)Bimodal_SJ1300_6040_NCN_capacheck.zip": "capacheck_zip",
+    "sch.zip": "sch_lab_zip",
 }
 HPPC_FIXTURE = EXAMPLE_ROOT / "fixtures" / "hppc" / "HPPC_Full range.sch"
 
@@ -30,6 +35,10 @@ def test_schedule_archive_inventory(archive_name: str, expected_count: int) -> N
 
     assert len(schedules) == expected_count
     assert all(member.file_size > 0 for member in schedules)
+    archived_names = {PurePosixPath(member.filename).name for member in schedules}
+    extracted_root = EXAMPLE_ROOT / "fixtures" / EXTRACTED_DIR_BY_ARCHIVE[archive_name]
+    extracted_names = {path.name for path in extracted_root.glob("*.sch")}
+    assert extracted_names == archived_names
 
 
 def test_total_reference_schedule_count() -> None:
