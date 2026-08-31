@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from pne_scheduler.ir.cell_profile import CellProfile
-from pne_scheduler.ir.project import ScheduleProject
+from pne_scheduler.ir.project import ModuleConnection, ScheduleProject
 from pne_scheduler.ui.flow_model import FlowProjectModel
 
 
@@ -76,3 +76,12 @@ def test_flow_model_rejects_unknown_parameter() -> None:
 
     with pytest.raises(ValueError, match="Unknown parameter"):
         model.update_params(node.id, {"duraton_s": 10})
+
+
+def test_project_expansion_rejects_dangling_connections() -> None:
+    model = _model()
+    node = model.add_module("rest")
+    model.project.connections.append(ModuleConnection(node.id, "missing"))
+
+    with pytest.raises(ValueError, match="unknown module"):
+        model.project.expand_steps()
