@@ -353,7 +353,7 @@ class ExperimentModule(Protocol):
 | SCH writer | **미완료/사용 금지** | 512-byte placeholder header 사용, 실제 파일 섹션 미구현 |
 | round-trip validator | **미완료** | 외부 parser가 없으면 검증 불가하고 현재는 step count만 비교 |
 | GUI | **부분 완료** | viewer/resume/bulk editor 존재; flow editor는 placeholder |
-| 테스트 실행 환경 | **차단** | `pip install -e ".[dev]"` 후에도 `pne_scheduler` import 실패; package discovery 수정 필요 |
+| 테스트 실행 환경 | **복구** | root-layout package를 명시적으로 등록해 editable install과 wheel import 성공 |
 
 ### 6.2 Gate A — 개발 기준선 복구 (최우선)
 
@@ -365,6 +365,11 @@ class ExperimentModule(Protocol):
 
 이 gate가 끝나기 전에는 기존 “65+ passed” 문구나 모듈 완료 상태를 릴리스
 근거로 사용하지 않는다.
+
+**진행 기록**
+- A1 완료: editable install과 별도 target에 설치한 wheel에서 package/subpackage import 확인
+- A3 완료: 두 ZIP과 추출 디렉터리의 8개·93개 목록 일치, HPPC 포함 총 102개 자동 확인
+- A2 진행 중: 로컬 전체 테스트는 실행 가능하며 CI 기준 고정과 README 수치 갱신이 남음
 
 ### 6.3 Gate B — 바이너리 스키마를 단일 정본으로 확정
 
@@ -473,8 +478,8 @@ run_pne_scheduler.py             # 루트 launcher
 
 | 항목 | 상태 | 대응 |
 |------|------|------|
-| editable install 후 package import 실패 | **재현됨** | Gate A에서 package discovery/레이아웃 우선 수정 |
-| parser/schema/compiler 종료조건 offset 불일치 | **재현됨** | 원본·Excel·ASSB 3-way 대조 후 단일 schema 사용 |
+| editable install 후 package import 실패 | **해결됨** | editable install과 wheel clean-target import 회귀 검증 |
+| parser/schema/compiler 종료조건 offset 불일치 | **내부 정합 완료** | `fEndV=32`, `fEndI=36`, `fEndC=40`; 비영 값 원본/외부 parser 대조는 B2에서 계속 |
 | lab 형식과 writer 타깃 불일치 | **확인됨** | 93개 중 89개가 `0x10004/696`; 612 검증 직후 Gate C6 진행 |
 | 612 vs 696 byte step size 자동 선택 | 부분 파악 | 확보한 102개 실측 sch로 version→size 매핑 검증 |
 | PNE raw current 단위 (mA vs A) | ini range 의존 | Cell range profile + ASSB `unit_scale` 대조 |
@@ -488,14 +493,15 @@ run_pne_scheduler.py             # 루트 launcher
 
 ## 9. 다음 즉시 액션
 
-1. **패키징 복구** — clean install에서 import와 전체 테스트 실행 가능하게 수정
-2. **fixture 자동 점검 추가** — archive 101개 + HPPC 1개를 테스트 입력으로 고정
-3. **offset 충돌 해결** — `fEndV/fEndI/fEndC`부터 원본 바이트와 필드 정의 대조
-4. **전체 reader 회귀 테스트** — 102개 파일의 layout·step count golden snapshot 생성
-5. **writer header 구현** — `0x00010003/612`로 schema·writer vertical slice 완성
-6. **696-byte lab parity** — 89/93을 차지하는 `0x00010004/696` writer 확장
-7. **대표 모듈 end-to-end 검증** — Formation → Cycle Life → RPT/DC-IR 순서
-8. **PNE 로드 테스트** — 성공 결과가 기록된 뒤에만 writer를 usable로 승격
+1. ✅ **패키징 복구** — editable install과 wheel clean-target import 검증 완료
+2. ✅ **fixture 자동 점검 추가** — archive/추출본 101개 + HPPC 1개를 테스트 입력으로 고정
+3. ✅ **내부 offset 충돌 해결** — parser/schema/compiler의 `fEndV/fEndI/fEndC` 위치 통일
+4. **offset 외부 확증** — 비영 `fEndI/fEndC` 원본 또는 공식 필드표로 의미 검증
+5. **전체 reader 회귀 테스트** — 102개 파일의 layout·step count golden snapshot 생성
+6. **writer header 구현** — `0x00010003/612`로 schema·writer vertical slice 완성
+7. **696-byte lab parity** — 89/93을 차지하는 `0x00010004/696` writer 확장
+8. **대표 모듈 end-to-end 검증** — Formation → Cycle Life → RPT/DC-IR 순서
+9. **PNE 로드 테스트** — 성공 결과가 기록된 뒤에만 writer를 usable로 승격
 
 ---
 
