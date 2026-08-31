@@ -1,11 +1,17 @@
 # pne_scheduler
 
-PNE 사이클러용 `.sch` 스케줄을 **읽기·해석·생성·재개**하는 Python 패키지입니다.  
-ASSB 실험실 프로토콜(FM, capacheck, cycle, RPT, QPEED 등)과 셀 형상(FP, L-level, xMyU) 추론을 지원합니다.
+Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` schedules.
+The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
+QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-78%20passed-brightgreen)](#테스트)
+[![Tests](https://img.shields.io/badge/tests-86%20passed-brightgreen)](#tests)
 
-## 설치
+> [!WARNING]
+> The from-scratch SCH writer still uses a placeholder header. Its output is not validated
+> for CTSPro or equipment execution. Reading, comparison, and template-preserving resume
+> operations are further along than new-file generation.
+
+## Installation
 
 ```powershell
 git clone https://github.com/Hwiho/pne_scheduler.git
@@ -13,57 +19,62 @@ cd pne_scheduler
 pip install -e ".[dev]"
 ```
 
-## 빠른 시작
+## Quick start
 
 ```powershell
-# 스케줄 뷰어 (GUI)
+# Schedule viewer
 python run_pne_scheduler_viewer.py
 
-# 프로젝트 에디터 — 모듈 일괄 수정 (GUI)
+# Project bulk editor
 python run_pne_scheduler_editor.py
 
-# 중단 실험 재개 (GUI)
+# Interrupted-experiment resume tool
 python run_pne_scheduler_resume.py
 
 # CLI
 python run_pne_scheduler.py info example/example.schproj
-python run_pne_scheduler.py build example/example.schproj -o output.sch
 python run_pne_scheduler.py view path\to\file.sch
+python -m pne_scheduler compare before.sch after.sch -o comparison.json
+
+# Offline writer development only; never execute this output on equipment
+python run_pne_scheduler.py build example/example.schproj -o output.sch --allow-experimental-output
 ```
 
-## CLI 요약
+## CLI summary
 
-| 명령 | 설명 |
+| Command | Description |
 |------|------|
-| `view [file.sch]` | 스텝 테이블 + FP/L/C-rate/프로토콜 표시 |
-| `edit [file.schproj]` | 프로젝트 에디터 GUI |
-| `info file.schproj` | 프로젝트 요약 |
-| `build file.schproj -o out.sch` | `.schproj` → `.sch` 컴파일 |
-| `bulk-edit ...` | 모듈 파라미터 일괄 수정 |
-| `resume sch data.csv -o resumed.sch` | 중단 실험 재개 스케줄 생성 |
+| `view [file.sch]` | Show the step table and inferred FP/L/C-rate/protocol |
+| `edit [file.schproj]` | Open the project bulk editor |
+| `info file.schproj` | Show a project summary |
+| `compare before.sch after.sch` | Generate a controlled binary-difference report |
+| `build ... --allow-experimental-output` | Produce offline-only experimental writer output |
+| `bulk-edit ...` | Edit compatible module parameters in bulk |
+| `resume sch data.csv -o resumed.sch` | Build a template-preserving resume schedule |
 
 ## Schedule viewer
 
 ```powershell
 python run_pne_scheduler_viewer.py
-# 또는
+# or
 python -m pne_scheduler view path\to\file.sch
 ```
 
-스텝 테이블과 함께 **L-level**, **footprint(FP)**, **mono/multi**, **C-rate**, **프로토콜**을 추론해 표시합니다.
+The viewer displays the step table together with inferred **L-level**, **footprint
+(FP)**, **mono/multi**, **C-rate**, and **protocol**.
 
-### 추론 파이프라인
+### Inference pipeline
 
 ```
-filename → FP (1818, 3350, …) → mono/multi (기본 mono) → L-level → Q_nom → C-rate
+filename → FP (1818, 3350, …) → mono/multi (default: mono) → L-level → Q_nom → C-rate
 ```
 
-| 항목 | 규칙 |
+| Item | Rule |
 |------|------|
-| **FP** | `1818`, `3350`, `70150`, `70295`, `101295` (mm 로딩) |
-| **Si 조합** | `6040`, `6535`, `7030` — FP가 아님 |
-| **L-level** | `L5.0`, `L.4.36` 등; 모노 미표기 → **L5.0** |
-| **multi** | `8M1U`, `8M2U` → **K = M × U** (양면전극 수) |
+| **FP** | `1818`, `3350`, `70150`, `70295`, `101295` loading geometry |
+| **Si composition** | `6040`, `6535`, `7030`; these are not FP values |
+| **L-level** | `L5.0`, `L.4.36`, and similar; omitted mono value defaults to **L5.0** |
+| **multi** | `8M1U`, `8M2U` → **K = M × U** double-sided electrode count |
 | **C-rate** | `I / Q_nom`, `Q_nom = 21600 mAh × (area/16.5) × (L/4.3) × K` |
 
 ## Bulk edit (modules)
@@ -72,21 +83,23 @@ filename → FP (1818, 3350, …) → mono/multi (기본 mono) → L-level → Q
 # GUI
 python run_pne_scheduler_editor.py
 
-# CLI — cycle_life 모듈 전체 0.5C
+# Set all cycle_life modules to 0.5C
 python -m pne_scheduler bulk-edit example/example.schproj --type cycle_life --set charge_c_rate=0.5
 
-# CLI — 선택 id
+# Select module IDs
 python -m pne_scheduler bulk-edit proj.schproj --ids cyc1,cyc2 --set loop_count=300
 
-# CLI — 모든 모듈 (호환 키만)
+# All modules with compatible keys
 python -m pne_scheduler bulk-edit proj.schproj --all --set rest_s=600
 ```
 
-값: `C/3`, float, int, JSON list (`[0.8,0.5,0.2]`) 지원.
+Values may be C-rate strings such as `C/3`, floats, integers, or JSON lists such as
+`[0.8,0.5,0.2]`.
 
 ## Resume interrupted experiment
 
-원본 `.sch` + StepEnd/raw CSV로 중단 지점을 찾아 이어서 실험할 스케줄을 생성합니다.
+The resume workflow combines an original `.sch` file with StepEnd/raw CSV data to locate
+the interruption point and create a continuation schedule.
 
 ```powershell
 python run_pne_scheduler_resume.py
@@ -96,66 +109,68 @@ python -m pne_scheduler resume original.sch channel_StepEnd.csv -o resumed.sch
 python -m pne_scheduler resume original.sch channel_StepEnd.csv -o resumed.sch --step 12 --loops 150
 ```
 
-- StepEnd 마지막 행 → 마지막 완료 CTS step (`SCH step = CTS - 1`)
-- `* Complete` → 다음 SCH step부터 재개
-- 중간 끊김 → 같은 SCH step부터 재개
-- LOOP 스케줄 → 남은 loop 자동 추정 (`--loops`로 override)
+- The final StepEnd row determines the last completed CTS step (`SCH step = CTS - 1`).
+- `* Complete` resumes from the next SCH step.
+- A mid-step interruption resumes from the same SCH step.
+- LOOP schedules estimate remaining loops; `--loops` overrides the estimate.
 
-자세한 내용: [docs/RESUME.md](docs/RESUME.md)
+See [docs/RESUME.md](docs/RESUME.md) for details.
 
 ## Lab protocol defaults
 
-| 실험 | 기본 C-rate | 비고 |
+| Experiment | Default C-rate | Notes |
 |------|-------------|------|
-| **FM (formation)** | 0.1C | charge/discharge |
-| **Capacheck / derating** | 0.1C → C/3 | 가끔 C/3×2 |
-| **Cycle** | 0.5C | 생성·해석 기본값 |
-| **In-situ cycle** | 0.5C | RPT 블록 없음 |
-| **RPT** | C/3 방전 | DC-IR @ SOC 80/50/20, 1.0–1.5C |
+| **FM (formation)** | 0.1C | Charge and discharge |
+| **Capacheck / derating** | 0.1C → C/3 | Sometimes two C/3 cycles |
+| **Cycle** | 0.5C | Generation and interpretation default |
+| **In-situ cycle** | 0.5C | No RPT block |
+| **RPT** | C/3 discharge | DC-IR at SOC 80/50/20, 1.0–1.5C |
 
-자세한 내용: [docs/PROTOCOL.md](docs/PROTOCOL.md)
+See [docs/PROTOCOL.md](docs/PROTOCOL.md) for details.
 
-## 패키지 구조
+## Package structure
 
 ```
 pne_scheduler/
-├── schema/          # .sch 바이너리 필드·enum
+├── schema/          # SCH binary fields and enums
 ├── ir/              # Schedule IR (.schproj)
-├── engine/          # C-rate engine, compiler
-├── modules/         # formation, cycle_life, RPT, DC-IR, QPEED …
-├── protocol/        # 실험 프로토콜 기본값·추론
-├── stack/           # FP, L-level, xMyU, 용량 추론
-├── classify/        # 파일명 → 실험 카테고리
-├── edit/            # 모듈 일괄 수정
-├── resume/          # 중단 재개·스플라이스
+├── engine/          # C-rate engine and compiler
+├── modules/         # Formation, cycle life, RPT, DC-IR, QPEED, and others
+├── protocol/        # Lab protocol defaults and inference
+├── stack/           # FP, L-level, xMyU, and capacity inference
+├── classify/        # Filename classification
+├── edit/            # Bulk module editing
+├── resume/          # Interrupted-experiment resume and splicing
 ├── io/              # reader / writer
-├── ui/              # viewer, editor, resume wizard
-├── tools/           # 배치 분석 CLI
-├── example/         # fixture + 분석 리포트
-├── docs/            # 사용 가이드
+├── ui/              # Viewer, editor, and resume wizard
+├── tools/           # Batch analysis CLI tools
+├── example/         # Fixtures and analysis reports
+├── docs/            # User and validation guides
 └── tests/
 ```
 
-## 예제 데이터
+## Example data
 
-- `example/fixtures/capacheck_zip/` — capacheck/QPEED/RPT fixture 8개
-- `example/fixtures/sch_lab_zip/` — 실험실 `.sch` 93개
-- `example/analysis/` — 배치 분석 JSON 리포트
+- `example/fixtures/capacheck_zip/` — 8 capacheck/QPEED/RPT fixtures
+- `example/fixtures/sch_lab_zip/` — 93 lab SCH fixtures
+- `example/fixtures/hppc/` — 1 HPPC fixture
+- `example/analysis/` — batch analysis JSON reports
 
-## 테스트
+## Tests
 
 ```powershell
 python -m pytest tests/ -q
 ```
 
-## 문서
+## Documentation
 
-- [사용 가이드](docs/GUIDE.md)
-- [프로토콜 & C-rate](docs/PROTOCOL.md)
-- [중단 실험 재개](docs/RESUME.md)
+- [User guide](docs/GUIDE.md)
+- [Protocol and C-rate](docs/PROTOCOL.md)
+- [Interrupted-experiment resume](docs/RESUME.md)
 - [SCH validation intake](docs/SCH_VALIDATION_INTAKE.md)
-- [로드맵](planning/ROADMAP.md)
+- [Roadmap](planning/ROADMAP.md)
 
-## 관련 저장소
+## Related repository
 
-이 패키지는 [pne-studio](https://github.com/Hwiho/pne-studio) 모노레포에서 분리된 독립 프로젝트입니다.
+This package was split from the
+[pne-studio](https://github.com/Hwiho/pne-studio) monorepo.
