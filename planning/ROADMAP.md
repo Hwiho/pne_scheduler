@@ -6,6 +6,7 @@
 |------|------|
 | 2026-08-31 | 초안: `sch_file_structure_20250211.xlsx`·ASSB_Analyzer_dev·Ensol PNE converter 기반 구조 정리, 비주얼 모듈형 스케줄 빌더 로드맵 수립 |
 | 2026-08-31 | `pne_scheduler/` 패키지 생성 — IR·C-rate·모듈 스텁·CLI·예제 `.schproj` |
+| 2026-08-31 | 저장소 현황 재점검 — 원본 SCH 아카이브 확보, 구현 상태와 검증 우선순위 재정렬 |
 
 ---
 
@@ -27,12 +28,14 @@ PNE 사이클러용 `.sch` 바이너리 스케줄 파일을 **직접 편집기 �
 | 출처 | 역할 | 상태 |
 |------|------|------|
 | `c:\sch_file_structure_20250211.xlsx` | PNE 공식 필드 정의 (버전별) | **정본 스펙** |
-| `ASSB_Analyzer_dev` → `assb_analyzer/io/pne_converter.py` | 읽기·검증·메타데이터 추출 | **가장 완성도 높은 reader** |
+| `ASSB_Analyzer_dev` → `assb_analyzer/io/pne_converter.py` | 읽기·검증·메타데이터 추출 | 선택적 외부 validator; 저장소에는 포함되지 않음 |
 | `_vendor/Ensol_PNE_framework/pne_app/io/pne_converter.py` | CycleNum·DCIR reference용 부분 reader | 로컬 vendor 사본 |
 | `assb_analyzer/io/cell_c_rate_reference.py` | C-rate ↔ 용량 ↔ 전류 (분석 측) | **writer에 재사용 가능한 로직** |
 | `assb_analyzer/io/classification_bulk_apply.py` | 동일 SCH 구조 fingerprint 비교 | 호환 Source 일괄 적용 |
 
-> **Writer:** `pne_scheduler/io/writer.py`에 minimal stub 구현됨 (Phase 0.3). Reader는 ASSB/Ensol parser wrapper.
+> **현재 구현:** `io/sch_parser.py`의 독립 layout detector/viewer parser와
+> `io/reader.py`의 ASSB/Ensol adapter가 공존한다. `io/writer.py`는 512-byte
+> placeholder header를 쓰는 spike이며 아직 PNE 호환 writer로 간주하면 안 된다.
 
 ### 2.2 파일 버전 (Excel 시트)
 
@@ -337,55 +340,78 @@ class ExperimentModule(Protocol):
 
 ## 6. 구현 로드맵
 
-### Phase 0 — 구조 확정 & Spike (1~2주)
+### 6.1 2026-08-31 저장소 점검 결과
 
-| # | 작업 | 산출물 | 완료 기준 |
-|---|------|--------|-----------|
-| 0.1 | Excel → Python struct schema 자동 생성 | `sch_schema_0x00010003.py` | 필드명·offset·타입 612B 전체 매핑 |
-| 0.2 | 기존 실측 `.sch` 3~5개 round-trip | test fixtures | parse → (identity) → parse 동일 |
-| 0.3 | Minimal writer: Rest → CC Charge → END | `write_minimal.sch` | PNE 장비 또는 시뮬레이터 로드 성공 |
-| 0.4 | ASSB parser와 offset 대조 | 검증 리포트 | `fIref`·`fEndI`·goto 필드 일치 |
+| 영역 | 상태 | 근거 / 판정 |
+|------|------|-------------|
+| 원본 fixture | **확보** | `example/archives/`에 8개·93개 SCH ZIP, `example/fixtures/hppc/`에 HPPC 1개 |
+| 파일 읽기·뷰어 | **부분 완료** | 612/696-byte layout 탐지와 주요 필드 표시 구현; 전체 fixture 회귀 테스트 없음 |
+| 분류·스택·C-rate 추론 | **부분 완료** | 단위 테스트 존재, 분석 리포트 생성됨 |
+| `.schproj` IR·JSON | **부분 완료** | 직렬화와 선형 DAG 정렬 구현; schema validation/version migration 없음 |
+| 실험 모듈 | **prototype** | Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED 등 expand 구현 |
+| binary compiler | **spike** | 일부 필드만 packing; mode, loop, DCR, sampling 등 핵심 필드 미기록 |
+| SCH writer | **미완료/사용 금지** | 512-byte placeholder header 사용, 실제 파일 섹션 미구현 |
+| round-trip validator | **미완료** | 외부 parser가 없으면 검증 불가하고 현재는 step count만 비교 |
+| GUI | **부분 완료** | viewer/resume/bulk editor 존재; flow editor는 placeholder |
+| 테스트 실행 환경 | **차단** | `pip install -e ".[dev]"` 후에도 `pne_scheduler` import 실패; package discovery 수정 필요 |
 
-### Phase 1 — Core Writer + C-rate (2~3주)
+### 6.2 Gate A — 개발 기준선 복구 (최우선)
 
-| # | 작업 | 산출물 |
-|---|------|--------|
-| 1.1 | `ScheduleProject` IR + JSON serializer | `.schproj` format v1 |
-| 1.2 | C-rate engine + CellProfile | 단위 테스트 |
-| 1.3 | Step compiler (IR → binary steps) | Formation 1-cycle 생성 |
-| 1.4 | Cell check param writer | header 전체 write |
-| 1.5 | CLI: `python -m pne_scheduler build project.schproj -o out.sch` | 자동화 가능 |
+| # | 작업 | 완료 기준 |
+|---|------|-----------|
+| A1 | `pyproject.toml` package discovery/소스 배치 수정 | clean environment에서 editable install 후 `import pne_scheduler` 성공 |
+| A2 | 테스트 명령과 CI 기준 고정 | `python -m pytest tests/ -q` 전체 통과, 실제 통과 개수를 README와 일치 |
+| A3 | fixture inventory 테스트 추가 | ZIP의 SCH 개수(8, 93)와 HPPC fixture 존재를 자동 확인 |
 
-### Phase 2 — 실험 모듈 (3~4주)
+이 gate가 끝나기 전에는 기존 “65+ passed” 문구나 모듈 완료 상태를 릴리스
+근거로 사용하지 않는다.
 
-| # | 모듈 | 우선순위 |
-|---|------|----------|
-| 2.1 | Formation | P0 |
-| 2.2 | Cycle Life (+ Loop/Cycle marker) | P0 |
-| 2.3 | DC-IR (SOC setting + pulse) | P0 |
-| 2.4 | RPT | P1 |
-| 2.5 | HPPC | P1 |
-| 2.6 | Rest/OCV utility | P1 |
+### 6.3 Gate B — 바이너리 스키마를 단일 정본으로 확정
 
-각 모듈마다: **실측 sch 1개와 byte-level 또는 semantic diff** 통과.
+| # | 작업 | 완료 기준 |
+|---|------|-----------|
+| B1 | 612/696 layout별 header·step 필드표 작성 | offset, dtype, 크기, 버전 출처를 코드 한 곳에서 관리 |
+| B2 | parser/schema/compiler offset 불일치 해소 | 특히 `fEndV`, `fEndI`, `fEndC`를 원본·Excel·ASSB 결과와 대조 |
+| B3 | 전체 원본 102개 read regression | 8 + 93 + HPPC 파일 모두 version, payload offset, step size/count 탐지 |
+| B4 | 대표 fixture semantic golden test | Formation/Cycle/RPT/QPEED/HPPC의 step type과 핵심 값이 golden data와 일치 |
 
-### Phase 3 — Visual UI (4~6주)
+현재 `schema/v0x00010003_612.py`, `io/sch_parser.py`, `engine/compiler.py`가
+종료 조건 offset을 동일하게 해석하지 않으므로 B2 이전의 semantic 분석값은
+참고 자료로만 취급한다.
 
-| # | 작업 |
-|---|------|
-| 3.1 | Module palette + node canvas |
-| 3.2 | Property panel (C-rate spinbox, V limit) |
-| 3.3 | Step table live preview |
-| 3.4 | Timeline / duration estimator |
-| 3.5 | Export + validation feedback |
-| 3.6 | Template load/save |
+### 6.4 Gate C — 실제 호환 SCH writer
 
-### Phase 4 — 고급 & 통합 (지속)
+| # | 작업 | 완료 기준 |
+|---|------|-----------|
+| C1 | `0x00010003` 전체 header/test-info/cell-check writer | placeholder 없이 정해진 payload offset과 크기 생성 |
+| C2 | step compiler 완성 | mode, 종료 조건, loop/goto, sampling, SOC, DCR 필드 기록 |
+| C3 | 내부 round-trip validator 독립화 | 외부 ASSB 설치 없이 write → read semantic 비교 |
+| C4 | 외부 parser 교차 검증 | 가능할 때 ASSB 결과와 내부 parser 결과 일치 |
+| C5 | PNE PC/장비 smoke test | Rest → CC Charge → END 파일 로드 성공 및 체크리스트 기록 |
 
-- `.sch` import (역변환)
-- ASSB Analyzer fingerprint 연동
-- 0x00010007 / EIS 지원
-- pne_studio2 메뉴에서 Schedule Builder 실행
+PNE 로드 성공 전에는 CLI `build` 결과를 “장비 실행 가능”으로 문서화하지 않는다.
+
+### 6.5 Gate D — 실험 모듈 fixture fidelity
+
+| 우선순위 | 모듈 | 검증 fixture / 기준 |
+|----------|------|---------------------|
+| P0 | Formation, Cycle Life, Rest | 대표 원본과 step topology·전류·전압·loop 의미 비교 |
+| P0 | RPT, DC-IR | SOC reference, DCR window, goto 관계 semantic diff |
+| P1 | HPPC | `HPPC_Full range.sch`의 SOC staircase와 양방향 pulse 비교 |
+| P1 | capacheck, QPEED, in-situ cycle | 8개 bimodal archive의 golden topology 비교 |
+
+각 모듈은 `validate`, `expand`, binary compile, round-trip까지 하나의 통합
+테스트로 통과해야 완료로 표시한다.
+
+### 6.6 Gate E — 편집 UX와 고급 기능
+
+1. 기존 viewer/resume/bulk editor의 fixture 기반 회귀 테스트
+2. flow editor의 module palette, DAG canvas, property panel, live preview
+3. export 전 validation feedback와 위험 조건 차단
+4. `.sch` → IR import, 0x00010007/EIS, fingerprint 연동
+5. pne_studio 통합
+
+Gate E는 writer 호환성이 확보된 Gate C 이후에 진행한다.
 
 ---
 
@@ -424,7 +450,9 @@ pne_scheduler/                   # 본 패키지 (repo 루트)
 run_pne_scheduler.py             # 루트 launcher
 ```
 
-**의존성:** `assb_analyzer.io.pne_converter.parse_sch_cycle_map_bytes`를 validation에 사용. 없으면 `_vendor/Ensol_PNE_framework` fallback.
+**검증 의존성 원칙:** 기본 read/write/round-trip은 저장소만으로 동작해야 한다.
+`assb_analyzer.io.pne_converter.parse_sch_cycle_map_bytes`는 선택적 교차 검증기로
+사용하며, 외부 패키지 부재가 기본 테스트를 건너뛰게 만들면 안 된다.
 
 ---
 
@@ -432,21 +460,26 @@ run_pne_scheduler.py             # 루트 launcher
 
 | 항목 | 상태 | 대응 |
 |------|------|------|
-| 612 vs 696 byte step size 자동 선택 | 부분 파악 | 실측 sch로 version→size 매핑 테이블 작성 |
-| PNE raw current 단위 (mA vs A) | ini range 의존 | Cell range profile + ASSB `unit_scale` 재사용 |
+| editable install 후 package import 실패 | **재현됨** | Gate A에서 package discovery/레이아웃 우선 수정 |
+| parser/schema/compiler 종료조건 offset 불일치 | **재현됨** | 원본·Excel·ASSB 3-way 대조 후 단일 schema 사용 |
+| 612 vs 696 byte step size 자동 선택 | 부분 파악 | 확보한 102개 실측 sch로 version→size 매핑 검증 |
+| PNE raw current 단위 (mA vs A) | ini range 의존 | Cell range profile + ASSB `unit_scale` 대조 |
 | `FILE_GRADE`, `STRUCT_EIS_SET` 내부 구조 | Excel에 이름만 | 0x00010007은 Phase 4로 연기 |
 | Δt/ΔV/ΔQ 권장값 | cyclediag에서 UNKNOWN | 사내 표준 sch 샘플에서 역추출 |
-| Writer 실기 검증 | 미착수 | Phase 0.3에서 PNE PC 1회 로드 테스트 필수 |
-| GitHub repo 접근 | `lgn0427-dev/ASSB_Analyzer_dev` 확인됨 | `pne_converter.py`를 정본 reader로 삼음 |
+| Writer 실기 검증 | 미착수 | Gate C5에서 PNE PC 로드 테스트 필수 |
+| 외부 ASSB parser 가용성 | 저장소 밖 의존성 | 내부 parser를 기본 정본으로 만들고 선택적으로 교차 검증 |
 
 ---
 
-## 9. 다음 즉시 액션 (이번 주)
+## 9. 다음 즉시 액션
 
-1. **실측 `.sch` 샘플 수집** — formation / cycle+RPT / DC-IR 각 1개 이상 (사이클러에서 export)
-2. **Phase 0.1** — Excel `0x00010003` 시트 → 612-byte struct offset table 코드 생성
-3. **Phase 0.3 spike** — 3-step minimal sch writer + PNE 로드 테스트
-4. **모듈 우선순위 확정** — Formation + Cycle Life + DC-IR 먼저 (ASSB 분류 체계와 정합)
+1. **패키징 복구** — clean install에서 import와 전체 테스트 실행 가능하게 수정
+2. **fixture 자동 점검 추가** — archive 101개 + HPPC 1개를 테스트 입력으로 고정
+3. **offset 충돌 해결** — `fEndV/fEndI/fEndC`부터 원본 바이트와 필드 정의 대조
+4. **전체 reader 회귀 테스트** — 102개 파일의 layout·step count golden snapshot 생성
+5. **writer header 구현** — `0x00010003/612` 한 버전에 집중해 실제 섹션 구성
+6. **대표 모듈 end-to-end 검증** — Formation → Cycle Life → RPT/DC-IR 순서
+7. **PNE 로드 테스트** — 성공 결과가 기록된 뒤에만 writer를 usable로 승격
 
 ---
 
