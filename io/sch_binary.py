@@ -8,9 +8,11 @@ from pathlib import Path
 
 from ..schema.enums import SCH_STEP_TYPE_END, SCH_STEP_TYPES
 
-# Common LOOP fields (612-byte layout, version 0x10003 family)
-OFFSET_LOOP_GOTO = 84
-OFFSET_LOOP_COUNT = 88
+# LOOP control fields shared by the observed 612- and 696-byte layouts.
+# Verified against the 102-file fixture corpus. Offsets 84/88 are unrelated
+# mode flags and must not be modified when resuming a schedule.
+OFFSET_LOOP_GOTO = 48
+OFFSET_LOOP_COUNT = 52
 
 
 @dataclass(frozen=True, slots=True)

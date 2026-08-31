@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from pne_scheduler.io.sch_binary import read_sch_binary
+from pne_scheduler.io.sch_binary import read_loop_info, read_sch_binary
 from pne_scheduler.resume import build_resume_plan, detect_checkpoint, splice_resume_schedule
 
 FIXTURE_SCH = (
@@ -14,6 +14,20 @@ FIXTURE_SCH = (
     / "fixtures"
     / "capacheck_zip"
     / "9)Bimodal_SJ1300_6040_NCN_capacheck.sch"
+)
+HPPC_SCH = (
+    Path(__file__).resolve().parents[1]
+    / "example"
+    / "fixtures"
+    / "hppc"
+    / "HPPC_Full range.sch"
+)
+RPT_696_SCH = (
+    Path(__file__).resolve().parents[1]
+    / "example"
+    / "fixtures"
+    / "capacheck_zip"
+    / "07100766_260511_SJ1300_dry_40um_RPT_500cycle.sch"
 )
 
 
@@ -66,3 +80,21 @@ def test_splice_resume_schedule(stepend_partial: Path, tmp_path: Path) -> None:
     assert doc.steps[0].step_no == 1
     assert doc.steps[-1].is_end
     assert result.plan.resumed_step_count == doc.step_count
+
+
+@pytest.mark.parametrize(
+    ("path", "step_no", "expected"),
+    [
+        (HPPC_SCH, 46, (29, 1)),
+        (RPT_696_SCH, 40, (4, 100)),
+    ],
+)
+def test_loop_fields_match_raw_fixtures(
+    path: Path,
+    step_no: int,
+    expected: tuple[int, int],
+) -> None:
+    doc = read_sch_binary(path)
+    loop = next(step for step in doc.steps if step.step_no == step_no)
+
+    assert read_loop_info(loop) == expected
