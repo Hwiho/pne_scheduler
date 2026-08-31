@@ -22,10 +22,9 @@ OFFSET_STEP_TYPE = 8
 OFFSET_F_VREF = 16
 OFFSET_F_IREF = 20
 OFFSET_F_END_TIME = 24
-OFFSET_F_END_CV_TIME = 28
 OFFSET_F_END_V = 28
-OFFSET_F_END_I = 32  # ASSB SCH_END_CURRENT_OFFSET
-OFFSET_F_END_C = 36  # ASSB/Ensol verified (see test_pne_converter.py)
+OFFSET_F_END_I = 32
+OFFSET_F_END_C = 36
 OFFSET_N_GOTO_STEP_ID = 92
 OFFSET_F_SOC_RATE = 392
 OFFSET_F_MAX_CAPACITY = 428
@@ -52,7 +51,6 @@ VERIFIED_STEP_FIELDS: tuple[SchFieldOffset, ...] = (
     SchFieldOffset("fVref", OFFSET_F_VREF, "float32"),
     SchFieldOffset("fIref", OFFSET_F_IREF, "float32"),
     SchFieldOffset("fEndTime", OFFSET_F_END_TIME, "float32"),
-    SchFieldOffset("fEndCVTime", OFFSET_F_END_CV_TIME, "float32"),
     SchFieldOffset("fEndV", OFFSET_F_END_V, "float32"),
     SchFieldOffset("fEndI", OFFSET_F_END_I, "float32"),
     SchFieldOffset("fEndC", OFFSET_F_END_C, "float32"),

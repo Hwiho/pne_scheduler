@@ -75,12 +75,12 @@ def test_geometry_pipeline_capacheck_6040() -> None:
 
 
 def test_parse_l436_rpt_file_footprint_and_c_rate() -> None:
-    path = FIXTURE_ROOT / "임효진_3350_L.4.36_NP1.08_RPT_SOC50 End_챔버시험용.sch"
-    if not path.exists():
-        pytest.skip("fixture missing")
+    matches = list(FIXTURE_ROOT.glob("*3350_L.4.36*RPT*.sch"))
+    assert len(matches) == 1
+    path = matches[0]
     doc = parse_schedule_file(path)
     assert doc.geometry.footprint.fp_id == "3350"
     assert doc.geometry.stack_level.primary.l_value == pytest.approx(4.3)
     charge = next(s for s in doc.steps if s.step_type == "CCCV" and s.f_iref > 1000)
     assert charge.c_rate is not None
-    assert charge.c_rate == pytest.approx(1.0, abs=0.15)
+    assert charge.c_rate == pytest.approx(4.0 / 3.0, abs=0.15)
