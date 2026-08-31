@@ -378,7 +378,8 @@ completion statuses may be used as release evidence.
 **Progress record**
 - A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
 - A3 complete: automatically verified that the two ZIPs match the 8-file and 93-file extracted directory listings, for a total of 102 files including HPPC
-- A2 in progress: confirmed `75 passed` locally; establishing the CI baseline and updating the README count remain
+- A2 complete locally: confirmed `78 passed` and synchronized the README test badge;
+  adding a hosted CI workflow remains a separate repository-infrastructure task
 
 ### 6.3 Gate B — Establish the Binary Schema as the Single Source of Truth
 
