@@ -388,8 +388,8 @@ than offline file generation and they depend on unresolved schemas.
 | Binary compiler | **spike** | Packs only some fields; does not write core fields such as mode, loop, DCR, and sampling |
 | SCH writer | **Incomplete/guarded** | Uses a 512-byte placeholder header; CLI output now requires explicit experimental acknowledgement and remains offline-only |
 | Round-trip validator | **Incomplete** | The repository can re-read output, but currently compares only step count and has no independent semantic field comparison |
-| GUI | **Partially complete** | Viewer/resume/bulk editor exist; first flow editor supports module connections, graph validation, property editing, save/load, and step preview |
-| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 100 tests |
+| GUI | **Partially complete** | Viewer/resume/bulk editor exist; flow editor supports module connections, cycle badges, graph validation, property editing, save/load, step preview, and nominal duration estimates |
+| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 105 tests |
 
 ### 6.2 Gate A — Restore the Development Baseline (Highest Priority)
 
@@ -405,7 +405,7 @@ under F6; local pass counts alone are not equipment-compatibility evidence.
 **Progress record**
 - A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
 - A3 complete: automatically verified that the two ZIPs match the 8-file and 93-file extracted directory listings, for a total of 102 files including HPPC
-- A2 complete locally: confirmed `100 passed` and synchronized the README test badge;
+- A2 complete locally: confirmed `105 passed` and synchronized the README test badge;
   adding a hosted CI workflow remains a separate repository-infrastructure task
 
 ### 6.3 Gate B — Establish the Binary Schema as the Single Source of Truth
@@ -495,6 +495,10 @@ Gate E proceeds after writer compatibility is secured in Gate C.
   `run_pne_scheduler_flow.py`
 - The editor rejects cycles and branching, supports `.schproj` load/save and Cell Profile
   editing, and warns about disconnected graphs or non-final/multiple END steps
+- Cycle-capable modules display their internal repeat count without introducing cyclic graph
+  edges; each block and expanded step has a nominal duration estimate
+- Duration estimation accounts for explicit time, capacity fraction/C-rate, and simple loop
+  multiplication while flagging CCCV taper, early termination, overhead, and unknown steps
 - Drag positioning, richer property widgets, undo/redo, semantic SCH export, and GUI
   automation remain incomplete
 

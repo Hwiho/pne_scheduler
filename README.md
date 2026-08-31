@@ -4,7 +4,7 @@ Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` sch
 The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
 QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-100%20passed-brightgreen)](#tests)
+[![Tests](https://img.shields.io/badge/tests-105%20passed-brightgreen)](#tests)
 
 > [!WARNING]
 > The from-scratch SCH writer still uses a placeholder header. Its output is not validated
@@ -131,7 +131,14 @@ python -m pne_scheduler flow example/example.schproj
 
 The first GUI version supports adding/removing modules, explicit connections, automatic
 linear chaining, JSON property editing, Cell Profile editing, graph validation, `.schproj`
-load/save, and expanded step preview. It intentionally does not send files to equipment.
+load/save, expanded step preview, cycle-count badges, and per-block/total duration estimates.
+It intentionally does not send files to equipment.
+
+Duration estimates use configured step time where available. Capacity-controlled charge and
+discharge steps use `capacity fraction ÷ C-rate`; a full step assumes nominal 100% usable
+capacity. Loop counts multiply the estimated loop body. Values marked `~` exclude effects
+that cannot yet be derived reliably, including CCCV taper, early voltage termination, and
+equipment overhead.
 
 ## Resume interrupted experiment
 

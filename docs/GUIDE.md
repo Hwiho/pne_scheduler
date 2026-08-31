@@ -57,7 +57,22 @@ Neither acknowledgement makes a file safe to execute.
 The flow editor provides a module palette, a visual canvas, linear connection validation,
 module and Cell Profile JSON editors, `.schproj` load/save, and a step-intent preview.
 Multiple inputs, multiple outputs, self-connections, and cycles are rejected because the
-current execution model is a linear schedule.
+current execution model is a linear schedule. Repeating experiments are represented inside
+cycle-capable blocks using `cycle_count` or `loop_count`, rather than by drawing a cyclic
+graph edge.
+
+Each block shows its repeat count and nominal duration estimate. The header and step-preview
+table show the estimated total and per-step durations:
+
+- Explicit time termination is treated as configured duration.
+- Capacity-controlled steps use `capacity fraction ÷ C-rate`.
+- Other charge/discharge steps assume 100% nominal usable capacity.
+- LOOP blocks multiply the estimated body by `loop_count`.
+- `~` marks an approximation; CCCV taper, possible early termination, and equipment overhead
+  are not included unless they are represented explicitly.
+
+An estimate with unknown steps is a partial lower-information total, not a guaranteed
+equipment completion time.
 
 ## Cell interpretation pipeline
 
