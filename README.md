@@ -153,6 +153,7 @@ python -m pytest tests/ -q
 - [사용 가이드](docs/GUIDE.md)
 - [프로토콜 & C-rate](docs/PROTOCOL.md)
 - [중단 실험 재개](docs/RESUME.md)
+- [SCH validation intake](docs/SCH_VALIDATION_INTAKE.md)
 - [로드맵](planning/ROADMAP.md)
 
 ## 관련 저장소

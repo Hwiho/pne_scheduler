@@ -23,11 +23,21 @@ from .v0x00010003_612 import (
     VERIFIED_STEP_FIELDS,
 )
 from .layouts import SCH_FILE_MAGIC, SCH_LAYOUTS, SchLayout, get_sch_layout
+from .fields import (
+    COMMON_STEP_FIELDS,
+    STEP_FIELDS_BY_VERSION,
+    FieldConfidence,
+    SchFieldDefinition,
+    get_step_field,
+    get_step_fields,
+)
 
 __all__ = [
     "CTS_STEP_OFFSET",
+    "COMMON_STEP_FIELDS",
     "DEFAULT_SCH_VERSION",
     "DEFAULT_STEP_SIZE",
+    "FieldConfidence",
     "OFFSET_F_END_C",
     "OFFSET_F_END_I",
     "OFFSET_F_IREF",
@@ -44,9 +54,13 @@ __all__ = [
     "SCH_STEP_TYPE_REST",
     "SCH_STEP_TYPES",
     "STEP_RECORD_SIZE",
+    "STEP_FIELDS_BY_VERSION",
+    "SchFieldDefinition",
     "SchLayout",
     "StepMode",
     "StepType",
     "VERIFIED_STEP_FIELDS",
+    "get_step_field",
+    "get_step_fields",
     "get_sch_layout",
 ]
