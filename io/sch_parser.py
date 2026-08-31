@@ -25,6 +25,7 @@ from ..schema.v0x00010003_612 import (
     OFFSET_F_END_V,
 )
 from ..stack import CellGeometryInference, c_rate_from_current, infer_cell_geometry, l_from_fvref
+from .layout import detect_sch_layout
 
 TYPE_NAMES: dict[int, str] = {
     1: "CHARGE",
@@ -173,30 +174,10 @@ class _RawStep:
 
 
 def _detect_layout(data: bytes) -> tuple[int, int] | None:
-    best: tuple[int, int, int] | None = None
-    scan_limit = min(len(data) - 12, 5000)
-    for payload_offset in range(0, scan_limit, 4):
-        if len(data) < payload_offset + 12:
-            break
-        step_no = struct.unpack_from("<i", data, payload_offset)[0]
-        step_type = struct.unpack_from("<i", data, payload_offset + 8)[0] & 0xFFFF
-        if step_no != 1 or step_type not in SCH_STEP_TYPES:
-            continue
-        for step_size in (612, 696):
-            score = 0
-            for expected in range(1, 8):
-                base = payload_offset + (expected - 1) * step_size
-                if base + 12 > len(data):
-                    break
-                sn = struct.unpack_from("<i", data, base)[0]
-                st = struct.unpack_from("<i", data, base + 8)[0] & 0xFFFF
-                if sn == expected and st in SCH_STEP_TYPES:
-                    score += 1
-            if best is None or score > best[0]:
-                best = (score, payload_offset, step_size)
-    if best is None or best[0] < 3:
+    layout = detect_sch_layout(data)
+    if layout is None:
         return None
-    return best[1], best[2]
+    return layout.payload_offset, layout.step_size
 
 
 def _read_steps(data: bytes, payload_offset: int, step_size: int) -> list[_RawStep]:

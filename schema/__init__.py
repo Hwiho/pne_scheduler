@@ -22,6 +22,7 @@ from .v0x00010003_612 import (
     STEP_RECORD_SIZE,
     VERIFIED_STEP_FIELDS,
 )
+from .layouts import SCH_FILE_MAGIC, SCH_LAYOUTS, SchLayout, get_sch_layout
 
 __all__ = [
     "CTS_STEP_OFFSET",
@@ -32,6 +33,8 @@ __all__ = [
     "OFFSET_F_IREF",
     "OFFSET_F_VREF",
     "SCH_FILE_VERSION",
+    "SCH_FILE_MAGIC",
+    "SCH_LAYOUTS",
     "SCH_STEP_TYPE_CC_CHARGE",
     "SCH_STEP_TYPE_CC_DISCHARGE",
     "SCH_STEP_TYPE_CCCV",
@@ -41,7 +44,9 @@ __all__ = [
     "SCH_STEP_TYPE_REST",
     "SCH_STEP_TYPES",
     "STEP_RECORD_SIZE",
+    "SchLayout",
     "StepMode",
     "StepType",
     "VERIFIED_STEP_FIELDS",
+    "get_sch_layout",
 ]
