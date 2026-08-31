@@ -71,6 +71,19 @@ def _build_parser() -> argparse.ArgumentParser:
     compare.add_argument("after", type=Path, help="Single-field-change .sch path")
     compare.add_argument("-o", "--output", type=Path, help="Optional JSON report path")
 
+    explain = sub.add_parser(
+        "explain",
+        help="Narrate what a .sch schedule does (SOC hints, voltage setpoints, blocks)",
+    )
+    explain.add_argument("sch", type=Path, help="Input .sch path")
+    explain.add_argument(
+        "--json",
+        action="store_true",
+        dest="as_json",
+        help="Print a structured JSON explanation",
+    )
+    explain.add_argument("-o", "--output", type=Path, help="Optional output path")
+
     patch = sub.add_parser(
         "patch-sch",
         help="Write a template-preserving SCH clone from an evidence-gated patch plan",
@@ -208,6 +221,30 @@ def main(argv: list[str] | None = None) -> int:
         else:
             print(rendered, end="")
         return 0 if report["compatible"] else 2
+
+    if args.command == "explain":
+        import json
+
+        from .io.sch_parser import parse_schedule_file
+        from .protocol import explain_schedule, format_explanation
+
+        try:
+            document = parse_schedule_file(args.sch)
+        except (OSError, ValueError) as exc:
+            print(f"Could not read schedule: {exc}", file=sys.stderr)
+            return 2
+
+        explanation = explain_schedule(document)
+        if args.as_json:
+            rendered = json.dumps(explanation.to_dict(), indent=2, ensure_ascii=False) + "\n"
+        else:
+            rendered = format_explanation(explanation)
+        if args.output:
+            args.output.write_text(rendered, encoding="utf-8")
+            print(f"Wrote {args.output}")
+        else:
+            print(rendered, end="")
+        return 0
 
     if args.command == "patch-sch":
         import json

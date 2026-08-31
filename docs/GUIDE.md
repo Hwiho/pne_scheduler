@@ -20,6 +20,7 @@ pip install -e ".[dev]"
 | Command | Description |
 |------|------|
 | `python -m pne_scheduler view [file.sch]` | Open the schedule viewer |
+| `python -m pne_scheduler explain file.sch` | Narrate protocol, SOC hints, and repeating blocks |
 | `python -m pne_scheduler edit [file.schproj]` | Open the project bulk editor |
 | `python -m pne_scheduler flow [file.schproj]` | Open the module connection editor |
 | `python -m pne_scheduler info file.schproj` | Show a project summary |
@@ -78,6 +79,23 @@ table show the estimated total and per-step durations:
 
 An estimate with unknown steps is a partial lower-information total, not a guaranteed
 equipment completion time.
+
+## Schedule explanation
+
+```powershell
+python -m pne_scheduler explain path\to\file.sch
+python -m pne_scheduler explain path\to\file.sch --json
+```
+
+The viewer summary includes the same narrative. Claims are labeled by evidence:
+
+- **filename** — `SOC50` / `SOC30` tokens, or HPPC / QPEED / RPT keywords
+- **step topology** — 2.5 V / 4.2 V limits, residual ~30 mA steps, LOOP counts
+- **voltage setpoint** — mid-window `fEndV` such as 3.318 V used as an SOC stand-in
+
+`fEndC` is unused in the current corpus, so the tool will not invent HPPC 90/50/10 or
+RPT 80/50/20 from a binary that does not store those fractions. REST time is read from
+`fIref` when `fEndTime` is 0. Output is analysis-only.
 
 ## Cell interpretation pipeline
 
