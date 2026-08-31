@@ -14,10 +14,6 @@ from .enums import (
     StepType,
 )
 from .v0x00010003_612 import (
-    OFFSET_F_END_C,
-    OFFSET_F_END_I,
-    OFFSET_F_IREF,
-    OFFSET_F_VREF,
     SCH_FILE_VERSION,
     STEP_RECORD_SIZE,
     VERIFIED_STEP_FIELDS,
@@ -25,11 +21,18 @@ from .v0x00010003_612 import (
 from .layouts import SCH_FILE_MAGIC, SCH_LAYOUTS, SchLayout, get_sch_layout
 from .fields import (
     COMMON_STEP_FIELDS,
+    OFFSET_F_END_C,
+    OFFSET_F_END_I,
+    OFFSET_F_IREF,
+    OFFSET_F_VREF,
+    OFFSET_LOOP_COUNT,
+    OFFSET_LOOP_GOTO,
     STEP_FIELDS_BY_VERSION,
     FieldConfidence,
     SchFieldDefinition,
     get_step_field,
     get_step_fields,
+    validate_step_field_registry,
 )
 
 __all__ = [
@@ -42,6 +45,8 @@ __all__ = [
     "OFFSET_F_END_I",
     "OFFSET_F_IREF",
     "OFFSET_F_VREF",
+    "OFFSET_LOOP_COUNT",
+    "OFFSET_LOOP_GOTO",
     "SCH_FILE_VERSION",
     "SCH_FILE_MAGIC",
     "SCH_LAYOUTS",
@@ -63,4 +68,5 @@ __all__ = [
     "get_step_field",
     "get_step_fields",
     "get_sch_layout",
+    "validate_step_field_registry",
 ]

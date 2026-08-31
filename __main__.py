@@ -16,9 +16,17 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
-    build = sub.add_parser("build", help="Compile a .schproj file to .sch")
+    build = sub.add_parser(
+        "build",
+        help="Compile a .schproj with the experimental, non-equipment-ready writer",
+    )
     build.add_argument("project", type=Path, help="Input .schproj path")
     build.add_argument("-o", "--output", type=Path, required=True, help="Output .sch path")
+    build.add_argument(
+        "--allow-experimental-output",
+        action="store_true",
+        help="Acknowledge that output is not validated for CTSPro or equipment execution",
+    )
 
     info = sub.add_parser("info", help="Show project summary")
     info.add_argument("project", type=Path, help="Input .schproj path")
@@ -28,6 +36,9 @@ def _build_parser() -> argparse.ArgumentParser:
 
     edit = sub.add_parser("edit", help="Open project editor GUI (bulk module edit)")
     edit.add_argument("project", type=Path, nargs="?", help="Optional .schproj to open")
+
+    flow = sub.add_parser("flow", help="Open the module connection flow editor")
+    flow.add_argument("project", type=Path, nargs="?", help="Optional .schproj to open")
 
     resume = sub.add_parser("resume", help="Resume interrupted experiment from .sch + data")
     resume.add_argument("sch", type=Path, help="Original .sch schedule")
@@ -60,6 +71,25 @@ def _build_parser() -> argparse.ArgumentParser:
     compare.add_argument("after", type=Path, help="Single-field-change .sch path")
     compare.add_argument("-o", "--output", type=Path, help="Optional JSON report path")
 
+    patch = sub.add_parser(
+        "patch-sch",
+        help="Write a template-preserving SCH clone from an evidence-gated patch plan",
+    )
+    patch.add_argument("template", type=Path, help="CTSPro-authored template .sch")
+    patch.add_argument("plan", type=Path, help="SCH patch-plan JSON")
+    patch.add_argument("-o", "--output", type=Path, required=True, help="Output .sch path")
+    patch.add_argument("--report", type=Path, help="Patch report JSON path")
+    patch.add_argument(
+        "--allow-analysis-output",
+        action="store_true",
+        help="Acknowledge that the output is not approved for equipment execution",
+    )
+    patch.add_argument(
+        "--allow-unverified-fields",
+        action="store_true",
+        help="Allow offline patching of fields that are not writer-ready",
+    )
+
     return parser
 
 
@@ -77,9 +107,18 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "build":
         from .io.writer import write_sch
 
+        if not args.allow_experimental_output:
+            print(
+                "Refusing to write an SCH file: the writer still uses a placeholder "
+                "header and is not equipment-ready. Pass --allow-experimental-output "
+                "only for offline development.",
+                file=sys.stderr,
+            )
+            return 2
         project = ScheduleProject.load(args.project)
         write_sch(project, args.output)
-        print(f"Wrote {args.output}")
+        print(f"Wrote experimental output to {args.output}")
+        print("WARNING: Do not load or execute this file on PNE equipment.")
         return 0
 
     if args.command == "view":
@@ -92,6 +131,12 @@ def main(argv: list[str] | None = None) -> int:
         from .ui.project_editor import launch_project_editor
 
         launch_project_editor(args.project)
+        return 0
+
+    if args.command == "flow":
+        from .ui.flow_editor import launch_flow_editor
+
+        launch_flow_editor(args.project)
         return 0
 
     if args.command == "resume":
@@ -163,6 +208,36 @@ def main(argv: list[str] | None = None) -> int:
         else:
             print(rendered, end="")
         return 0 if report["compatible"] else 2
+
+    if args.command == "patch-sch":
+        import json
+
+        from .io.template_writer import SchPatchPlan, apply_sch_patch
+
+        try:
+            plan = SchPatchPlan.load(args.plan)
+            result = apply_sch_patch(
+                args.template,
+                plan,
+                args.output,
+                allow_analysis_output=args.allow_analysis_output,
+                allow_unverified_fields=args.allow_unverified_fields,
+            )
+        except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            print(f"SCH patch failed: {exc}", file=sys.stderr)
+            return 2
+
+        report_path = args.report or args.output.with_suffix(
+            args.output.suffix + ".report.json"
+        )
+        report_path.write_text(
+            json.dumps(result.report, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+        print(f"Wrote analysis-only SCH clone to {result.output_path}")
+        print(f"Wrote patch report to {report_path}")
+        print("WARNING: Do not execute this file on PNE equipment.")
+        return 0
 
     return 1
 

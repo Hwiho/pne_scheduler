@@ -19,7 +19,7 @@ from ..schema.enums import (
 )
 from ..engine.c_rate import snap_c_rate
 from ..protocol import ProtocolInference, infer_protocol_from_schedule
-from ..schema.v0x00010003_612 import (
+from ..schema.fields import (
     OFFSET_F_END_C,
     OFFSET_F_END_I,
     OFFSET_F_END_V,

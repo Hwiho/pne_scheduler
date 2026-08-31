@@ -100,11 +100,23 @@ def _topological_module_order(
         return list(modules)
 
     by_id = {m.id: m for m in modules}
+    if len(by_id) != len(modules):
+        raise ValueError("Module ids must be unique")
     incoming = {m.id: 0 for m in modules}
     adjacency: dict[str, list[str]] = {m.id: [] for m in modules}
+    seen_edges: set[tuple[str, str]] = set()
     for edge in connections:
         if edge.source_id not in by_id or edge.target_id not in by_id:
-            continue
+            raise ValueError(
+                "Module connection references an unknown module: "
+                f"{edge.source_id} -> {edge.target_id}"
+            )
+        pair = (edge.source_id, edge.target_id)
+        if pair in seen_edges:
+            raise ValueError(
+                f"Duplicate module connection: {edge.source_id} -> {edge.target_id}"
+            )
+        seen_edges.add(pair)
         adjacency[edge.source_id].append(edge.target_id)
         incoming[edge.target_id] += 1
 
@@ -119,5 +131,5 @@ def _topological_module_order(
                 queue.append(nxt)
 
     if len(ordered_ids) != len(modules):
-        raise ValueError("Module graph has a cycle or disconnected nodes")
+        raise ValueError("Module graph has a cycle")
     return [by_id[mid] for mid in ordered_ids]

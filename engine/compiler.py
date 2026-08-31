@@ -15,7 +15,7 @@ from ..schema import (
     SCH_STEP_TYPE_REST,
     STEP_RECORD_SIZE,
 )
-from ..schema.v0x00010003_612 import (
+from ..schema.fields import (
     OFFSET_F_END_C,
     OFFSET_F_END_I,
     OFFSET_F_END_TIME,

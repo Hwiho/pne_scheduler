@@ -7,7 +7,7 @@ import struct
 import zipfile
 from pathlib import Path
 
-from pne_scheduler.schema.v0x00010003_612 import (
+from pne_scheduler.schema.fields import (
     OFFSET_F_END_C,
     OFFSET_F_END_I,
     OFFSET_F_END_V,
