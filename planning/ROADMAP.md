@@ -388,8 +388,8 @@ than offline file generation and they depend on unresolved schemas.
 | Binary compiler | **spike** | Packs only some fields; does not write core fields such as mode, loop, DCR, and sampling |
 | SCH writer | **Incomplete/guarded** | Uses a 512-byte placeholder header; CLI output now requires explicit experimental acknowledgement and remains offline-only |
 | Round-trip validator | **Incomplete** | The repository can re-read output, but currently compares only step count and has no independent semantic field comparison |
-| GUI | **Partially complete** | Viewer/resume/bulk editor exist; flow editor is a placeholder |
-| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 90 tests |
+| GUI | **Partially complete** | Viewer/resume/bulk editor exist; first flow editor supports module connections, graph validation, property editing, save/load, and step preview |
+| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 98 tests |
 
 ### 6.2 Gate A — Restore the Development Baseline (Highest Priority)
 
@@ -405,7 +405,7 @@ under F6; local pass counts alone are not equipment-compatibility evidence.
 **Progress record**
 - A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
 - A3 complete: automatically verified that the two ZIPs match the 8-file and 93-file extracted directory listings, for a total of 102 files including HPPC
-- A2 complete locally: confirmed `90 passed` and synchronized the README test badge;
+- A2 complete locally: confirmed `98 passed` and synchronized the README test badge;
   adding a hosted CI workflow remains a separate repository-infrastructure task
 
 ### 6.3 Gate B — Establish the Binary Schema as the Single Source of Truth
@@ -459,6 +459,9 @@ output as “equipment-executable.”
 **Progress record**
 - C0 complete: `build` requires `--allow-experimental-output`, prints an equipment warning,
   and has regression coverage for both blocked and acknowledged paths
+- C0.2 partially complete: `patch-sch` verifies the exact template SHA-256, preserves header,
+  file length, topology, and undeclared bytes, re-reads output structurally, and emits a
+  provenance report; semantic fields remain blocked unless explicitly enabled for offline work
 - Controlled diff reports now include source SHA-256, parsed geometry, change totals, and
   unparsed-tail detection so evidence cannot silently ignore bytes after END
 
@@ -479,12 +482,20 @@ integration test before it is marked complete.
 ### 6.6 Gate E — Editing UX and Advanced Features
 
 1. Fixture-based regression tests for the existing viewer/resume/bulk editor
-2. Flow editor module palette, DAG canvas, property panel, and live preview
+2. Flow editor module palette, connection canvas, property panel, and live preview
 3. Validation feedback and blocking of unsafe conditions before export
 4. `.sch` → IR import, 0x00010007/EIS, and fingerprint integration
 5. pne_studio integration
 
 Gate E proceeds after writer compatibility is secured in Gate C.
+
+**Progress record**
+- A first linear-flow editor is available through `pne_scheduler flow` and
+  `run_pne_scheduler_flow.py`
+- The editor rejects cycles and branching, supports `.schproj` load/save and Cell Profile
+  editing, and warns about disconnected graphs or non-final/multiple END steps
+- Drag positioning, richer property widgets, undo/redo, semantic SCH export, and GUI
+  automation remain incomplete
 
 ### 6.7 Gate F — Operational Release and Traceability
 

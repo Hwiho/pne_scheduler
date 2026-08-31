@@ -21,8 +21,10 @@ pip install -e ".[dev]"
 |------|------|
 | `python -m pne_scheduler view [file.sch]` | Open the schedule viewer |
 | `python -m pne_scheduler edit [file.schproj]` | Open the project bulk editor |
+| `python -m pne_scheduler flow [file.schproj]` | Open the module connection editor |
 | `python -m pne_scheduler info file.schproj` | Show a project summary |
 | `python -m pne_scheduler compare before.sch after.sch` | Compare a controlled SCH pair |
+| `python -m pne_scheduler patch-sch template.sch plan.json -o out.sch` | Apply an evidence-gated, template-preserving patch |
 | `python -m pne_scheduler build ... --allow-experimental-output` | Produce offline-only experimental output |
 | `python -m pne_scheduler bulk-edit ...` | Edit compatible module parameters in bulk |
 | `python -m pne_scheduler resume sch data.csv -o resumed.sch` | Build a resume schedule |
@@ -32,8 +34,29 @@ pip install -e ".[dev]"
 ```powershell
 python run_pne_scheduler_viewer.py
 python run_pne_scheduler_editor.py
+python run_pne_scheduler_flow.py
 python run_pne_scheduler_resume.py
 ```
+
+## Template-preserving writer
+
+1. Start from the exact CTSPro-authored SCH file to preserve.
+2. Obtain its SHA-256 from a `compare` report.
+3. Copy `example/sch-patch.template.json` and set the hash, expected version, step number,
+   field, and raw value.
+4. Run `patch-sch`.
+5. Review the generated `.report.json`.
+
+The default path rejects fields that are not marked writer-ready. At present, semantic
+fields still require controlled CTSPro evidence, so `--allow-unverified-fields` is strictly
+for offline reverse-engineering. It does not make a file safe to execute.
+
+## Module flow editor
+
+The flow editor provides a module palette, a visual canvas, linear connection validation,
+module and Cell Profile JSON editors, `.schproj` load/save, and a step-intent preview.
+Multiple inputs, multiple outputs, self-connections, and cycles are rejected because the
+current execution model is a linear schedule.
 
 ## Cell interpretation pipeline
 

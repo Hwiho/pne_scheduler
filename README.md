@@ -4,7 +4,7 @@ Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` sch
 The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
 QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-90%20passed-brightgreen)](#tests)
+[![Tests](https://img.shields.io/badge/tests-98%20passed-brightgreen)](#tests)
 
 > [!WARNING]
 > The from-scratch SCH writer still uses a placeholder header. Its output is not validated
@@ -28,6 +28,9 @@ python run_pne_scheduler_viewer.py
 # Project bulk editor
 python run_pne_scheduler_editor.py
 
+# Module connection flow editor
+python run_pne_scheduler_flow.py
+
 # Interrupted-experiment resume tool
 python run_pne_scheduler_resume.py
 
@@ -35,6 +38,7 @@ python run_pne_scheduler_resume.py
 python run_pne_scheduler.py info example/example.schproj
 python run_pne_scheduler.py view path\to\file.sch
 python -m pne_scheduler compare before.sch after.sch -o comparison.json
+python -m pne_scheduler flow example/example.schproj
 
 # Offline writer development only; never execute this output on equipment
 python run_pne_scheduler.py build example/example.schproj -o output.sch --allow-experimental-output
@@ -46,8 +50,10 @@ python run_pne_scheduler.py build example/example.schproj -o output.sch --allow-
 |------|------|
 | `view [file.sch]` | Show the step table and inferred FP/L/C-rate/protocol |
 | `edit [file.schproj]` | Open the project bulk editor |
+| `flow [file.schproj]` | Arrange, connect, validate, and preview experiment modules |
 | `info file.schproj` | Show a project summary |
 | `compare before.sch after.sch` | Generate a controlled binary-difference report |
+| `patch-sch template.sch plan.json -o out.sch` | Write a byte-preserving, analysis-only template clone |
 | `build ... --allow-experimental-output` | Produce offline-only experimental writer output |
 | `bulk-edit ...` | Edit compatible module parameters in bulk |
 | `resume sch data.csv -o resumed.sch` | Build a template-preserving resume schedule |
@@ -95,6 +101,35 @@ python -m pne_scheduler bulk-edit proj.schproj --all --set rest_s=600
 
 Values may be C-rate strings such as `C/3`, floats, integers, or JSON lists such as
 `[0.8,0.5,0.2]`.
+
+## Template-preserving SCH writer
+
+The limited writer applies typed field patches to an exact CTSPro-authored template. It
+requires the template SHA-256, preserves the header, file length, step topology, and every
+byte outside declared field ranges, then emits a JSON provenance report.
+
+```powershell
+python -m pne_scheduler compare template.sch template.sch
+# Copy example/sch-patch.template.json and insert the reported SHA-256.
+
+python -m pne_scheduler patch-sch template.sch patch.json -o patched.sch
+```
+
+No current semantic field is marked writer-ready because controlled CTSPro reopen evidence
+has not been supplied. `--allow-unverified-fields` enables offline research output only and
+always prints an equipment warning.
+
+## Module flow editor
+
+```powershell
+python run_pne_scheduler_flow.py
+# or
+python -m pne_scheduler flow example/example.schproj
+```
+
+The first GUI version supports adding/removing modules, explicit connections, automatic
+linear chaining, JSON property editing, Cell Profile editing, graph validation, `.schproj`
+load/save, and expanded step preview. It intentionally does not send files to equipment.
 
 ## Resume interrupted experiment
 
