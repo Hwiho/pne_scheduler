@@ -1,0 +1,21 @@
+00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no1.sch
+00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no3.sch
+00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no4.sch
+00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no5.sch
+00207966_260429_8stack_45╡╡ 0.5C cycle_SJ900╜└╜─_no1.sch
+00207966_260514_bimodal ╛τ▒╪ ╞≥░í_45╡╡ ╗τ└╠┼¼.sch
+00207966_260514_bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_45╡╡ ╗τ└╠┼¼.sch
+00207966_260519_S83S-SJ1300 ╡╡0%_45╡╡ ╗τ└╠┼¼.sch
+00207966_260519_S83S-SJ1300 ╡╡1%_45╡╡ ╗τ└╠┼¼.sch
+00207966_260519_╛τ▒╪86wt%-SJ1300 ╡╡1%_45╡╡ ╗τ└╠┼¼.sch
+86wt%-SJ1300 ╡╡1%_0.5C cycle.sch
+Capacheck_3)Set3_Capa_cycle_├¿╣÷╣╠┐¼╡┐.sch
+S83S-SJ1300 ╡╡0%_0.5C cycle.sch
+S83S-SJ1300 ╡╡1%_0.5C cycle.sch
+SJ1300_no1_0.5C cycle.sch
+SJ1300_no3_0.5C cycle.sch
+SJ1300_no4_0.5C cycle.sch
+SJ1300_no5_0.5C cycle.sch
+SJ900_no1_0.5C cycle.sch
+bimodal_0.5C cycle.sch
+bimodal_ref ╛τ▒╪_0.5C cycle.sch

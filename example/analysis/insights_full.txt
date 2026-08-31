@@ -1,0 +1,137 @@
+=== ALL FILES BY CATEGORY ===
+
+## capacheck (8)
+  00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no1.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,~0.07C,~0.36C
+  00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no3.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,~0.07C,~0.36C
+  00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no4.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,~0.07C,~0.36C
+  00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no5.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,~0.07C,~0.36C
+  00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ900╜└╜─_no1.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,~0.07C,~0.36C
+  1Ah capacheck.sch | steps=19 | L=L5 | maxI=86400 | C=~0.00C,~0.07C,~0.43C,~2.29C
+  2Ah capacheck.sch | steps=19 | L=L5 | maxI=86400 | C=~0.00C,~0.07C,~0.14C,~0.43C
+  Capacheck_3)Set3_Capa_cycle_├¿╣÷╣╠┐¼╡┐.sch | steps=41 | L=L5 | maxI=21600 | C=1C,~0.00C,~0.02C,~0.07C
+
+## cycle_life (24)
+  0.5C cycle.sch | steps=31 | L=L5 | maxI=172800 | C=4.5C,~0.00C,~0.07C,~0.43C
+  00207966_250616_1Ah_swelling_Gore 2.5Mpa_0.5C cycle_1-300.sch | steps=31 | L=L5 | maxI=172800 | C=4.5C,~0.00C,~0.07C,~0.43C
+  00207966_250616_1Ah_swelling_Gore 3Mpa_0.5C cycle_1-300.sch | steps=31 | L=L5 | maxI=172800 | C=4.5C,~0.00C,~0.07C,~0.43C
+  00207966_250616_1Ah_swelling_no pad_0.5C cycle_1-300.sch | steps=31 | L=L5 | maxI=172800 | C=4.5C,~0.00C,~0.07C,~0.43C
+  00207966_250916_Gr-SiC_288kgf_1.0Mpa_0.5C cycle.sch | steps=25 | L=L5 | maxI=54000 | C=1.5C,C/2,~0.00C,~0.07C
+  00207966_250916_Gr-SiC_288kgf_1.5Mpa_0.5C cycle.sch | steps=25 | L=L5 | maxI=54000 | C=1.5C,C/2,~0.00C,~0.07C
+  00207966_250916_Gr-SiC_288kgf_2.0Mpa_0.5C cycle.sch | steps=25 | L=L5 | maxI=54000 | C=1.5C,C/2,~0.00C,~0.07C
+  00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no1.sch | steps=41 | L=L5 | maxI=21600 | C=~0.00C,~0.02C,~0.07C,~0.14C
+  00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no3.sch | steps=41 | L=L5 | maxI=21600 | C=~0.00C,~0.02C,~0.07C,~0.14C
+  00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no4.sch | steps=41 | L=L5 | maxI=21600 | C=~0.00C,~0.02C,~0.07C,~0.14C
+  00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no5.sch | steps=41 | L=L5 | maxI=21600 | C=~0.00C,~0.02C,~0.07C,~0.14C
+  00207966_260429_8stack_45╡╡ 0.5C cycle_SJ900╜└╜─_no1.sch | steps=41 | L=L5 | maxI=21600 | C=~0.00C,~0.02C,~0.07C,~0.14C
+  86wt%-SJ1300 ╡╡1%_0.5C cycle.sch | steps=41 | L=L5 | maxI=25200 | C=1C,C/2,~0.00C,~0.02C
+  S83S-SJ1300 ╡╡0%_0.5C cycle.sch | steps=41 | L=L5 | maxI=25200 | C=1C,~0.00C,~0.02C,~0.07C
+  S83S-SJ1300 ╡╡1%_0.5C cycle.sch | steps=41 | L=L5 | maxI=25200 | C=1C,~0.00C,~0.02C,~0.07C
+  SJ1300_no1_0.5C cycle.sch | steps=41 | L=L5 | maxI=21600 | C=~0.00C,~0.02C,~0.07C,~0.14C
+  SJ1300_no3_0.5C cycle.sch | steps=41 | L=L5 | maxI=21600 | C=~0.00C,~0.02C,~0.07C,~0.14C
+  SJ1300_no4_0.5C cycle.sch | steps=41 | L=L5 | maxI=21600 | C=~0.00C,~0.02C,~0.07C,~0.14C
+  SJ1300_no5_0.5C cycle.sch | steps=41 | L=L5 | maxI=21600 | C=~0.00C,~0.02C,~0.07C,~0.14C
+  SJ900_no1_0.5C cycle.sch | steps=41 | L=L5 | maxI=21600 | C=~0.00C,~0.02C,~0.07C,~0.14C
+  SiC_0.5CCycle_1Ah.sch | steps=25 | L=L5 | maxI=54000 | C=1.5C,C/2,~0.00C,~0.07C
+  bimodal_0.5C cycle.sch | steps=41 | L=L4.3 | maxI=25200 | C=1C,~0.00C,~0.03C,~0.08C
+  bimodal_ref ╛τ▒╪_0.5C cycle.sch | steps=41 | L=L5 | maxI=25200 | C=1C,~0.00C,~0.02C,~0.07C
+  └╙╝÷╟÷_SiC_0.5CCycle_1Ah_├¿╣÷╣╠┐¼╡┐.sch | steps=25 | L=L5 | maxI=54000 | C=1.5C,C/2,~0.00C,~0.07C
+
+## formation (12)
+  00207966_250611_1Ah_swelling 1st_FM.sch | steps=19 | L=L5 | maxI=172800 | C=4.5C,~0.00C,~0.07C,~0.43C
+  00207966_250912_1Ah_Gr-SiC_├╩▒Γ░í╛╨ ╞≥░í┐δ_FM.sch | steps=19 | L=L5 | maxI=86400 | C=~0.00C,~0.01C,~0.07C,~2.29C
+  00207966_260421_8stack_SJ900 ╜└╜─_FM.sch | steps=9 | L=L5 | maxI=54000 | C=1.5C,~0.01C,~0.07C
+  00207966_260421_8stack_SJ900 ╜└╜─_FM_000.sch | steps=9 | L=L5 | maxI=54000 | C=1.5C,~0.01C,~0.07C
+  00207966_260422_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch | steps=7 | L=L5 | maxI=7200 | C=0.2C,~0.01C,~0.07C
+  00207966_260424_8stack_SJ1300 ░╟╜─1┬≈_FM_SOC30 ╝╝╞├.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,C/2,~0.07C,~0.43C
+  00207966_260427_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch | steps=7 | L=L5 | maxI=10800 | C=~0.07C,~0.29C,~0.43C
+  Monocell_FM_L4.3.sch | steps=9 | L=L4.3 | maxI=54000 | C=2.5C,C/2,~0.08C
+  Monocell_FM_L5.0.sch | steps=9 | L=L5 | maxI=54000 | C=~0.07C,~0.43C,~2.15C
+  Monocell_FM_L5.6.sch | steps=9 | L=L5.5 | maxI=54000 | C=2C,~0.07C,~0.39C
+  SJ1300 ░╟╜─_8╜║┼├_FM.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,C/2,~0.07C,~0.43C
+  SJ900 ╜└╜─_8╜║┼├_FM.sch | steps=9 | L=L5 | maxI=54000 | C=1.5C,~0.01C,~0.07C
+
+## unknown (49)
+  0.1C capa_SJ1300░╟╜─ #1.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,~0.07C,~0.36C
+  0.1C capa_SJ1300░╟╜─ #3.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,~0.07C,~0.36C
+  0.1C capa_SJ1300░╟╜─ #4.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,~0.07C,~0.36C
+  0.1C capa_SJ1300░╟╜─ #5.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,~0.07C,~0.36C
+  0.1C capa_SJ900 #1.sch | steps=13 | L=L5 | maxI=54000 | C=1.5C,~0.07C,~0.36C
+  00207966_250611_capa.sch | steps=3 | L=L5 | maxI=0 | C=~0.00C
+  00207966_250611_capa2.sch | steps=3 | L=L5 | maxI=0 | C=~0.00C
+  00207966_250723_FD_╜║╟┴╕╡┴÷▒╫.sch | steps=25 | L=L5 | maxI=86400 | C=~0.00C,~0.07C,~0.14C,~0.86C
+  00207966_250723_FD_░φ┴ñ┴÷▒╫.sch | steps=25 | L=L5 | maxI=86400 | C=~0.00C,~0.07C,~0.14C,~0.86C
+  00207966_250827_Gr_2Mpa_288kgf╜║╟┴╕╡┴÷▒╫.sch | steps=25 | L=L5 | maxI=86400 | C=~0.00C,~0.07C,~0.14C,~1.15C
+  00207966_250827_Gr_2Mpa_90kgf╜║╟┴╕╡┴÷▒╫.sch | steps=25 | L=L5 | maxI=86400 | C=~0.00C,~0.07C,~0.14C,~1.15C
+  00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ.sch | steps=19 | L=L5 | maxI=86400 | C=~0.00C,~0.07C,~0.14C,~0.43C
+  00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ_000.sch | steps=19 | L=L5 | maxI=86400 | C=~0.00C,~0.07C,~0.14C,~0.43C
+  00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ_001.sch | steps=19 | L=L5 | maxI=86400 | C=~0.00C,~0.07C,~0.14C,~0.43C
+  00207966_251016_1Ah_f.sch | steps=19 | L=L5 | maxI=86400 | C=~0.00C,~0.07C,~0.43C,~2.29C
+  00207966_260116_╖╬╡∙╞≥░í_L4.3-no7.sch | steps=9 | L=L4.3 | maxI=54000 | C=2.5C,C/2,~0.08C
+  00207966_260116_╖╬╡∙╞≥░í_L5.0-no5.sch | steps=9 | L=L5 | maxI=54000 | C=~0.07C,~0.43C,~2.15C
+  00207966_260116_╖╬╡∙╞≥░í_L5.6-no7.sch | steps=9 | L=L5.5 | maxI=54000 | C=2C,~0.07C,~0.39C
+  00207966_260514_bimodal ╛τ▒╪ ╞≥░í_45╡╡ ╗τ└╠┼¼.sch | steps=41 | L=L5 | maxI=25200 | C=1C,~0.00C,~0.02C,~0.07C
+  00207966_260514_bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_45╡╡ ╗τ└╠┼¼.sch | steps=41 | L=L5 | maxI=25200 | C=1C,~0.00C,~0.02C,~0.07C
+  00207966_260519_S83S-SJ1300 ╡╡0%_45╡╡ ╗τ└╠┼¼.sch | steps=41 | L=L5 | maxI=25200 | C=1C,~0.00C,~0.02C,~0.07C
+  00207966_260519_S83S-SJ1300 ╡╡1%_45╡╡ ╗τ└╠┼¼.sch | steps=41 | L=L5 | maxI=25200 | C=1C,~0.00C,~0.02C,~0.07C
+  00207966_260519_╛τ▒╪86wt%-SJ1300 ╡╡1%_45╡╡ ╗τ└╠┼¼.sch | steps=41 | L=L5 | maxI=25200 | C=1C,C/2,~0.00C,~0.02C
+  00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch | steps=5 | L=L5 | maxI=36000 | C=~0.02C,~0.07C,~1.67C
+  00207966_260819_514bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch | steps=5 | L=L5 | maxI=36000 | C=~0.02C,~0.07C,~1.67C
+  00207966_260820_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch | steps=5 | L=L5 | maxI=36000 | C=~0.02C,~0.07C,~1.67C
+  00207966_260820_░φ┐┬╚░╝║╚¡ ░φ┐┬└·└σ set1_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch | steps=5 | L=L5 | maxI=36000 | C=~0.02C,~0.07C,~1.67C
+  07100766_260522_Set1_SJ900_wet_QC_1_charge.sch | steps=24 | L=L5 | maxI=21600 | C=1C,C/3,~0.02C,~0.03C
+  07100766_260522_Set2_SJ1300_60-40_wet_QC_1_charge.sch | steps=25 | L=L5 | maxI=21600 | C=1C,~0.01C,~0.07C,~0.29C
+  07100766_260522_Set2_SJ1300_60-40_wet_QC_cycle.sch | steps=17 | L=L5 | maxI=21600 | C=1C,~0.01C,~0.02C,~0.07C
+  07100766_260522_Set3_SJ1300_65-35_wet_QC_1_charge.sch | steps=25 | L=L5 | maxI=21600 | C=1C,C/3,~0.01C,~0.02C
+  07100766_260522_Set3_SJ1300_65-35_wet_QC_cycle.sch | steps=17 | L=L5 | maxI=21600 | C=1C,~0.01C,~0.02C,~0.07C
+  07100766_260522_Set4_SJ900_dry_QC_1_charge.sch | steps=26 | L=L5 | maxI=21600 | C=1C,C/3,~0.00C,~0.01C
+  07100766_260522_Set4_SJ900_dry_QC_1_charge_2.sch | steps=24 | L=L5 | maxI=21600 | C=1C,C/3,~0.02C,~0.03C
+  07100766_260522_Set4_SJ900_dry_QC_1_charge_3.sch | steps=24 | L=L5 | maxI=21600 | C=1C,C/3,~0.02C,~0.03C
+  07100766_260522_Set4_SJ900_dry_QC_cycle.sch | steps=18 | L=L5 | maxI=21600 | C=1C,~0.00C,~0.01C,~0.07C
+  F-D.sch | steps=25 | L=L5 | maxI=86400 | C=~0.00C,~0.07C,~0.14C,~1.15C
+  SJ900 ╜└╜─_8╜║┼├_SOC30╝╝╞├.sch | steps=7 | L=L5 | maxI=10800 | C=~0.07C,~0.29C,~0.43C
+  Set1_QC_1_charge.sch | steps=24 | L=L5 | maxI=21600 | C=1C,C/3,~0.02C,~0.03C
+  Set2_QC_1N1Q.sch | steps=17 | L=L5 | maxI=21600 | C=1C,~0.01C,~0.02C,~0.07C
+  Set2_QC_1_charge.sch | steps=25 | L=L5 | maxI=21600 | C=1C,~0.01C,~0.07C,~0.29C
+  Set3_QC_1N1Q.sch | steps=17 | L=L5 | maxI=21600 | C=1C,~0.01C,~0.02C,~0.07C
+  Set3_QC_1_charge.sch | steps=25 | L=L5 | maxI=21600 | C=1C,C/3,~0.01C,~0.02C
+  Set4_QC_1N1Q.sch | steps=18 | L=L5 | maxI=21600 | C=1C,~0.00C,~0.01C,~0.07C
+  Set4_QC_1_charge.sch | steps=26 | L=L5 | maxI=21600 | C=1C,C/3,~0.00C,~0.01C
+  └ⁿ╖∙└╬░í.sch | steps=3 | L=L5 | maxI=0 | C=~0.00C
+  ╜┼└»┴ñ_1Ah QC_1N1Q_910.727mAh_├¿╣÷╣╠┐¼╡┐.sch | steps=17 | L=L5 | maxI=1800 | C=~0.00C,~0.01C,~0.02C,~0.07C
+  ╜┼└»┴ñ_1Ah_QC 1 charge_948.729mAh_├¿╣÷╣╠┐¼╡┐.sch | steps=25 | L=L5 | maxI=21600 | C=~0.00C,~0.01C,~0.02C,~0.07C
+  ╣µ└ⁿ.sch | steps=5 | L=L5 | maxI=36000 | C=~0.02C,~0.07C,~1.67C
+
+=== FORMATION (FM) ===
+  00207966_250611_1Ah_swelling 1st_FM.sch | steps=19 | C=['4.5C', '~0.00C', '~0.07C', '~0.43C', '~2.29C']
+  00207966_250912_1Ah_Gr-SiC_├╩▒Γ░í╛╨ ╞≥░í┐δ_FM.sch | steps=19 | C=['~0.00C', '~0.01C', '~0.07C', '~2.29C']
+  00207966_260421_8stack_SJ900 ╜└╜─_FM.sch | steps=9 | C=['1.5C', '~0.01C', '~0.07C']
+  00207966_260421_8stack_SJ900 ╜└╜─_FM_000.sch | steps=9 | C=['1.5C', '~0.01C', '~0.07C']
+  00207966_260422_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch | steps=7 | C=['0.2C', '~0.01C', '~0.07C']
+  00207966_260424_8stack_SJ1300 ░╟╜─1┬≈_FM_SOC30 ╝╝╞├.sch | steps=13 | C=['1.5C', 'C/2', '~0.07C', '~0.43C']
+  00207966_260427_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch | steps=7 | C=['~0.07C', '~0.29C', '~0.43C']
+  Monocell_FM_L4.3.sch | steps=9 | C=['2.5C', 'C/2', '~0.08C']
+  Monocell_FM_L5.0.sch | steps=9 | C=['~0.07C', '~0.43C', '~2.15C']
+  Monocell_FM_L5.6.sch | steps=9 | C=['2C', '~0.07C', '~0.39C']
+  SJ1300 ░╟╜─_8╜║┼├_FM.sch | steps=13 | C=['1.5C', 'C/2', '~0.07C', '~0.43C']
+  SJ900 ╜└╜─_8╜║┼├_FM.sch | steps=9 | C=['1.5C', '~0.01C', '~0.07C']
+
+=== EXPLICIT L FILES ===
+  00207966_260116_╖╬╡∙╞≥░í_L4.3-no7.sch | inferred L=L4.3 src=combined
+  00207966_260116_╖╬╡∙╞≥░í_L5.0-no5.sch | inferred L=L5 src=combined
+  00207966_260116_╖╬╡∙╞≥░í_L5.6-no7.sch | inferred L=L5.5 src=combined
+  Monocell_FM_L4.3.sch | inferred L=L4.3 src=combined
+  Monocell_FM_L5.0.sch | inferred L=L5 src=combined
+  Monocell_FM_L5.6.sch | inferred L=L5.5 src=combined
+
+=== SMALL SCHEDULES (<=7 steps) ===
+  00207966_250611_capa.sch | steps=3 | ['~0.00C']
+  00207966_250611_capa2.sch | steps=3 | ['~0.00C']
+  └ⁿ╖∙└╬░í.sch | steps=3 | ['~0.00C']
+  00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch | steps=5 | ['~0.02C', '~0.07C', '~1.67C']
+  00207966_260819_514bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch | steps=5 | ['~0.02C', '~0.07C', '~1.67C']
+  00207966_260820_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch | steps=5 | ['~0.02C', '~0.07C', '~1.67C']
+  00207966_260820_░φ┐┬╚░╝║╚¡ ░φ┐┬└·└σ set1_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch | steps=5 | ['~0.02C', '~0.07C', '~1.67C']
+  ╣µ└ⁿ.sch | steps=5 | ['~0.02C', '~0.07C', '~1.67C']
+  00207966_260422_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch | steps=7 | ['0.2C', '~0.01C', '~0.07C']
+  00207966_260427_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch | steps=7 | ['~0.07C', '~0.29C', '~0.43C']
+  SJ900 ╜└╜─_8╜║┼├_SOC30╝╝╞├.sch | steps=7 | ['~0.07C', '~0.29C', '~0.43C']

@@ -1,0 +1,36 @@
+{
+  "schema": "pne_scheduler.schproj/v1",
+  "name": "Example formation + cycle life",
+  "sch_version": 65539,
+  "cell_profile": {
+    "nominal_capacity_mAh": 80.0,
+    "v_max": 4.2,
+    "v_min": 2.5,
+    "max_current_mA": 800.0
+  },
+  "modules": [
+    {
+      "id": "formation_1",
+      "module_type": "formation",
+      "params": {
+        "charge_c_rate": 0.1,
+        "discharge_c_rate": 0.1,
+        "rest_s": 600.0,
+        "cycle_count": 2
+      }
+    },
+    {
+      "id": "cycle_life_1",
+      "module_type": "cycle_life",
+      "params": {
+        "charge_c_rate": 0.5,
+        "discharge_c_rate": 0.5,
+        "rest_s": 300.0,
+        "loop_count": 10
+      }
+    }
+  ],
+  "connections": [
+    { "source_id": "formation_1", "target_id": "cycle_life_1" }
+  ]
+}

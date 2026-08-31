@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pne-scheduler"
+version = "0.1.0"
+description = "PNE cycler .sch schedule builder, viewer, and resume tools for ASSB lab protocols"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [{ name = "Hwiho Kim", email = "hwiho@hotmail.com" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+pne-scheduler = "pne_scheduler.__main__:main"
+
+[tool.setuptools.package-dir]
+"pne_scheduler" = "."
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pne_scheduler*"]
+namespaces = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
