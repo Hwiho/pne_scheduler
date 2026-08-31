@@ -77,6 +77,43 @@ def test_diff_refuses_to_align_incompatible_layouts() -> None:
     assert report["step_changes"] == []
 
 
+def test_diff_refuses_to_align_changed_step_number_sequence(tmp_path: Path) -> None:
+    after = bytearray(CAPACHECK.read_bytes())
+    struct.pack_into("<i", after, 1760 + 5 * 612, 99)
+    after_path = tmp_path / "renumbered.sch"
+    after_path.write_bytes(after)
+
+    report = compare_sch_files(CAPACHECK, after_path)
+
+    assert report["compatible"] is False
+    assert report["warnings"] == [
+        "Step number sequences differ; step records were not aligned automatically."
+    ]
+    assert report["step_changes"] == []
+
+
+def test_diff_reports_hashes_summary_and_unparsed_tail(tmp_path: Path) -> None:
+    after_path = tmp_path / "with-tail.sch"
+    after_path.write_bytes(CAPACHECK.read_bytes() + b"\x01")
+
+    report = compare_sch_files(CAPACHECK, after_path)
+
+    assert len(report["before"]["sha256"]) == 64
+    assert len(report["after"]["sha256"]) == 64
+    assert report["before"]["sha256"] != report["after"]["sha256"]
+    assert report["summary"]["files_identical"] is False
+    assert report["summary"]["unparsed_changed_byte_count"] == 1
+    assert report["unparsed_tail_changes"] == [
+        {
+            "start": 0,
+            "end_exclusive": 1,
+            "length": 1,
+            "before_hex": "",
+            "after_hex": "01",
+        }
+    ]
+
+
 def test_validation_intake_template_is_non_executing() -> None:
     template = json.loads(
         (ROOT / "example" / "validation-intake.template.json").read_text(

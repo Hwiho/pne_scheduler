@@ -61,11 +61,13 @@ python -m pne_scheduler.tools.compare_sch `
 
 The report includes:
 
+- SHA-256 and file size for exact artifact provenance.
 - Version, payload offset, record size, and step count for each file.
 - Header byte ranges that changed.
 - Changed byte ranges grouped by step.
 - Aligned 4-byte interpretations as hex, unsigned integer, signed integer, and float.
 - Known field names and their current evidence confidence.
+- Summary counts and any changed bytes after the parsed END record.
 
 If layouts or step counts differ, the tool reports incompatibility instead of aligning
 unrelated records.
