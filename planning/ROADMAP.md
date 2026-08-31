@@ -369,7 +369,7 @@ class ExperimentModule(Protocol):
 **진행 기록**
 - A1 완료: editable install과 별도 target에 설치한 wheel에서 package/subpackage import 확인
 - A3 완료: 두 ZIP과 추출 디렉터리의 8개·93개 목록 일치, HPPC 포함 총 102개 자동 확인
-- A2 진행 중: 로컬 전체 테스트는 실행 가능하며 CI 기준 고정과 README 수치 갱신이 남음
+- A2 진행 중: 로컬 `72 passed` 확인; CI 기준 고정과 README 수치 갱신이 남음
 
 ### 6.3 Gate B — 바이너리 스키마를 단일 정본으로 확정
 
