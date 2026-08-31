@@ -27,7 +27,7 @@ Enable creation of `.sch` binary schedule files for PNE cyclers **without using 
 
 | Source | Role | Status |
 |--------|------|--------|
-| `c:\sch_file_structure_20250211.xlsx` | Official PNE field definitions (by version) | **Canonical specification** |
+| `c:\sch_file_structure_20250211.xlsx` | Expected official PNE field definitions (by version) | Canonical when supplied and provenance-checked; not present in this repository |
 | `ASSB_Analyzer_dev` → `assb_analyzer/io/pne_converter.py` | Reading, validation, and metadata extraction | Optional external validator; not included in the repository |
 | `_vendor/Ensol_PNE_framework/pne_app/io/pne_converter.py` | Partial reader for CycleNum and DCIR reference | Local vendor copy |
 | `assb_analyzer/io/cell_c_rate_reference.py` | C-rate ↔ capacity ↔ current (analysis side) | **Logic reusable by the writer** |
@@ -36,6 +36,8 @@ Enable creation of `.sch` binary schedule files for PNE cyclers **without using 
 > **Current implementation:** The standalone layout detector/viewer parser in `io/sch_parser.py`
 > coexists with the ASSB/Ensol adapter in `io/reader.py`. `io/writer.py` is a spike
 > that writes a 512-byte placeholder header and must not yet be considered a PNE-compatible writer.
+> The CLI blocks `build` by default unless the developer explicitly passes
+> `--allow-experimental-output`; even acknowledged output is for offline analysis only.
 
 ### 2.2 File Versions (Excel Sheets)
 
@@ -138,21 +140,24 @@ Later fields are shifted by 8 bytes in comparable schedules, so a separate field
 
 ### 2.6 Core Step Fields (Required for Experiment Module Design)
 
-| Field | Meaning | Module input |
-|-------|---------|--------------|
-| `fVref` | Target voltage (V) | Charge upper limit / discharge lower limit |
-| `fIref` | Target current (mA, equipment raw value) | Calculated as **C-rate × reference capacity** |
-| `fEndTime` | End time (sec) | Rest, interval between HPPC pulses |
-| `fEndV` | End voltage | CC-CV transition, discharge termination |
-| `fEndI` | End current (CV cutoff) | Specified as a C-rate such as C/20 or C/50 |
-| `fEndC` | End capacity (mAh) | SOC setting, partial cycle |
-| `fEndCVTime` | CV phase duration | |
-| `nLoopInfoGoto/Cycle` | Loop target/count | Cycle-life experiments, RPT period |
-| `nGotoStepID` | SOC reference step | DC-IR SOC setting |
-| `fDCRStartTime/EndTime` | DCIR measurement window | DC-IR module |
-| `fDeltaTime/V/I` | Data sampling | Default profile |
-| `fSocRate` | SOC ratio | SOC setting step |
-| `fMaxCapacity` | Reference capacity (mAh) | Basis for C-rate calculation |
+These names describe the intended module contract, not a claim that every binary offset and
+unit is verified. `schema/fields.py` is authoritative for current evidence confidence.
+
+| Field | Intended meaning | Current evidence | Module input |
+|-------|------------------|------------------|--------------|
+| `fVref` | Target voltage | Semantic unverified | Charge upper limit / discharge lower limit |
+| `fIref` | Target current | Semantic unverified; equipment scaling unresolved | **C-rate × reference capacity** |
+| `fEndTime` | End time | Semantic unverified | Rest or pulse interval |
+| `fEndV` | End voltage | Corpus inferred | CC-CV transition or discharge termination |
+| `fEndI` | End current | Corpus inferred | CV cutoff C-rate |
+| `fEndC` | End capacity | Semantic unverified; no nonzero fixture | SOC setting or partial cycle |
+| `fEndCVTime` | CV phase duration | Offset unresolved | CV duration |
+| `loop_target/count` | Loop target and count | Corpus inferred at `+48/+52` | Cycle-life and RPT loops |
+| `nGotoStepID` | SOC reference step | Offset/semantics unresolved | DC-IR SOC setting |
+| `fDCRStartTime/EndTime` | DCIR measurement window | Offset/semantics unresolved | DC-IR module |
+| `fDeltaTime/V/I` | Data sampling | Offset/semantics unresolved | Sampling profile |
+| `fSocRate` | SOC ratio | Legacy offset only | SOC setting step |
+| `fMaxCapacity` | Reference capacity | Legacy offset only | C-rate calculation basis |
 
 ---
 
@@ -344,6 +349,28 @@ class ExperimentModule(Protocol):
 | **Chiller / thermal profile** | fTref, chiller fields (0x00010007) |
 | **Version control** | `.schproj` git-friendly JSON + diff view |
 
+### 5.5 Recommended Feature Order
+
+The next product work should favor verifiable, template-preserving operations before
+from-scratch binary generation.
+
+| Priority | Feature | Why it belongs here | Dependency |
+|----------|---------|---------------------|------------|
+| P0 | **Safe export gate and build manifest** | Prevents experimental output from being mistaken for equipment-ready SCH; records source hash, schema evidence, target profile, and validation results | Available now |
+| P0 | **Template-preserving SCH patcher** | Reuses a CTSPro-authored header and unknown bytes while changing only allowlisted, evidence-qualified fields | Controlled field pairs and reopen checks |
+| P0 | **Semantic SCH diff** | Shows step-level intent changes instead of only raw bytes and can assert that the expected field alone changed | Reader field coverage |
+| P0 | **Target equipment profile** | Makes PNE02/16/21/22, current range, CTSPro version, units, and supported layout explicit instead of inferring them from filenames | User/INI metadata |
+| P1 | **Schedule linter and execution preview** | Detects invalid loops, missing END, unsafe V/I limits, unreachable steps, and implausible duration before export | IR and parser |
+| P1 | **Read-only SCH → IR import** | Enables review, cloning, and diffing of existing schedules before editable round-trip is trusted | Semantic reader coverage |
+| P1 | **Versioned protocol templates** | Makes Formation/Cycle/RPT/HPPC defaults reviewable and traceable by equipment profile | Golden module fixtures |
+| P2 | **Parameter sweep and batch export** | Produces controlled variants after one template is verified | Safe patcher and manifest |
+| P2 | **Approval/audit bundle** | Packages SCH hash, human-readable step table, diff report, screenshots, and operator approval | Stable export workflow |
+| P3 | **Visual flow editor** | Improves composition UX after the underlying semantic and safety contracts are reliable | Gates C, D, and release gate |
+
+Features that should not be prioritized yet are direct hardware control, automatic upload to
+cycler PCs, and broad 0x00010007/EIS generation. Their failure modes are harder to inspect
+than offline file generation and they depend on unresolved schemas.
+
 ---
 
 ## 6. Implementation Roadmap
@@ -359,10 +386,10 @@ class ExperimentModule(Protocol):
 | `.schproj` IR/JSON | **Partially complete** | Serialization and linear DAG sorting implemented; no schema validation/version migration |
 | Experiment modules | **prototype** | expand implemented for Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED, etc. |
 | Binary compiler | **spike** | Packs only some fields; does not write core fields such as mode, loop, DCR, and sampling |
-| SCH writer | **Incomplete/do not use** | Uses a 512-byte placeholder header; actual file sections are not implemented |
+| SCH writer | **Incomplete/guarded** | Uses a 512-byte placeholder header; CLI output now requires explicit experimental acknowledgement and remains offline-only |
 | Round-trip validator | **Incomplete** | Validation is impossible without an external parser, and currently only the step count is compared |
 | GUI | **Partially complete** | Viewer/resume/bulk editor exist; flow editor is a placeholder |
-| Test execution environment | **Restored** | Editable install and wheel import succeed after explicitly registering the root-layout package |
+| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 86 tests |
 
 ### 6.2 Gate A — Restore the Development Baseline (Highest Priority)
 
@@ -378,7 +405,7 @@ completion statuses may be used as release evidence.
 **Progress record**
 - A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
 - A3 complete: automatically verified that the two ZIPs match the 8-file and 93-file extracted directory listings, for a total of 102 files including HPPC
-- A2 complete locally: confirmed `78 passed` and synchronized the README test badge;
+- A2 complete locally: confirmed `86 passed` and synchronized the README test badge;
   adding a hosted CI workflow remains a separate repository-infrastructure task
 
 ### 6.3 Gate B — Establish the Binary Schema as the Single Source of Truth
@@ -389,6 +416,7 @@ completion statuses may be used as release evidence.
 | B2 | Resolve parser/schema/compiler offset discrepancies | In particular, compare `fEndV`, `fEndI`, and `fEndC` against originals, Excel, and ASSB results |
 | B3 | Read regression over all 102 original files | Detect version, payload offset, step size/count for all 8 + 93 + HPPC files |
 | B4 | Semantic golden tests for representative fixtures | Step types and core values for Formation/Cycle/RPT/QPEED/HPPC match golden data |
+| B5 | Validate controlled-pair intake metadata | Reject incomplete equipment/version/value provenance before promoting field confidence |
 
 The end-condition offsets in `schema/v0x00010003_612.py`, `io/sch_parser.py`, and
 `engine/compiler.py` have been unified based on analysis of the original corpus. Analysis
@@ -409,6 +437,9 @@ manifest and golden tests are authoritative.
 
 | # | Task | Completion criteria |
 |---|------|---------------------|
+| C0 | Guard experimental output | Default CLI refuses from-scratch output; explicit acknowledgement still prints a non-equipment warning |
+| C0.1 | Build validation manifest | Every output records source/template hash, target profile, changed fields, evidence levels, and validation results |
+| C0.2 | Template-preserving patch vertical slice | Change only allowlisted writer-ready fields in an approved CTSPro template and prove all other bytes are preserved |
 | C1 | Full header/test-info/cell-check writer for `0x00010003` | Generate the defined payload offset and size without placeholders |
 | C2 | Complete the step compiler | Write mode, end conditions, loop/goto, sampling, SOC, and DCR fields |
 | C3 | Make the internal round-trip validator independent | Semantic write → read comparison without an external ASSB installation |
@@ -420,6 +451,12 @@ The 612-byte implementation is the first vertical slice for establishing the sch
 for 696-byte records is essential for actual lab parity, so the writer must not be marked fully
 complete until C6 is finished. Until a successful PNE load, do not document CLI `build`
 output as “equipment-executable.”
+
+**Progress record**
+- C0 complete: `build` requires `--allow-experimental-output`, prints an equipment warning,
+  and has regression coverage for both blocked and acknowledged paths
+- Controlled diff reports now include source SHA-256, parsed geometry, change totals, and
+  unparsed-tail detection so evidence cannot silently ignore bytes after END
 
 ### 6.5 Gate D — Experiment Module Fixture Fidelity
 
@@ -442,6 +479,21 @@ integration test before it is marked complete.
 5. pne_studio integration
 
 Gate E proceeds after writer compatibility is secured in Gate C.
+
+### 6.7 Gate F — Operational Release and Traceability
+
+| # | Task | Completion criteria |
+|---|------|---------------------|
+| F1 | Target equipment compatibility report | Export names the intended PNE unit/range, CTSPro version, layout, and unresolved assumptions |
+| F2 | Reopen approval record | CTSPro opens the exact SHA-256 artifact and the operator records the result |
+| F3 | Equipment smoke-test protocol | Empty-channel or approved dummy-cell procedure, abort criteria, expected readings, and signed result |
+| F4 | Artifact immutability | The smoke-tested hash is identical to the released hash; regenerated files require reapproval |
+| F5 | Release status labels | Distinguish `analysis-only`, `CTSPro-reopen-verified`, and `equipment-verified` in CLI/UI output |
+| F6 | Hosted CI | Packaging, all fixture tests, schema invariants, and documentation checks run on every pull request |
+
+No feature may display “equipment-ready” until F1–F4 pass for the exact artifact and target
+profile. Verification on one current range or CTSPro version does not automatically transfer
+to another profile.
 
 ---
 
@@ -512,6 +564,11 @@ tests to be skipped.
 | Writer validation on physical equipment | Not started | PNE PC load test is mandatory in Gate C5 |
 | External ASSB parser availability | Dependency outside the repository | Make the internal parser the default source of truth and optionally cross-validate |
 | Drift between fixture names and test expectations | **Confirmed** | Do not hide with skips; stabilize with manifest-based fixture lookup |
+| Experimental output mistaken for production | **Mitigated, not resolved** | Default-block `build`; require manifest, reopen verification, and exact-hash release gates |
+| Binary changes after parsed END ignored by diff | **Resolved** | Compare and report unparsed tails in addition to header and step records |
+| Equipment profile inferred from filenames | **Prohibited** | Require explicit provenance/profile metadata and retain unknown when unavailable |
+| Controlled-pair metadata is incomplete or inconsistent | Open | Add schema validation before evidence promotion (B5) |
+| Documentation language/status drift | Partially resolved | README and user guide are English; audit remaining public docs and derive test status in CI |
 
 ---
 
@@ -520,12 +577,14 @@ tests to be skipped.
 1. ✅ **Restore packaging** — completed editable install and clean-target wheel import validation
 2. ✅ **Add automatic fixture checks** — established 101 archive/extracted files + 1 HPPC file as test inputs
 3. ✅ **Resolve internal offset conflict** — unified parser/schema/compiler locations for `fEndV/fEndI/fEndC`
-4. **Externally confirm offsets** — validate semantics using an original with nonzero `fEndC` or the official field table
+4. **Validate intake metadata** — make controlled before/after pairs reject incomplete equipment, CTSPro, and changed-value provenance
 5. ✅ **Full reader regression test** — locked layout, step count, hash, and EOF geometry for all 102 files
-6. **Implement writer header** — complete the schema/writer vertical slice for `0x00010003/612`
-7. **696-byte lab parity** — extend the writer for `0x00010004/696`, which accounts for 89/93
-8. **End-to-end validation of representative modules** — Formation → Cycle Life → RPT/DC-IR order
-9. **PNE load test** — promote the writer to usable only after a successful result is recorded
+6. **Externally confirm field semantics** — prioritize nonzero `fEndC`, current scaling, sampling, DCR, and goto controlled pairs
+7. **Implement safe patch vertical slice** — approved 612-byte template, allowlisted field, exact preservation report
+8. **Implement writer header** — complete the from-scratch schema/writer vertical slice for `0x00010003/612`
+9. **696-byte lab parity** — extend patching/writing for `0x00010004/696`, which accounts for 89/93 lab fixtures
+10. **End-to-end module validation** — Formation → Cycle Life → RPT/DC-IR order
+11. **Release-gated PNE test** — reopen, exact hash, target profile, and approved equipment procedure
 
 ---
 
