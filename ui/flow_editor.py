@@ -59,6 +59,8 @@ class FlowEditorApp:
             ("Save As…", self._save_as),
             ("Validate", self._validate),
             ("Preview Steps", self._preview),
+            ("Overview", self._show_overview),
+            ("Export .sch…", self._export_sch),
         ):
             ttk.Button(toolbar, text=label, command=command).pack(
                 side=tk.LEFT,
@@ -78,10 +80,29 @@ class FlowEditorApp:
 
         output = ttk.Notebook(self.root)
         output.pack(side=tk.BOTTOM, fill=tk.X, padx=8, pady=(0, 6))
+        self.output_notebook = output
+        overview_frame = ttk.Frame(output)
         preview_frame = ttk.Frame(output)
         validation_frame = ttk.Frame(output)
+        output.add(overview_frame, text="Overview")
         output.add(preview_frame, text="Step preview")
         output.add(validation_frame, text="Validation")
+
+        self.overview_text = tk.Text(
+            overview_frame,
+            height=10,
+            wrap=tk.WORD,
+            font=("TkFixedFont", 10),
+            state=tk.DISABLED,
+        )
+        overview_scroll = ttk.Scrollbar(
+            overview_frame,
+            orient=tk.VERTICAL,
+            command=self.overview_text.yview,
+        )
+        self.overview_text.configure(yscrollcommand=overview_scroll.set)
+        self.overview_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        overview_scroll.pack(side=tk.RIGHT, fill=tk.Y)
 
         columns = ("no", "type", "mode", "label", "c_rate", "voltage", "end")
         self.preview_tree = ttk.Treeview(
@@ -547,6 +568,60 @@ class FlowEditorApp:
             or "Preview expanded without graph warnings."
         )
         self.status_var.set(f"Previewed {len(steps)} step intents")
+        self._render_overview()
+
+    def _show_overview(self) -> None:
+        self._render_overview()
+        self.output_notebook.select(0)
+
+    def _render_overview(self) -> None:
+        from ..protocol.overview import compose_overview, format_overview
+
+        try:
+            text = format_overview(compose_overview(self.model.project))
+        except (TypeError, ValueError) as exc:
+            text = f"Overview unavailable: {exc}\n"
+        self.overview_text.configure(state=tk.NORMAL)
+        self.overview_text.delete("1.0", tk.END)
+        self.overview_text.insert(tk.END, text)
+        self.overview_text.configure(state=tk.DISABLED)
+
+    def _export_sch(self) -> None:
+        validation = self.model.validate()
+        if validation.errors:
+            messagebox.showerror("Export blocked", "\n".join(validation.errors))
+            return
+        if not messagebox.askokcancel(
+            "Experimental SCH export",
+            "This writes an analysis-only .sch that the in-repo viewer can reload.\n"
+            "It is not equipment-ready. Do not load it on a PNE cycler.",
+        ):
+            return
+        path = filedialog.asksaveasfilename(
+            title="Export experimental SCH",
+            defaultextension=".sch",
+            filetypes=[("PNE schedule", "*.sch"), ("All files", "*.*")],
+        )
+        if not path:
+            return
+        from ..io.writer import write_sch_reloadable
+
+        try:
+            document = write_sch_reloadable(self.model.project, Path(path))
+        except (OSError, ValueError) as exc:
+            messagebox.showerror("Export or reload failed", str(exc))
+            return
+        self._render_overview()
+        self.status_var.set(
+            f"Exported {Path(path).name}: viewer reload OK ({len(document.steps)} steps)"
+        )
+        messagebox.showinfo(
+            "Export OK",
+            f"Wrote {Path(path).name}\n"
+            f"Viewer reload: {len(document.steps)} steps "
+            f"at payload offset {document.payload_offset}.\n"
+            "Not equipment-ready.",
+        )
 
     def _refresh_all(self) -> None:
         ids = [node.id for node in self.model.project.modules]
@@ -573,6 +648,7 @@ class FlowEditorApp:
             ),
         )
         self._validate()
+        self._render_overview()
 
     def _render_canvas(self) -> None:
         self.canvas.delete("all")

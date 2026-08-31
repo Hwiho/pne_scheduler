@@ -31,6 +31,12 @@ def _build_parser() -> argparse.ArgumentParser:
     info = sub.add_parser("info", help="Show project summary")
     info.add_argument("project", type=Path, help="Input .schproj path")
 
+    overview = sub.add_parser(
+        "overview",
+        help="Summarize the composed module recipes in a .schproj",
+    )
+    overview.add_argument("project", type=Path, help="Input .schproj path")
+
     view = sub.add_parser("view", help="Open schedule viewer GUI")
     view.add_argument("sch", type=Path, nargs="?", help="Optional .sch file to open")
 
@@ -117,8 +123,15 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Modules: {len(project.modules)}")
         return 0
 
+    if args.command == "overview":
+        from .protocol.overview import compose_overview, format_overview
+
+        project = ScheduleProject.load(args.project)
+        print(format_overview(compose_overview(project)), end="")
+        return 0
+
     if args.command == "build":
-        from .io.writer import write_sch
+        from .io.writer import write_sch_reloadable
 
         if not args.allow_experimental_output:
             print(
@@ -129,8 +142,13 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 2
         project = ScheduleProject.load(args.project)
-        write_sch(project, args.output)
+        try:
+            document = write_sch_reloadable(project, args.output)
+        except ValueError as exc:
+            print(str(exc), file=sys.stderr)
+            return 1
         print(f"Wrote experimental output to {args.output}")
+        print(f"Viewer reload OK: {len(document.steps)} steps at offset {document.payload_offset}.")
         print("WARNING: Do not load or execute this file on PNE equipment.")
         return 0
 

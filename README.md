@@ -4,7 +4,7 @@ Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` sch
 The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
 QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-125%20passed-brightgreen)](#tests)
+[![Tests](https://img.shields.io/badge/tests-131%20passed-brightgreen)](#tests)
 
 > [!WARNING]
 > The from-scratch SCH writer still uses a placeholder header. Its output is not validated
@@ -56,6 +56,7 @@ python run_pne_scheduler.py build example/example.schproj -o output.sch --allow-
 | `info file.schproj` | Show a project summary |
 | `compare before.sch after.sch` | Generate a controlled binary-difference report |
 | `patch-sch template.sch plan.json -o out.sch` | Write a byte-preserving, analysis-only template clone |
+| `overview file.schproj` | Summarize composed module recipes (what the pattern does) |
 | `build ... --allow-experimental-output` | Produce offline-only experimental writer output |
 | `bulk-edit ...` | Edit compatible module parameters in bulk |
 | `resume sch data.csv -o resumed.sch` | Build a template-preserving resume schedule |
@@ -153,18 +154,13 @@ and the command always prints an equipment warning.
 
 ## Module flow editor
 
-```powershell
-python run_pne_scheduler_flow.py
-# or
-python -m pne_scheduler flow example/example.schproj
-```
-
 The flow editor shows **charge / discharge / rest units inside each module**.
 QPEED, HPPC, formation, cycle life, and sequence modules ship with named
 **presets**; pick one, then edit the units directly (or rebuild from the preset
-and knobs). Primitive `charge`, `discharge`, and `rest` modules remain
-single-step. Recipes expand to analysis-only step intents — they are not
-equipment-ready SCH.
+and knobs). After the pattern is assembled, the **Overview** tab (and
+`python -m pne_scheduler overview file.schproj`) summarizes what you composed.
+**Export .sch…** writes an experimental file and reloads it in the in-repo
+viewer parser; it is still not equipment-ready.
 
 Default QPEED preset `qpeed.full_3318` matches the checked-in QPEED-2 topology:
 1C condition to **3.318 V**, then 1.5C to 4.2 V, repeated. `qpeed.soc_fraction`
@@ -174,6 +170,7 @@ and `hppc.soc_90_50_10` are generator templates, not fixture matches.
 python run_pne_scheduler_flow.py
 # or
 python -m pne_scheduler flow example/qpeed.schproj
+python -m pne_scheduler overview example/qpeed.schproj
 python -m pne_scheduler flow example/example.schproj
 ```
 

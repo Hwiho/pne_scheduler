@@ -23,6 +23,7 @@ pip install -e ".[dev]"
 | `python -m pne_scheduler explain file.sch` | Narrate protocol, SOC hints, and repeating blocks |
 | `python -m pne_scheduler edit [file.schproj]` | Open the project bulk editor |
 | `python -m pne_scheduler flow [file.schproj]` | Open the module connection editor |
+| `python -m pne_scheduler overview file.schproj` | Summarize composed module recipes |
 | `python -m pne_scheduler info file.schproj` | Show a project summary |
 | `python -m pne_scheduler compare before.sch after.sch` | Compare a controlled SCH pair |
 | `python -m pne_scheduler patch-sch template.sch plan.json -o out.sch` | Apply an evidence-gated, template-preserving patch |
@@ -57,10 +58,11 @@ Neither acknowledgement makes a file safe to execute.
 
 The flow editor provides a module palette, a visual canvas, linear connection validation,
 module recipes (charge / discharge / rest units inside QPEED, HPPC, formation, cycle life,
-and sequence modules), named presets, Cell Profile JSON, `.schproj` load/save, and a
-step-intent preview. Edit units on the selected module instead of only reading a
-side-panel summary. Multiple inputs, multiple outputs, self-connections, and cycles are
-rejected because the current execution model is a linear schedule.
+and sequence modules), named presets, Cell Profile JSON, `.schproj` load/save, a
+step-intent preview, and an **Overview** of the composed pattern. **Export .sch…**
+reloads the file in the in-repo viewer parser; it is not equipment-ready. Multiple
+inputs, multiple outputs, self-connections, and cycles are rejected because the
+current execution model is a linear schedule.
 
 QPEED conditions vary; start from a preset (`qpeed.full_3318` matches QPEED-2:
 condition to 3.318 V, then 1.5C to 4.2 V) and change the units. `qpeed.soc_fraction`

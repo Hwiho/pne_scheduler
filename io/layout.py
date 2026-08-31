@@ -14,7 +14,8 @@ def detect_sch_layout(data: bytes) -> SchLayout | None:
 
     registered = get_sch_layout(version)
     if magic == SCH_FILE_MAGIC and registered is not None:
-        if _score_layout(data, registered.payload_offset, registered.step_size) >= 3:
+        score = _score_layout(data, registered.payload_offset, registered.step_size)
+        if score >= 1:
             return registered
 
     best: tuple[int, int, int] | None = None

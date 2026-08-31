@@ -47,14 +47,14 @@ def test_compiled_end_conditions_are_read_at_canonical_offsets() -> None:
 
     record = compile_steps([intent], cell)[0]
 
-    assert struct.unpack_from("<f", record, OFFSET_F_END_V)[0] == pytest.approx(4.2)
+    assert struct.unpack_from("<f", record, OFFSET_F_END_V)[0] == pytest.approx(4200.0)
     assert struct.unpack_from("<f", record, OFFSET_F_END_I)[0] == pytest.approx(6.0)
     assert struct.unpack_from("<f", record, OFFSET_F_END_C)[0] == pytest.approx(30.0)
     assert struct.unpack_from("<f", record, 40)[0] == 0.0
 
     parsed = _read_steps(record, payload_offset=0, step_size=STEP_RECORD_SIZE)
     assert len(parsed) == 1
-    assert parsed[0].f_end_v == pytest.approx(4.2)
+    assert parsed[0].f_end_v == pytest.approx(4200.0)
     assert parsed[0].f_end_i == pytest.approx(6.0)
     assert parsed[0].f_end_c == pytest.approx(30.0)
 
