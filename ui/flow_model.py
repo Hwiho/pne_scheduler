@@ -142,7 +142,7 @@ class FlowProjectModel:
         apply_recipe(instance, recipe)
         self.persist_instance(module_id, instance)
 
-    def card_lines(self, module_id: str, *, limit: int = 8) -> list[str]:
+    def card_lines(self, module_id: str, *, limit: int = 12) -> list[str]:
         try:
             instance = self.instantiate(module_id)
         except (TypeError, ValueError):

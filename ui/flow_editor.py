@@ -24,7 +24,8 @@ class FlowEditorApp:
     def __init__(self, root: tk.Tk, initial_path: Path | None = None) -> None:
         self.root = root
         self.root.title("PNE Scheduler — Module Flow Editor")
-        self.root.geometry("1440x900")
+        self.root.geometry("1320x820")
+        self.root.minsize(1100, 720)
         self.project_path: Path | None = None
         self.model = FlowProjectModel(self._new_project())
         self.selected_id: str | None = None
@@ -50,7 +51,7 @@ class FlowEditorApp:
 
     def _build_ui(self) -> None:
         toolbar = ttk.Frame(self.root, padding=6)
-        toolbar.pack(fill=tk.X)
+        toolbar.pack(side=tk.TOP, fill=tk.X)
         for label, command in (
             ("New", self._new),
             ("Open…", self._open),
@@ -69,22 +70,14 @@ class FlowEditorApp:
             foreground="#9a5b00",
         ).pack(side=tk.RIGHT)
 
-        body = ttk.Panedwindow(self.root, orient=tk.HORIZONTAL)
-        body.pack(fill=tk.BOTH, expand=True, padx=8, pady=(0, 8))
-
-        controls = ttk.Frame(body, padding=6)
-        center = ttk.Frame(body, padding=6)
-        properties = ttk.Frame(body, padding=6)
-        body.add(controls, weight=1)
-        body.add(center, weight=4)
-        body.add(properties, weight=2)
-
-        self._build_controls(controls)
-        self._build_canvas(center)
-        self._build_properties(properties)
+        self.status_var = tk.StringVar(value="Ready")
+        ttk.Label(self.root, textvariable=self.status_var, padding=5).pack(
+            side=tk.BOTTOM,
+            fill=tk.X,
+        )
 
         output = ttk.Notebook(self.root)
-        output.pack(fill=tk.BOTH, expand=False, padx=8, pady=(0, 6))
+        output.pack(side=tk.BOTTOM, fill=tk.X, padx=8, pady=(0, 6))
         preview_frame = ttk.Frame(output)
         validation_frame = ttk.Frame(output)
         output.add(preview_frame, text="Step preview")
@@ -95,7 +88,7 @@ class FlowEditorApp:
             preview_frame,
             columns=columns,
             show="headings",
-            height=8,
+            height=7,
         )
         widths = (45, 85, 65, 260, 75, 75, 120)
         for column, width in zip(columns, widths):
@@ -112,14 +105,25 @@ class FlowEditorApp:
 
         self.validation_text = tk.Text(
             validation_frame,
-            height=8,
+            height=7,
             wrap=tk.WORD,
             state=tk.DISABLED,
         )
         self.validation_text.pack(fill=tk.BOTH, expand=True)
 
-        self.status_var = tk.StringVar(value="Ready")
-        ttk.Label(self.root, textvariable=self.status_var, padding=5).pack(fill=tk.X)
+        body = ttk.Panedwindow(self.root, orient=tk.HORIZONTAL)
+        body.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=8, pady=(0, 8))
+
+        controls = ttk.Frame(body, padding=6)
+        center = ttk.Frame(body, padding=6)
+        properties = ttk.Frame(body, padding=6)
+        body.add(controls, weight=1)
+        body.add(center, weight=4)
+        body.add(properties, weight=2)
+
+        self._build_controls(controls)
+        self._build_canvas(center)
+        self._build_properties(properties)
 
     def _build_controls(self, parent: ttk.Frame) -> None:
         ttk.Label(parent, text="Module palette").pack(anchor=tk.W)
@@ -250,7 +254,7 @@ class FlowEditorApp:
                 frame,
                 columns=("summary",),
                 show="headings",
-                height=8,
+                height=6,
                 selectmode="browse",
             )
             tree.heading("summary", text="Charge / discharge / rest")
@@ -313,7 +317,7 @@ class FlowEditorApp:
         self.params_text = tk.Text(
             self.json_frame,
             width=35,
-            height=10,
+            height=7,
             font=("TkFixedFont", 10),
         )
         self.params_text.pack(fill=tk.BOTH, expand=True, pady=(0, 6))
@@ -840,53 +844,59 @@ class FlowEditorApp:
     def _unit_dialog(self, initial: RecipeUnit) -> RecipeUnit | None:
         win = tk.Toplevel(self.root)
         win.title("Recipe unit")
+        win.resizable(True, True)
+        try:
+            x = int(self.root.winfo_rootx()) + 90
+            y = int(self.root.winfo_rooty()) + 90
+            win.geometry(f"440x300+{x}+{y}")
+        except tk.TclError:
+            win.geometry("440x300")
         win.transient(self.root)
-        win.grab_set()
+
         kind_var = tk.StringVar(value=initial.kind)
         mode_var = tk.StringVar(value=initial.mode or "CC")
-        rate_var = tk.StringVar("" if initial.c_rate is None else str(initial.c_rate))
+        rate_var = tk.StringVar(value="" if initial.c_rate is None else str(initial.c_rate))
         voltage_var = tk.StringVar(
-            "" if initial.end_voltage_v is None else str(initial.end_voltage_v)
+            value="" if initial.end_voltage_v is None else str(initial.end_voltage_v)
         )
         time_var = tk.StringVar(
-            "" if initial.end_time_s is None else str(initial.end_time_s)
+            value="" if initial.end_time_s is None else str(initial.end_time_s)
         )
         label_var = tk.StringVar(value=initial.label)
         result: dict[str, RecipeUnit | None] = {"unit": None}
-        fields: dict[str, tk.StringVar] = {
-            "kind": kind_var,
-            "mode": mode_var,
-            "c_rate": rate_var,
-            "end_voltage_v": voltage_var,
-            "end_time_s": time_var,
-            "label": label_var,
-        }
-        rows = (
-            ("Kind", "kind", ("charge", "discharge", "rest", "end"), True),
-            ("Mode", "mode", ("CCCV", "CC", "CV"), True),
-            ("C-rate", "c_rate", None, False),
-            ("End voltage (V)", "end_voltage_v", None, False),
-            ("End time (s)", "end_time_s", None, False),
-            ("Label", "label", None, False),
-        )
-        for title, key, values, combo in rows:
-            frame = ttk.Frame(win, padding=(10, 4))
-            frame.pack(fill=tk.X)
-            ttk.Label(frame, text=title, width=16).pack(side=tk.LEFT)
-            if combo:
-                ttk.Combobox(
-                    frame,
-                    textvariable=fields[key],
-                    values=values,
-                    state="readonly",
-                    width=18,
-                ).pack(side=tk.LEFT, fill=tk.X, expand=True)
-            else:
-                ttk.Entry(frame, textvariable=fields[key], width=22).pack(
-                    side=tk.LEFT,
-                    fill=tk.X,
-                    expand=True,
-                )
+
+        body = tk.Frame(win, padx=14, pady=12, bg="#f4f6f8")
+        body.pack(fill=tk.BOTH, expand=True)
+
+        def add_combo(title: str, variable: tk.StringVar, values: tuple[str, ...]) -> None:
+            row = tk.Frame(body, bg="#f4f6f8")
+            row.pack(fill=tk.X, pady=4)
+            tk.Label(row, text=title, width=16, anchor="w", bg="#f4f6f8").pack(side=tk.LEFT)
+            box = ttk.Combobox(
+                row,
+                textvariable=variable,
+                values=values,
+                state="readonly",
+                width=22,
+            )
+            box.pack(side=tk.LEFT, fill=tk.X, expand=True)
+
+        def add_entry(title: str, variable: tk.StringVar) -> None:
+            row = tk.Frame(body, bg="#f4f6f8")
+            row.pack(fill=tk.X, pady=4)
+            tk.Label(row, text=title, width=16, anchor="w", bg="#f4f6f8").pack(side=tk.LEFT)
+            tk.Entry(row, textvariable=variable, width=24).pack(
+                side=tk.LEFT,
+                fill=tk.X,
+                expand=True,
+            )
+
+        add_combo("Kind", kind_var, ("charge", "discharge", "rest", "end"))
+        add_combo("Mode", mode_var, ("CCCV", "CC", "CV"))
+        add_entry("C-rate", rate_var)
+        add_entry("End voltage (V)", voltage_var)
+        add_entry("End time (s)", time_var)
+        add_entry("Label", label_var)
 
         def _parse_float(raw: str) -> float | None:
             text = raw.strip()
@@ -901,7 +911,7 @@ class FlowEditorApp:
                     "kind": kind,
                     "label": label_var.get().strip(),
                 }
-                if kind != "rest":
+                if kind != "rest" and kind != "end":
                     payload["mode"] = mode_var.get()
                     payload["c_rate"] = _parse_float(rate_var.get())
                     payload["end_voltage_v"] = _parse_float(voltage_var.get())
@@ -910,15 +920,31 @@ class FlowEditorApp:
             except (TypeError, ValueError) as exc:
                 messagebox.showerror("Invalid unit", str(exc), parent=win)
                 return
+            win.grab_release()
             win.destroy()
 
-        buttons = ttk.Frame(win, padding=10)
-        buttons.pack(fill=tk.X)
-        ttk.Button(buttons, text="OK", command=_ok).pack(side=tk.RIGHT)
-        ttk.Button(buttons, text="Cancel", command=win.destroy).pack(
+        def _cancel() -> None:
+            win.grab_release()
+            win.destroy()
+
+        buttons = tk.Frame(body, bg="#f4f6f8")
+        buttons.pack(fill=tk.X, pady=(12, 0))
+        tk.Button(buttons, text="Cancel", width=10, command=_cancel).pack(
             side=tk.RIGHT,
-            padx=(0, 6),
+            padx=(6, 0),
         )
+        tk.Button(buttons, text="OK", width=10, command=_ok).pack(side=tk.RIGHT)
+
+        win.protocol("WM_DELETE_WINDOW", _cancel)
+        win.update_idletasks()
+        win.deiconify()
+        win.lift()
+        win.focus_force()
+        try:
+            win.wait_visibility()
+        except tk.TclError:
+            pass
+        win.grab_set()
         win.wait_window()
         return result["unit"]
 
