@@ -66,11 +66,14 @@ The report includes:
 - Header byte ranges that changed.
 - Changed byte ranges grouped by step.
 - Aligned 4-byte interpretations as hex, unsigned integer, signed integer, and float.
-- Known field names and their current evidence confidence.
+- Known field names, declared dtype, primary decoded value, evidence, confidence, and
+  writer-readiness state.
 - Summary counts and any changed bytes after the parsed END record.
 
 If layouts or step counts differ, the tool reports incompatibility instead of aligning
-unrelated records.
+unrelated records. A compatible pair is still flagged as uncontrolled when it changes more
+than one step or aligned word, changes header metadata alongside a step, changes the step
+type, or modifies bytes after END.
 
 ## Evidence promotion rules
 

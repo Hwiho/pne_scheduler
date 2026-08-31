@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from pne_scheduler.io.sch_binary import read_sch_binary
-from pne_scheduler.schema.fields import get_step_field
+from pne_scheduler.schema.fields import SchFieldDefinition, get_step_fields
 
 
 def _changed_ranges(before: bytes, after: bytes) -> list[tuple[int, int]]:
@@ -54,12 +54,31 @@ def _decode_word(data: bytes, offset: int) -> dict[str, int | float | str] | Non
     }
 
 
+def _decode_primary(
+    data: bytes,
+    field: SchFieldDefinition | None,
+) -> int | float | None:
+    if field is None:
+        return None
+    value = data[field.offset : field.offset + field.size]
+    if len(value) != field.size:
+        return None
+    formats = {
+        "uint8": "<B",
+        "uint32": "<I",
+        "int32": "<i",
+        "float32": "<f",
+    }
+    return struct.unpack(formats[field.dtype], value)[0]
+
+
 def _changed_words(
     before: bytes,
     after: bytes,
     ranges: list[tuple[int, int]],
     version: int,
 ) -> list[dict[str, Any]]:
+    fields = get_step_fields(version)
     offsets = {
         word_offset
         for start, end in ranges
@@ -67,12 +86,30 @@ def _changed_words(
     }
     words = []
     for offset in sorted(offsets):
-        field = get_step_field(version, offset)
+        changed_bytes = {
+            byte_offset
+            for start, end in ranges
+            for byte_offset in range(max(start, offset), min(end, offset + 4))
+        }
+        matches = [
+            field
+            for field in fields
+            if any(
+                field.offset <= byte_offset < field.offset + field.size
+                for byte_offset in changed_bytes
+            )
+        ]
+        field = matches[0] if len(matches) == 1 else None
         words.append(
             {
                 "offset": offset,
                 "field": field.name if field else None,
                 "confidence": field.confidence.value if field else "unknown",
+                "dtype": field.dtype if field else None,
+                "evidence": field.evidence if field else None,
+                "writer_ready": field.writer_ready if field else False,
+                "primary_before": _decode_primary(before, field),
+                "primary_after": _decode_primary(after, field),
                 "before": _decode_word(before, offset),
                 "after": _decode_word(after, offset),
             }
@@ -151,8 +188,31 @@ def compare_sch_files(before_path: Path, after_path: Path) -> dict[str, Any]:
                 }
             )
 
+        changed_word_count = sum(len(change["words"]) for change in step_changes)
+        if len(step_changes) != 1:
+            warnings.append(
+                "A controlled pair should change exactly one step; "
+                f"found {len(step_changes)}."
+            )
+        if changed_word_count != 1:
+            warnings.append(
+                "A controlled pair should change exactly one aligned word; "
+                f"found {changed_word_count}."
+            )
+        if header_ranges and step_changes:
+            warnings.append(
+                "Header bytes changed alongside the step payload; check for "
+                "unrelated metadata drift."
+            )
+        for change in step_changes:
+            if change["before_type"] != change["after_type"]:
+                warnings.append(
+                    f"Step {change['step_no']}: step type changed "
+                    f"({change['before_type']} -> {change['after_type']})."
+                )
+
     return {
-        "schema": "pne_scheduler.sch_diff/v1",
+        "schema": "pne_scheduler.sch_diff/v2",
         "before": {
             "path": str(before_path),
             "size": len(before_bytes),
@@ -198,6 +258,11 @@ def compare_sch_files(before_path: Path, after_path: Path) -> dict[str, Any]:
             "unparsed_changed_byte_count": sum(
                 end - start for start, end in tail_ranges
             ),
+            "controlled_pair_clean": compatible
+            and len(step_changes) == 1
+            and sum(len(change["words"]) for change in step_changes) == 1
+            and not header_ranges
+            and not tail_ranges,
         },
     }
 

@@ -7,6 +7,24 @@ from enum import Enum
 
 from .enums import SchFileVersion
 
+OFFSET_STEP_NO = 0
+OFFSET_PROCESS_WORD = 4
+OFFSET_STEP_TYPE = 8
+OFFSET_MODE_VALUE = 12
+OFFSET_F_VREF = 16
+OFFSET_F_IREF = 20
+OFFSET_F_END_TIME = 24
+OFFSET_F_END_V = 28
+OFFSET_F_END_I = 32
+OFFSET_F_END_C = 36
+OFFSET_LOOP_GOTO = 48
+OFFSET_LOOP_COUNT = 52
+OFFSET_N_GOTO_STEP_ID = 92
+OFFSET_F_SOC_RATE = 392
+OFFSET_F_MAX_CAPACITY = 428
+OFFSET_B_USE_ACTUAL_CAPA = 512
+OFFSET_B_USE_DATA_STEP_NO = 513
+
 
 class FieldConfidence(str, Enum):
     STRUCTURAL_VERIFIED = "structural_verified"
@@ -22,101 +40,142 @@ class SchFieldDefinition:
     confidence: FieldConfidence
     evidence: str
     size: int = 4
-    writable: bool = False
+    writer_ready: bool = False
 
 
 COMMON_STEP_FIELDS: tuple[SchFieldDefinition, ...] = (
     SchFieldDefinition(
         "step_no",
-        0,
+        OFFSET_STEP_NO,
         "int32",
         FieldConfidence.STRUCTURAL_VERIFIED,
         "Sequential record number in all 102 fixtures.",
-        writable=True,
     ),
     SchFieldDefinition(
         "process_word",
-        4,
-        "uint32",
+        OFFSET_PROCESS_WORD,
+        "int32",
         FieldConfidence.SEMANTIC_UNVERIFIED,
         "Present in the legacy field map; zero throughout the current corpus.",
     ),
     SchFieldDefinition(
         "step_type_word",
-        8,
-        "uint32",
+        OFFSET_STEP_TYPE,
+        "int32",
         FieldConfidence.STRUCTURAL_VERIFIED,
         "Matches REST, CCCV, CC charge/discharge, LOOP, CYCLE, and END records.",
-        writable=True,
     ),
     SchFieldDefinition(
         "mode_value",
-        12,
+        OFFSET_MODE_VALUE,
         "float32",
         FieldConfidence.SEMANTIC_UNVERIFIED,
         "Mode-dependent nonzero values are observed, but semantics are not established.",
     ),
     SchFieldDefinition(
         "fVref",
-        16,
+        OFFSET_F_VREF,
         "float32",
         FieldConfidence.SEMANTIC_UNVERIFIED,
         "Legacy name retained for compatibility; UI units and scaling are unresolved.",
     ),
     SchFieldDefinition(
         "fIref",
-        20,
+        OFFSET_F_IREF,
         "float32",
         FieldConfidence.SEMANTIC_UNVERIFIED,
         "Legacy name retained for compatibility; UI units and scaling are unresolved.",
     ),
     SchFieldDefinition(
         "fEndTime",
-        24,
+        OFFSET_F_END_TIME,
         "float32",
         FieldConfidence.SEMANTIC_UNVERIFIED,
         "Legacy name retained; zero throughout the current corpus.",
     ),
     SchFieldDefinition(
         "fEndV",
-        28,
+        OFFSET_F_END_V,
         "float32",
         FieldConfidence.CORPUS_INFERRED,
         "Nonzero values occur on CC records and match voltage-like termination values.",
     ),
     SchFieldDefinition(
         "fEndI",
-        32,
+        OFFSET_F_END_I,
         "float32",
         FieldConfidence.CORPUS_INFERRED,
         "Nonzero values occur on CCCV records and match cutoff-like ratios.",
     ),
     SchFieldDefinition(
         "fEndC",
-        36,
+        OFFSET_F_END_C,
         "float32",
         FieldConfidence.SEMANTIC_UNVERIFIED,
         "Legacy name retained; no nonzero example exists in the current corpus.",
     ),
     SchFieldDefinition(
         "loop_target",
-        48,
+        OFFSET_LOOP_GOTO,
         "uint32",
         FieldConfidence.CORPUS_INFERRED,
         "LOOP-only target-like values verified in representative 612/696 fixtures.",
     ),
     SchFieldDefinition(
         "loop_count",
-        52,
+        OFFSET_LOOP_COUNT,
         "uint32",
         FieldConfidence.CORPUS_INFERRED,
         "LOOP-only repeat-like values verified in representative 612/696 fixtures.",
     ),
 )
 
+V3_612_LEGACY_STEP_FIELDS: tuple[SchFieldDefinition, ...] = (
+    SchFieldDefinition(
+        "nGotoStepID",
+        OFFSET_N_GOTO_STEP_ID,
+        "uint32",
+        FieldConfidence.SEMANTIC_UNVERIFIED,
+        "Legacy name retained; this word is zero in all 102 checked-in fixtures.",
+    ),
+    SchFieldDefinition(
+        "fSocRate",
+        OFFSET_F_SOC_RATE,
+        "float32",
+        FieldConfidence.SEMANTIC_UNVERIFIED,
+        "Legacy 0x00010003 offset; controlled semantic evidence is unavailable.",
+    ),
+    SchFieldDefinition(
+        "fMaxCapacity",
+        OFFSET_F_MAX_CAPACITY,
+        "float32",
+        FieldConfidence.SEMANTIC_UNVERIFIED,
+        "Legacy 0x00010003 offset; units and equipment scaling are unresolved.",
+    ),
+    SchFieldDefinition(
+        "bUseActualCapa",
+        OFFSET_B_USE_ACTUAL_CAPA,
+        "uint8",
+        FieldConfidence.SEMANTIC_UNVERIFIED,
+        "Legacy 0x00010003 flag; controlled semantic evidence is unavailable.",
+        size=1,
+    ),
+    SchFieldDefinition(
+        "bUseDataStepNo",
+        OFFSET_B_USE_DATA_STEP_NO,
+        "uint8",
+        FieldConfidence.SEMANTIC_UNVERIFIED,
+        "Legacy 0x00010003 flag; controlled semantic evidence is unavailable.",
+        size=1,
+    ),
+)
+
 STEP_FIELDS_BY_VERSION: dict[int, tuple[SchFieldDefinition, ...]] = {
     int(SchFileVersion.V0X00010002): COMMON_STEP_FIELDS,
-    int(SchFileVersion.V0X00010003): COMMON_STEP_FIELDS,
+    int(SchFileVersion.V0X00010003): (
+        *COMMON_STEP_FIELDS,
+        *V3_612_LEGACY_STEP_FIELDS,
+    ),
     int(SchFileVersion.V0X00010004): COMMON_STEP_FIELDS,
 }
 
@@ -182,7 +241,12 @@ def validate_step_field_registry() -> tuple[str, ...]:
                     )
                 occupied[byte_offset] = field.name
 
-            if field.writable and field.confidence == FieldConfidence.SEMANTIC_UNVERIFIED:
-                errors.append(f"{prefix}: unverified semantic field cannot be writable")
+            if (
+                field.writer_ready
+                and field.confidence == FieldConfidence.SEMANTIC_UNVERIFIED
+            ):
+                errors.append(
+                    f"{prefix}: unverified semantic field cannot be writer-ready"
+                )
 
     return tuple(errors)
