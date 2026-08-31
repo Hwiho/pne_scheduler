@@ -34,6 +34,7 @@ def test_flow_model_add_connect_preview_and_round_trip(tmp_path: Path) -> None:
 
     validation = model.validate()
     steps, warnings = model.preview_steps()
+    duration = model.estimate_duration()
     project_path = tmp_path / "flow.schproj"
     model.project.save(project_path)
     loaded = ScheduleProject.load(project_path)
@@ -42,6 +43,11 @@ def test_flow_model_add_connect_preview_and_round_trip(tmp_path: Path) -> None:
     assert validation.warnings == ()
     assert len(steps) == 5
     assert warnings == ()
+    assert duration.total.estimated_seconds == pytest.approx(72_240.0)
+    assert [item.module_id for item in duration.modules] == [
+        formation.id,
+        rest.id,
+    ]
     assert loaded.to_dict() == model.project.to_dict()
 
 
