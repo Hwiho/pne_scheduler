@@ -50,7 +50,7 @@ PNE 사이클러용 `.sch` 바이너리 스케줄 파일을 **직접 편집기 �
 
 **1차 타깃 버전:** `0x00010003` + `step_size=612`  
 → ASSB converter가 이미 layout policy·DCIR SOC rule·current condition mapping을 이 조합에 맞춰 구현함.  
-**2차:** corpus의 90%를 차지하는 `0x00010004` + `step_size=696`.  
+**2차:** corpus의 90%를 차지하는 `0x00010004` + `step_size=696`.
 **후속:** `0x00010007` (EIS 실험 필요 시).
 
 ### 2.3 바이너리 레이아웃 (4개 섹션)
@@ -377,7 +377,7 @@ class ExperimentModule(Protocol):
 **진행 기록**
 - A1 완료: editable install과 별도 target에 설치한 wheel에서 package/subpackage import 확인
 - A3 완료: 두 ZIP과 추출 디렉터리의 8개·93개 목록 일치, HPPC 포함 총 102개 자동 확인
-- A2 진행 중: 로컬 `73 passed` 확인; CI 기준 고정과 README 수치 갱신이 남음
+- A2 진행 중: 로컬 `75 passed` 확인; CI 기준 고정과 README 수치 갱신이 남음
 
 ### 6.3 Gate B — 바이너리 스키마를 단일 정본으로 확정
 
