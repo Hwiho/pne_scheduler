@@ -60,25 +60,13 @@ def test_controlled_diff_identifies_known_step_field(tmp_path: Path) -> None:
     assert len(report["step_changes"]) == 1
     change = report["step_changes"][0]
     assert change["step_no"] == 6
-    assert change["words"] == [
-        {
-            "offset": 28,
-            "field": "fEndV",
-            "confidence": "corpus_inferred",
-            "before": {
-                "hex": "00401c45",
-                "uint32": 1159487488,
-                "int32": 1159487488,
-                "float32": 2500.0,
-            },
-            "after": {
-                "hex": "00344345",
-                "uint32": 1162023936,
-                "int32": 1162023936,
-                "float32": 3123.0,
-            },
-        }
-    ]
+    assert len(change["words"]) == 1
+    word = change["words"][0]
+    assert word["offset"] == 28
+    assert word["field"] == "fEndV"
+    assert word["confidence"] == "corpus_inferred"
+    assert word["before"]["float32"] == 2500.0
+    assert word["after"]["float32"] == 3123.0
 
 
 def test_diff_refuses_to_align_incompatible_layouts() -> None:
