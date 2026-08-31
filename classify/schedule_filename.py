@@ -15,6 +15,7 @@ class ScheduleCategory(StrEnum):
     INSITU_CYCLE = "insitu_cycle"
     RPT = "rpt"
     QPEED = "qpeed"
+    HPPC = "hppc"
     UNKNOWN = "unknown"
 
 
@@ -40,10 +41,13 @@ CATEGORY_TO_MODULE: dict[ScheduleCategory, str] = {
     ScheduleCategory.INSITU_CYCLE: "insitu_cycle",
     ScheduleCategory.RPT: "rpt",
     ScheduleCategory.QPEED: "qpeed",
+    ScheduleCategory.HPPC: "hppc",
 }
 
 _QPEED_PATTERN = re.compile(r"qpeed", re.IGNORECASE)
 _QPEED_SOC_SETTING_PATTERN = re.compile(r"soc[_\s-]*setting", re.IGNORECASE)
+# SOC50 / SOC_30 / SOC 80, but not SOC_setting (no digits).
+_SOC_PERCENT_PATTERN = re.compile(r"soc\s*[_-]?\s*(\d{1,3})(?!\s*setting)", re.IGNORECASE)
 
 _RULES: tuple[tuple[str, re.Pattern[str], ScheduleCategory], ...] = (
     (
@@ -65,6 +69,11 @@ _RULES: tuple[tuple[str, re.Pattern[str], ScheduleCategory], ...] = (
         "qpeed_keyword",
         _QPEED_PATTERN,
         ScheduleCategory.QPEED,
+    ),
+    (
+        "hppc_keyword",
+        re.compile(r"hppc", re.IGNORECASE),
+        ScheduleCategory.HPPC,
     ),
     (
         "formation_fm",
@@ -97,6 +106,7 @@ class ScheduleFilenameMatch:
     suggested_module: str
     qpeed_variant: QpeedVariant | None = None
     protocol_variant: ProtocolVariant = ProtocolVariant.NONE
+    filename_soc_percents: tuple[int, ...] = ()
 
     @property
     def is_qpeed_soc_setting(self) -> bool:
@@ -124,10 +134,24 @@ def _protocol_variant_from_name(name: str, category: ScheduleCategory) -> Protoc
     return ProtocolVariant.NONE
 
 
+def extract_filename_soc_percents(name: str) -> tuple[int, ...]:
+    """Return SOC percentages encoded in a filename, if any.
+
+    ``SOC_setting`` is a QPEED sub-protocol name, not a percentage, and is ignored.
+    """
+    percents: list[int] = []
+    for match in _SOC_PERCENT_PATTERN.finditer(name):
+        value = int(match.group(1))
+        if 0 <= value <= 100:
+            percents.append(value)
+    return tuple(percents)
+
+
 def classify_schedule_filename(path: str | Path) -> ScheduleFilenameMatch:
     """Infer schedule experiment type from a `.sch` filename."""
     resolved = Path(path)
     name = resolved.name
+    soc_percents = extract_filename_soc_percents(name)
 
     for rule_name, pattern, category in _RULES:
         if not pattern.search(name):
@@ -142,6 +166,7 @@ def classify_schedule_filename(path: str | Path) -> ScheduleFilenameMatch:
             suggested_module=CATEGORY_TO_MODULE.get(category, "unknown"),
             qpeed_variant=qpeed_variant,
             protocol_variant=_protocol_variant_from_name(name, category),
+            filename_soc_percents=soc_percents,
         )
 
     return ScheduleFilenameMatch(
@@ -149,6 +174,7 @@ def classify_schedule_filename(path: str | Path) -> ScheduleFilenameMatch:
         category=ScheduleCategory.UNKNOWN,
         matched_rule="none",
         suggested_module="unknown",
+        filename_soc_percents=soc_percents,
     )
 
 

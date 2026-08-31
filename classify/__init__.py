@@ -6,6 +6,7 @@ from .schedule_filename import (
     ScheduleFilenameMatch,
     classify_schedule_filename,
     classify_schedule_paths,
+    extract_filename_soc_percents,
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "ScheduleFilenameMatch",
     "classify_schedule_filename",
     "classify_schedule_paths",
+    "extract_filename_soc_percents",
 ]
