@@ -67,6 +67,10 @@ def test_all_catalog_layouts_match_binary_parser() -> None:
 def test_equipment_provenance_is_fixture_scoped() -> None:
     catalog = _load_catalog()
     assert "only to these exact checked-in fixtures" in catalog["scope"]
+    formation_routing = catalog["operational_context"]["formation"]
+    assert formation_routing["current_equipment"] == ["PNE02", "PNE21", "PNE22"]
+    assert formation_routing["exclusive"] is False
+    assert "not fixture provenance" in formation_routing["note"]
 
     qpeed_entries = [
         entry for entry in catalog["fixtures"] if "qpeed" in entry["path"].casefold()

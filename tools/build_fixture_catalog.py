@@ -118,6 +118,17 @@ def build_catalog() -> dict:
             "PNE21": "100mA cycler; no fixture currently identified",
             "PNE22": "100mA cycler; no fixture currently identified",
         },
+        "operational_context": {
+            "formation": {
+                "current_equipment": ["PNE02", "PNE21", "PNE22"],
+                "source": "user_reported_current_practice",
+                "exclusive": False,
+                "note": (
+                    "This is routing context, not fixture provenance. Formation filenames "
+                    "must not be used to infer equipment identity."
+                ),
+            }
+        },
         "fixture_count": len(fixtures),
         "fixtures": fixtures,
     }
