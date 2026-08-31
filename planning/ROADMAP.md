@@ -1,59 +1,59 @@
-# SCH Schedule Builder — 구조 분석 & 로드맵
+# SCH Schedule Builder — Structural Analysis & Roadmap
 
-## 변경 이력
+## Change History
 
-| 일시 | 요약 |
-|------|------|
-| 2026-08-31 | 초안: `sch_file_structure_20250211.xlsx`·ASSB_Analyzer_dev·Ensol PNE converter 기반 구조 정리, 비주얼 모듈형 스케줄 빌더 로드맵 수립 |
-| 2026-08-31 | `pne_scheduler/` 패키지 생성 — IR·C-rate·모듈 스텁·CLI·예제 `.schproj` |
-| 2026-08-31 | 저장소 현황 재점검 — 원본 SCH 아카이브 확보, 구현 상태와 검증 우선순위 재정렬 |
-
----
-
-## 1. 목표
-
-PNE 사이클러용 `.sch` 바이너리 스케줄 파일을 **직접 편집기 없이** 만들 수 있게 한다.
-
-- **LabVIEW 스타일** 모듈형 비주얼 인터페이스: 실험 블록을 끌어다 붙이고 연결
-- 배터리 실험 유형을 **템플릿 모듈**로 제공 (수명, 포메이션, RPT, HPPC, DC-IR 등)
-- 사용자는 **C-rate**를 입력하고, **기준 용량**으로부터 전류(A/mA)를 자동 계산
-- 생성된 `.sch`는 PNE 장비에서 바로 실행 가능해야 함
+| Date | Summary |
+|------|---------|
+| 2026-08-31 | Initial draft: documented the structure based on `sch_file_structure_20250211.xlsx`, ASSB_Analyzer_dev, and the Ensol PNE converter; established the roadmap for a visual modular schedule builder |
+| 2026-08-31 | Created the `pne_scheduler/` package — IR, C-rate, module stubs, CLI, and example `.schproj` |
+| 2026-08-31 | Reassessed repository status — secured the original SCH archive and reprioritized implementation and validation |
 
 ---
 
-## 2. `.sch` 파일 구조 (현재 파악)
+## 1. Goal
 
-### 2.1 출처
+Enable creation of `.sch` binary schedule files for PNE cyclers **without using the native editor**.
 
-| 출처 | 역할 | 상태 |
-|------|------|------|
-| `c:\sch_file_structure_20250211.xlsx` | PNE 공식 필드 정의 (버전별) | **정본 스펙** |
-| `ASSB_Analyzer_dev` → `assb_analyzer/io/pne_converter.py` | 읽기·검증·메타데이터 추출 | 선택적 외부 validator; 저장소에는 포함되지 않음 |
-| `_vendor/Ensol_PNE_framework/pne_app/io/pne_converter.py` | CycleNum·DCIR reference용 부분 reader | 로컬 vendor 사본 |
-| `assb_analyzer/io/cell_c_rate_reference.py` | C-rate ↔ 용량 ↔ 전류 (분석 측) | **writer에 재사용 가능한 로직** |
-| `assb_analyzer/io/classification_bulk_apply.py` | 동일 SCH 구조 fingerprint 비교 | 호환 Source 일괄 적용 |
+- **LabVIEW-style** modular visual interface: drag, place, and connect experiment blocks
+- Provide battery experiment types as **template modules** (cycle life, formation, RPT, HPPC, DC-IR, etc.)
+- Users enter a **C-rate**, and current (A/mA) is calculated automatically from the **reference capacity**
+- Generated `.sch` files must be directly executable on PNE equipment
 
-> **현재 구현:** `io/sch_parser.py`의 독립 layout detector/viewer parser와
-> `io/reader.py`의 ASSB/Ensol adapter가 공존한다. `io/writer.py`는 512-byte
-> placeholder header를 쓰는 spike이며 아직 PNE 호환 writer로 간주하면 안 된다.
+---
 
-### 2.2 파일 버전 (Excel 시트)
+## 2. `.sch` File Structure (Current Understanding)
 
-| 시트명 | `nFileVersion` | Step 필드 수 (대략) | 비고 |
-|--------|----------------|---------------------|------|
-| Type1 `0x00010001` | 65537 | ~90 | 구형, `szName[64]` |
-| Type2 `0x00010001` | 65537 | ~90 | Type1과 유사 |
+### 2.1 Sources
+
+| Source | Role | Status |
+|--------|------|--------|
+| `c:\sch_file_structure_20250211.xlsx` | Official PNE field definitions (by version) | **Canonical specification** |
+| `ASSB_Analyzer_dev` → `assb_analyzer/io/pne_converter.py` | Reading, validation, and metadata extraction | Optional external validator; not included in the repository |
+| `_vendor/Ensol_PNE_framework/pne_app/io/pne_converter.py` | Partial reader for CycleNum and DCIR reference | Local vendor copy |
+| `assb_analyzer/io/cell_c_rate_reference.py` | C-rate ↔ capacity ↔ current (analysis side) | **Logic reusable by the writer** |
+| `assb_analyzer/io/classification_bulk_apply.py` | Comparison of identical SCH structure fingerprints | Bulk application of compatible Source values |
+
+> **Current implementation:** The standalone layout detector/viewer parser in `io/sch_parser.py`
+> coexists with the ASSB/Ensol adapter in `io/reader.py`. `io/writer.py` is a spike
+> that writes a 512-byte placeholder header and must not yet be considered a PNE-compatible writer.
+
+### 2.2 File Versions (Excel Sheets)
+
+| Sheet name | `nFileVersion` | Step field count (approx.) | Notes |
+|------------|----------------|----------------------------|-------|
+| Type1 `0x00010001` | 65537 | ~90 | Legacy, `szName[64]` |
+| Type2 `0x00010001` | 65537 | ~90 | Similar to Type1 |
 | `0x00010002` | 65538 | ~90 | |
-| `0x00010003` | 65539 | ~105 | ASSB converter **기본 타깃** (`step_size=612`) |
+| `0x00010003` | 65539 | ~105 | ASSB converter **default target** (`step_size=612`) |
 | `0x00010004` | 65540 | ~118 | |
-| `0x00010007` | 65543 | **132** (`stEISSet` 포함) | 최신, EIS 필드 추가 |
+| `0x00010007` | 65543 | **132** (includes `stEISSet`) | Latest, adds EIS fields |
 
-**1차 타깃 버전:** `0x00010003` + `step_size=612`  
-→ ASSB converter가 이미 layout policy·DCIR SOC rule·current condition mapping을 이 조합에 맞춰 구현함.  
-**2차:** corpus의 90%를 차지하는 `0x00010004` + `step_size=696`.
-**후속:** `0x00010007` (EIS 실험 필요 시).
+**Primary target version:** `0x00010003` + `step_size=612`
+→ The ASSB converter already implements its layout policy, DCIR SOC rules, and current-condition mapping for this combination.
+**Secondary:** `0x00010004` + `step_size=696`, which accounts for 90% of the corpus.
+**Later:** `0x00010007` (when EIS experiments are needed).
 
-### 2.3 바이너리 레이아웃 (4개 섹션)
+### 2.3 Binary Layout (4 Sections)
 
 ```
 ┌─────────────────────────────────────┐
@@ -63,7 +63,7 @@ PNE 사이클러용 `.sch` 바이너리 스케줄 파일을 **직접 편집기 �
 │  szDescrition[128]                  │
 │  szReserved[128]                    │
 ├─────────────────────────────────────┤
-│ FILE_TEST_INFORMATION  (×2 블록)    │
+│ FILE_TEST_INFORMATION  (×2 blocks)  │
 │  lID, lType                         │
 │  szName[], szDescription[]          │
 │  szCreator[], szModifiedTime[]      │
@@ -76,89 +76,89 @@ PNE 사이클러용 `.sch` 바이너리 스케줄 파일을 **직접 편집기 �
 ├─────────────────────────────────────┤
 │ FILE_STEP_CONDITION  (×N steps)     │
 │  chStepNo, chType, chMode           │
-│  fVref, fIref (전압/전류 설정)      │
+│  fVref, fIref (voltage/current setpoints) │
 │  fEndTime, fEndV, fEndI, fEndC ...  │
 │  Loop/Goto (nLoopInfo*, nGotoStepID)│
 │  Limit (fVLimit*, fILimit*)         │
 │  Sampling (fDeltaTime/V/I)          │
 │  DCIR (fDCRStartTime, fDCREndTime)  │
 │  SOC (fSocRate, fMaxCapacity)       │
-│  ... (버전별 확장 필드)             │
+│  ... (version-specific extension fields) │
 └─────────────────────────────────────┘
 ```
 
-### 2.4 Step Type / Mode 코드
+### 2.4 Step Type / Mode Codes
 
-**chType (Step 종류)**
+**chType (Step type)**
 
-| 이름 | 코드 | 용도 |
-|------|------|------|
-| CHARGE | 0x01 | 충전 |
-| DISCHARGE | 0x02 | 방전 |
-| REST | 0x03 | 휴지 |
-| OCV | 0x04 | OCV 측정 |
-| IMPEDANCE | 0x05 | 임피던스 |
-| END | 0x06 | 종료 |
-| CYCLE | 0x07 | 사이클 마커 |
-| LOOP | 0x08 | 루프 |
-| PATTERN | 0x09 | 패턴 파일 |
-| BALANCE | 0x0A | 밸런스 |
+| Name | Code | Purpose |
+|------|------|---------|
+| CHARGE | 0x01 | Charge |
+| DISCHARGE | 0x02 | Discharge |
+| REST | 0x03 | Rest |
+| OCV | 0x04 | OCV measurement |
+| IMPEDANCE | 0x05 | Impedance |
+| END | 0x06 | End |
+| CYCLE | 0x07 | Cycle marker |
+| LOOP | 0x08 | Loop |
+| PATTERN | 0x09 | Pattern file |
+| BALANCE | 0x0A | Balance |
 
-**chMode (실행 모드)** — converter에서 사용하는 조합:
+**chMode (Execution mode)** — combinations used by the converter:
 
-| 코드 | 의미 | converter 매핑 |
-|------|------|----------------|
+| Code | Meaning | Converter mapping |
+|------|---------|-------------------|
 | 0x0101 | CCCV | `SCH_STEP_TYPE_CCCV` |
 | 0x0201 | CC Charge | `SCH_STEP_TYPE_CC_CHARGE` |
 | 0x0202 | CC Discharge | `SCH_STEP_TYPE_CC_DISCHARGE` |
 
-**SCH ↔ CTS StepNo 관계 (중요):**
+**Relationship between SCH and CTS StepNo (important):**
 
 ```
 CTS StepNo = SCH StepNo + 1
 ```
 
-ASSB `cell_c_rate_reference.py`와 `pne_converter.py` 모두 이 mapping을 전제로 current condition을 검증한다. Writer도 반드시 동일 규칙을 지켜야 한다.
+Both ASSB `cell_c_rate_reference.py` and `pne_converter.py` validate current conditions based on this mapping. The writer must follow the same rule.
 
-### 2.5 검증된 layout registry
+### 2.5 Validated Layout Registry
 
-| `nFileVersion` | Header / payload offset | Step record | Fixture 수 |
-|----------------|-------------------------:|------------:|-----------:|
+| `nFileVersion` | Header / payload offset | Step record | Fixture count |
+|----------------|-------------------------:|------------:|--------------:|
 | `0x00010002` | 1632 | 612 | 6 |
 | `0x00010003` | 1760 | 612 | 4 |
 | `0x00010004` | 1844 | 696 | 92 |
 
-102개 corpus에서는 버전과 framing이 위 세 조합으로 완전히 일치하고 footer가
-없다. 이는 현재 표본의 불변 조건이며, 보지 못한 producer까지 같은 구조라고
-가정하지 않는다. Writer는 layout registry를 통해 버전별 schema를 선택하고
-unknown/reserved bytes를 보존해야 한다.
+Across the corpus of 102 files, versions and framing match these three combinations
+exactly, with no footer. This is an invariant of the current sample; it does not assume
+that unseen producers use the same structure. The writer must select the version-specific
+schema through the layout registry and preserve unknown/reserved bytes.
 
-696-byte record는 단순히 612-byte 뒤에 84 bytes를 붙인 구조가 아니다. 비교
-가능한 schedule에서 후반 필드가 8 bytes 이동하므로 별도 field map이 필요하다.
+The 696-byte record is not formed simply by appending 84 bytes to the 612-byte record.
+Later fields are shifted by 8 bytes in comparable schedules, so a separate field map is required.
 
-### 2.6 핵심 Step 필드 (실험 모듈 설계에 필요)
+### 2.6 Core Step Fields (Required for Experiment Module Design)
 
-| 필드 | 의미 | 모듈에서의 입력 |
-|------|------|----------------|
-| `fVref` | 목표 전압 (V) | 충전 상한 / 방전 하한 |
-| `fIref` | 목표 전류 (mA, 장비 raw) | **C-rate × 기준용량**으로 계산 |
-| `fEndTime` | 종료 시간 (sec) | Rest, HPPC pulse 간격 |
-| `fEndV` | 종료 전압 | CC-CV 전환, 방전 종료 |
-| `fEndI` | 종료 전류 (CV cutoff) | C/20, C/50 등 C-rate로 지정 |
-| `fEndC` | 종료 용량 (mAh) | SOC setting, partial cycle |
-| `fEndCVTime` | CV 구간 시간 | |
-| `nLoopInfoGoto/Cycle` | 루프 대상·횟수 | 수명 실험, RPT 주기 |
+| Field | Meaning | Module input |
+|-------|---------|--------------|
+| `fVref` | Target voltage (V) | Charge upper limit / discharge lower limit |
+| `fIref` | Target current (mA, equipment raw value) | Calculated as **C-rate × reference capacity** |
+| `fEndTime` | End time (sec) | Rest, interval between HPPC pulses |
+| `fEndV` | End voltage | CC-CV transition, discharge termination |
+| `fEndI` | End current (CV cutoff) | Specified as a C-rate such as C/20 or C/50 |
+| `fEndC` | End capacity (mAh) | SOC setting, partial cycle |
+| `fEndCVTime` | CV phase duration | |
+| `nLoopInfoGoto/Cycle` | Loop target/count | Cycle-life experiments, RPT period |
 | `nGotoStepID` | SOC reference step | DC-IR SOC setting |
-| `fDCRStartTime/EndTime` | DCIR 측정 구간 | DC-IR 모듈 |
-| `fDeltaTime/V/I` | 데이터 샘플링 | 기본 프로파일 |
-| `fSocRate` | SOC 비율 | SOC setting step |
-| `fMaxCapacity` | 기준 용량 (mAh) | C-rate 계산 기준 |
+| `fDCRStartTime/EndTime` | DCIR measurement window | DC-IR module |
+| `fDeltaTime/V/I` | Data sampling | Default profile |
+| `fSocRate` | SOC ratio | SOC setting step |
+| `fMaxCapacity` | Reference capacity (mAh) | Basis for C-rate calculation |
 
 ---
 
-## 3. 아키텍처 제안
+## 3. Proposed Architecture
 
-### 3.1 3-Layer 구조
+### 3.1 3-Layer Structure
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -168,7 +168,7 @@ unknown/reserved bytes를 보존해야 한다.
                          │ project JSON (.schproj)
 ┌────────────────────────▼─────────────────────────────────┐
 │  Domain Layer — Experiment Modules + Schedule IR         │
-│  Formation / CycleLife / RPT / HPPC / DCIR / Rest ...  │
+│  Formation / CycleLife / RPT / HPPC / DCIR / Rest ...    │
 │  C-rate Engine, Loop expander, Safety validator          │
 └────────────────────────┬─────────────────────────────────┘
                          │ compiled step list
@@ -178,18 +178,18 @@ unknown/reserved bytes를 보존해야 한다.
 └──────────────────────────────────────────────────────────┘
 ```
 
-### 3.2 중간 표현 (Schedule IR)
+### 3.2 Intermediate Representation (Schedule IR)
 
-UI와 바이너리 사이에 **버전 독립 IR**을 둔다.
+Place a **version-independent IR** between the UI and binary layers.
 
 ```python
 @dataclass
 class ScheduleProject:
     name: str
-    cell_profile: CellProfile          # 기준 용량, Vmax/Vmin
+    cell_profile: CellProfile          # reference capacity, Vmax/Vmin
     sch_version: int                   # 0x00010003
-    modules: list[ExperimentModule]    # 그래프 노드
-    connections: list[ModuleConnection]  # 실행 순서
+    modules: list[ExperimentModule]    # graph nodes
+    connections: list[ModuleConnection]  # execution order
 
 @dataclass
 class CellProfile:
@@ -200,46 +200,46 @@ class CellProfile:
 
 @dataclass
 class StepIntent:
-  # 사용자 친화적 의도 — C-rate 기반
+    # User-friendly intent — C-rate based
     step_type: Literal["charge","discharge","rest","ocv","cycle","loop","end"]
     mode: Literal["CCCV","CC","CV"]
-    c_rate: float | None              # fIref 산출
-    cv_cutoff_c_rate: float | None    # fEndI 산출
+    c_rate: float | None              # used to derive fIref
+    cv_cutoff_c_rate: float | None    # used to derive fEndI
     end_voltage_v: float | None
     end_time_s: float | None
     end_capacity_fraction: float | None  # SOC 50% → fEndC
     ...
 ```
 
-모듈은 `StepIntent[]`를 생성하고, compiler가 `FILE_STEP_CONDITION` 바이트 레코드로 flatten한다.
+Modules generate `StepIntent[]`, and the compiler flattens it into `FILE_STEP_CONDITION` byte records.
 
-### 3.3 C-rate Engine (요구사항 3 반영)
+### 3.3 C-rate Engine (Addresses Requirement 3)
 
 ```
 I_mA = C_rate × Q_nominal_mAh
 ```
 
-| 입력 | 예시 | 산출 |
-|------|------|------|
+| Input | Example | Output |
+|-------|---------|--------|
 | 1C charge, 80 mAh cell | C=1.0 | I = 80 mA |
 | C/3 discharge | C=0.333 | I = 26.7 mA |
 | CV cutoff C/20 | C=0.05 | fEndI = 4 mA |
 
-**UI 규칙:**
-- 사용자-facing 단위는 **항상 C-rate** (전류 직접 입력은 고급 옵션으로만)
-- Cell Profile에서 `nominal_capacity_mAh` 한 번 설정 → 모든 모듈에 전파
-- ASSB `cell_c_rate_reference.py`의 허용 C-rate 테이블(`_ALLOWED_CURRENT_RATES`)을 preset으로 제공
-- Writer 출력 시 PNE raw 단위(mA) + float32 packing (`_f32repr` 규칙) 적용
+**UI rules:**
+- The user-facing unit is **always C-rate** (direct current input is available only as an advanced option)
+- Set `nominal_capacity_mAh` once in the Cell Profile → propagate it to every module
+- Provide the allowed C-rate table (`_ALLOWED_CURRENT_RATES`) from ASSB `cell_c_rate_reference.py` as presets
+- When writing output, apply PNE raw units (mA) and float32 packing (`_f32repr` rules)
 
-### 3.4 비주얼 UI (요구사항 1 반영)
+### 3.4 Visual UI (Addresses Requirement 1)
 
-**화면 구성:**
+**Screen layout:**
 
 ```
 ┌─────────────┬────────────────────────────────┬──────────────┐
 │ Module      │  Canvas (node graph)           │ Properties   │
 │ Palette     │                                │ Panel        │
-│             │  [Formation]──▶[CycleLife]   │              │
+│             │  [Formation]──▶[CycleLife]     │              │
 │ · Formation │         │                      │ C-rate: 1C   │
 │ · CycleLife │         └──▶[RPT every 50]     │ Vmax: 4.2 V  │
 │ · RPT       │                                │ Loop: 500    │
@@ -252,44 +252,44 @@ I_mA = C_rate × Q_nominal_mAh
 └───────────────────────────────────────────────────────────────┘
 ```
 
-**기술 스택 후보:**
+**Technology stack candidates:**
 
-| 옵션 | 장점 | 단점 |
-|------|------|------|
-| **A. Tkinter + custom canvas** | pne_studio2와 동일 스택, 배포 단순 | node graph 직접 구현 부담 |
-| **B. PySide6 + NodeEditor** | LabVIEW UX에 가까움 | 의존성 추가 |
-| **C. Web (React Flow) + Electron** | 최고의 graph UX | 별도 앱, 배포 복잡 |
+| Option | Advantages | Disadvantages |
+|--------|------------|---------------|
+| **A. Tkinter + custom canvas** | Same stack as pne_studio2, simple deployment | Significant effort to implement the node graph |
+| **B. PySide6 + NodeEditor** | Closer to the LabVIEW UX | Adds dependencies |
+| **C. Web (React Flow) + Electron** | Best graph UX | Separate app, complex deployment |
 
-**권장:** Phase 3 비주얼 UI는 `pne_scheduler/ui/`에서 별도 앱으로 시작하고, 나중에 pne_studio2와 통합.
+**Recommendation:** Start the Phase 3 visual UI as a separate app in `pne_scheduler/ui/`, then integrate it with pne_studio2 later.
 
 ---
 
-## 4. 실험 모듈 카탈로그 (요구사항 2)
+## 4. Experiment Module Catalog (Requirement 2)
 
-### 4.1 Phase 1 — 필수 모듈
+### 4.1 Phase 1 — Essential Modules
 
-| 모듈 | 구성 Step 패턴 | 주요 파라미터 (C-rate 기반) |
-|------|----------------|----------------------------|
-| **Formation** | Charge CCCV → Rest → Discharge CC → Rest (×N cycle) | charge C, discharge C, Vmax/Vmin, cycle count |
+| Module | Step pattern | Main parameters (C-rate based) |
+|--------|--------------|--------------------------------|
+| **Formation** | Charge CCCV → Rest → Discharge CC → Rest (×N cycles) | charge C, discharge C, Vmax/Vmin, cycle count |
 | **Cycle Life** | [Charge CCCV → Rest → Discharge CC → Rest] × loop | C_charge, C_discharge, end condition (V or C), loop count |
 | **RPT** | Reference discharge (C/3) → Rest → pseudo-OCV steps | C_ref, SOC checkpoints, anchor cycle interval |
 | **DC-IR** | SOC setting discharge → Rest → pulse discharge (short CC) → Rest | SOC %, pulse C, pulse duration, DCR window |
 | **HPPC** | SOC staircase + pulse train (charge/discharge pulses) | SOC list, pulse C, pulse/rest duration |
 | **Rest / OCV** | Rest or OCV hold | duration, ΔV sampling |
 
-### 4.2 Phase 2 — 확장 모듈
+### 4.2 Phase 2 — Extension Modules
 
-| 모듈 | 설명 |
-|------|------|
+| Module | Description |
+|--------|-------------|
 | **Calendar Aging** | Storage at SOC X%, periodic RPT insert |
 | **Rate Capability** | Multi C-rate discharge ladder |
 | **GITT** | Intermittent current + rest OCV |
-| **Pattern Drive** | PATTERN step + `.pat` 파일 연결 |
-| **EIS** | `stEISSet` (0x00010007 전용) |
+| **Pattern Drive** | PATTERN step + `.pat` file connection |
+| **EIS** | `stEISSet` (0x00010007 only) |
 | **Self-discharge** | Long rest + periodic OCV |
-| **Pre-test / Cell Check** | `FILE_CELL_CHECK_PARAM` 자동 생성 |
+| **Pre-test / Cell Check** | Automatic generation of `FILE_CELL_CHECK_PARAM` |
 
-### 4.3 모듈 공통 인터페이스
+### 4.3 Common Module Interface
 
 ```python
 class ExperimentModule(Protocol):
@@ -304,138 +304,140 @@ class ExperimentModule(Protocol):
 
 ---
 
-## 5. 추가 제안 기능 (요구사항 4)
+## 5. Additional Proposed Features (Requirement 4)
 
-### 5.1 안전·검증
+### 5.1 Safety and Validation
 
-| 기능 | 설명 |
-|------|------|
-| **Safety envelope** | Cell Profile V/I 한도 대비 step별 자동 검증 |
-| **Round-trip validator** | Writer 출력 → ASSB `parse_sch_cycle_map_bytes` 재파싱 → 원본 IR 비교 |
-| **PNE simulator hook** | 가능하면 PNE PC 시뮬레이터로 dry-run (수동 확인 체크리스트) |
-| **StepNo continuity check** | 1..N 연속, END step 존재, LOOP goto 유효성 |
+| Feature | Description |
+|---------|-------------|
+| **Safety envelope** | Automatically validate each step against the Cell Profile V/I limits |
+| **Round-trip validator** | Writer output → reparse with ASSB `parse_sch_cycle_map_bytes` → compare with the original IR |
+| **PNE simulator hook** | If possible, dry-run in the PNE PC simulator (manual verification checklist) |
+| **StepNo continuity check** | Consecutive 1..N numbering, presence of an END step, and LOOP goto validity |
 
-### 5.2 생산성
+### 5.2 Productivity
 
-| 기능 | 설명 |
-|------|------|
-| **Template library** | ASSB preset (`06_assb_design_stack`) 연동 Cell Profile |
-| **Import existing .sch** | 실측 sch 역파싱 → IR → 그래프 편집 (reader 확장) |
-| **Clone & parameter sweep** | 동일 구조에 C-rate / cycle 수만 sweep → batch export |
-| **Schedule fingerprint** | ASSB `FrozenScheduleStructureFingerprint` 호환 — 동일 구조 Source 검색 |
-| **Human-readable export** | Step table Excel/PDF (공정서 첨부용) |
-| **Estimated duration / throughput** | 총 예상 시간, 에너지, 사이클 수 요약 |
+| Feature | Description |
+|---------|-------------|
+| **Template library** | Cell Profile integration with ASSB presets (`06_assb_design_stack`) |
+| **Import existing .sch** | Reverse-parse a measured sch → IR → graph editing (reader extension) |
+| **Clone & parameter sweep** | Sweep only C-rate / cycle count over the same structure → batch export |
+| **Schedule fingerprint** | Compatible with ASSB `FrozenScheduleStructureFingerprint` — search for Sources with the same structure |
+| **Human-readable export** | Step table in Excel/PDF (for attachment to process documents) |
+| **Estimated duration / throughput** | Summary of total estimated time, energy, and cycle count |
 
-### 5.3 분석 연동 (pne_studio2 / ASSB 생태계)
+### 5.3 Analysis Integration (pne_studio2 / ASSB Ecosystem)
 
-| 기능 | 설명 |
-|------|------|
-| **ASSB classification hint** | 모듈 조합에서 예상 test type (formation/cycle/dcir) 자동 태깅 |
-| **C-rate display sync** | ASSB Cell Manager `cell_c_rate_reference` schema와 동일 기준 용량 |
-| **Sampling preset** | Δt/ΔV/ΔQ 기본값 (cyclediag IMPROVEMENT_ROADMAP #16 미해 UNKNOWN 항목 해소) |
-| **Post-build checklist** | `.cts` naming, `.ini` current range, channel folder 구조 안내 |
+| Feature | Description |
+|---------|-------------|
+| **ASSB classification hint** | Automatically tag the expected test type (formation/cycle/dcir) from the module combination |
+| **C-rate display sync** | Use the same reference capacity as the ASSB Cell Manager `cell_c_rate_reference` schema |
+| **Sampling preset** | Default Δt/ΔV/ΔQ values (resolve the UNKNOWN item in cyclediag IMPROVEMENT_ROADMAP #16) |
+| **Post-build checklist** | Guidance for `.cts` naming, `.ini` current range, and channel folder structure |
 
-### 5.4 고급
+### 5.4 Advanced
 
-| 기능 | 설명 |
-|------|------|
-| **Conditional branching** | SOC/전압 조건 goto (nGotoStepID 시나리오) |
-| **Multi-version export** | 동일 IR → 0x00010003 / 0x00010007 선택 출력 |
-| **Chiller / thermal profile** | fTref, chiller 필드 (0x00010007) |
+| Feature | Description |
+|---------|-------------|
+| **Conditional branching** | SOC/voltage conditional goto (`nGotoStepID` scenario) |
+| **Multi-version export** | Same IR → selectable 0x00010003 / 0x00010007 output |
+| **Chiller / thermal profile** | fTref, chiller fields (0x00010007) |
 | **Version control** | `.schproj` git-friendly JSON + diff view |
 
 ---
 
-## 6. 구현 로드맵
+## 6. Implementation Roadmap
 
-### 6.1 2026-08-31 저장소 점검 결과
+### 6.1 Repository Assessment Results as of 2026-08-31
 
-| 영역 | 상태 | 근거 / 판정 |
-|------|------|-------------|
-| 원본 fixture | **확보** | `example/archives/`에 8개·93개 SCH ZIP, `example/fixtures/hppc/`에 HPPC 1개 |
-| 파일 읽기·뷰어 | **부분 완료** | 612/696-byte layout 탐지와 주요 필드 표시 구현; 기존 보고서는 93개 parse 성공이나 자동 회귀 테스트 없음 |
-| 분류·스택·C-rate 추론 | **부분 완료** | 단위 테스트 존재, 분석 리포트 생성됨 |
-| `.schproj` IR·JSON | **부분 완료** | 직렬화와 선형 DAG 정렬 구현; schema validation/version migration 없음 |
-| 실험 모듈 | **prototype** | Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED 등 expand 구현 |
-| binary compiler | **spike** | 일부 필드만 packing; mode, loop, DCR, sampling 등 핵심 필드 미기록 |
-| SCH writer | **미완료/사용 금지** | 512-byte placeholder header 사용, 실제 파일 섹션 미구현 |
-| round-trip validator | **미완료** | 외부 parser가 없으면 검증 불가하고 현재는 step count만 비교 |
-| GUI | **부분 완료** | viewer/resume/bulk editor 존재; flow editor는 placeholder |
-| 테스트 실행 환경 | **복구** | root-layout package를 명시적으로 등록해 editable install과 wheel import 성공 |
+| Area | Status | Evidence / assessment |
+|------|--------|-----------------------|
+| Original fixtures | **Secured** | 8-file and 93-file SCH ZIPs in `example/archives/`, and 1 HPPC file in `example/fixtures/hppc/` |
+| File reading/viewer | **Partially complete** | Implemented 612/696-byte layout detection and display of major fields; an existing report shows 93 files parsed successfully, but there are no automated regression tests |
+| Classification/stack/C-rate inference | **Partially complete** | Unit tests exist and analysis reports have been generated |
+| `.schproj` IR/JSON | **Partially complete** | Serialization and linear DAG sorting implemented; no schema validation/version migration |
+| Experiment modules | **prototype** | expand implemented for Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED, etc. |
+| Binary compiler | **spike** | Packs only some fields; does not write core fields such as mode, loop, DCR, and sampling |
+| SCH writer | **Incomplete/do not use** | Uses a 512-byte placeholder header; actual file sections are not implemented |
+| Round-trip validator | **Incomplete** | Validation is impossible without an external parser, and currently only the step count is compared |
+| GUI | **Partially complete** | Viewer/resume/bulk editor exist; flow editor is a placeholder |
+| Test execution environment | **Restored** | Editable install and wheel import succeed after explicitly registering the root-layout package |
 
-### 6.2 Gate A — 개발 기준선 복구 (최우선)
+### 6.2 Gate A — Restore the Development Baseline (Highest Priority)
 
-| # | 작업 | 완료 기준 |
-|---|------|-----------|
-| A1 | `pyproject.toml` package discovery/소스 배치 수정 | clean environment에서 editable install 후 `import pne_scheduler` 성공 |
-| A2 | 테스트 명령과 CI 기준 고정 | `python -m pytest tests/ -q` 전체 통과, 실제 통과 개수를 README와 일치 |
-| A3 | fixture inventory 테스트 추가 | ZIP의 SCH 개수(8, 93)와 HPPC fixture 존재를 자동 확인 |
+| # | Task | Completion criteria |
+|---|------|---------------------|
+| A1 | Fix `pyproject.toml` package discovery/source layout | `import pne_scheduler` succeeds after an editable install in a clean environment |
+| A2 | Establish the test command and CI baseline | All `python -m pytest tests/ -q` tests pass, and the actual pass count matches the README |
+| A3 | Add fixture inventory tests | Automatically verify the SCH counts in the ZIPs (8, 93) and the presence of the HPPC fixture |
 
-이 gate가 끝나기 전에는 기존 “65+ passed” 문구나 모듈 완료 상태를 릴리스
-근거로 사용하지 않는다.
+Until this gate is complete, neither the existing “65+ passed” statement nor module
+completion statuses may be used as release evidence.
 
-**진행 기록**
-- A1 완료: editable install과 별도 target에 설치한 wheel에서 package/subpackage import 확인
-- A3 완료: 두 ZIP과 추출 디렉터리의 8개·93개 목록 일치, HPPC 포함 총 102개 자동 확인
-- A2 진행 중: 로컬 `75 passed` 확인; CI 기준 고정과 README 수치 갱신이 남음
+**Progress record**
+- A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
+- A3 complete: automatically verified that the two ZIPs match the 8-file and 93-file extracted directory listings, for a total of 102 files including HPPC
+- A2 in progress: confirmed `75 passed` locally; establishing the CI baseline and updating the README count remain
 
-### 6.3 Gate B — 바이너리 스키마를 단일 정본으로 확정
+### 6.3 Gate B — Establish the Binary Schema as the Single Source of Truth
 
-| # | 작업 | 완료 기준 |
-|---|------|-----------|
-| B1 | 612/696 layout별 header·step 필드표 작성 | offset, dtype, 크기, 버전 출처를 코드 한 곳에서 관리 |
-| B2 | parser/schema/compiler offset 불일치 해소 | 특히 `fEndV`, `fEndI`, `fEndC`를 원본·Excel·ASSB 결과와 대조 |
-| B3 | 전체 원본 102개 read regression | 8 + 93 + HPPC 파일 모두 version, payload offset, step size/count 탐지 |
-| B4 | 대표 fixture semantic golden test | Formation/Cycle/RPT/QPEED/HPPC의 step type과 핵심 값이 golden data와 일치 |
+| # | Task | Completion criteria |
+|---|------|---------------------|
+| B1 | Create header/step field tables for the 612/696 layouts | Manage offset, dtype, size, and version source in one place in the code |
+| B2 | Resolve parser/schema/compiler offset discrepancies | In particular, compare `fEndV`, `fEndI`, and `fEndC` against originals, Excel, and ASSB results |
+| B3 | Read regression over all 102 original files | Detect version, payload offset, step size/count for all 8 + 93 + HPPC files |
+| B4 | Semantic golden tests for representative fixtures | Step types and core values for Formation/Cycle/RPT/QPEED/HPPC match golden data |
 
-`schema/v0x00010003_612.py`, `io/sch_parser.py`, `engine/compiler.py`의 종료
-조건 offset은 원본 corpus 분석을 기준으로 통일했다. 수정 전 생성된 분석값은
-참고 자료로만 취급하고, 재생성된 manifest와 golden test를 기준으로 삼는다.
+The end-condition offsets in `schema/v0x00010003_612.py`, `io/sch_parser.py`, and
+`engine/compiler.py` have been unified based on analysis of the original corpus. Analysis
+values generated before the correction are treated only as reference material; the regenerated
+manifest and golden tests are authoritative.
 
-### 6.4 Gate C — 실제 호환 SCH writer
+### 6.4 Gate C — Actually Compatible SCH Writer
 
-| # | 작업 | 완료 기준 |
-|---|------|-----------|
-| C1 | `0x00010003` 전체 header/test-info/cell-check writer | placeholder 없이 정해진 payload offset과 크기 생성 |
-| C2 | step compiler 완성 | mode, 종료 조건, loop/goto, sampling, SOC, DCR 필드 기록 |
-| C3 | 내부 round-trip validator 독립화 | 외부 ASSB 설치 없이 write → read semantic 비교 |
-| C4 | 외부 parser 교차 검증 | 가능할 때 ASSB 결과와 내부 parser 결과 일치 |
-| C5 | PNE PC/장비 smoke test | Rest → CC Charge → END 파일 로드 성공 및 체크리스트 기록 |
-| C6 | `0x00010004/696` writer 확장 | lab archive의 지배적 형식(89/93)을 대표 fixture와 semantic 비교 |
+| # | Task | Completion criteria |
+|---|------|---------------------|
+| C1 | Full header/test-info/cell-check writer for `0x00010003` | Generate the defined payload offset and size without placeholders |
+| C2 | Complete the step compiler | Write mode, end conditions, loop/goto, sampling, SOC, and DCR fields |
+| C3 | Make the internal round-trip validator independent | Semantic write → read comparison without an external ASSB installation |
+| C4 | Cross-validate against the external parser | Internal parser results match ASSB results when available |
+| C5 | PNE PC/equipment smoke test | Successfully load a Rest → CC Charge → END file and record the checklist |
+| C6 | Extend writer for `0x00010004/696` | Semantically compare the dominant lab archive format (89/93) with representative fixtures |
 
-612-byte 구현은 schema 확정용 첫 vertical slice다. 실제 lab parity에는 696-byte
-지원이 필수이므로 C6까지 끝나기 전에는 writer 전체를 완료로 표시하지 않는다.
-PNE 로드 성공 전에는 CLI `build` 결과를 “장비 실행 가능”으로 문서화하지 않는다.
+The 612-byte implementation is the first vertical slice for establishing the schema. Support
+for 696-byte records is essential for actual lab parity, so the writer must not be marked fully
+complete until C6 is finished. Until a successful PNE load, do not document CLI `build`
+output as “equipment-executable.”
 
-### 6.5 Gate D — 실험 모듈 fixture fidelity
+### 6.5 Gate D — Experiment Module Fixture Fidelity
 
-| 우선순위 | 모듈 | 검증 fixture / 기준 |
-|----------|------|---------------------|
-| P0 | Formation, Cycle Life, Rest | 대표 원본과 step topology·전류·전압·loop 의미 비교 |
-| P0 | RPT, DC-IR | SOC reference, DCR window, goto 관계 semantic diff |
-| P1 | HPPC | `HPPC_Full range.sch`의 SOC staircase와 양방향 pulse 비교 |
-| P1 | capacheck, QPEED, in-situ cycle | 8개 bimodal archive의 golden topology 비교 |
+| Priority | Module | Validation fixture / criteria |
+|----------|--------|-------------------------------|
+| P0 | Formation, Cycle Life, Rest | Compare step topology, current, voltage, and loop semantics with representative originals |
+| P0 | RPT, DC-IR | Semantic diff of SOC reference, DCR window, and goto relationships |
+| P1 | HPPC | Compare the SOC staircase and bidirectional pulses in `HPPC_Full range.sch` |
+| P1 | capacheck, QPEED, in-situ cycle | Compare golden topology for the 8-file bimodal archive |
 
-각 모듈은 `validate`, `expand`, binary compile, round-trip까지 하나의 통합
-테스트로 통과해야 완료로 표시한다.
+Each module must pass `validate`, `expand`, binary compile, and round-trip in a single
+integration test before it is marked complete.
 
-### 6.6 Gate E — 편집 UX와 고급 기능
+### 6.6 Gate E — Editing UX and Advanced Features
 
-1. 기존 viewer/resume/bulk editor의 fixture 기반 회귀 테스트
-2. flow editor의 module palette, DAG canvas, property panel, live preview
-3. export 전 validation feedback와 위험 조건 차단
-4. `.sch` → IR import, 0x00010007/EIS, fingerprint 연동
-5. pne_studio 통합
+1. Fixture-based regression tests for the existing viewer/resume/bulk editor
+2. Flow editor module palette, DAG canvas, property panel, and live preview
+3. Validation feedback and blocking of unsafe conditions before export
+4. `.sch` → IR import, 0x00010007/EIS, and fingerprint integration
+5. pne_studio integration
 
-Gate E는 writer 호환성이 확보된 Gate C 이후에 진행한다.
+Gate E proceeds after writer compatibility is secured in Gate C.
 
 ---
 
-## 7. 패키지 배치 제안
+## 7. Proposed Package Layout
 
 ```
-pne_scheduler/                   # 본 패키지 (repo 루트)
-├── planning/ROADMAP.md          # 본 문서
+pne_scheduler/                   # main package (repo root)
+├── planning/ROADMAP.md          # this document
 ├── example/example.schproj
 ├── schema/
 │   ├── v0x00010003_612.py
@@ -459,68 +461,69 @@ pne_scheduler/                   # 본 패키지 (repo 루트)
 │   └── writer.py
 ├── validate/
 │   └── roundtrip.py
-├── stack/                       # FP, L-level, xMyU, 용량 추론
-├── protocol/                    # 프로토콜 기본값·추론
-├── classify/                    # 파일명 분류
-├── edit/                        # 모듈 일괄 수정
-├── resume/                      # 중단 실험 재개
+├── stack/                       # FP, L-level, xMyU, capacity inference
+├── protocol/                    # protocol defaults and inference
+├── classify/                    # filename classification
+├── edit/                        # bulk module editing
+├── resume/                      # resume interrupted experiments
 ├── ui/
 │   ├── schedule_viewer.py
 │   ├── project_editor.py
 │   ├── resume_wizard.py
 │   └── flow_editor.py           # placeholder
-├── tools/                       # fixture 배치 분석
+├── tools/                       # batch fixture analysis
 ├── docs/
 └── tests/
 
-run_pne_scheduler.py             # 루트 launcher
+run_pne_scheduler.py             # root launcher
 ```
 
-**검증 의존성 원칙:** 기본 read/write/round-trip은 저장소만으로 동작해야 한다.
-`assb_analyzer.io.pne_converter.parse_sch_cycle_map_bytes`는 선택적 교차 검증기로
-사용하며, 외부 패키지 부재가 기본 테스트를 건너뛰게 만들면 안 된다.
+**Validation dependency principle:** Basic read/write/round-trip functionality must work
+with the repository alone. Use `assb_analyzer.io.pne_converter.parse_sch_cycle_map_bytes`
+as an optional cross-validator; the absence of the external package must not cause basic
+tests to be skipped.
 
 ---
 
-## 8. 리스크 & 미해결 항목
+## 8. Risks & Unresolved Items
 
-| 항목 | 상태 | 대응 |
-|------|------|------|
-| editable install 후 package import 실패 | **해결됨** | editable install과 wheel clean-target import 회귀 검증 |
-| parser/schema/compiler 종료조건 offset 불일치 | **내부 정합 완료** | `fEndV=28`, `fEndI=32`, `fEndC=36`; `fEndC` 비영 원본/외부 parser 대조는 B2에서 계속 |
-| LOOP goto/count offset 오해 | **해결됨** | corpus로 `+48/+52` 확인; 기존 `+84/+88` 수정과 612/696 golden test 추가 |
-| lab 형식과 writer 타깃 불일치 | **확인됨** | 93개 중 89개가 `0x10004/696`; 612 검증 직후 Gate C6 진행 |
-| 612 vs 696 byte step size 자동 선택 | 부분 파악 | 확보한 102개 실측 sch로 version→size 매핑 검증 |
-| PNE raw current 단위 (mA vs A) | ini range 의존 | Cell range profile + ASSB `unit_scale` 대조 |
-| `FILE_GRADE`, `STRUCT_EIS_SET` 내부 구조 | Excel에 이름만 | 0x00010007은 Phase 4로 연기 |
-| Δt/ΔV/ΔQ 권장값 | cyclediag에서 UNKNOWN | 사내 표준 sch 샘플에서 역추출 |
-| Writer 실기 검증 | 미착수 | Gate C5에서 PNE PC 로드 테스트 필수 |
-| 외부 ASSB parser 가용성 | 저장소 밖 의존성 | 내부 parser를 기본 정본으로 만들고 선택적으로 교차 검증 |
-| fixture 이름과 테스트 기대값 drift | **확인됨** | skip으로 숨기지 말고 manifest 기반 fixture lookup으로 고정 |
-
----
-
-## 9. 다음 즉시 액션
-
-1. ✅ **패키징 복구** — editable install과 wheel clean-target import 검증 완료
-2. ✅ **fixture 자동 점검 추가** — archive/추출본 101개 + HPPC 1개를 테스트 입력으로 고정
-3. ✅ **내부 offset 충돌 해결** — parser/schema/compiler의 `fEndV/fEndI/fEndC` 위치 통일
-4. **offset 외부 확증** — 비영 `fEndC` 원본 또는 공식 필드표로 의미 검증
-5. **전체 reader 회귀 테스트** — 102개 파일의 layout·step count golden snapshot 생성
-6. **writer header 구현** — `0x00010003/612`로 schema·writer vertical slice 완성
-7. **696-byte lab parity** — 89/93을 차지하는 `0x00010004/696` writer 확장
-8. **대표 모듈 end-to-end 검증** — Formation → Cycle Life → RPT/DC-IR 순서
-9. **PNE 로드 테스트** — 성공 결과가 기록된 뒤에만 writer를 usable로 승격
+| Item | Status | Response |
+|------|--------|----------|
+| Package import fails after editable install | **Resolved** | Regression validation of editable install and clean-target wheel import |
+| Parser/schema/compiler end-condition offset discrepancy | **Internally consistent** | `fEndV=28`, `fEndI=32`, `fEndC=36`; comparison of originals with nonzero `fEndC` against the external parser continues in B2 |
+| Misunderstanding of LOOP goto/count offsets | **Resolved** | Corpus confirmed `+48/+52`; corrected the previous `+84/+88` and added 612/696 golden tests |
+| Mismatch between lab format and writer target | **Confirmed** | 89 of 93 files use `0x10004/696`; proceed with Gate C6 immediately after 612 validation |
+| Automatic selection of 612 vs 696 byte step size | Partially understood | Validate version→size mapping against the 102 secured measured sch files |
+| PNE raw current unit (mA vs A) | Depends on ini range | Compare Cell range profile with ASSB `unit_scale` |
+| Internal structure of `FILE_GRADE`, `STRUCT_EIS_SET` | Only names are present in Excel | Defer 0x00010007 to Phase 4 |
+| Recommended Δt/ΔV/ΔQ values | UNKNOWN in cyclediag | Reverse-extract from internal standard sch samples |
+| Writer validation on physical equipment | Not started | PNE PC load test is mandatory in Gate C5 |
+| External ASSB parser availability | Dependency outside the repository | Make the internal parser the default source of truth and optionally cross-validate |
+| Drift between fixture names and test expectations | **Confirmed** | Do not hide with skips; stabilize with manifest-based fixture lookup |
 
 ---
 
-## 10. 참고 코드 위치
+## 9. Immediate Next Actions
 
-| 경로 | 내용 |
-|------|------|
-| `c:\sch_file_structure_20250211.xlsx` | PNE 공식 필드 스펙 |
+1. ✅ **Restore packaging** — completed editable install and clean-target wheel import validation
+2. ✅ **Add automatic fixture checks** — established 101 archive/extracted files + 1 HPPC file as test inputs
+3. ✅ **Resolve internal offset conflict** — unified parser/schema/compiler locations for `fEndV/fEndI/fEndC`
+4. **Externally confirm offsets** — validate semantics using an original with nonzero `fEndC` or the official field table
+5. **Full reader regression test** — generate a golden snapshot of layout and step count for 102 files
+6. **Implement writer header** — complete the schema/writer vertical slice for `0x00010003/612`
+7. **696-byte lab parity** — extend the writer for `0x00010004/696`, which accounts for 89/93
+8. **End-to-end validation of representative modules** — Formation → Cycle Life → RPT/DC-IR order
+9. **PNE load test** — promote the writer to usable only after a successful result is recorded
+
+---
+
+## 10. Reference Code Locations
+
+| Path | Content |
+|------|---------|
+| `c:\sch_file_structure_20250211.xlsx` | Official PNE field specification |
 | `ASSB_Analyzer_dev/assb_analyzer/io/pne_converter.py` | SCH parser (read), current conditions, DCIR SOC rules |
 | `ASSB_Analyzer_dev/assb_analyzer/io/cell_c_rate_reference.py` | C-rate ↔ capacity |
 | `ASSB_Analyzer_dev/assb_analyzer/io/classification_bulk_apply.py` | SCH structure fingerprint |
-| `_vendor/Ensol_PNE_framework/pne_app/io/pne_converter.py` | 로컬 부분 reader |
-| `pne_studio2/assets/presets/06_assb_design_stack.json` | Cell 설계 preset (용량 추정 참고) |
+| `_vendor/Ensol_PNE_framework/pne_app/io/pne_converter.py` | Local partial reader |
+| `pne_studio2/assets/presets/06_assb_design_stack.json` | Cell design preset (reference for capacity estimation) |
