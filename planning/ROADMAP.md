@@ -345,7 +345,7 @@ class ExperimentModule(Protocol):
 | 영역 | 상태 | 근거 / 판정 |
 |------|------|-------------|
 | 원본 fixture | **확보** | `example/archives/`에 8개·93개 SCH ZIP, `example/fixtures/hppc/`에 HPPC 1개 |
-| 파일 읽기·뷰어 | **부분 완료** | 612/696-byte layout 탐지와 주요 필드 표시 구현; 전체 fixture 회귀 테스트 없음 |
+| 파일 읽기·뷰어 | **부분 완료** | 612/696-byte layout 탐지와 주요 필드 표시 구현; 기존 보고서는 93개 parse 성공이나 자동 회귀 테스트 없음 |
 | 분류·스택·C-rate 추론 | **부분 완료** | 단위 테스트 존재, 분석 리포트 생성됨 |
 | `.schproj` IR·JSON | **부분 완료** | 직렬화와 선형 DAG 정렬 구현; schema validation/version migration 없음 |
 | 실험 모듈 | **prototype** | Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED 등 expand 구현 |
@@ -388,7 +388,10 @@ class ExperimentModule(Protocol):
 | C3 | 내부 round-trip validator 독립화 | 외부 ASSB 설치 없이 write → read semantic 비교 |
 | C4 | 외부 parser 교차 검증 | 가능할 때 ASSB 결과와 내부 parser 결과 일치 |
 | C5 | PNE PC/장비 smoke test | Rest → CC Charge → END 파일 로드 성공 및 체크리스트 기록 |
+| C6 | `0x00010004/696` writer 확장 | lab archive의 지배적 형식(89/93)을 대표 fixture와 semantic 비교 |
 
+612-byte 구현은 schema 확정용 첫 vertical slice다. 실제 lab parity에는 696-byte
+지원이 필수이므로 C6까지 끝나기 전에는 writer 전체를 완료로 표시하지 않는다.
 PNE 로드 성공 전에는 CLI `build` 결과를 “장비 실행 가능”으로 문서화하지 않는다.
 
 ### 6.5 Gate D — 실험 모듈 fixture fidelity
@@ -443,8 +446,18 @@ pne_scheduler/                   # 본 패키지 (repo 루트)
 │   └── writer.py
 ├── validate/
 │   └── roundtrip.py
+├── stack/                       # FP, L-level, xMyU, 용량 추론
+├── protocol/                    # 프로토콜 기본값·추론
+├── classify/                    # 파일명 분류
+├── edit/                        # 모듈 일괄 수정
+├── resume/                      # 중단 실험 재개
 ├── ui/
-│   └── flow_editor.py           # Phase 3
+│   ├── schedule_viewer.py
+│   ├── project_editor.py
+│   ├── resume_wizard.py
+│   └── flow_editor.py           # placeholder
+├── tools/                       # fixture 배치 분석
+├── docs/
 └── tests/
 
 run_pne_scheduler.py             # 루트 launcher
@@ -462,12 +475,14 @@ run_pne_scheduler.py             # 루트 launcher
 |------|------|------|
 | editable install 후 package import 실패 | **재현됨** | Gate A에서 package discovery/레이아웃 우선 수정 |
 | parser/schema/compiler 종료조건 offset 불일치 | **재현됨** | 원본·Excel·ASSB 3-way 대조 후 단일 schema 사용 |
+| lab 형식과 writer 타깃 불일치 | **확인됨** | 93개 중 89개가 `0x10004/696`; 612 검증 직후 Gate C6 진행 |
 | 612 vs 696 byte step size 자동 선택 | 부분 파악 | 확보한 102개 실측 sch로 version→size 매핑 검증 |
 | PNE raw current 단위 (mA vs A) | ini range 의존 | Cell range profile + ASSB `unit_scale` 대조 |
 | `FILE_GRADE`, `STRUCT_EIS_SET` 내부 구조 | Excel에 이름만 | 0x00010007은 Phase 4로 연기 |
 | Δt/ΔV/ΔQ 권장값 | cyclediag에서 UNKNOWN | 사내 표준 sch 샘플에서 역추출 |
 | Writer 실기 검증 | 미착수 | Gate C5에서 PNE PC 로드 테스트 필수 |
 | 외부 ASSB parser 가용성 | 저장소 밖 의존성 | 내부 parser를 기본 정본으로 만들고 선택적으로 교차 검증 |
+| fixture 이름과 테스트 기대값 drift | **확인됨** | skip으로 숨기지 말고 manifest 기반 fixture lookup으로 고정 |
 
 ---
 
@@ -477,9 +492,10 @@ run_pne_scheduler.py             # 루트 launcher
 2. **fixture 자동 점검 추가** — archive 101개 + HPPC 1개를 테스트 입력으로 고정
 3. **offset 충돌 해결** — `fEndV/fEndI/fEndC`부터 원본 바이트와 필드 정의 대조
 4. **전체 reader 회귀 테스트** — 102개 파일의 layout·step count golden snapshot 생성
-5. **writer header 구현** — `0x00010003/612` 한 버전에 집중해 실제 섹션 구성
-6. **대표 모듈 end-to-end 검증** — Formation → Cycle Life → RPT/DC-IR 순서
-7. **PNE 로드 테스트** — 성공 결과가 기록된 뒤에만 writer를 usable로 승격
+5. **writer header 구현** — `0x00010003/612`로 schema·writer vertical slice 완성
+6. **696-byte lab parity** — 89/93을 차지하는 `0x00010004/696` writer 확장
+7. **대표 모듈 end-to-end 검증** — Formation → Cycle Life → RPT/DC-IR 순서
+8. **PNE 로드 테스트** — 성공 결과가 기록된 뒤에만 writer를 usable로 승격
 
 ---
 
