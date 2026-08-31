@@ -1,0 +1,1963 @@
+{
+  "schema": "pne_scheduler.fixture_catalog/v1",
+  "scope": "Equipment provenance applies only to these exact checked-in fixtures. It must not be inferred for future files from filenames or protocol names.",
+  "equipment_summary": {
+    "PNE02": "500mA cycler; probable attribution for current QPEED fixtures",
+    "PNE16": "6A cycler; user attribution for the current sch.zip corpus",
+    "PNE21": "100mA cycler; no fixture currently identified",
+    "PNE22": "100mA cycler; no fixture currently identified"
+  },
+  "operational_context": {
+    "formation": {
+      "current_equipment": [
+        "PNE02",
+        "PNE21",
+        "PNE22"
+      ],
+      "source": "user_reported_current_practice",
+      "exclusive": false,
+      "note": "This is routing context, not fixture provenance. Formation filenames must not be used to infer equipment identity."
+    }
+  },
+  "fixture_count": 102,
+  "fixtures": [
+    {
+      "path": "capacheck_zip/00207966_260803_727도급셀_Set8_45도 Cycle.sch",
+      "sha256": "53f789da1726fee0a61197301c43c4d59fcc24e5c9fef63def1394594576838d",
+      "size": 46436,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010003",
+        "payload_offset": 1760,
+        "step_size": 612,
+        "step_count": 73
+      },
+      "equipment_provenance": {
+        "equipment": null,
+        "rating": null,
+        "confidence": "unknown",
+        "source": "unassigned",
+        "evidence": "No equipment identity is encoded in the SCH file or confirmed by the user."
+      }
+    },
+    {
+      "path": "capacheck_zip/07100766_260511_SJ1300_dry_40um_RPT_500cycle.sch",
+      "sha256": "bb78b1ded34cc7a69937f3b5e5e7021f0b4a7b84fb15f2e79e946b19037e9c3f",
+      "size": 30380,
+      "category": "rpt",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": null,
+        "rating": null,
+        "confidence": "unknown",
+        "source": "unassigned",
+        "evidence": "No equipment identity is encoded in the SCH file or confirmed by the user."
+      }
+    },
+    {
+      "path": "capacheck_zip/07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch",
+      "sha256": "b9e97d1585d47b6d3caf794be6385eed3bbb8787411ca41ba6da263dcb7e62fd",
+      "size": 103964,
+      "category": "qpeed",
+      "layout": {
+        "version": "0x00010003",
+        "payload_offset": 1760,
+        "step_size": 612,
+        "step_count": 167
+      },
+      "equipment_provenance": {
+        "equipment": "PNE02",
+        "rating": "500mA",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed QPEED fixtures in the current corpus to PNE02, with uncertainty."
+      }
+    },
+    {
+      "path": "capacheck_zip/07100766_260713_Set9_QPEED_SOC_setting_BM_SJ1300_6040_C_NCN.sch",
+      "sha256": "3158b1e96c290e11950ff3922b6b1cf5ee2897461889c8f2543718a0abb79512",
+      "size": 8492,
+      "category": "qpeed",
+      "layout": {
+        "version": "0x00010003",
+        "payload_offset": 1760,
+        "step_size": 612,
+        "step_count": 11
+      },
+      "equipment_provenance": {
+        "equipment": "PNE02",
+        "rating": "500mA",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed QPEED fixtures in the current corpus to PNE02, with uncertainty."
+      }
+    },
+    {
+      "path": "capacheck_zip/3.BM_C1%_FM.sch",
+      "sha256": "c9e94f76cf636078afa296771c2bfb9217c10e2456e83ded595d147811f82b94",
+      "size": 8108,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 9
+      },
+      "equipment_provenance": {
+        "equipment": null,
+        "rating": null,
+        "confidence": "unknown",
+        "source": "unassigned",
+        "evidence": "No equipment identity is encoded in the SCH file or confirmed by the user."
+      }
+    },
+    {
+      "path": "capacheck_zip/9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
+      "sha256": "5321449813b21162cee9faaa80782646ba2dabf50eccb465f948f6451461683e",
+      "size": 10940,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010003",
+        "payload_offset": 1760,
+        "step_size": 612,
+        "step_count": 15
+      },
+      "equipment_provenance": {
+        "equipment": null,
+        "rating": null,
+        "confidence": "unknown",
+        "source": "unassigned",
+        "evidence": "No equipment identity is encoded in the SCH file or confirmed by the user."
+      }
+    },
+    {
+      "path": "capacheck_zip/set3_bimodal-30_45도 0.5C cycle.sch",
+      "sha256": "7773d9420803c50e3648f85a7aed75ccba8f9e92ea8b672f186b838bafceb5a3",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": null,
+        "rating": null,
+        "confidence": "unknown",
+        "source": "unassigned",
+        "evidence": "No equipment identity is encoded in the SCH file or confirmed by the user."
+      }
+    },
+    {
+      "path": "capacheck_zip/차효현_3350_L.4.36_NP1.08_RPT_SOC50 End_챔버미연동.sch",
+      "sha256": "e82e4f18e0cc91816eec0261c874cdfd8eba1e85bc8aa6b402f86e0cdad00cb9",
+      "size": 13260,
+      "category": "rpt",
+      "layout": {
+        "version": "0x00010002",
+        "payload_offset": 1632,
+        "step_size": 612,
+        "step_count": 19
+      },
+      "equipment_provenance": {
+        "equipment": null,
+        "rating": null,
+        "confidence": "unknown",
+        "source": "unassigned",
+        "evidence": "No equipment identity is encoded in the SCH file or confirmed by the user."
+      }
+    },
+    {
+      "path": "hppc/HPPC_Full range.sch",
+      "sha256": "5b180886cd2747ba29a4cf88f5d1dd2fc55fda8da4628883fe0f2c95ded67633",
+      "size": 39576,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010002",
+        "payload_offset": 1632,
+        "step_size": 612,
+        "step_count": 62
+      },
+      "equipment_provenance": {
+        "equipment": null,
+        "rating": null,
+        "confidence": "unknown",
+        "source": "unassigned",
+        "evidence": "No equipment identity is encoded in the SCH file or confirmed by the user."
+      }
+    },
+    {
+      "path": "sch_lab_zip/0.1C capa_SJ1300░╟╜─ #1.sch",
+      "sha256": "45277fed113b1b61723289d8cef7b96a2009023252ed73583b491838d3e9edf6",
+      "size": 10892,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/0.1C capa_SJ1300░╟╜─ #3.sch",
+      "sha256": "ae7d630ad7f2303272d3fa1bba65350ae51b88865152a8580a7fb72d8f200bb3",
+      "size": 10892,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/0.1C capa_SJ1300░╟╜─ #4.sch",
+      "sha256": "187cccfcee4d90082c047cc7a693b145b3f8352ed8ddcbb6280c1fe590156f58",
+      "size": 10892,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/0.1C capa_SJ1300░╟╜─ #5.sch",
+      "sha256": "566e60e716d89c1eac6891acfaa4410dc596a2c05dd339c5d7ddd42b70083538",
+      "size": 10892,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/0.1C capa_SJ900 #1.sch",
+      "sha256": "e86f83d9a409d49e29fc2cf5997e8ef81ee293141f451d1b58703a60b7de2df9",
+      "size": 10892,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/0.5C cycle.sch",
+      "sha256": "2539628ddb31cc0340eb423ecd51cf446d2523d8bff7312bc52f03eb7026634d",
+      "size": 23420,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 31
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250611_1Ah_swelling 1st_FM.sch",
+      "sha256": "0f40e7d361f2e2ad6459e79d14840fe63870192bd66864c08f9d3151ba2f67ff",
+      "size": 15068,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 19
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250611_capa.sch",
+      "sha256": "7fd2d68f9aaadb87c19dbaf145211f03a5d3fe8bbebb0cecceb3c2ca03fe6704",
+      "size": 3932,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 3
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250611_capa2.sch",
+      "sha256": "2ef4379dfc71f067e01d58b89b0812ef6bbacf14d2b71613e2362d8ed447c4ae",
+      "size": 3932,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 3
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250616_1Ah_swelling_Gore 2.5Mpa_0.5C cycle_1-300.sch",
+      "sha256": "a2461e39226f37c778e9f69ef7906e394ae1e1a60af3030e279e9ac1a4f550c7",
+      "size": 23420,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 31
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250616_1Ah_swelling_Gore 3Mpa_0.5C cycle_1-300.sch",
+      "sha256": "2539628ddb31cc0340eb423ecd51cf446d2523d8bff7312bc52f03eb7026634d",
+      "size": 23420,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 31
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250616_1Ah_swelling_no pad_0.5C cycle_1-300.sch",
+      "sha256": "8db81d958267b113ab2fc07d970eacf64eda1defbe17171abd2ddb772f5d11f3",
+      "size": 23420,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 31
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250723_FD_╜║╟┴╕╡┴÷▒╫.sch",
+      "sha256": "d175c73f8fe33fc4c0fa4e9f630d210de82734c03cf3d5d921e8ccbcd40b2d74",
+      "size": 19244,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250723_FD_░φ┴ñ┴÷▒╫.sch",
+      "sha256": "9229806740bf228507deedff92b5a3434802c5f039701442eeb1766fc6a66493",
+      "size": 19244,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250827_Gr_2Mpa_288kgf╜║╟┴╕╡┴÷▒╫.sch",
+      "sha256": "7d0810403bf2c5e2a24916fb6129496bed5b0be8fb8e011fa911636a676a04ac",
+      "size": 19244,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250827_Gr_2Mpa_90kgf╜║╟┴╕╡┴÷▒╫.sch",
+      "sha256": "33f9339a9768278bd3ce07bf78b931c56497c46333ffe2e264ef4891eb514879",
+      "size": 19244,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ.sch",
+      "sha256": "22b98c29f06f450ccf5bc87a64a4f0754fa6b856a69169a6662f2827561a6fa2",
+      "size": 15068,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 19
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ_000.sch",
+      "sha256": "5637e08a525d00d870abdcab1def3b01758ffd6ebae9f9c52c69579fa7354039",
+      "size": 15068,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 19
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ_001.sch",
+      "sha256": "06710b65db4d956b37cdc4c726349e609e949f6317735b52228c9203c190519b",
+      "size": 15068,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 19
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250912_1Ah_Gr-SiC_├╩▒Γ░í╛╨ ╞≥░í┐δ_FM.sch",
+      "sha256": "51d1de990b360a04a2cfb537afd0940426726cfbdea633fc41d480c1c5d4afaf",
+      "size": 15068,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 19
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250916_Gr-SiC_288kgf_1.0Mpa_0.5C cycle.sch",
+      "sha256": "0f66ad274ffb787aca18dd267f818422103485b44559e15f6c7656dbd3e3bc7e",
+      "size": 19244,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250916_Gr-SiC_288kgf_1.5Mpa_0.5C cycle.sch",
+      "sha256": "07100a99f5ff9228cafcd5d4cbc2f3c72224d6c3d4bd1122932d57ac3d11b223",
+      "size": 19244,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_250916_Gr-SiC_288kgf_2.0Mpa_0.5C cycle.sch",
+      "sha256": "3a80990b81ace4d55107ba100c721472fca64bc6a6a6a8558312f97ab2dffb95",
+      "size": 19244,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_251016_1Ah_f.sch",
+      "sha256": "6c257c8d2db79bc0c77e3dfa1abc1565bac761da6504335dcfbacd1f3295238b",
+      "size": 15068,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 19
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260116_╖╬╡∙╞≥░í_L4.3-no7.sch",
+      "sha256": "379b0cbefd57a586ab7cd8556a826f0bdb6a6818f60f01148221b164395129cf",
+      "size": 8108,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 9
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260116_╖╬╡∙╞≥░í_L5.0-no5.sch",
+      "sha256": "ac13ba282f8fe95d20a759e929b43c47d779e2971f41fefdbb05aefc5673bf89",
+      "size": 8108,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 9
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260116_╖╬╡∙╞≥░í_L5.6-no7.sch",
+      "sha256": "f757431da56b0b85fc31c17811a9ba92041e3d6ee5b84c2e57cc0680f154de04",
+      "size": 8108,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 9
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260421_8stack_SJ900 ╜└╜─_FM.sch",
+      "sha256": "7ac032bac520dab0cf858b7aae31c05a89ce00ed41d1d4cff70cc76e1ce48e11",
+      "size": 8108,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 9
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260421_8stack_SJ900 ╜└╜─_FM_000.sch",
+      "sha256": "b2d8a53a6a64162deeda48ad7caa1e9587805cefb37428ce22b4404c80b6b191",
+      "size": 8108,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 9
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260422_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch",
+      "sha256": "e45a9e2632a0d363775669c9cc05db06e809a72c9a6c117de4e56d30779fbe84",
+      "size": 6716,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 7
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260424_8stack_SJ1300 ░╟╜─1┬≈_FM_SOC30 ╝╝╞├.sch",
+      "sha256": "06897222a217a12c4424d89947db3422e976e75a95bffb759d2f60fd16cacea1",
+      "size": 10892,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260427_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch",
+      "sha256": "61429a13fa96b46d5a80436e1809352b6404e99734676f6670f58f7263ed7090",
+      "size": 6716,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 7
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no1.sch",
+      "sha256": "45277fed113b1b61723289d8cef7b96a2009023252ed73583b491838d3e9edf6",
+      "size": 10892,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no3.sch",
+      "sha256": "ae7d630ad7f2303272d3fa1bba65350ae51b88865152a8580a7fb72d8f200bb3",
+      "size": 10892,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no4.sch",
+      "sha256": "187cccfcee4d90082c047cc7a693b145b3f8352ed8ddcbb6280c1fe590156f58",
+      "size": 10892,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no5.sch",
+      "sha256": "566e60e716d89c1eac6891acfaa4410dc596a2c05dd339c5d7ddd42b70083538",
+      "size": 10892,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ900╜└╜─_no1.sch",
+      "sha256": "e86f83d9a409d49e29fc2cf5997e8ef81ee293141f451d1b58703a60b7de2df9",
+      "size": 10892,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no1.sch",
+      "sha256": "a05a128fd092ddd70d2d0f1eb6bc6d74c9ea222ac7deeed61d6396a172be46da",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no3.sch",
+      "sha256": "fdc2920db73c0fa256189a228fed57fefa1bf37eb6b1d3c7fa7e903d8579c265",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no4.sch",
+      "sha256": "6e140c38752e9932fed6dac9d151c2b876c15d4ce1fa8c754708a152340b1762",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no5.sch",
+      "sha256": "f89cd15e8e86c17707f428d254195872604bcb5e6a7b92efe209cd567591e48a",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ900╜└╜─_no1.sch",
+      "sha256": "663f8de1e2b21f51406b992f23746f91ad17f2cc9360f4747e95b5ebe2b11190",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260514_bimodal ╛τ▒╪ ╞≥░í_45╡╡ ╗τ└╠┼¼.sch",
+      "sha256": "0ae634d557ccc56c580f96627ede8b254e54f6e0f99143ef063f6e90792c6ce1",
+      "size": 30380,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260514_bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_45╡╡ ╗τ└╠┼¼.sch",
+      "sha256": "eccef69aa6b89ea115e3c545897de17282e44ffef7f73c3418ee023a8b4155a5",
+      "size": 30380,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260519_S83S-SJ1300 ╡╡0%_45╡╡ ╗τ└╠┼¼.sch",
+      "sha256": "bf0a558ca07a58d1a86bbeed9a71057a431bb09d1087c25d48df9695f276a1d3",
+      "size": 30380,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260519_S83S-SJ1300 ╡╡1%_45╡╡ ╗τ└╠┼¼.sch",
+      "sha256": "2a5792bca0443cc2b3d2492a131ecf3e99212803e3dd947784bf29d0f77d3432",
+      "size": 30380,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260519_╛τ▒╪86wt%-SJ1300 ╡╡1%_45╡╡ ╗τ└╠┼¼.sch",
+      "sha256": "ff55faf90aeb386657670b2797daf938607c3c7f6704a5e3799dc4c0029112d4",
+      "size": 30380,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch",
+      "sha256": "418620818fb3d1e5ffb38e0cbb21d95210c7a9214f560b4c1d734a3e28e5fd69",
+      "size": 5324,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 5
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260819_514bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
+      "sha256": "51b3584697c9b9bfe00db6fe5a981c7aaf5fc75cd6fadc83a626f597834d395a",
+      "size": 5324,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 5
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260820_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
+      "sha256": "2b4d8c6bfe9b2228b8e00b2b65f5cd5ec2b7bc877b32894e674c3af1afe7f593",
+      "size": 5324,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 5
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/00207966_260820_░φ┐┬╚░╝║╚¡ ░φ┐┬└·└σ set1_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
+      "sha256": "6f984fd68e44fb30be39ba2a6339a832cf3df88f96bb8c44402b798411e091d7",
+      "size": 5324,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 5
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/07100766_260522_Set1_SJ900_wet_QC_1_charge.sch",
+      "sha256": "f34a0c8ed698000a662e63c325a436369ec6a3a0d450cee9d430834141e492b9",
+      "size": 18548,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 24
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/07100766_260522_Set2_SJ1300_60-40_wet_QC_1_charge.sch",
+      "sha256": "0e28ba7fff0b0f864f28eda31d19d602c70c3b5aca74a84aa2b70a7d1e85f267",
+      "size": 19244,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/07100766_260522_Set2_SJ1300_60-40_wet_QC_cycle.sch",
+      "sha256": "43a54f699e5be56038c6c1e1aa6e8981476e7e0c1d780bbfd27f1221c41b331e",
+      "size": 13676,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 17
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/07100766_260522_Set3_SJ1300_65-35_wet_QC_1_charge.sch",
+      "sha256": "ea5082232aaaf996f5e1ff5e5515511aa30e52cf9af6b870e4922929b7682cc1",
+      "size": 19244,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/07100766_260522_Set3_SJ1300_65-35_wet_QC_cycle.sch",
+      "sha256": "214bdfacb8359ed4ef6661fb880ef5ca4e0b8c268069f77aed30154188a36e55",
+      "size": 13676,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 17
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/07100766_260522_Set4_SJ900_dry_QC_1_charge.sch",
+      "sha256": "349b8325b51cb45b919cbb4c387144e621d378489f6d799fe8c5e90d7ae8790f",
+      "size": 19940,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 26
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/07100766_260522_Set4_SJ900_dry_QC_1_charge_2.sch",
+      "sha256": "7f2e280111cb77cca0f0212d9181c30f279352cdd6912082363261e2dc66fe7d",
+      "size": 18548,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 24
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/07100766_260522_Set4_SJ900_dry_QC_1_charge_3.sch",
+      "sha256": "57594b0e3af3cf79be1c801da9fc029ff3d4d3d83479dc322ea1455bb1583e4d",
+      "size": 18548,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 24
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/07100766_260522_Set4_SJ900_dry_QC_cycle.sch",
+      "sha256": "538f4afdf247f249cd86346e2b69403c7ba215c098d1981d78df223df949ee78",
+      "size": 14372,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 18
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/1Ah capacheck.sch",
+      "sha256": "6c257c8d2db79bc0c77e3dfa1abc1565bac761da6504335dcfbacd1f3295238b",
+      "size": 15068,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 19
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/2Ah capacheck.sch",
+      "sha256": "5637e08a525d00d870abdcab1def3b01758ffd6ebae9f9c52c69579fa7354039",
+      "size": 15068,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 19
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/86wt%-SJ1300 ╡╡1%_0.5C cycle.sch",
+      "sha256": "ff55faf90aeb386657670b2797daf938607c3c7f6704a5e3799dc4c0029112d4",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Capacheck_3)Set3_Capa_cycle_├¿╣÷╣╠┐¼╡┐.sch",
+      "sha256": "7c2eb638bfd52550bcfb6729e241b92824333f95a8b9438d77c3a12603a3aa4c",
+      "size": 26724,
+      "category": "capacheck",
+      "layout": {
+        "version": "0x00010002",
+        "payload_offset": 1632,
+        "step_size": 612,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/F-D.sch",
+      "sha256": "7d0810403bf2c5e2a24916fb6129496bed5b0be8fb8e011fa911636a676a04ac",
+      "size": 19244,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Monocell_FM_L4.3.sch",
+      "sha256": "379b0cbefd57a586ab7cd8556a826f0bdb6a6818f60f01148221b164395129cf",
+      "size": 8108,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 9
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Monocell_FM_L5.0.sch",
+      "sha256": "ac13ba282f8fe95d20a759e929b43c47d779e2971f41fefdbb05aefc5673bf89",
+      "size": 8108,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 9
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Monocell_FM_L5.6.sch",
+      "sha256": "f757431da56b0b85fc31c17811a9ba92041e3d6ee5b84c2e57cc0680f154de04",
+      "size": 8108,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 9
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/S83S-SJ1300 ╡╡0%_0.5C cycle.sch",
+      "sha256": "bf0a558ca07a58d1a86bbeed9a71057a431bb09d1087c25d48df9695f276a1d3",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/S83S-SJ1300 ╡╡1%_0.5C cycle.sch",
+      "sha256": "2a5792bca0443cc2b3d2492a131ecf3e99212803e3dd947784bf29d0f77d3432",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/SJ1300 ░╟╜─_8╜║┼├_FM.sch",
+      "sha256": "06897222a217a12c4424d89947db3422e976e75a95bffb759d2f60fd16cacea1",
+      "size": 10892,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 13
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/SJ1300_no1_0.5C cycle.sch",
+      "sha256": "a05a128fd092ddd70d2d0f1eb6bc6d74c9ea222ac7deeed61d6396a172be46da",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/SJ1300_no3_0.5C cycle.sch",
+      "sha256": "fdc2920db73c0fa256189a228fed57fefa1bf37eb6b1d3c7fa7e903d8579c265",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/SJ1300_no4_0.5C cycle.sch",
+      "sha256": "6e140c38752e9932fed6dac9d151c2b876c15d4ce1fa8c754708a152340b1762",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/SJ1300_no5_0.5C cycle.sch",
+      "sha256": "f89cd15e8e86c17707f428d254195872604bcb5e6a7b92efe209cd567591e48a",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/SJ900 ╜└╜─_8╜║┼├_FM.sch",
+      "sha256": "b2d8a53a6a64162deeda48ad7caa1e9587805cefb37428ce22b4404c80b6b191",
+      "size": 8108,
+      "category": "formation",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 9
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/SJ900 ╜└╜─_8╜║┼├_SOC30╝╝╞├.sch",
+      "sha256": "61429a13fa96b46d5a80436e1809352b6404e99734676f6670f58f7263ed7090",
+      "size": 6716,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 7
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/SJ900_no1_0.5C cycle.sch",
+      "sha256": "663f8de1e2b21f51406b992f23746f91ad17f2cc9360f4747e95b5ebe2b11190",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set1_QC_1_charge.sch",
+      "sha256": "57594b0e3af3cf79be1c801da9fc029ff3d4d3d83479dc322ea1455bb1583e4d",
+      "size": 18548,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 24
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set2_QC_1N1Q.sch",
+      "sha256": "43a54f699e5be56038c6c1e1aa6e8981476e7e0c1d780bbfd27f1221c41b331e",
+      "size": 13676,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 17
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set2_QC_1_charge.sch",
+      "sha256": "0e28ba7fff0b0f864f28eda31d19d602c70c3b5aca74a84aa2b70a7d1e85f267",
+      "size": 19244,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set3_QC_1N1Q.sch",
+      "sha256": "214bdfacb8359ed4ef6661fb880ef5ca4e0b8c268069f77aed30154188a36e55",
+      "size": 13676,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 17
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set3_QC_1_charge.sch",
+      "sha256": "ea5082232aaaf996f5e1ff5e5515511aa30e52cf9af6b870e4922929b7682cc1",
+      "size": 19244,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set4_QC_1N1Q.sch",
+      "sha256": "538f4afdf247f249cd86346e2b69403c7ba215c098d1981d78df223df949ee78",
+      "size": 14372,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 18
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set4_QC_1_charge.sch",
+      "sha256": "349b8325b51cb45b919cbb4c387144e621d378489f6d799fe8c5e90d7ae8790f",
+      "size": 19940,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 26
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/SiC_0.5CCycle_1Ah.sch",
+      "sha256": "3a80990b81ace4d55107ba100c721472fca64bc6a6a6a8558312f97ab2dffb95",
+      "size": 19244,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/bimodal_0.5C cycle.sch",
+      "sha256": "0ae634d557ccc56c580f96627ede8b254e54f6e0f99143ef063f6e90792c6ce1",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/bimodal_ref ╛τ▒╪_0.5C cycle.sch",
+      "sha256": "eccef69aa6b89ea115e3c545897de17282e44ffef7f73c3418ee023a8b4155a5",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/└ⁿ╖∙└╬░í.sch",
+      "sha256": "2ef4379dfc71f067e01d58b89b0812ef6bbacf14d2b71613e2362d8ed447c4ae",
+      "size": 3932,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 3
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/└╙╝÷╟÷_SiC_0.5CCycle_1Ah_├¿╣÷╣╠┐¼╡┐.sch",
+      "sha256": "7bd790841ba44cc7335f2826d5ab15e5c7630599f2c281d42f489432dba8b255",
+      "size": 16932,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010002",
+        "payload_offset": 1632,
+        "step_size": 612,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/╜┼└»┴ñ_1Ah QC_1N1Q_910.727mAh_├¿╣÷╣╠┐¼╡┐.sch",
+      "sha256": "536e4f68fe72e646f21b166018e3ebbfc366d9d32ab4c248ca872f848887943a",
+      "size": 12036,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010002",
+        "payload_offset": 1632,
+        "step_size": 612,
+        "step_count": 17
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/╜┼└»┴ñ_1Ah_QC 1 charge_948.729mAh_├¿╣÷╣╠┐¼╡┐.sch",
+      "sha256": "c369272418e06b5c8039b7fb2b3f8ea186e15ef9c6c7fece8c37465a033f5349",
+      "size": 16932,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010002",
+        "payload_offset": 1632,
+        "step_size": 612,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/╣µ└ⁿ.sch",
+      "sha256": "2b4d8c6bfe9b2228b8e00b2b65f5cd5ec2b7bc877b32894e674c3af1afe7f593",
+      "size": 5324,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 5
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    }
+  ]
+}

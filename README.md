@@ -3,7 +3,7 @@
 PNE 사이클러용 `.sch` 스케줄을 **읽기·해석·생성·재개**하는 Python 패키지입니다.  
 ASSB 실험실 프로토콜(FM, capacheck, cycle, RPT, QPEED 등)과 셀 형상(FP, L-level, xMyU) 추론을 지원합니다.
 
-[![Tests](https://img.shields.io/badge/tests-65%2B%20passed-brightgreen)](#테스트)
+[![Tests](https://img.shields.io/badge/tests-78%20passed-brightgreen)](#테스트)
 
 ## 설치
 

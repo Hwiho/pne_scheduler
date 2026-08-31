@@ -353,7 +353,8 @@ class ExperimentModule(Protocol):
 | Area | Status | Evidence / assessment |
 |------|--------|-----------------------|
 | Original fixtures | **Secured** | 8-file and 93-file SCH ZIPs in `example/archives/`, and 1 HPPC file in `example/fixtures/hppc/` |
-| File reading/viewer | **Partially complete** | Implemented 612/696-byte layout detection and display of major fields; an existing report shows 93 files parsed successfully, but there are no automated regression tests |
+| File reading/viewer | **Partially complete** | Implemented registry-first 612/696-byte layout detection; all 102 fixtures have automated structural golden regression coverage |
+| Equipment provenance | **Partially classified** | Current fixture-only catalog records user-confirmed, user-attributed, and unknown equipment sources without creating filename rules for future files |
 | Classification/stack/C-rate inference | **Partially complete** | Unit tests exist and analysis reports have been generated |
 | `.schproj` IR/JSON | **Partially complete** | Serialization and linear DAG sorting implemented; no schema validation/version migration |
 | Experiment modules | **prototype** | expand implemented for Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED, etc. |
@@ -377,7 +378,8 @@ completion statuses may be used as release evidence.
 **Progress record**
 - A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
 - A3 complete: automatically verified that the two ZIPs match the 8-file and 93-file extracted directory listings, for a total of 102 files including HPPC
-- A2 in progress: confirmed `75 passed` locally; establishing the CI baseline and updating the README count remain
+- A2 complete locally: confirmed `78 passed` and synchronized the README test badge;
+  adding a hosted CI workflow remains a separate repository-infrastructure task
 
 ### 6.3 Gate B — Establish the Binary Schema as the Single Source of Truth
 
@@ -392,6 +394,12 @@ The end-condition offsets in `schema/v0x00010003_612.py`, `io/sch_parser.py`, an
 `engine/compiler.py` have been unified based on analysis of the original corpus. Analysis
 values generated before the correction are treated only as reference material; the regenerated
 manifest and golden tests are authoritative.
+
+**Progress record**
+- B3 complete: `example/fixtures/catalog.json` locks SHA-256, version, payload offset,
+  step size, step count, and equipment provenance for all 102 checked-in fixtures
+- Layout detection now uses the v2/v3/v4 registry first and retains structural scanning
+  only as a guarded fallback for unknown producers
 
 ### 6.4 Gate C — Actually Compatible SCH Writer
 
@@ -509,7 +517,7 @@ tests to be skipped.
 2. ✅ **Add automatic fixture checks** — established 101 archive/extracted files + 1 HPPC file as test inputs
 3. ✅ **Resolve internal offset conflict** — unified parser/schema/compiler locations for `fEndV/fEndI/fEndC`
 4. **Externally confirm offsets** — validate semantics using an original with nonzero `fEndC` or the official field table
-5. **Full reader regression test** — generate a golden snapshot of layout and step count for 102 files
+5. ✅ **Full reader regression test** — locked layout, step count, hash, and EOF geometry for all 102 files
 6. **Implement writer header** — complete the schema/writer vertical slice for `0x00010003/612`
 7. **696-byte lab parity** — extend the writer for `0x00010004/696`, which accounts for 89/93
 8. **End-to-end validation of representative modules** — Formation → Cycle Life → RPT/DC-IR order
