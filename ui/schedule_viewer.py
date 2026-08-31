@@ -38,15 +38,15 @@ class ScheduleViewerApp:
         self._document: ScheduleDocument | None = None
 
         self._build_ui()
+        self._fixture_paths: list[Path] = []
+        sch_files: list[Path] = []
+        for directory in FIXTURE_DIRS:
+            if directory.exists():
+                sch_files.extend(sorted(directory.glob("*.sch")))
+        if sch_files:
+            self._populate_fixture_list(sch_files)
         if initial_path is not None and initial_path.exists():
             self.load_file(initial_path)
-        elif any(directory.exists() for directory in FIXTURE_DIRS):
-            sch_files: list[Path] = []
-            for directory in FIXTURE_DIRS:
-                if directory.exists():
-                    sch_files.extend(sorted(directory.glob("*.sch")))
-            if sch_files:
-                self._populate_fixture_list(sch_files)
 
     def _build_ui(self) -> None:
         toolbar = ttk.Frame(self.root, padding=6)
@@ -122,6 +122,12 @@ class ScheduleViewerApp:
         if labels:
             self.fixture_combo.current(0)
 
+    def _select_fixture(self, path: Path) -> None:
+        paths = getattr(self, "_fixture_paths", [])
+        names = [item.name for item in paths]
+        if path.name in names:
+            self.fixture_var.set(path.name)
+
     def _on_fixture_selected(self, _event: object = None) -> None:
         index = self.fixture_combo.current()
         if index < 0:
@@ -152,6 +158,7 @@ class ScheduleViewerApp:
         self._render_summary(document)
         self._render_table(document)
         self.status_var.set(f"Loaded {path.name} — {len(document.steps)} steps")
+        self._select_fixture(path)
 
     def _render_summary(self, doc: ScheduleDocument) -> None:
         cls = doc.classification
