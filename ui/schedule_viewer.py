@@ -8,12 +8,9 @@ from tkinter import filedialog, messagebox, ttk
 
 from ..io.sch_parser import ScheduleDocument, parse_schedule_file
 from ..engine.c_rate import FAST_CHARGE_MIN_C_RATE, STANDARD_C_RATE_PRESETS
-from ..protocol import explain_schedule, format_explanation
 
-FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "example" / "fixtures"
-FIXTURE_DIRS = (
-    FIXTURE_ROOT / "hppc",
-    FIXTURE_ROOT / "capacheck_zip",
+FIXTURE_DIR = (
+    Path(__file__).resolve().parents[1] / "example" / "fixtures" / "capacheck_zip"
 )
 
 COLUMNS = (
@@ -40,11 +37,8 @@ class ScheduleViewerApp:
         self._build_ui()
         if initial_path is not None and initial_path.exists():
             self.load_file(initial_path)
-        elif any(directory.exists() for directory in FIXTURE_DIRS):
-            sch_files: list[Path] = []
-            for directory in FIXTURE_DIRS:
-                if directory.exists():
-                    sch_files.extend(sorted(directory.glob("*.sch")))
+        elif FIXTURE_DIR.exists():
+            sch_files = sorted(FIXTURE_DIR.glob("*.sch"))
             if sch_files:
                 self._populate_fixture_list(sch_files)
 
@@ -66,7 +60,7 @@ class ScheduleViewerApp:
         summary = ttk.LabelFrame(self.root, text="Summary", padding=8)
         summary.pack(fill=tk.X, padx=8, pady=(0, 6))
 
-        self.summary_text = tk.Text(summary, height=16, wrap=tk.WORD, font=("Consolas", 10))
+        self.summary_text = tk.Text(summary, height=9, wrap=tk.WORD, font=("Consolas", 10))
         self.summary_text.pack(fill=tk.X)
         self.summary_text.configure(state=tk.DISABLED)
 
@@ -217,12 +211,6 @@ class ScheduleViewerApp:
         preset_labels = ", ".join(p.label for p in STANDARD_C_RATE_PRESETS)
         lines.append("")
         lines.append(f"Standard C-rates: {preset_labels}")
-        lines.append("")
-        lines.append("— What this schedule does (inferred) —")
-        explanation = format_explanation(explain_schedule(doc)).rstrip()
-        # Skip the duplicate filename title line.
-        body = "\n".join(explanation.splitlines()[1:])
-        lines.append(body)
 
         self.summary_text.configure(state=tk.NORMAL)
         self.summary_text.delete("1.0", tk.END)

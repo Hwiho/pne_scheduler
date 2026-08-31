@@ -51,16 +51,3 @@ def test_qpeed_soc_setting_is_sub_experiment_of_qpeed() -> None:
     assert match.qpeed_variant == QpeedVariant.SOC_SETTING
     assert match.suggested_module == "qpeed"
     assert match.is_qpeed_soc_setting
-    assert match.filename_soc_percents == ()
-
-
-def test_hppc_filename_is_hppc_not_unknown() -> None:
-    match = classify_schedule_filename("HPPC_Full range.sch")
-    assert match.category == ScheduleCategory.HPPC
-    assert match.suggested_module == "hppc"
-
-
-def test_filename_soc_percent_from_rpt_name() -> None:
-    match = classify_schedule_filename("임효진_3350_L.4.36_NP1.08_RPT_SOC50 End.sch")
-    assert match.category == ScheduleCategory.RPT
-    assert match.filename_soc_percents == (50,)

@@ -32,19 +32,6 @@
 ### QPEED
 - >2.5C 급충 실험
 - `SOC_setting` 은 QPEED 하위 variant
-- 현재 코퍼스에서 SOC%는 `fEndC`에 저장되지 않음. full 파일은 **3.318 V** 충전을 SOC 대용으로 13회 반복한 뒤 고율로 4.2 V까지 충전
-
-### HPPC
-- 모듈 생성 기본값: SOC 90/50/10, 10 s pulse (생성 템플릿)
-- 체크인 fixture `HPPC_Full range.sch`는 **2.5–4.2 V full range** + 30 mA residual. SOC 계단은 바이너리에 없음
-
-### 스케줄 설명 (read-only)
-
-```powershell
-python -m pne_scheduler explain path\to\file.sch
-```
-
-파일명 SOC, 전압 setpoint, rest/LOOP 블록을 서술한다. writer-ready가 아니다.
 
 ## `.schproj` 예시
 

@@ -18,14 +18,11 @@ from ..schema.enums import (
     SCH_STEP_TYPES,
 )
 from ..engine.c_rate import snap_c_rate
-from ..protocol.infer import ProtocolInference, infer_protocol_from_schedule
+from ..protocol import ProtocolInference, infer_protocol_from_schedule
 from ..schema.fields import (
     OFFSET_F_END_C,
     OFFSET_F_END_I,
     OFFSET_F_END_V,
-    OFFSET_LOOP_COUNT,
-    OFFSET_LOOP_GOTO,
-    OFFSET_MODE_VALUE,
 )
 from ..stack import CellGeometryInference, c_rate_from_current, infer_cell_geometry, l_from_fvref
 from .layout import detect_sch_layout
@@ -58,9 +55,6 @@ class SchStepView:
     f_end_v: float
     f_end_i: float
     f_end_c: float
-    mode_value: float = 0.0
-    loop_target: int = 0
-    loop_count: int = 0
     step_l_level: float | None = None
     c_rate: float | None = None
     c_rate_label: str = ""
@@ -141,9 +135,6 @@ def parse_schedule_file(path: str | Path) -> ScheduleDocument:
                 f_end_v=step.f_end_v,
                 f_end_i=step.f_end_i,
                 f_end_c=step.f_end_c,
-                mode_value=step.mode_value,
-                loop_target=step.loop_target,
-                loop_count=step.loop_count,
                 step_l_level=step_l,
                 c_rate=c_rate,
                 c_rate_label=c_snap.label if c_snap is not None else "",
@@ -180,9 +171,6 @@ class _RawStep:
     f_end_v: float
     f_end_i: float
     f_end_c: float
-    mode_value: float = 0.0
-    loop_target: int = 0
-    loop_count: int = 0
 
 
 def _detect_layout(data: bytes) -> tuple[int, int] | None:
@@ -212,9 +200,6 @@ def _read_steps(data: bytes, payload_offset: int, step_size: int) -> list[_RawSt
                 f_end_v=struct.unpack_from("<f", data, base + OFFSET_F_END_V)[0],
                 f_end_i=struct.unpack_from("<f", data, base + OFFSET_F_END_I)[0],
                 f_end_c=struct.unpack_from("<f", data, base + OFFSET_F_END_C)[0],
-                mode_value=struct.unpack_from("<f", data, base + OFFSET_MODE_VALUE)[0],
-                loop_target=struct.unpack_from("<I", data, base + OFFSET_LOOP_GOTO)[0],
-                loop_count=struct.unpack_from("<I", data, base + OFFSET_LOOP_COUNT)[0],
             )
         )
         if step_type_code == int(SCH_STEP_TYPE_END):

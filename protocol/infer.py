@@ -25,8 +25,6 @@ class InferredProtocol(StrEnum):
     CYCLE_LIFE = "cycle_life"
     INSITU_CYCLE = "insitu_cycle"
     RPT = "rpt"
-    QPEED = "qpeed"
-    HPPC = "hppc"
     QC = "qc"
     UNKNOWN = "unknown"
 
@@ -87,23 +85,6 @@ def infer_protocol_from_schedule(
             confidence=0.9,
             detail="FM / formation filename",
             expected_c_rates=("0.1C",),
-        )
-
-    if filename_category == "hppc" or "hppc" in name:
-        return ProtocolInference(
-            protocol=InferredProtocol.HPPC,
-            confidence=0.9,
-            detail="HPPC filename",
-            expected_c_rates=("pulse C-rate",),
-        )
-
-    if filename_category == "qpeed" or "qpeed" in name:
-        variant = "SOC-setting" if "soc" in name and "setting" in name else "full"
-        return ProtocolInference(
-            protocol=InferredProtocol.QPEED,
-            confidence=0.9,
-            detail=f"QPEED filename ({variant})",
-            expected_c_rates=("1C", ">1C pulse/fast charge"),
         )
 
     if filename_category == "rpt" or "rpt" in name:

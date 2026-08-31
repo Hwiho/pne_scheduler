@@ -29,6 +29,4 @@ PROTOCOL_SUMMARY: dict[str, str] = {
     "cycle_life": "default 0.5C charge/discharge",
     "insitu": "0.5C cycle without RPT blocks",
     "rpt": "C/3 discharge ladder + DC-IR pulse @ SOC 80/50/20 (1.0–1.5C)",
-    "qpeed": "SOC-setting charge then high-C charge; SOC% is not stored in fEndC",
-    "hppc": "Full-range or SOC-staircase pulse characterization; SOC% is not stored in fEndC",
 }

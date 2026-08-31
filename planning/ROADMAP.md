@@ -8,7 +8,6 @@
 | 2026-08-31 | Created the `pne_scheduler/` package — IR, C-rate, module stubs, CLI, and example `.schproj` |
 | 2026-08-31 | Reassessed repository status — secured the original SCH archive and reprioritized implementation and validation |
 | 2026-08-31 | Distinguished must-do lab-writer and validation work from later UX, EIS, and integration features |
-| 2026-08-31 | Added a read-only schedule explainer (filename SOC, voltage setpoints, repeating blocks) |
 
 ---
 
@@ -405,7 +404,7 @@ These can start now, but several remain incomplete until M1–M5 arrive.
 |----|---------|------|---------------------|
 | M6 | Raw-unit and capacity contract | B0 | One mapping for offset `+12` vs `+16`, mV/mA, INI range, and a single Q_nom used by viewer and writer |
 | M7 | Intake metadata validator | B5 | Reject incomplete equipment, CTSPro, changed-field, and screenshot provenance before confidence promotion |
-| M8 | Semantic golden tests | B4 | Formation, Cycle, RPT, QPEED, and HPPC fixtures lock step type plus core values. The read-only `explain` command is a helper for this, not a writer-ready claim |
+| M8 | Semantic golden tests | B4 | Formation, Cycle, RPT, QPEED, and HPPC fixtures lock step type plus core values |
 | M9 | Writer-ready allowlist | C0.2 | Promote a field only after two controlled values, no extra byte drift, and M5 reopen |
 | M10 | 696-byte lab patch parity | C6 | The same allowlisted patch works on `0x00010004/696`, the dominant lab layout |
 | M11 | Pre-export safety linter | D / E | Block missing END, illegal loops, V/I outside the Cell Profile, and implausible duration |
@@ -438,16 +437,16 @@ Do not treat these as current blockers:
 | Area | Status | Evidence / assessment |
 |------|--------|-----------------------|
 | Original fixtures | **Secured** | 8-file and 93-file SCH ZIPs in `example/archives/`, and 1 HPPC file in `example/fixtures/hppc/` |
-| File reading/viewer | **Partially complete** | Layout detection and structural goldens for 102 fixtures; `explain` narrates protocol/SOC hints without treating inferred SOC as writer-ready |
-| Classification/stack/C-rate inference | **Partially complete** | Unit tests exist and analysis reports have been generated; HPPC is a filename category; QPEED SOC cadence is reported as 3.318 V, not a stored % |
+| File reading/viewer | **Partially complete** | Implemented registry-first 612/696-byte layout detection; all 102 fixtures have automated structural golden regression coverage |
 | Equipment provenance | **Partially classified** | Current fixture-only catalog records user-confirmed, user-attributed, and unknown equipment sources without creating filename rules for future files |
+| Classification/stack/C-rate inference | **Partially complete** | Unit tests exist and analysis reports have been generated |
 | `.schproj` IR/JSON | **Partially complete** | Serialization and linear DAG sorting implemented; no schema validation/version migration |
 | Experiment modules | **prototype** | expand implemented for Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED, etc. |
 | Binary compiler | **spike** | Packs only some fields; does not write core fields such as mode, loop, DCR, and sampling |
 | SCH writer | **Incomplete/guarded** | Uses a 512-byte placeholder header; CLI output now requires explicit experimental acknowledgement and remains offline-only |
 | Round-trip validator | **Incomplete** | The repository can re-read output, but currently compares only step count and has no independent semantic field comparison |
-| GUI | **Partially complete** | Viewer/resume/bulk editor exist; viewer summary includes the schedule explainer; flow editor uses rounded color-coded cards, port attach/detach, cycle badges, and duration estimates |
-| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 122 tests |
+| GUI | **Partially complete** | Viewer/resume/bulk editor exist; flow editor uses rounded color-coded cards, port attach/detach, cycle badges, and duration estimates |
+| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 109 tests |
 
 ### 6.2 Gate A — Restore the Development Baseline (Highest Priority)
 
@@ -463,7 +462,7 @@ under F6; local pass counts alone are not equipment-compatibility evidence.
 **Progress record**
 - A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
 - A3 complete: automatically verified that the two ZIPs match the 8-file and 93-file extracted directory listings, for a total of 102 files including HPPC
-- A2 complete locally: confirmed `122 passed` and synchronized the README test badge;
+- A2 complete locally: confirmed `109 passed` and synchronized the README test badge;
   adding a hosted CI workflow remains a separate repository-infrastructure task
 
 ### 6.3 Gate B — Establish the Binary Schema as the Single Source of Truth
@@ -666,14 +665,13 @@ Do these in order. Later Gates C1/EIS/pne_studio are not current must-do work.
 3. ✅ **Resolve internal offset conflict** — unified parser/schema/compiler locations for `fEndV/fEndI/fEndC`
 4. ✅ **Full reader regression test** — locked layout, step count, hash, and EOF geometry for all 102 files
 5. ✅ **Template-preserving patch engine** — hash, topology, and undeclared-byte preservation exist; fields are still not writer-ready
-6. ✅ **Read-only schedule explainer** — `explain` narrates HPPC/QPEED/RPT SOC hints from filename and voltage setpoints; inferred SOC is not writer-ready
-7. **Collect M1–M5 evidence** — controlled pairs, CTSPro/INI, nonzero `fEndC`, sampling/DCR/goto, and reopen of an exact hash
-8. **M6 raw-unit/capacity contract** — offset `+12` vs `+16`, mV/mA, INI range, one Q_nom
-9. **M7–M8 intake validator and semantic goldens** — reject incomplete provenance; lock Formation/Cycle/RPT/HPPC values
-10. **M9–M10 writer-ready 612 and 696 patches** — promote only reopened, byte-clean fields
-11. **M11–M12 safety linter and resume goto guard**
-12. **M13 hosted CI**
-13. **M15–M17 release-gated PNE test** — profile record, exact-hash reopen, smoke test, status labels
+6. **Collect M1–M5 evidence** — controlled pairs, CTSPro/INI, nonzero `fEndC`, sampling/DCR/goto, and reopen of an exact hash
+7. **M6 raw-unit/capacity contract** — offset `+12` vs `+16`, mV/mA, INI range, one Q_nom
+8. **M7–M8 intake validator and semantic goldens** — reject incomplete provenance; lock Formation/Cycle/RPT/HPPC values
+9. **M9–M10 writer-ready 612 and 696 patches** — promote only reopened, byte-clean fields
+10. **M11–M12 safety linter and resume goto guard**
+11. **M13 hosted CI**
+12. **M15–M17 release-gated PNE test** — profile record, exact-hash reopen, smoke test, status labels
 
 ---
 
