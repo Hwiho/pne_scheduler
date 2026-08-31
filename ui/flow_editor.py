@@ -7,9 +7,10 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog, messagebox, simpledialog, ttk
 
+from ..engine.duration import format_duration
 from ..ir.cell_profile import CellProfile
 from ..ir.project import ScheduleProject
-from .flow_model import FlowProjectModel
+from .flow_model import FlowDurationEstimate, FlowProjectModel
 
 
 class FlowEditorApp:
@@ -60,6 +61,13 @@ class FlowEditorApp:
             text="SCH export remains analysis-only; use a validated template patch plan.",
             foreground="#9a5b00",
         ).pack(side=tk.RIGHT)
+        self.duration_var = tk.StringVar(value="Estimated total: —")
+        ttk.Label(
+            self.root,
+            textvariable=self.duration_var,
+            padding=(10, 4),
+            foreground="#245c3d",
+        ).pack(fill=tk.X)
 
         body = ttk.Panedwindow(self.root, orient=tk.HORIZONTAL)
         body.pack(fill=tk.BOTH, expand=True, padx=8, pady=(0, 8))
@@ -82,14 +90,23 @@ class FlowEditorApp:
         output.add(preview_frame, text="Step preview")
         output.add(validation_frame, text="Validation")
 
-        columns = ("no", "type", "mode", "label", "c_rate", "voltage", "end")
+        columns = (
+            "no",
+            "type",
+            "mode",
+            "label",
+            "c_rate",
+            "voltage",
+            "duration",
+            "end",
+        )
         self.preview_tree = ttk.Treeview(
             preview_frame,
             columns=columns,
             show="headings",
             height=8,
         )
-        widths = (45, 85, 65, 260, 75, 75, 120)
+        widths = (45, 85, 65, 230, 70, 70, 95, 120)
         for column, width in zip(columns, widths):
             self.preview_tree.heading(column, text=column.replace("_", " ").title())
             self.preview_tree.column(column, width=width, anchor=tk.W)
@@ -394,12 +411,16 @@ class FlowEditorApp:
     def _preview(self) -> None:
         try:
             steps, warnings = self.model.preview_steps()
+            duration = self.model.estimate_duration()
         except ValueError as exc:
             messagebox.showerror("Preview failed", str(exc))
             return
         for item in self.preview_tree.get_children():
             self.preview_tree.delete(item)
-        for index, step in enumerate(steps, start=1):
+        for index, (step, step_duration) in enumerate(
+            zip(steps, duration.total.steps),
+            start=1,
+        ):
             end_summary = ", ".join(
                 value
                 for value in (
@@ -423,13 +444,21 @@ class FlowEditorApp:
                     step.label,
                     step.c_rate if step.c_rate is not None else "",
                     step.voltage_v if step.voltage_v is not None else "",
+                    (
+                        ("~" if step_duration.approximate else "")
+                        + format_duration(step_duration.seconds)
+                        if step_duration.seconds is not None
+                        else "unknown"
+                    ),
                     end_summary,
                 ),
             )
+        duration_warnings = tuple(dict.fromkeys((*warnings, *duration.warnings)))
         self._set_validation(
-            "\n".join(f"WARNING: {warning}" for warning in warnings)
+            "\n".join(f"WARNING: {warning}" for warning in duration_warnings)
             or "Preview expanded without graph warnings."
         )
+        self._set_duration_summary(duration)
         self.status_var.set(f"Previewed {len(steps)} step intents")
 
     def _refresh_all(self) -> None:
@@ -457,16 +486,27 @@ class FlowEditorApp:
             ),
         )
         self._validate()
+        try:
+            self._set_duration_summary(self.model.estimate_duration())
+        except ValueError:
+            self.duration_var.set("Estimated total: unavailable until graph errors are fixed")
 
     def _render_canvas(self) -> None:
         self.canvas.delete("all")
         self._canvas_items.clear()
         positions: dict[str, tuple[float, float]] = {}
+        try:
+            duration_by_id = {
+                item.module_id: item.estimate
+                for item in self.model.estimate_duration().modules
+            }
+        except ValueError:
+            duration_by_id = {}
         for index, node in enumerate(self.model.project.modules):
             column = index % 4
             row = index // 4
             x = 45 + column * 260
-            y = 45 + row * 150
+            y = 45 + row * 165
             positions[node.id] = (x, y)
 
         for edge in self.model.project.connections:
@@ -475,10 +515,10 @@ class FlowEditorApp:
             if source is None or target is None:
                 continue
             self.canvas.create_line(
-                source[0] + 180,
-                source[1] + 40,
+                source[0] + 200,
+                source[1] + 50,
                 target[0],
-                target[1] + 40,
+                target[1] + 50,
                 fill="#3f6f9f",
                 width=2,
                 arrow=tk.LAST,
@@ -490,9 +530,13 @@ class FlowEditorApp:
             rectangle = self.canvas.create_rectangle(
                 x,
                 y,
-                x + 180,
-                y + 80,
-                fill="#d9edff" if selected else "#ffffff",
+                x + 200,
+                y + 105,
+                fill=(
+                    "#fff3d6"
+                    if "loop_count" in node.params or "cycle_count" in node.params
+                    else ("#d9edff" if selected else "#ffffff")
+                ),
                 outline="#1677c8" if selected else "#677583",
                 width=3 if selected else 1,
             )
@@ -505,12 +549,41 @@ class FlowEditorApp:
             )
             kind = self.canvas.create_text(
                 x + 12,
-                y + 50,
+                y + 46,
                 text=node.module_type,
                 anchor=tk.W,
                 fill="#425466",
             )
-            for item in (rectangle, title, kind):
+            repeat_value = node.params.get(
+                "loop_count",
+                node.params.get("cycle_count"),
+            )
+            badge_text = (
+                f"cycle block × {repeat_value}"
+                if repeat_value is not None
+                else "single block"
+            )
+            badge = self.canvas.create_text(
+                x + 12,
+                y + 68,
+                text=badge_text,
+                anchor=tk.W,
+                fill="#8a5a00" if repeat_value is not None else "#637282",
+            )
+            estimate = duration_by_id.get(node.id)
+            duration_text = (
+                f"estimated: ~{format_duration(estimate.estimated_seconds)}"
+                if estimate is not None
+                else "estimated: unavailable"
+            )
+            duration_item = self.canvas.create_text(
+                x + 12,
+                y + 90,
+                text=duration_text,
+                anchor=tk.W,
+                fill="#245c3d",
+            )
+            for item in (rectangle, title, kind, badge, duration_item):
                 self._canvas_items[item] = node.id
 
     def _render_properties(self) -> None:
@@ -535,6 +608,15 @@ class FlowEditorApp:
         self.validation_text.delete("1.0", tk.END)
         self.validation_text.insert(tk.END, text)
         self.validation_text.configure(state=tk.DISABLED)
+
+    def _set_duration_summary(self, duration: FlowDurationEstimate) -> None:
+        total = duration.total
+        prefix = "~" if not total.is_exact else ""
+        summary = f"Estimated total: {prefix}{format_duration(total.estimated_seconds)}"
+        if total.unknown_step_count:
+            summary += f" + {total.unknown_step_count} unknown step execution(s)"
+        summary += " (nominal estimate; CV taper and equipment overhead may be excluded)"
+        self.duration_var.set(summary)
 
 
 def launch_flow_editor(initial_path: str | Path | None = None) -> None:
