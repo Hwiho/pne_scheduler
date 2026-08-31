@@ -1,0 +1,28 @@
+{
+  "schema": "pne_scheduler.validation_intake/v1",
+  "equipment": {
+    "label": "PNE21",
+    "rating": "100mA",
+    "ctspro_version": null,
+    "channel_profile": null,
+    "source": "user_confirmed"
+  },
+  "scope": "fixture_specific_provenance",
+  "before_file": "before.sch",
+  "after_file": "after.sch",
+  "changed_step": 2,
+  "ui_field": "Charge current",
+  "before_value": {
+    "value": 10,
+    "unit": "mA"
+  },
+  "after_value": {
+    "value": 17,
+    "unit": "mA"
+  },
+  "expected_field": null,
+  "executed_on_equipment": false,
+  "ctspro_reopen_verified": false,
+  "screenshots": [],
+  "notes": null
+}

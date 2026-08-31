@@ -396,10 +396,14 @@ values generated before the correction are treated only as reference material; t
 manifest and golden tests are authoritative.
 
 **Progress record**
+- B1 partially complete: `schema/fields.py` records known offsets with explicit evidence
+  confidence, while unknown and late version-specific fields remain intentionally opaque
 - B3 complete: `example/fixtures/catalog.json` locks SHA-256, version, payload offset,
   step size, step count, and equipment provenance for all 102 checked-in fixtures
 - Layout detection now uses the v2/v3/v4 registry first and retains structural scanning
   only as a guarded fallback for unknown producers
+- Controlled before/after evidence can be ingested with
+  `pne_scheduler.tools.compare_sch` and `docs/SCH_VALIDATION_INTAKE.md`
 
 ### 6.4 Gate C — Actually Compatible SCH Writer
 
