@@ -16,9 +16,17 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
-    build = sub.add_parser("build", help="Compile a .schproj file to .sch")
+    build = sub.add_parser(
+        "build",
+        help="Compile a .schproj with the experimental, non-equipment-ready writer",
+    )
     build.add_argument("project", type=Path, help="Input .schproj path")
     build.add_argument("-o", "--output", type=Path, required=True, help="Output .sch path")
+    build.add_argument(
+        "--allow-experimental-output",
+        action="store_true",
+        help="Acknowledge that output is not validated for CTSPro or equipment execution",
+    )
 
     info = sub.add_parser("info", help="Show project summary")
     info.add_argument("project", type=Path, help="Input .schproj path")
@@ -77,9 +85,18 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "build":
         from .io.writer import write_sch
 
+        if not args.allow_experimental_output:
+            print(
+                "Refusing to write an SCH file: the writer still uses a placeholder "
+                "header and is not equipment-ready. Pass --allow-experimental-output "
+                "only for offline development.",
+                file=sys.stderr,
+            )
+            return 2
         project = ScheduleProject.load(args.project)
         write_sch(project, args.output)
-        print(f"Wrote {args.output}")
+        print(f"Wrote experimental output to {args.output}")
+        print("WARNING: Do not load or execute this file on PNE equipment.")
         return 0
 
     if args.command == "view":
