@@ -52,6 +52,14 @@ def _build_parser() -> argparse.ArgumentParser:
     sel.add_argument("--type", dest="module_type", type=str, help="Filter by module type")
     bulk.add_argument("-o", "--output", type=Path, help="Save to path (default: overwrite input)")
 
+    compare = sub.add_parser(
+        "compare",
+        help="Compare a controlled before/after SCH pair",
+    )
+    compare.add_argument("before", type=Path, help="Baseline .sch path")
+    compare.add_argument("after", type=Path, help="Single-field-change .sch path")
+    compare.add_argument("-o", "--output", type=Path, help="Optional JSON report path")
+
     return parser
 
 
@@ -141,6 +149,20 @@ def main(argv: list[str] | None = None) -> int:
         for err in result.errors:
             print(f"  ERROR: {err}")
         return 0 if not result.errors else 1
+
+    if args.command == "compare":
+        import json
+
+        from .tools.compare_sch import compare_sch_files
+
+        report = compare_sch_files(args.before, args.after)
+        rendered = json.dumps(report, indent=2, ensure_ascii=False) + "\n"
+        if args.output:
+            args.output.write_text(rendered, encoding="utf-8")
+            print(f"Wrote {args.output}")
+        else:
+            print(rendered, end="")
+        return 0 if report["compatible"] else 2
 
     return 1
 
