@@ -2,6 +2,7 @@ from .base import ExperimentModule, expand_module, register_module
 from .capacheck import CapacheckModule
 from .cycle_life import CycleLifeModule
 from .dcir import DcirModule
+from .formation import FormationModule
 from .insitu_cycle import InsituCycleModule
 from .hppc import HppcModule
 from .rest import RestModule
