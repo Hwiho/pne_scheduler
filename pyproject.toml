@@ -18,13 +18,25 @@ dev = ["pytest>=7.0"]
 [project.scripts]
 pne-scheduler = "pne_scheduler.__main__:main"
 
+[tool.setuptools]
+packages = [
+    "pne_scheduler",
+    "pne_scheduler.classify",
+    "pne_scheduler.edit",
+    "pne_scheduler.engine",
+    "pne_scheduler.io",
+    "pne_scheduler.ir",
+    "pne_scheduler.modules",
+    "pne_scheduler.protocol",
+    "pne_scheduler.resume",
+    "pne_scheduler.schema",
+    "pne_scheduler.stack",
+    "pne_scheduler.ui",
+    "pne_scheduler.validate",
+]
+
 [tool.setuptools.package-dir]
 "pne_scheduler" = "."
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["pne_scheduler*"]
-namespaces = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
