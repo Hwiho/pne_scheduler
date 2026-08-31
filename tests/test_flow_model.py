@@ -84,6 +84,38 @@ def test_flow_model_rejects_unknown_parameter() -> None:
         model.update_params(node.id, {"duraton_s": 10})
 
 
+def test_rewire_replaces_existing_linear_connection() -> None:
+    model = _model()
+    first = model.add_module("rest")
+    second = model.add_module("rest")
+    third = model.add_module("rest")
+    model.connect(first.id, second.id)
+
+    notes = model.rewire(first.id, third.id)
+
+    assert (first.id, third.id) in {
+        (edge.source_id, edge.target_id) for edge in model.project.connections
+    }
+    assert (first.id, second.id) not in {
+        (edge.source_id, edge.target_id) for edge in model.project.connections
+    }
+    assert any("Detached" in note for note in notes)
+    assert model.validate().is_valid
+
+
+def test_rewire_rolls_back_illegal_cycle() -> None:
+    model = _model()
+    first = model.add_module("rest")
+    second = model.add_module("rest")
+    model.connect(first.id, second.id)
+    original = list(model.project.connections)
+
+    with pytest.raises(ValueError, match="cycle"):
+        model.rewire(second.id, first.id)
+
+    assert model.project.connections == original
+
+
 def test_project_expansion_rejects_dangling_connections() -> None:
     model = _model()
     node = model.add_module("rest")

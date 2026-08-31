@@ -120,6 +120,36 @@ class FlowProjectModel:
         if len(self.project.connections) == original:
             raise ValueError(f"Connection does not exist: {source_id} -> {target_id}")
 
+    def rewire(self, source_id: str, target_id: str) -> tuple[str, ...]:
+        """Attach source → target, replacing any existing linear wires on those ports."""
+        if source_id == target_id:
+            raise ValueError("A module cannot connect to itself")
+        self.get_module(source_id)
+        self.get_module(target_id)
+        original = list(self.project.connections)
+        notes: list[str] = []
+        try:
+            for edge in original:
+                if edge.source_id == source_id and edge.target_id != target_id:
+                    self.disconnect(edge.source_id, edge.target_id)
+                    notes.append(f"Detached {edge.source_id} → {edge.target_id}")
+                elif edge.target_id == target_id and edge.source_id != source_id:
+                    self.disconnect(edge.source_id, edge.target_id)
+                    notes.append(f"Detached {edge.source_id} → {edge.target_id}")
+            already = ModuleConnection(source_id, target_id) in self.project.connections
+            if not already:
+                self.connect(source_id, target_id)
+                notes.append(f"Attached {source_id} → {target_id}")
+        except ValueError:
+            self.project.connections[:] = original
+            raise
+        return tuple(notes)
+
+    def ordered_modules(self) -> list[ModuleNode]:
+        if self.validate().errors:
+            return list(self.project.modules)
+        return self._ordered_modules()
+
     def auto_connect(self) -> None:
         self.project.connections[:] = [
             ModuleConnection(source.id, target.id)
@@ -212,7 +242,7 @@ class FlowProjectModel:
             raise ValueError("; ".join(validation.errors))
         modules: list[ModuleDurationEstimate] = []
         warnings = list(validation.warnings)
-        for node in self._ordered_modules():
+        for node in self.ordered_modules():
             estimate = estimate_steps_duration(
                 expand_module(node, self.project.cell_profile)
             )
