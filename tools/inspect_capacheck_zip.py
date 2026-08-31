@@ -7,8 +7,15 @@ import struct
 import zipfile
 from pathlib import Path
 
-ZIP_PATH = Path(r"c:\9)Bimodal_SJ1300_6040_NCN_capacheck.zip")
-OUT_DIR = Path(__file__).resolve().parents[1] / "example" / "fixtures" / "capacheck_zip"
+from pne_scheduler.schema.v0x00010003_612 import (
+    OFFSET_F_END_C,
+    OFFSET_F_END_I,
+    OFFSET_F_END_V,
+)
+
+ROOT = Path(__file__).resolve().parents[1]
+ZIP_PATH = ROOT / "example" / "archives" / "9)Bimodal_SJ1300_6040_NCN_capacheck.zip"
+OUT_DIR = ROOT / "example" / "fixtures" / "capacheck_zip"
 
 SCH_STEP_TYPES = {3, 0x0101, 0x0201, 0x0202, 6, 7, 8}
 TYPE_NAMES = {
@@ -69,9 +76,15 @@ def read_steps(data: bytes, payload_offset: int, step_size: int) -> list[dict]:
                 "fVref": round(struct.unpack_from("<f", data, base + 16)[0], 4),
                 "fIref": round(struct.unpack_from("<f", data, base + 20)[0], 4),
                 "fEndTime": round(struct.unpack_from("<f", data, base + 24)[0], 2),
-                "fEndV": round(struct.unpack_from("<f", data, base + 32)[0], 4),
-                "fEndI": round(struct.unpack_from("<f", data, base + 36)[0], 4),
-                "fEndC": round(struct.unpack_from("<f", data, base + 40)[0], 4),
+                "fEndV": round(
+                    struct.unpack_from("<f", data, base + OFFSET_F_END_V)[0], 4
+                ),
+                "fEndI": round(
+                    struct.unpack_from("<f", data, base + OFFSET_F_END_I)[0], 4
+                ),
+                "fEndC": round(
+                    struct.unpack_from("<f", data, base + OFFSET_F_END_C)[0], 4
+                ),
             }
         )
         if step_type == 6:

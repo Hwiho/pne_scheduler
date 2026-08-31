@@ -380,9 +380,9 @@ class ExperimentModule(Protocol):
 | B3 | 전체 원본 102개 read regression | 8 + 93 + HPPC 파일 모두 version, payload offset, step size/count 탐지 |
 | B4 | 대표 fixture semantic golden test | Formation/Cycle/RPT/QPEED/HPPC의 step type과 핵심 값이 golden data와 일치 |
 
-현재 `schema/v0x00010003_612.py`, `io/sch_parser.py`, `engine/compiler.py`가
-종료 조건 offset을 동일하게 해석하지 않으므로 B2 이전의 semantic 분석값은
-참고 자료로만 취급한다.
+`schema/v0x00010003_612.py`, `io/sch_parser.py`, `engine/compiler.py`의 종료
+조건 offset은 원본 corpus 분석을 기준으로 통일했다. 수정 전 생성된 분석값은
+참고 자료로만 취급하고, 재생성된 manifest와 golden test를 기준으로 삼는다.
 
 ### 6.4 Gate C — 실제 호환 SCH writer
 
@@ -479,7 +479,7 @@ run_pne_scheduler.py             # 루트 launcher
 | 항목 | 상태 | 대응 |
 |------|------|------|
 | editable install 후 package import 실패 | **해결됨** | editable install과 wheel clean-target import 회귀 검증 |
-| parser/schema/compiler 종료조건 offset 불일치 | **내부 정합 완료** | `fEndV=32`, `fEndI=36`, `fEndC=40`; 비영 값 원본/외부 parser 대조는 B2에서 계속 |
+| parser/schema/compiler 종료조건 offset 불일치 | **내부 정합 완료** | `fEndV=28`, `fEndI=32`, `fEndC=36`; `fEndC` 비영 원본/외부 parser 대조는 B2에서 계속 |
 | lab 형식과 writer 타깃 불일치 | **확인됨** | 93개 중 89개가 `0x10004/696`; 612 검증 직후 Gate C6 진행 |
 | 612 vs 696 byte step size 자동 선택 | 부분 파악 | 확보한 102개 실측 sch로 version→size 매핑 검증 |
 | PNE raw current 단위 (mA vs A) | ini range 의존 | Cell range profile + ASSB `unit_scale` 대조 |
@@ -496,7 +496,7 @@ run_pne_scheduler.py             # 루트 launcher
 1. ✅ **패키징 복구** — editable install과 wheel clean-target import 검증 완료
 2. ✅ **fixture 자동 점검 추가** — archive/추출본 101개 + HPPC 1개를 테스트 입력으로 고정
 3. ✅ **내부 offset 충돌 해결** — parser/schema/compiler의 `fEndV/fEndI/fEndC` 위치 통일
-4. **offset 외부 확증** — 비영 `fEndI/fEndC` 원본 또는 공식 필드표로 의미 검증
+4. **offset 외부 확증** — 비영 `fEndC` 원본 또는 공식 필드표로 의미 검증
 5. **전체 reader 회귀 테스트** — 102개 파일의 layout·step count golden snapshot 생성
 6. **writer header 구현** — `0x00010003/612`로 schema·writer vertical slice 완성
 7. **696-byte lab parity** — 89/93을 차지하는 `0x00010004/696` writer 확장
