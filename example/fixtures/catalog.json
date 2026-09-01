@@ -22,7 +22,7 @@
   "fixture_count": 102,
   "fixtures": [
     {
-      "path": "capacheck_zip/00207966_260803_727도급셀_Set8_45도 Cycle.sch",
+      "path": "capacheck_zip/00207966_260803_727\ub3c4\uae09\uc140_Set8_45\ub3c4 Cycle.sch",
       "sha256": "53f789da1726fee0a61197301c43c4d59fcc24e5c9fef63def1394594576838d",
       "size": 46436,
       "category": "cycle_life",
@@ -136,7 +136,7 @@
       }
     },
     {
-      "path": "capacheck_zip/set3_bimodal-30_45도 0.5C cycle.sch",
+      "path": "capacheck_zip/set3_bimodal-30_45\ub3c4 0.5C cycle.sch",
       "sha256": "7773d9420803c50e3648f85a7aed75ccba8f9e92ea8b672f186b838bafceb5a3",
       "size": 30380,
       "category": "cycle_life",
@@ -155,7 +155,7 @@
       }
     },
     {
-      "path": "capacheck_zip/차효현_3350_L.4.36_NP1.08_RPT_SOC50 End_챔버미연동.sch",
+      "path": "capacheck_zip/\ucc28\ud6a8\ud604_3350_L.4.36_NP1.08_RPT_SOC50 End_\ucc54\ubc84\ubbf8\uc5f0\ub3d9.sch",
       "sha256": "e82e4f18e0cc91816eec0261c874cdfd8eba1e85bc8aa6b402f86e0cdad00cb9",
       "size": 13260,
       "category": "rpt",
@@ -193,7 +193,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/0.1C capa_SJ1300░╟╜─ #1.sch",
+      "path": "sch_lab_zip/0.1C capa_SJ1300\u2591\u255f\u255c\u2500 #1.sch",
       "sha256": "45277fed113b1b61723289d8cef7b96a2009023252ed73583b491838d3e9edf6",
       "size": 10892,
       "category": "capacheck",
@@ -212,7 +212,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/0.1C capa_SJ1300░╟╜─ #3.sch",
+      "path": "sch_lab_zip/0.1C capa_SJ1300\u2591\u255f\u255c\u2500 #3.sch",
       "sha256": "ae7d630ad7f2303272d3fa1bba65350ae51b88865152a8580a7fb72d8f200bb3",
       "size": 10892,
       "category": "capacheck",
@@ -231,7 +231,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/0.1C capa_SJ1300░╟╜─ #4.sch",
+      "path": "sch_lab_zip/0.1C capa_SJ1300\u2591\u255f\u255c\u2500 #4.sch",
       "sha256": "187cccfcee4d90082c047cc7a693b145b3f8352ed8ddcbb6280c1fe590156f58",
       "size": 10892,
       "category": "capacheck",
@@ -250,7 +250,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/0.1C capa_SJ1300░╟╜─ #5.sch",
+      "path": "sch_lab_zip/0.1C capa_SJ1300\u2591\u255f\u255c\u2500 #5.sch",
       "sha256": "566e60e716d89c1eac6891acfaa4410dc596a2c05dd339c5d7ddd42b70083538",
       "size": 10892,
       "category": "capacheck",
@@ -421,7 +421,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_250723_FD_╜║╟┴╕╡┴÷▒╫.sch",
+      "path": "sch_lab_zip/00207966_250723_FD_\u255c\u2551\u255f\u2534\u2555\u2561\u2534\u00f7\u2592\u256b.sch",
       "sha256": "d175c73f8fe33fc4c0fa4e9f630d210de82734c03cf3d5d921e8ccbcd40b2d74",
       "size": 19244,
       "category": "unknown",
@@ -440,7 +440,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_250723_FD_░φ┴ñ┴÷▒╫.sch",
+      "path": "sch_lab_zip/00207966_250723_FD_\u2591\u03c6\u2534\u00f1\u2534\u00f7\u2592\u256b.sch",
       "sha256": "9229806740bf228507deedff92b5a3434802c5f039701442eeb1766fc6a66493",
       "size": 19244,
       "category": "unknown",
@@ -459,7 +459,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_250827_Gr_2Mpa_288kgf╜║╟┴╕╡┴÷▒╫.sch",
+      "path": "sch_lab_zip/00207966_250827_Gr_2Mpa_288kgf\u255c\u2551\u255f\u2534\u2555\u2561\u2534\u00f7\u2592\u256b.sch",
       "sha256": "7d0810403bf2c5e2a24916fb6129496bed5b0be8fb8e011fa911636a676a04ac",
       "size": 19244,
       "category": "unknown",
@@ -478,7 +478,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_250827_Gr_2Mpa_90kgf╜║╟┴╕╡┴÷▒╫.sch",
+      "path": "sch_lab_zip/00207966_250827_Gr_2Mpa_90kgf\u255c\u2551\u255f\u2534\u2555\u2561\u2534\u00f7\u2592\u256b.sch",
       "sha256": "33f9339a9768278bd3ce07bf78b931c56497c46333ffe2e264ef4891eb514879",
       "size": 19244,
       "category": "unknown",
@@ -497,7 +497,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ.sch",
+      "path": "sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP \u255b\u255a\u2514\u207f\u255d\u2551\u2510\u03b4.sch",
       "sha256": "22b98c29f06f450ccf5bc87a64a4f0754fa6b856a69169a6662f2827561a6fa2",
       "size": 15068,
       "category": "unknown",
@@ -516,7 +516,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ_000.sch",
+      "path": "sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP \u255b\u255a\u2514\u207f\u255d\u2551\u2510\u03b4_000.sch",
       "sha256": "5637e08a525d00d870abdcab1def3b01758ffd6ebae9f9c52c69579fa7354039",
       "size": 15068,
       "category": "unknown",
@@ -535,7 +535,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ_001.sch",
+      "path": "sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP \u255b\u255a\u2514\u207f\u255d\u2551\u2510\u03b4_001.sch",
       "sha256": "06710b65db4d956b37cdc4c726349e609e949f6317735b52228c9203c190519b",
       "size": 15068,
       "category": "unknown",
@@ -554,7 +554,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_250912_1Ah_Gr-SiC_├╩▒Γ░í╛╨ ╞≥░í┐δ_FM.sch",
+      "path": "sch_lab_zip/00207966_250912_1Ah_Gr-SiC_\u251c\u2569\u2592\u0393\u2591\u00ed\u255b\u2568 \u255e\u2265\u2591\u00ed\u2510\u03b4_FM.sch",
       "sha256": "51d1de990b360a04a2cfb537afd0940426726cfbdea633fc41d480c1c5d4afaf",
       "size": 15068,
       "category": "formation",
@@ -649,7 +649,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260116_╖╬╡∙╞≥░í_L4.3-no7.sch",
+      "path": "sch_lab_zip/00207966_260116_\u2556\u256c\u2561\u2219\u255e\u2265\u2591\u00ed_L4.3-no7.sch",
       "sha256": "379b0cbefd57a586ab7cd8556a826f0bdb6a6818f60f01148221b164395129cf",
       "size": 8108,
       "category": "unknown",
@@ -668,7 +668,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260116_╖╬╡∙╞≥░í_L5.0-no5.sch",
+      "path": "sch_lab_zip/00207966_260116_\u2556\u256c\u2561\u2219\u255e\u2265\u2591\u00ed_L5.0-no5.sch",
       "sha256": "ac13ba282f8fe95d20a759e929b43c47d779e2971f41fefdbb05aefc5673bf89",
       "size": 8108,
       "category": "unknown",
@@ -687,7 +687,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260116_╖╬╡∙╞≥░í_L5.6-no7.sch",
+      "path": "sch_lab_zip/00207966_260116_\u2556\u256c\u2561\u2219\u255e\u2265\u2591\u00ed_L5.6-no7.sch",
       "sha256": "f757431da56b0b85fc31c17811a9ba92041e3d6ee5b84c2e57cc0680f154de04",
       "size": 8108,
       "category": "unknown",
@@ -706,7 +706,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260421_8stack_SJ900 ╜└╜─_FM.sch",
+      "path": "sch_lab_zip/00207966_260421_8stack_SJ900 \u255c\u2514\u255c\u2500_FM.sch",
       "sha256": "7ac032bac520dab0cf858b7aae31c05a89ce00ed41d1d4cff70cc76e1ce48e11",
       "size": 8108,
       "category": "formation",
@@ -725,7 +725,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260421_8stack_SJ900 ╜└╜─_FM_000.sch",
+      "path": "sch_lab_zip/00207966_260421_8stack_SJ900 \u255c\u2514\u255c\u2500_FM_000.sch",
       "sha256": "b2d8a53a6a64162deeda48ad7caa1e9587805cefb37428ce22b4404c80b6b191",
       "size": 8108,
       "category": "formation",
@@ -744,7 +744,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260422_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch",
+      "path": "sch_lab_zip/00207966_260422_8stack_SJ900 \u255c\u2514\u255c\u2500_FM \u255a\u2500_SOC30 \u255d\u255d\u255e\u251c.sch",
       "sha256": "e45a9e2632a0d363775669c9cc05db06e809a72c9a6c117de4e56d30779fbe84",
       "size": 6716,
       "category": "formation",
@@ -763,7 +763,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260424_8stack_SJ1300 ░╟╜─1┬≈_FM_SOC30 ╝╝╞├.sch",
+      "path": "sch_lab_zip/00207966_260424_8stack_SJ1300 \u2591\u255f\u255c\u25001\u252c\u2248_FM_SOC30 \u255d\u255d\u255e\u251c.sch",
       "sha256": "06897222a217a12c4424d89947db3422e976e75a95bffb759d2f60fd16cacea1",
       "size": 10892,
       "category": "formation",
@@ -782,7 +782,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260427_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch",
+      "path": "sch_lab_zip/00207966_260427_8stack_SJ900 \u255c\u2514\u255c\u2500_FM \u255a\u2500_SOC30 \u255d\u255d\u255e\u251c.sch",
       "sha256": "61429a13fa96b46d5a80436e1809352b6404e99734676f6670f58f7263ed7090",
       "size": 6716,
       "category": "formation",
@@ -801,7 +801,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no1.sch",
+      "path": "sch_lab_zip/00207966_260428_8stack_45\u2561\u2561 0.1C capacheck_SJ1300\u2591\u255f\u255c\u2500_no1.sch",
       "sha256": "45277fed113b1b61723289d8cef7b96a2009023252ed73583b491838d3e9edf6",
       "size": 10892,
       "category": "capacheck",
@@ -820,7 +820,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no3.sch",
+      "path": "sch_lab_zip/00207966_260428_8stack_45\u2561\u2561 0.1C capacheck_SJ1300\u2591\u255f\u255c\u2500_no3.sch",
       "sha256": "ae7d630ad7f2303272d3fa1bba65350ae51b88865152a8580a7fb72d8f200bb3",
       "size": 10892,
       "category": "capacheck",
@@ -839,7 +839,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no4.sch",
+      "path": "sch_lab_zip/00207966_260428_8stack_45\u2561\u2561 0.1C capacheck_SJ1300\u2591\u255f\u255c\u2500_no4.sch",
       "sha256": "187cccfcee4d90082c047cc7a693b145b3f8352ed8ddcbb6280c1fe590156f58",
       "size": 10892,
       "category": "capacheck",
@@ -858,7 +858,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no5.sch",
+      "path": "sch_lab_zip/00207966_260428_8stack_45\u2561\u2561 0.1C capacheck_SJ1300\u2591\u255f\u255c\u2500_no5.sch",
       "sha256": "566e60e716d89c1eac6891acfaa4410dc596a2c05dd339c5d7ddd42b70083538",
       "size": 10892,
       "category": "capacheck",
@@ -877,7 +877,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ900╜└╜─_no1.sch",
+      "path": "sch_lab_zip/00207966_260428_8stack_45\u2561\u2561 0.1C capacheck_SJ900\u255c\u2514\u255c\u2500_no1.sch",
       "sha256": "e86f83d9a409d49e29fc2cf5997e8ef81ee293141f451d1b58703a60b7de2df9",
       "size": 10892,
       "category": "capacheck",
@@ -896,7 +896,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no1.sch",
+      "path": "sch_lab_zip/00207966_260429_8stack_45\u2561\u2561 0.5C cycle_SJ1300\u2591\u255f\u255c\u2500_no1.sch",
       "sha256": "a05a128fd092ddd70d2d0f1eb6bc6d74c9ea222ac7deeed61d6396a172be46da",
       "size": 30380,
       "category": "cycle_life",
@@ -915,7 +915,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no3.sch",
+      "path": "sch_lab_zip/00207966_260429_8stack_45\u2561\u2561 0.5C cycle_SJ1300\u2591\u255f\u255c\u2500_no3.sch",
       "sha256": "fdc2920db73c0fa256189a228fed57fefa1bf37eb6b1d3c7fa7e903d8579c265",
       "size": 30380,
       "category": "cycle_life",
@@ -934,7 +934,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no4.sch",
+      "path": "sch_lab_zip/00207966_260429_8stack_45\u2561\u2561 0.5C cycle_SJ1300\u2591\u255f\u255c\u2500_no4.sch",
       "sha256": "6e140c38752e9932fed6dac9d151c2b876c15d4ce1fa8c754708a152340b1762",
       "size": 30380,
       "category": "cycle_life",
@@ -953,7 +953,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no5.sch",
+      "path": "sch_lab_zip/00207966_260429_8stack_45\u2561\u2561 0.5C cycle_SJ1300\u2591\u255f\u255c\u2500_no5.sch",
       "sha256": "f89cd15e8e86c17707f428d254195872604bcb5e6a7b92efe209cd567591e48a",
       "size": 30380,
       "category": "cycle_life",
@@ -972,7 +972,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ900╜└╜─_no1.sch",
+      "path": "sch_lab_zip/00207966_260429_8stack_45\u2561\u2561 0.5C cycle_SJ900\u255c\u2514\u255c\u2500_no1.sch",
       "sha256": "663f8de1e2b21f51406b992f23746f91ad17f2cc9360f4747e95b5ebe2b11190",
       "size": 30380,
       "category": "cycle_life",
@@ -991,7 +991,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260514_bimodal ╛τ▒╪ ╞≥░í_45╡╡ ╗τ└╠┼¼.sch",
+      "path": "sch_lab_zip/00207966_260514_bimodal \u255b\u03c4\u2592\u256a \u255e\u2265\u2591\u00ed_45\u2561\u2561 \u2557\u03c4\u2514\u2560\u253c\u00bc.sch",
       "sha256": "0ae634d557ccc56c580f96627ede8b254e54f6e0f99143ef063f6e90792c6ce1",
       "size": 30380,
       "category": "unknown",
@@ -1010,7 +1010,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260514_bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_45╡╡ ╗τ└╠┼¼.sch",
+      "path": "sch_lab_zip/00207966_260514_bimodal \u255b\u03c4\u2592\u256a \u255e\u2265\u2591\u00ed_ref \u255b\u03c4\u2592\u256a_45\u2561\u2561 \u2557\u03c4\u2514\u2560\u253c\u00bc.sch",
       "sha256": "eccef69aa6b89ea115e3c545897de17282e44ffef7f73c3418ee023a8b4155a5",
       "size": 30380,
       "category": "unknown",
@@ -1029,7 +1029,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260519_S83S-SJ1300 ╡╡0%_45╡╡ ╗τ└╠┼¼.sch",
+      "path": "sch_lab_zip/00207966_260519_S83S-SJ1300 \u2561\u25610%_45\u2561\u2561 \u2557\u03c4\u2514\u2560\u253c\u00bc.sch",
       "sha256": "bf0a558ca07a58d1a86bbeed9a71057a431bb09d1087c25d48df9695f276a1d3",
       "size": 30380,
       "category": "unknown",
@@ -1048,7 +1048,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260519_S83S-SJ1300 ╡╡1%_45╡╡ ╗τ└╠┼¼.sch",
+      "path": "sch_lab_zip/00207966_260519_S83S-SJ1300 \u2561\u25611%_45\u2561\u2561 \u2557\u03c4\u2514\u2560\u253c\u00bc.sch",
       "sha256": "2a5792bca0443cc2b3d2492a131ecf3e99212803e3dd947784bf29d0f77d3432",
       "size": 30380,
       "category": "unknown",
@@ -1067,7 +1067,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260519_╛τ▒╪86wt%-SJ1300 ╡╡1%_45╡╡ ╗τ└╠┼¼.sch",
+      "path": "sch_lab_zip/00207966_260519_\u255b\u03c4\u2592\u256a86wt%-SJ1300 \u2561\u25611%_45\u2561\u2561 \u2557\u03c4\u2514\u2560\u253c\u00bc.sch",
       "sha256": "ff55faf90aeb386657670b2797daf938607c3c7f6704a5e3799dc4c0029112d4",
       "size": 30380,
       "category": "unknown",
@@ -1086,7 +1086,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch",
+      "path": "sch_lab_zip/00207966_260702_3\u2510\u2219 \u2591\u03c6\u2510\u252c\u2514\u00b7\u2514\u03c3\u255d\u2510 \u2563\u00b5\u2514\u207f.sch",
       "sha256": "418620818fb3d1e5ffb38e0cbb21d95210c7a9214f560b4c1d734a3e28e5fd69",
       "size": 5324,
       "category": "unknown",
@@ -1105,7 +1105,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260819_514bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
+      "path": "sch_lab_zip/00207966_260819_514bimodal \u255b\u03c4\u2592\u256a \u255e\u2265\u2591\u00ed_ref \u255b\u03c4\u2592\u256a_\u255d\u2510 \u255e\u2264\u2592\u0393 \u2514\u207f \u2563\u00b5\u2514\u207f.sch",
       "sha256": "51b3584697c9b9bfe00db6fe5a981c7aaf5fc75cd6fadc83a626f597834d395a",
       "size": 5324,
       "category": "unknown",
@@ -1124,7 +1124,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260820_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
+      "path": "sch_lab_zip/00207966_260820_\u255d\u2510 \u255e\u2264\u2592\u0393 \u2514\u207f \u2563\u00b5\u2514\u207f.sch",
       "sha256": "2b4d8c6bfe9b2228b8e00b2b65f5cd5ec2b7bc877b32894e674c3af1afe7f593",
       "size": 5324,
       "category": "unknown",
@@ -1143,7 +1143,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/00207966_260820_░φ┐┬╚░╝║╚¡ ░φ┐┬└·└σ set1_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
+      "path": "sch_lab_zip/00207966_260820_\u2591\u03c6\u2510\u252c\u255a\u2591\u255d\u2551\u255a\u00a1 \u2591\u03c6\u2510\u252c\u2514\u00b7\u2514\u03c3 set1_\u255d\u2510 \u255e\u2264\u2592\u0393 \u2514\u207f \u2563\u00b5\u2514\u207f.sch",
       "sha256": "6f984fd68e44fb30be39ba2a6339a832cf3df88f96bb8c44402b798411e091d7",
       "size": 5324,
       "category": "unknown",
@@ -1371,7 +1371,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/86wt%-SJ1300 ╡╡1%_0.5C cycle.sch",
+      "path": "sch_lab_zip/86wt%-SJ1300 \u2561\u25611%_0.5C cycle.sch",
       "sha256": "ff55faf90aeb386657670b2797daf938607c3c7f6704a5e3799dc4c0029112d4",
       "size": 30380,
       "category": "cycle_life",
@@ -1390,7 +1390,45 @@
       }
     },
     {
-      "path": "sch_lab_zip/Capacheck_3)Set3_Capa_cycle_├¿╣÷╣╠┐¼╡┐.sch",
+      "path": "sch_lab_zip/bimodal_0.5C cycle.sch",
+      "sha256": "0ae634d557ccc56c580f96627ede8b254e54f6e0f99143ef063f6e90792c6ce1",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/bimodal_ref \u255b\u03c4\u2592\u256a_0.5C cycle.sch",
+      "sha256": "eccef69aa6b89ea115e3c545897de17282e44ffef7f73c3418ee023a8b4155a5",
+      "size": 30380,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 41
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Capacheck_3)Set3_Capa_cycle_\u251c\u00bf\u2563\u00f7\u2563\u2560\u2510\u00bc\u2561\u2510.sch",
       "sha256": "7c2eb638bfd52550bcfb6729e241b92824333f95a8b9438d77c3a12603a3aa4c",
       "size": 26724,
       "category": "capacheck",
@@ -1485,7 +1523,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/S83S-SJ1300 ╡╡0%_0.5C cycle.sch",
+      "path": "sch_lab_zip/S83S-SJ1300 \u2561\u25610%_0.5C cycle.sch",
       "sha256": "bf0a558ca07a58d1a86bbeed9a71057a431bb09d1087c25d48df9695f276a1d3",
       "size": 30380,
       "category": "cycle_life",
@@ -1504,7 +1542,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/S83S-SJ1300 ╡╡1%_0.5C cycle.sch",
+      "path": "sch_lab_zip/S83S-SJ1300 \u2561\u25611%_0.5C cycle.sch",
       "sha256": "2a5792bca0443cc2b3d2492a131ecf3e99212803e3dd947784bf29d0f77d3432",
       "size": 30380,
       "category": "cycle_life",
@@ -1523,7 +1561,159 @@
       }
     },
     {
-      "path": "sch_lab_zip/SJ1300 ░╟╜─_8╜║┼├_FM.sch",
+      "path": "sch_lab_zip/Set1_QC_1_charge.sch",
+      "sha256": "57594b0e3af3cf79be1c801da9fc029ff3d4d3d83479dc322ea1455bb1583e4d",
+      "size": 18548,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 24
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set2_QC_1_charge.sch",
+      "sha256": "0e28ba7fff0b0f864f28eda31d19d602c70c3b5aca74a84aa2b70a7d1e85f267",
+      "size": 19244,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set2_QC_1N1Q.sch",
+      "sha256": "43a54f699e5be56038c6c1e1aa6e8981476e7e0c1d780bbfd27f1221c41b331e",
+      "size": 13676,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 17
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set3_QC_1_charge.sch",
+      "sha256": "ea5082232aaaf996f5e1ff5e5515511aa30e52cf9af6b870e4922929b7682cc1",
+      "size": 19244,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set3_QC_1N1Q.sch",
+      "sha256": "214bdfacb8359ed4ef6661fb880ef5ca4e0b8c268069f77aed30154188a36e55",
+      "size": 13676,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 17
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set4_QC_1_charge.sch",
+      "sha256": "349b8325b51cb45b919cbb4c387144e621d378489f6d799fe8c5e90d7ae8790f",
+      "size": 19940,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 26
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "probable",
+        "source": "user_attributed",
+        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
+      }
+    },
+    {
+      "path": "sch_lab_zip/Set4_QC_1N1Q.sch",
+      "sha256": "538f4afdf247f249cd86346e2b69403c7ba215c098d1981d78df223df949ee78",
+      "size": 14372,
+      "category": "unknown",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 18
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/SiC_0.5CCycle_1Ah.sch",
+      "sha256": "3a80990b81ace4d55107ba100c721472fca64bc6a6a6a8558312f97ab2dffb95",
+      "size": 19244,
+      "category": "cycle_life",
+      "layout": {
+        "version": "0x00010004",
+        "payload_offset": 1844,
+        "step_size": 696,
+        "step_count": 25
+      },
+      "equipment_provenance": {
+        "equipment": "PNE16",
+        "rating": "6A",
+        "confidence": "confirmed",
+        "source": "user_confirmed",
+        "evidence": "The user confirmed this classification for the current fixture corpus only."
+      }
+    },
+    {
+      "path": "sch_lab_zip/SJ1300 \u2591\u255f\u255c\u2500_8\u255c\u2551\u253c\u251c_FM.sch",
       "sha256": "06897222a217a12c4424d89947db3422e976e75a95bffb759d2f60fd16cacea1",
       "size": 10892,
       "category": "formation",
@@ -1618,7 +1808,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/SJ900 ╜└╜─_8╜║┼├_FM.sch",
+      "path": "sch_lab_zip/SJ900 \u255c\u2514\u255c\u2500_8\u255c\u2551\u253c\u251c_FM.sch",
       "sha256": "b2d8a53a6a64162deeda48ad7caa1e9587805cefb37428ce22b4404c80b6b191",
       "size": 8108,
       "category": "formation",
@@ -1637,7 +1827,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/SJ900 ╜└╜─_8╜║┼├_SOC30╝╝╞├.sch",
+      "path": "sch_lab_zip/SJ900 \u255c\u2514\u255c\u2500_8\u255c\u2551\u253c\u251c_SOC30\u255d\u255d\u255e\u251c.sch",
       "sha256": "61429a13fa96b46d5a80436e1809352b6404e99734676f6670f58f7263ed7090",
       "size": 6716,
       "category": "unknown",
@@ -1675,197 +1865,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/Set1_QC_1_charge.sch",
-      "sha256": "57594b0e3af3cf79be1c801da9fc029ff3d4d3d83479dc322ea1455bb1583e4d",
-      "size": 18548,
-      "category": "unknown",
-      "layout": {
-        "version": "0x00010004",
-        "payload_offset": 1844,
-        "step_size": 696,
-        "step_count": 24
-      },
-      "equipment_provenance": {
-        "equipment": "PNE16",
-        "rating": "6A",
-        "confidence": "probable",
-        "source": "user_attributed",
-        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
-      }
-    },
-    {
-      "path": "sch_lab_zip/Set2_QC_1N1Q.sch",
-      "sha256": "43a54f699e5be56038c6c1e1aa6e8981476e7e0c1d780bbfd27f1221c41b331e",
-      "size": 13676,
-      "category": "unknown",
-      "layout": {
-        "version": "0x00010004",
-        "payload_offset": 1844,
-        "step_size": 696,
-        "step_count": 17
-      },
-      "equipment_provenance": {
-        "equipment": "PNE16",
-        "rating": "6A",
-        "confidence": "confirmed",
-        "source": "user_confirmed",
-        "evidence": "The user confirmed this classification for the current fixture corpus only."
-      }
-    },
-    {
-      "path": "sch_lab_zip/Set2_QC_1_charge.sch",
-      "sha256": "0e28ba7fff0b0f864f28eda31d19d602c70c3b5aca74a84aa2b70a7d1e85f267",
-      "size": 19244,
-      "category": "unknown",
-      "layout": {
-        "version": "0x00010004",
-        "payload_offset": 1844,
-        "step_size": 696,
-        "step_count": 25
-      },
-      "equipment_provenance": {
-        "equipment": "PNE16",
-        "rating": "6A",
-        "confidence": "probable",
-        "source": "user_attributed",
-        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
-      }
-    },
-    {
-      "path": "sch_lab_zip/Set3_QC_1N1Q.sch",
-      "sha256": "214bdfacb8359ed4ef6661fb880ef5ca4e0b8c268069f77aed30154188a36e55",
-      "size": 13676,
-      "category": "unknown",
-      "layout": {
-        "version": "0x00010004",
-        "payload_offset": 1844,
-        "step_size": 696,
-        "step_count": 17
-      },
-      "equipment_provenance": {
-        "equipment": "PNE16",
-        "rating": "6A",
-        "confidence": "confirmed",
-        "source": "user_confirmed",
-        "evidence": "The user confirmed this classification for the current fixture corpus only."
-      }
-    },
-    {
-      "path": "sch_lab_zip/Set3_QC_1_charge.sch",
-      "sha256": "ea5082232aaaf996f5e1ff5e5515511aa30e52cf9af6b870e4922929b7682cc1",
-      "size": 19244,
-      "category": "unknown",
-      "layout": {
-        "version": "0x00010004",
-        "payload_offset": 1844,
-        "step_size": 696,
-        "step_count": 25
-      },
-      "equipment_provenance": {
-        "equipment": "PNE16",
-        "rating": "6A",
-        "confidence": "probable",
-        "source": "user_attributed",
-        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
-      }
-    },
-    {
-      "path": "sch_lab_zip/Set4_QC_1N1Q.sch",
-      "sha256": "538f4afdf247f249cd86346e2b69403c7ba215c098d1981d78df223df949ee78",
-      "size": 14372,
-      "category": "unknown",
-      "layout": {
-        "version": "0x00010004",
-        "payload_offset": 1844,
-        "step_size": 696,
-        "step_count": 18
-      },
-      "equipment_provenance": {
-        "equipment": "PNE16",
-        "rating": "6A",
-        "confidence": "confirmed",
-        "source": "user_confirmed",
-        "evidence": "The user confirmed this classification for the current fixture corpus only."
-      }
-    },
-    {
-      "path": "sch_lab_zip/Set4_QC_1_charge.sch",
-      "sha256": "349b8325b51cb45b919cbb4c387144e621d378489f6d799fe8c5e90d7ae8790f",
-      "size": 19940,
-      "category": "unknown",
-      "layout": {
-        "version": "0x00010004",
-        "payload_offset": 1844,
-        "step_size": 696,
-        "step_count": 26
-      },
-      "equipment_provenance": {
-        "equipment": "PNE16",
-        "rating": "6A",
-        "confidence": "probable",
-        "source": "user_attributed",
-        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
-      }
-    },
-    {
-      "path": "sch_lab_zip/SiC_0.5CCycle_1Ah.sch",
-      "sha256": "3a80990b81ace4d55107ba100c721472fca64bc6a6a6a8558312f97ab2dffb95",
-      "size": 19244,
-      "category": "cycle_life",
-      "layout": {
-        "version": "0x00010004",
-        "payload_offset": 1844,
-        "step_size": 696,
-        "step_count": 25
-      },
-      "equipment_provenance": {
-        "equipment": "PNE16",
-        "rating": "6A",
-        "confidence": "confirmed",
-        "source": "user_confirmed",
-        "evidence": "The user confirmed this classification for the current fixture corpus only."
-      }
-    },
-    {
-      "path": "sch_lab_zip/bimodal_0.5C cycle.sch",
-      "sha256": "0ae634d557ccc56c580f96627ede8b254e54f6e0f99143ef063f6e90792c6ce1",
-      "size": 30380,
-      "category": "cycle_life",
-      "layout": {
-        "version": "0x00010004",
-        "payload_offset": 1844,
-        "step_size": 696,
-        "step_count": 41
-      },
-      "equipment_provenance": {
-        "equipment": "PNE16",
-        "rating": "6A",
-        "confidence": "probable",
-        "source": "user_attributed",
-        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
-      }
-    },
-    {
-      "path": "sch_lab_zip/bimodal_ref ╛τ▒╪_0.5C cycle.sch",
-      "sha256": "eccef69aa6b89ea115e3c545897de17282e44ffef7f73c3418ee023a8b4155a5",
-      "size": 30380,
-      "category": "cycle_life",
-      "layout": {
-        "version": "0x00010004",
-        "payload_offset": 1844,
-        "step_size": 696,
-        "step_count": 41
-      },
-      "equipment_provenance": {
-        "equipment": "PNE16",
-        "rating": "6A",
-        "confidence": "probable",
-        "source": "user_attributed",
-        "evidence": "The user attributed the current sch.zip corpus to PNE16, with uncertainty."
-      }
-    },
-    {
-      "path": "sch_lab_zip/└ⁿ╖∙└╬░í.sch",
+      "path": "sch_lab_zip/\u2514\u207f\u2556\u2219\u2514\u256c\u2591\u00ed.sch",
       "sha256": "2ef4379dfc71f067e01d58b89b0812ef6bbacf14d2b71613e2362d8ed447c4ae",
       "size": 3932,
       "category": "unknown",
@@ -1884,7 +1884,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/└╙╝÷╟÷_SiC_0.5CCycle_1Ah_├¿╣÷╣╠┐¼╡┐.sch",
+      "path": "sch_lab_zip/\u2514\u2559\u255d\u00f7\u255f\u00f7_SiC_0.5CCycle_1Ah_\u251c\u00bf\u2563\u00f7\u2563\u2560\u2510\u00bc\u2561\u2510.sch",
       "sha256": "7bd790841ba44cc7335f2826d5ab15e5c7630599f2c281d42f489432dba8b255",
       "size": 16932,
       "category": "cycle_life",
@@ -1903,7 +1903,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/╜┼└»┴ñ_1Ah QC_1N1Q_910.727mAh_├¿╣÷╣╠┐¼╡┐.sch",
+      "path": "sch_lab_zip/\u255c\u253c\u2514\u00bb\u2534\u00f1_1Ah QC_1N1Q_910.727mAh_\u251c\u00bf\u2563\u00f7\u2563\u2560\u2510\u00bc\u2561\u2510.sch",
       "sha256": "536e4f68fe72e646f21b166018e3ebbfc366d9d32ab4c248ca872f848887943a",
       "size": 12036,
       "category": "unknown",
@@ -1922,7 +1922,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/╜┼└»┴ñ_1Ah_QC 1 charge_948.729mAh_├¿╣÷╣╠┐¼╡┐.sch",
+      "path": "sch_lab_zip/\u255c\u253c\u2514\u00bb\u2534\u00f1_1Ah_QC 1 charge_948.729mAh_\u251c\u00bf\u2563\u00f7\u2563\u2560\u2510\u00bc\u2561\u2510.sch",
       "sha256": "c369272418e06b5c8039b7fb2b3f8ea186e15ef9c6c7fece8c37465a033f5349",
       "size": 16932,
       "category": "unknown",
@@ -1941,7 +1941,7 @@
       }
     },
     {
-      "path": "sch_lab_zip/╣µ└ⁿ.sch",
+      "path": "sch_lab_zip/\u2563\u00b5\u2514\u207f.sch",
       "sha256": "2b4d8c6bfe9b2228b8e00b2b65f5cd5ec2b7bc877b32894e674c3af1afe7f593",
       "size": 5324,
       "category": "unknown",

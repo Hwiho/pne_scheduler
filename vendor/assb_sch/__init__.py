@@ -1,0 +1,68 @@
+"""Vendored ASSB `.sch` parser for standalone pne_scheduler operation."""
+
+from .constants import (
+    SCH_CONDITION_CANDIDATE_FIELDS_BY_LAYOUT,
+    SCH_CURRENT_CONDITION_MAPPING_POLICY,
+    SCH_DCIR_SOC_RULES_LAYOUT_POLICY,
+    SCH_DCIR_SOC_RULES_MAPPING_POLICY,
+    SCH_DCIR_SOC_RULES_SCHEMA,
+    SCH_END_CURRENT_OFFSET,
+    SCH_FILE_VERSION_V3,
+    SCH_LAYOUT_V3_612,
+    SCH_REFERENCE_CURRENT_OFFSET,
+    SCH_STEP_SIZE_CANDIDATES,
+    SCH_STEP_TYPE_CC_CHARGE,
+    SCH_STEP_TYPE_CC_DISCHARGE,
+    SCH_STEP_TYPE_CCCV,
+    SCH_STEP_TYPE_CYCLE_MARKER,
+    SCH_STEP_TYPE_END,
+    SCH_STEP_TYPE_LOOP,
+    SCH_STEP_TYPE_REST,
+    SCH_STEP_TYPES,
+    SCH_V0X00010003_STEP612_CONDITION_FIELDS,
+)
+from .models import SchCycleMap, SchStep
+from .offset_parity import (
+    ASSB_ONLY_FIELDS,
+    DOCUMENTED_DIVERGENCES,
+    SHARED_OFFSET_PAIRS,
+    assb_offset_table,
+    pne_scheduler_offset_table,
+)
+from .parser import (
+    detect_sch_layout,
+    parse_sch_cycle_map_bytes,
+    sch_cycle_map_has_terminal_end,
+)
+
+__all__ = [
+    "ASSB_ONLY_FIELDS",
+    "DOCUMENTED_DIVERGENCES",
+    "SHARED_OFFSET_PAIRS",
+    "SCH_CONDITION_CANDIDATE_FIELDS_BY_LAYOUT",
+    "SCH_CURRENT_CONDITION_MAPPING_POLICY",
+    "SCH_DCIR_SOC_RULES_LAYOUT_POLICY",
+    "SCH_DCIR_SOC_RULES_MAPPING_POLICY",
+    "SCH_DCIR_SOC_RULES_SCHEMA",
+    "SCH_END_CURRENT_OFFSET",
+    "SCH_FILE_VERSION_V3",
+    "SCH_LAYOUT_V3_612",
+    "SCH_REFERENCE_CURRENT_OFFSET",
+    "SCH_STEP_SIZE_CANDIDATES",
+    "SCH_STEP_TYPE_CC_CHARGE",
+    "SCH_STEP_TYPE_CC_DISCHARGE",
+    "SCH_STEP_TYPE_CCCV",
+    "SCH_STEP_TYPE_CYCLE_MARKER",
+    "SCH_STEP_TYPE_END",
+    "SCH_STEP_TYPE_LOOP",
+    "SCH_STEP_TYPE_REST",
+    "SCH_STEP_TYPES",
+    "SCH_V0X00010003_STEP612_CONDITION_FIELDS",
+    "SchCycleMap",
+    "SchStep",
+    "assb_offset_table",
+    "detect_sch_layout",
+    "parse_sch_cycle_map_bytes",
+    "pne_scheduler_offset_table",
+    "sch_cycle_map_has_terminal_end",
+]
