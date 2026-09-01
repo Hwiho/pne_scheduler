@@ -1,0 +1,3758 @@
+{
+  "source": "sch_file_structure_20250211.xlsx",
+  "source_note": "PNE official SCH file structure specification (2025-02-11).",
+  "layouts": {
+    "0x00010007": {
+      "sections": [
+        {
+          "name": "파랑색은 미사용 또는 내부용",
+          "repeat": null,
+          "offset_start": 0,
+          "fields": [],
+          "size_bytes": 0
+        },
+        {
+          "name": "PS_FILE_ID_HEADER",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [],
+          "size_bytes": 0
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [],
+          "size_bytes": 0
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [],
+          "size_bytes": 0
+        },
+        {
+          "name": "FILE_CELL_CHECK_PARAM",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [
+            {
+              "name": "float",
+              "offset": 0,
+              "dtype": "1",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 4,
+              "dtype": "2",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 8,
+              "dtype": "3",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 12,
+              "dtype": "4",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 16,
+              "dtype": "5",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 20,
+              "dtype": "6",
+              "size": 4
+            },
+            {
+              "name": "ULONG",
+              "offset": 24,
+              "dtype": "7",
+              "size": 4
+            },
+            {
+              "name": "int",
+              "offset": 28,
+              "dtype": "8",
+              "size": 4
+            },
+            {
+              "name": "BOOL",
+              "offset": 32,
+              "dtype": "9",
+              "size": 4
+            }
+          ],
+          "size_bytes": 36
+        },
+        {
+          "name": "FILE_STEP_CONDITION",
+          "repeat": "xN",
+          "offset_start": 36,
+          "fields": [
+            {
+              "name": "BYTE",
+              "offset": 36,
+              "dtype": "1",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 40,
+              "dtype": "2",
+              "size": 4
+            },
+            {
+              "name": "int",
+              "offset": 44,
+              "dtype": "3",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 48,
+              "dtype": "4",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 52,
+              "dtype": "5",
+              "size": 4
+            },
+            {
+              "name": "WORD",
+              "offset": 56,
+              "dtype": "6",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 60,
+              "dtype": "7",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 64,
+              "dtype": "8",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 68,
+              "dtype": "9",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 72,
+              "dtype": "10",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 76,
+              "dtype": "11",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 80,
+              "dtype": "12",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 84,
+              "dtype": "13",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 88,
+              "dtype": "14",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 92,
+              "dtype": "15",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 96,
+              "dtype": "16",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 100,
+              "dtype": "17",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 104,
+              "dtype": "18",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 108,
+              "dtype": "19",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 112,
+              "dtype": "20",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 116,
+              "dtype": "21",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 120,
+              "dtype": "22",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 124,
+              "dtype": "23",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 128,
+              "dtype": "24",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 132,
+              "dtype": "25",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 136,
+              "dtype": "26",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 140,
+              "dtype": "27",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 144,
+              "dtype": "28",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 148,
+              "dtype": "29",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 152,
+              "dtype": "30",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 156,
+              "dtype": "31",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 160,
+              "dtype": "32",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 164,
+              "dtype": "33",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 168,
+              "dtype": "34",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 172,
+              "dtype": "35",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 176,
+              "dtype": "36",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 180,
+              "dtype": "37",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 184,
+              "dtype": "38",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 188,
+              "dtype": "39",
+              "size": 4
+            },
+            {
+              "name": "BOOL",
+              "offset": 192,
+              "dtype": "40",
+              "size": 4
+            },
+            {
+              "name": "FILE_GRADE",
+              "offset": 196,
+              "dtype": "41",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 200,
+              "dtype": "42",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 204,
+              "dtype": "43",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 208,
+              "dtype": "44",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 212,
+              "dtype": "45",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 216,
+              "dtype": "46",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 220,
+              "dtype": "47",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 224,
+              "dtype": "48",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 228,
+              "dtype": "49",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 232,
+              "dtype": "50",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 236,
+              "dtype": "51",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 240,
+              "dtype": "52",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 244,
+              "dtype": "53",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 248,
+              "dtype": "54",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 252,
+              "dtype": "55",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 256,
+              "dtype": "56",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 260,
+              "dtype": "57",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 264,
+              "dtype": "58",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 268,
+              "dtype": "59",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 272,
+              "dtype": "60",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 276,
+              "dtype": "61",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 280,
+              "dtype": "62",
+              "size": 4
+            },
+            {
+              "name": "LONG",
+              "offset": 284,
+              "dtype": "63",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 288,
+              "dtype": "64",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 292,
+              "dtype": "65",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 296,
+              "dtype": "66",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 300,
+              "dtype": "67",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 304,
+              "dtype": "68",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 308,
+              "dtype": "69",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 312,
+              "dtype": "70",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 316,
+              "dtype": "71",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 320,
+              "dtype": "72",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 324,
+              "dtype": "75",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 328,
+              "dtype": "76",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 332,
+              "dtype": "77",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 336,
+              "dtype": "78",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 340,
+              "dtype": "79",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 344,
+              "dtype": "80",
+              "size": 4
+            },
+            {
+              "name": "long",
+              "offset": 348,
+              "dtype": "83",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 352,
+              "dtype": "84",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 356,
+              "dtype": "89",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 360,
+              "dtype": "90",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 364,
+              "dtype": "91",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 368,
+              "dtype": "92",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 372,
+              "dtype": "97",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 376,
+              "dtype": "98",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 380,
+              "dtype": "99",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 384,
+              "dtype": "100",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 388,
+              "dtype": "101",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 392,
+              "dtype": "102",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 396,
+              "dtype": "103",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 400,
+              "dtype": "104",
+              "size": 4
+            },
+            {
+              "name": "long",
+              "offset": 404,
+              "dtype": "105",
+              "size": 4
+            },
+            {
+              "name": "long",
+              "offset": 408,
+              "dtype": "106",
+              "size": 4
+            },
+            {
+              "name": "long",
+              "offset": 412,
+              "dtype": "109",
+              "size": 4
+            },
+            {
+              "name": "long",
+              "offset": 416,
+              "dtype": "112",
+              "size": 4
+            },
+            {
+              "name": "BOOL",
+              "offset": 420,
+              "dtype": "113",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 424,
+              "dtype": "114",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 428,
+              "dtype": "115",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 432,
+              "dtype": "116",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 436,
+              "dtype": "117",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 440,
+              "dtype": "118",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 444,
+              "dtype": "119",
+              "size": 4
+            },
+            {
+              "name": "LONG",
+              "offset": 448,
+              "dtype": "120",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 452,
+              "dtype": "122",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 456,
+              "dtype": "123",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 460,
+              "dtype": "124",
+              "size": 4
+            },
+            {
+              "name": "LONG",
+              "offset": 464,
+              "dtype": "125",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 468,
+              "dtype": "126",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 472,
+              "dtype": "127",
+              "size": 4
+            },
+            {
+              "name": "LONG",
+              "offset": 476,
+              "dtype": "128",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 480,
+              "dtype": "129",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 484,
+              "dtype": "130",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 488,
+              "dtype": "131",
+              "size": 4
+            },
+            {
+              "name": "long",
+              "offset": 492,
+              "dtype": "132",
+              "size": 4
+            },
+            {
+              "name": "STRUCT_EIS_SET",
+              "offset": 496,
+              "dtype": "133",
+              "size": 4
+            }
+          ],
+          "size_bytes": 464
+        }
+      ],
+      "step_record_size": 464,
+      "step_field_count": 116
+    },
+    "0x00010004": {
+      "sections": [
+        {
+          "name": "파랑색은 미사용 또는 내부용",
+          "repeat": null,
+          "offset_start": 0,
+          "fields": [],
+          "size_bytes": 0
+        },
+        {
+          "name": "PS_FILE_ID_HEADER",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [],
+          "size_bytes": 0
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [],
+          "size_bytes": 0
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [],
+          "size_bytes": 0
+        },
+        {
+          "name": "FILE_CELL_CHECK_PARAM",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [
+            {
+              "name": "float",
+              "offset": 0,
+              "dtype": "1",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 4,
+              "dtype": "2",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 8,
+              "dtype": "3",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 12,
+              "dtype": "4",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 16,
+              "dtype": "5",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 20,
+              "dtype": "6",
+              "size": 4
+            },
+            {
+              "name": "ULONG",
+              "offset": 24,
+              "dtype": "7",
+              "size": 4
+            },
+            {
+              "name": "int",
+              "offset": 28,
+              "dtype": "8",
+              "size": 4
+            },
+            {
+              "name": "BOOL",
+              "offset": 32,
+              "dtype": "9",
+              "size": 4
+            }
+          ],
+          "size_bytes": 36
+        },
+        {
+          "name": "FILE_STEP_CONDITION",
+          "repeat": "xN",
+          "offset_start": 36,
+          "fields": [
+            {
+              "name": "BYTE",
+              "offset": 36,
+              "dtype": "1",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 40,
+              "dtype": "2",
+              "size": 4
+            },
+            {
+              "name": "int",
+              "offset": 44,
+              "dtype": "3",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 48,
+              "dtype": "4",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 52,
+              "dtype": "5",
+              "size": 4
+            },
+            {
+              "name": "WORD",
+              "offset": 56,
+              "dtype": "6",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 60,
+              "dtype": "7",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 64,
+              "dtype": "8",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 68,
+              "dtype": "9",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 72,
+              "dtype": "10",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 76,
+              "dtype": "11",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 80,
+              "dtype": "12",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 84,
+              "dtype": "13",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 88,
+              "dtype": "14",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 92,
+              "dtype": "15",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 96,
+              "dtype": "16",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 100,
+              "dtype": "17",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 104,
+              "dtype": "18",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 108,
+              "dtype": "19",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 112,
+              "dtype": "20",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 116,
+              "dtype": "21",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 120,
+              "dtype": "22",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 124,
+              "dtype": "23",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 128,
+              "dtype": "24",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 132,
+              "dtype": "25",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 136,
+              "dtype": "26",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 140,
+              "dtype": "27",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 144,
+              "dtype": "28",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 148,
+              "dtype": "29",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 152,
+              "dtype": "30",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 156,
+              "dtype": "31",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 160,
+              "dtype": "32",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 164,
+              "dtype": "33",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 168,
+              "dtype": "34",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 172,
+              "dtype": "35",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 176,
+              "dtype": "36",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 180,
+              "dtype": "37",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 184,
+              "dtype": "38",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 188,
+              "dtype": "39",
+              "size": 4
+            },
+            {
+              "name": "BOOL",
+              "offset": 192,
+              "dtype": "40",
+              "size": 4
+            },
+            {
+              "name": "FILE_GRADE",
+              "offset": 196,
+              "dtype": "41",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 200,
+              "dtype": "42",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 204,
+              "dtype": "43",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 208,
+              "dtype": "44",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 212,
+              "dtype": "45",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 216,
+              "dtype": "46",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 220,
+              "dtype": "47",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 224,
+              "dtype": "48",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 228,
+              "dtype": "49",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 232,
+              "dtype": "50",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 236,
+              "dtype": "51",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 240,
+              "dtype": "52",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 244,
+              "dtype": "53",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 248,
+              "dtype": "54",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 252,
+              "dtype": "55",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 256,
+              "dtype": "56",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 260,
+              "dtype": "57",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 264,
+              "dtype": "58",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 268,
+              "dtype": "59",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 272,
+              "dtype": "60",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 276,
+              "dtype": "61",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 280,
+              "dtype": "62",
+              "size": 4
+            },
+            {
+              "name": "LONG",
+              "offset": 284,
+              "dtype": "63",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 288,
+              "dtype": "64",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 292,
+              "dtype": "65",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 296,
+              "dtype": "66",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 300,
+              "dtype": "67",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 304,
+              "dtype": "68",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 308,
+              "dtype": "69",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 312,
+              "dtype": "70",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 316,
+              "dtype": "71",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 320,
+              "dtype": "72",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 324,
+              "dtype": "75",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 328,
+              "dtype": "76",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 332,
+              "dtype": "77",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 336,
+              "dtype": "78",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 340,
+              "dtype": "79",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 344,
+              "dtype": "80",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 348,
+              "dtype": "81",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 352,
+              "dtype": "86",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 356,
+              "dtype": "87",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 360,
+              "dtype": "88",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 364,
+              "dtype": "89",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 368,
+              "dtype": "90",
+              "size": 4
+            },
+            {
+              "name": "UINT",
+              "offset": 372,
+              "dtype": "91",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 376,
+              "dtype": "92",
+              "size": 4
+            },
+            {
+              "name": "BYTE",
+              "offset": 380,
+              "dtype": "93",
+              "size": 4
+            },
+            {
+              "name": "long",
+              "offset": 384,
+              "dtype": "94",
+              "size": 4
+            },
+            {
+              "name": "long",
+              "offset": 388,
+              "dtype": "95",
+              "size": 4
+            },
+            {
+              "name": "long",
+              "offset": 392,
+              "dtype": "98",
+              "size": 4
+            },
+            {
+              "name": "long",
+              "offset": 396,
+              "dtype": "101",
+              "size": 4
+            },
+            {
+              "name": "BOOL",
+              "offset": 400,
+              "dtype": "102",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 404,
+              "dtype": "103",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 408,
+              "dtype": "104",
+              "size": 4
+            },
+            {
+              "name": "char",
+              "offset": 412,
+              "dtype": "105",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 416,
+              "dtype": "106",
+              "size": 4
+            },
+            {
+              "name": "LONG",
+              "offset": 420,
+              "dtype": "107",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 424,
+              "dtype": "109",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 428,
+              "dtype": "110",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 432,
+              "dtype": "111",
+              "size": 4
+            },
+            {
+              "name": "LONG",
+              "offset": 436,
+              "dtype": "112",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 440,
+              "dtype": "113",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 444,
+              "dtype": "114",
+              "size": 4
+            },
+            {
+              "name": "LONG",
+              "offset": 448,
+              "dtype": "115",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 452,
+              "dtype": "116",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 456,
+              "dtype": "117",
+              "size": 4
+            },
+            {
+              "name": "float",
+              "offset": 460,
+              "dtype": "118",
+              "size": 4
+            },
+            {
+              "name": "long",
+              "offset": 464,
+              "dtype": "119",
+              "size": 4
+            }
+          ],
+          "size_bytes": 432
+        }
+      ],
+      "step_record_size": 432,
+      "step_field_count": 108
+    },
+    "0x00010003": {
+      "sections": [
+        {
+          "name": "PS_FILE_ID_HEADER",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [
+            {
+              "name": "nFileID",
+              "offset": 0,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nFileVersion",
+              "offset": 4,
+              "dtype": "UINT",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 8,
+          "fields": [
+            {
+              "name": "lID",
+              "offset": 8,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "lType",
+              "offset": 12,
+              "dtype": "LONG",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 16,
+          "fields": [
+            {
+              "name": "lID",
+              "offset": 16,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "lType",
+              "offset": 20,
+              "dtype": "LONG",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_CELL_CHECK_PARAM",
+          "repeat": "x1",
+          "offset_start": 24,
+          "fields": [
+            {
+              "name": "fMaxVoltage",
+              "offset": 24,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fMinVoltage",
+              "offset": 28,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fMaxCurrent",
+              "offset": 32,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fVrefVal",
+              "offset": 36,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fIrefVal",
+              "offset": 40,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaVoltage",
+              "offset": 44,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "lTrickleTime",
+              "offset": 48,
+              "dtype": "ULONG",
+              "size": 4
+            },
+            {
+              "name": "nMaxFaultNo",
+              "offset": 52,
+              "dtype": "int",
+              "size": 4
+            },
+            {
+              "name": "bPreTest",
+              "offset": 56,
+              "dtype": "BOOL",
+              "size": 1
+            }
+          ],
+          "size_bytes": 33
+        },
+        {
+          "name": "FILE_STEP_CONDITION",
+          "repeat": "xN",
+          "offset_start": 57,
+          "fields": [
+            {
+              "name": "chStepNo",
+              "offset": 57,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "nProcType",
+              "offset": 58,
+              "dtype": "int",
+              "size": 4
+            },
+            {
+              "name": "chType",
+              "offset": 62,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "chMode",
+              "offset": 63,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "wReserved1",
+              "offset": 64,
+              "dtype": "WORD",
+              "size": 2
+            },
+            {
+              "name": "fVref",
+              "offset": 66,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fIref",
+              "offset": 70,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndTime",
+              "offset": 74,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndCVTime",
+              "offset": 78,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndV",
+              "offset": 82,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndI",
+              "offset": 86,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndC",
+              "offset": 90,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndDV",
+              "offset": 94,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndDI",
+              "offset": 98,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoGoto",
+              "offset": 102,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoCycle",
+              "offset": 106,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndTGoto",
+              "offset": 110,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoCVEndTGoto",
+              "offset": 114,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndVGoto",
+              "offset": 118,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndIGoto",
+              "offset": 122,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndCGoto",
+              "offset": 126,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndTempGoto",
+              "offset": 130,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndSocGoto",
+              "offset": 134,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nGotoStepID",
+              "offset": 138,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "tempType",
+              "offset": 142,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "tempDir",
+              "offset": 143,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "fVLimitHigh",
+              "offset": 144,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fVLimitLow",
+              "offset": 148,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fILimitHigh",
+              "offset": 152,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fILimitLow",
+              "offset": 156,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCLimitHigh",
+              "offset": 160,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCLimitLow",
+              "offset": 164,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fImpLimitHigh",
+              "offset": 168,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fImpLimitLow",
+              "offset": 172,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaTime",
+              "offset": 176,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaTime1",
+              "offset": 180,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaV",
+              "offset": 184,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaI",
+              "offset": 188,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "bGrade",
+              "offset": 192,
+              "dtype": "BOOL",
+              "size": 1
+            },
+            {
+              "name": "sGrading_Val",
+              "offset": 193,
+              "dtype": "FILE_GRADE",
+              "size": 4
+            },
+            {
+              "name": "fPatternMinVal",
+              "offset": 197,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fPatternMaxVal",
+              "offset": 201,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fStartT",
+              "offset": 205,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndT",
+              "offset": 209,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportV",
+              "offset": 213,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportI",
+              "offset": 217,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportTime",
+              "offset": 221,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fAutoTempLow",
+              "offset": 225,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fAutoTempHigh",
+              "offset": 229,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCapaVoltage1",
+              "offset": 233,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCapaVoltage2",
+              "offset": 237,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDCRStartTime",
+              "offset": 241,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDCREndTime",
+              "offset": 245,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLCStartTime",
+              "offset": 249,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLCEndTime",
+              "offset": 253,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "lRange",
+              "offset": 257,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "fReportTemp",
+              "offset": 261,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fSocRate",
+              "offset": 265,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndW",
+              "offset": 269,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndWh",
+              "offset": 273,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fHighLimitTemp",
+              "offset": 277,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLowLimitTemp",
+              "offset": 281,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fTref",
+              "offset": 285,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "nType",
+              "offset": 289,
+              "dtype": "short int",
+              "size": 4
+            },
+            {
+              "name": "nMode",
+              "offset": 293,
+              "dtype": "short int",
+              "size": 4
+            },
+            {
+              "name": "fMaxCapacity",
+              "offset": 297,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fRenewalTime",
+              "offset": 301,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "ocvTableRow",
+              "offset": 305,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "ocvTableCol",
+              "offset": 306,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "powerTableRow",
+              "offset": 307,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "powerTableCol",
+              "offset": 308,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "cNotUseTempWait",
+              "offset": 309,
+              "dtype": "unsigned char",
+              "size": 4
+            },
+            {
+              "name": "bUseActualCapa",
+              "offset": 313,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "bUseDataStepNo",
+              "offset": 314,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "bEndStepSave",
+              "offset": 315,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "bInitIntegralCap",
+              "offset": 316,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "nLoopInfoGotoCnt",
+              "offset": 317,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "bComplete",
+              "offset": 321,
+              "dtype": "BYTE",
+              "size": 1
+            }
+          ],
+          "size_bytes": 265
+        }
+      ],
+      "step_record_size": 265,
+      "step_field_count": 78
+    },
+    "0x00010002": {
+      "sections": [
+        {
+          "name": "PS_FILE_ID_HEADER",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [
+            {
+              "name": "nFileID",
+              "offset": 0,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nFileVersion",
+              "offset": 4,
+              "dtype": "UINT",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 8,
+          "fields": [
+            {
+              "name": "lID",
+              "offset": 8,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "lType",
+              "offset": 12,
+              "dtype": "LONG",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 16,
+          "fields": [
+            {
+              "name": "lID",
+              "offset": 16,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "lType",
+              "offset": 20,
+              "dtype": "LONG",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_CELL_CHECK_PARAM",
+          "repeat": "x1",
+          "offset_start": 24,
+          "fields": [
+            {
+              "name": "fMaxVoltage",
+              "offset": 24,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fMinVoltage",
+              "offset": 28,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fMaxCurrent",
+              "offset": 32,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fVrefVal",
+              "offset": 36,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fIrefVal",
+              "offset": 40,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaVoltage",
+              "offset": 44,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "lTrickleTime",
+              "offset": 48,
+              "dtype": "ULONG",
+              "size": 4
+            },
+            {
+              "name": "nMaxFaultNo",
+              "offset": 52,
+              "dtype": "int",
+              "size": 4
+            },
+            {
+              "name": "bPreTest",
+              "offset": 56,
+              "dtype": "BOOL",
+              "size": 1
+            }
+          ],
+          "size_bytes": 33
+        },
+        {
+          "name": "FILE_STEP_CONDITION",
+          "repeat": "xN",
+          "offset_start": 57,
+          "fields": [
+            {
+              "name": "chStepNo",
+              "offset": 57,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "nProcType",
+              "offset": 58,
+              "dtype": "int",
+              "size": 4
+            },
+            {
+              "name": "chType",
+              "offset": 62,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "chMode",
+              "offset": 63,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "wReserved1",
+              "offset": 64,
+              "dtype": "WORD",
+              "size": 2
+            },
+            {
+              "name": "fVref",
+              "offset": 66,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fIref",
+              "offset": 70,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndTime",
+              "offset": 74,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndCVTime",
+              "offset": 78,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndV",
+              "offset": 82,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndI",
+              "offset": 86,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndC",
+              "offset": 90,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndDV",
+              "offset": 94,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndDI",
+              "offset": 98,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoGoto",
+              "offset": 102,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoCycle",
+              "offset": 106,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndTGoto",
+              "offset": 110,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoCVEndTGoto",
+              "offset": 114,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndVGoto",
+              "offset": 118,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndIGoto",
+              "offset": 122,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndCGoto",
+              "offset": 126,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndTempGoto",
+              "offset": 130,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndSocGoto",
+              "offset": 134,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nGotoStepID",
+              "offset": 138,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "tempType",
+              "offset": 142,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "tempDir",
+              "offset": 143,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "fVLimitHigh",
+              "offset": 144,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fVLimitLow",
+              "offset": 148,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fILimitHigh",
+              "offset": 152,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fILimitLow",
+              "offset": 156,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCLimitHigh",
+              "offset": 160,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCLimitLow",
+              "offset": 164,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fImpLimitHigh",
+              "offset": 168,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fImpLimitLow",
+              "offset": 172,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaTime",
+              "offset": 176,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaTime1",
+              "offset": 180,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaV",
+              "offset": 184,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaI",
+              "offset": 188,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "bGrade",
+              "offset": 192,
+              "dtype": "BOOL",
+              "size": 1
+            },
+            {
+              "name": "sGrading_Val",
+              "offset": 193,
+              "dtype": "FILE_GRADE",
+              "size": 4
+            },
+            {
+              "name": "fPatternMinVal",
+              "offset": 197,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fPatternMaxVal",
+              "offset": 201,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fStartT",
+              "offset": 205,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndT",
+              "offset": 209,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportV",
+              "offset": 213,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportI",
+              "offset": 217,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportTime",
+              "offset": 221,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fAutoTempLow",
+              "offset": 225,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fAutoTempHigh",
+              "offset": 229,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCapaVoltage1",
+              "offset": 233,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCapaVoltage2",
+              "offset": 237,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDCRStartTime",
+              "offset": 241,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDCREndTime",
+              "offset": 245,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLCStartTime",
+              "offset": 249,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLCEndTime",
+              "offset": 253,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "lRange",
+              "offset": 257,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "fReportTemp",
+              "offset": 261,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fSocRate",
+              "offset": 265,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndW",
+              "offset": 269,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndWh",
+              "offset": 273,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fHighLimitTemp",
+              "offset": 277,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLowLimitTemp",
+              "offset": 281,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fTref",
+              "offset": 285,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "nType",
+              "offset": 289,
+              "dtype": "short int",
+              "size": 4
+            },
+            {
+              "name": "nMode",
+              "offset": 293,
+              "dtype": "short int",
+              "size": 4
+            },
+            {
+              "name": "fMaxCapacity",
+              "offset": 297,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fRenewalTime",
+              "offset": 301,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "ocvTableRow",
+              "offset": 305,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "ocvTableCol",
+              "offset": 306,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "powerTableRow",
+              "offset": 307,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "powerTableCol",
+              "offset": 308,
+              "dtype": "char",
+              "size": 1
+            },
+            {
+              "name": "cNotUseTempWait",
+              "offset": 309,
+              "dtype": "unsigned char",
+              "size": 4
+            },
+            {
+              "name": "bUseActualCapa",
+              "offset": 313,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "bUseDataStepNo",
+              "offset": 314,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "bEndStepSave",
+              "offset": 315,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "bInitIntegralCap",
+              "offset": 316,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "nLoopInfoGotoCnt",
+              "offset": 317,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "bComplete",
+              "offset": 321,
+              "dtype": "BYTE",
+              "size": 1
+            }
+          ],
+          "size_bytes": 265
+        }
+      ],
+      "step_record_size": 265,
+      "step_field_count": 78
+    },
+    "Type2 0x00010001": {
+      "sections": [
+        {
+          "name": "PS_FILE_ID_HEADER",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [
+            {
+              "name": "nFileID",
+              "offset": 0,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nFileVersion",
+              "offset": 4,
+              "dtype": "UINT",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 8,
+          "fields": [
+            {
+              "name": "lID",
+              "offset": 8,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "lType",
+              "offset": 12,
+              "dtype": "LONG",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 16,
+          "fields": [
+            {
+              "name": "lID",
+              "offset": 16,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "lType",
+              "offset": 20,
+              "dtype": "LONG",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_CELL_CHECK_PARAM",
+          "repeat": "x1",
+          "offset_start": 24,
+          "fields": [
+            {
+              "name": "fMaxVoltage",
+              "offset": 24,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fMinVoltage",
+              "offset": 28,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fMaxCurrent",
+              "offset": 32,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fVrefVal",
+              "offset": 36,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fIrefVal",
+              "offset": 40,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaVoltage",
+              "offset": 44,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "lTrickleTime",
+              "offset": 48,
+              "dtype": "ULONG",
+              "size": 4
+            },
+            {
+              "name": "nMaxFaultNo",
+              "offset": 52,
+              "dtype": "int",
+              "size": 4
+            },
+            {
+              "name": "bPreTest",
+              "offset": 56,
+              "dtype": "BOOL",
+              "size": 1
+            }
+          ],
+          "size_bytes": 33
+        },
+        {
+          "name": "FILE_STEP_CONDITION",
+          "repeat": "xN",
+          "offset_start": 57,
+          "fields": [
+            {
+              "name": "chStepNo",
+              "offset": 57,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "nProcType",
+              "offset": 58,
+              "dtype": "int",
+              "size": 4
+            },
+            {
+              "name": "chType",
+              "offset": 62,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "chMode",
+              "offset": 63,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "wReserved1",
+              "offset": 64,
+              "dtype": "WORD",
+              "size": 2
+            },
+            {
+              "name": "fVref",
+              "offset": 66,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fIref",
+              "offset": 70,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndTime",
+              "offset": 74,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndCVTime",
+              "offset": 78,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndV",
+              "offset": 82,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndI",
+              "offset": 86,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndC",
+              "offset": 90,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndDV",
+              "offset": 94,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndDI",
+              "offset": 98,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoGoto",
+              "offset": 102,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoCycle",
+              "offset": 106,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndTGoto",
+              "offset": 110,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoCVEndTGoto",
+              "offset": 114,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndVGoto",
+              "offset": 118,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndIGoto",
+              "offset": 122,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndCGoto",
+              "offset": 126,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nGotoStepID",
+              "offset": 130,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "fVLimitHigh",
+              "offset": 134,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fVLimitLow",
+              "offset": 138,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fILimitHigh",
+              "offset": 142,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fILimitLow",
+              "offset": 146,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCLimitHigh",
+              "offset": 150,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCLimitLow",
+              "offset": 154,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fImpLimitHigh",
+              "offset": 158,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fImpLimitLow",
+              "offset": 162,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaTime",
+              "offset": 166,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaTime1",
+              "offset": 170,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaV",
+              "offset": 174,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaI",
+              "offset": 178,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "bGrade",
+              "offset": 182,
+              "dtype": "BOOL",
+              "size": 1
+            },
+            {
+              "name": "sGrading_Val",
+              "offset": 183,
+              "dtype": "FILE_GRADE",
+              "size": 4
+            },
+            {
+              "name": "fPatternMinVal",
+              "offset": 187,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fPatternMaxVal",
+              "offset": 191,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fStartT",
+              "offset": 195,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndT",
+              "offset": 199,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportV",
+              "offset": 203,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportI",
+              "offset": 207,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportTime",
+              "offset": 211,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCapaVoltage1",
+              "offset": 215,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCapaVoltage2",
+              "offset": 219,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDCRStartTime",
+              "offset": 223,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDCREndTime",
+              "offset": 227,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLCStartTime",
+              "offset": 231,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLCEndTime",
+              "offset": 235,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "lRange",
+              "offset": 239,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "fReportTemp",
+              "offset": 243,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fSocRate",
+              "offset": 247,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndW",
+              "offset": 251,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndWh",
+              "offset": 255,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fHighLimitTemp",
+              "offset": 259,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLowLimitTemp",
+              "offset": 263,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fTref",
+              "offset": 267,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "bUseActualCapa",
+              "offset": 271,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "bUseDataStepNo",
+              "offset": 272,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "wReserved",
+              "offset": 273,
+              "dtype": "WORD",
+              "size": 2
+            },
+            {
+              "name": "nLoopInfoGotoCnt",
+              "offset": 275,
+              "dtype": "UINT",
+              "size": 4
+            }
+          ],
+          "size_bytes": 222
+        }
+      ],
+      "step_record_size": 222,
+      "step_field_count": 61
+    },
+    "Type1 0x00010001": {
+      "sections": [
+        {
+          "name": "PS_FILE_ID_HEADER",
+          "repeat": "x1",
+          "offset_start": 0,
+          "fields": [
+            {
+              "name": "nFileID",
+              "offset": 0,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nFileVersion",
+              "offset": 4,
+              "dtype": "UINT",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 8,
+          "fields": [
+            {
+              "name": "lID",
+              "offset": 8,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "lType",
+              "offset": 12,
+              "dtype": "LONG",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_TEST_INFORMATION",
+          "repeat": "x1",
+          "offset_start": 16,
+          "fields": [
+            {
+              "name": "lID",
+              "offset": 16,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "lType",
+              "offset": 20,
+              "dtype": "LONG",
+              "size": 4
+            }
+          ],
+          "size_bytes": 8
+        },
+        {
+          "name": "FILE_CELL_CHECK_PARAM",
+          "repeat": "x1",
+          "offset_start": 24,
+          "fields": [
+            {
+              "name": "fMaxVoltage",
+              "offset": 24,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fMinVoltage",
+              "offset": 28,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fMaxCurrent",
+              "offset": 32,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fVrefVal",
+              "offset": 36,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fIrefVal",
+              "offset": 40,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaVoltage",
+              "offset": 44,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "lTrickleTime",
+              "offset": 48,
+              "dtype": "ULONG",
+              "size": 4
+            },
+            {
+              "name": "nMaxFaultNo",
+              "offset": 52,
+              "dtype": "int",
+              "size": 4
+            },
+            {
+              "name": "bPreTest",
+              "offset": 56,
+              "dtype": "BOOL",
+              "size": 1
+            }
+          ],
+          "size_bytes": 33
+        },
+        {
+          "name": "FILE_STEP_CONDITION",
+          "repeat": "xN",
+          "offset_start": 57,
+          "fields": [
+            {
+              "name": "chStepNo",
+              "offset": 57,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "nProcType",
+              "offset": 58,
+              "dtype": "int",
+              "size": 4
+            },
+            {
+              "name": "chType",
+              "offset": 62,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "chMode",
+              "offset": 63,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "wReserved1",
+              "offset": 64,
+              "dtype": "WORD",
+              "size": 2
+            },
+            {
+              "name": "fVref",
+              "offset": 66,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fIref",
+              "offset": 70,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndTime",
+              "offset": 74,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndV",
+              "offset": 78,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndI",
+              "offset": 82,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndC",
+              "offset": 86,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndDV",
+              "offset": 90,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndDI",
+              "offset": 94,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoGoto",
+              "offset": 98,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoCycle",
+              "offset": 102,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndTGoto",
+              "offset": 106,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndVGoto",
+              "offset": 110,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndIGoto",
+              "offset": 114,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nLoopInfoEndCGoto",
+              "offset": 118,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "nGotoStepID",
+              "offset": 122,
+              "dtype": "UINT",
+              "size": 4
+            },
+            {
+              "name": "fVLimitHigh",
+              "offset": 126,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fVLimitLow",
+              "offset": 130,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fILimitHigh",
+              "offset": 134,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fILimitLow",
+              "offset": 138,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCLimitHigh",
+              "offset": 142,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCLimitLow",
+              "offset": 146,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fImpLimitHigh",
+              "offset": 150,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fImpLimitLow",
+              "offset": 154,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaTime",
+              "offset": 158,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaTime1",
+              "offset": 162,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaV",
+              "offset": 166,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDeltaI",
+              "offset": 170,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "bGrade",
+              "offset": 174,
+              "dtype": "BOOL",
+              "size": 1
+            },
+            {
+              "name": "sGrading_Val",
+              "offset": 175,
+              "dtype": "FILE_GRADE",
+              "size": 4
+            },
+            {
+              "name": "fPatternMinVal",
+              "offset": 179,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fPatternMaxVal",
+              "offset": 183,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fStartT",
+              "offset": 187,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndT",
+              "offset": 191,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportV",
+              "offset": 195,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportI",
+              "offset": 199,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fReportTime",
+              "offset": 203,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCapaVoltage1",
+              "offset": 207,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fCapaVoltage2",
+              "offset": 211,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDCRStartTime",
+              "offset": 215,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fDCREndTime",
+              "offset": 219,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLCStartTime",
+              "offset": 223,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLCEndTime",
+              "offset": 227,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "lRange",
+              "offset": 231,
+              "dtype": "LONG",
+              "size": 4
+            },
+            {
+              "name": "fReportTemp",
+              "offset": 235,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fSocRate",
+              "offset": 239,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndW",
+              "offset": 243,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fEndWh",
+              "offset": 247,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fHighLimitTemp",
+              "offset": 251,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fLowLimitTemp",
+              "offset": 255,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "fTref",
+              "offset": 259,
+              "dtype": "float",
+              "size": 4
+            },
+            {
+              "name": "bUseActualCapa",
+              "offset": 263,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "bUseDataStepNo",
+              "offset": 264,
+              "dtype": "BYTE",
+              "size": 1
+            },
+            {
+              "name": "wReserved",
+              "offset": 265,
+              "dtype": "WORD",
+              "size": 2
+            },
+            {
+              "name": "nLoopInfoGotoCnt",
+              "offset": 267,
+              "dtype": "UINT",
+              "size": 4
+            }
+          ],
+          "size_bytes": 214
+        }
+      ],
+      "step_record_size": 214,
+      "step_field_count": 59
+    }
+  }
+}

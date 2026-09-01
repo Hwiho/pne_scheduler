@@ -27,7 +27,7 @@ Enable creation of `.sch` binary schedule files for PNE cyclers **without using 
 
 | Source | Role | Status |
 |--------|------|--------|
-| `c:\sch_file_structure_20250211.xlsx` | Expected official PNE field definitions (by version) | Canonical when supplied and provenance-checked; not present in this repository |
+| `schema/reference/sch_file_structure_20250211.xlsx` | Expected official PNE field definitions (by version) | Canonical reference; JSON export in same folder |
 | `ASSB_Analyzer_dev` → `assb_analyzer/io/pne_converter.py` | Reading, validation, and metadata extraction | Optional external validator; not included in the repository |
 | `_vendor/Ensol_PNE_framework/pne_app/io/pne_converter.py` | Partial reader for CycleNum and DCIR reference | Local vendor copy |
 | `assb_analyzer/io/cell_c_rate_reference.py` | C-rate ↔ capacity ↔ current (analysis side) | **Logic reusable by the writer** |
