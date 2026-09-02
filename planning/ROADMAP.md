@@ -479,6 +479,13 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 - End-condition offsets unified: `fEndV=28`, `fEndI=32`, `fEndC=36` across parser/schema/compiler
 - Intake tooling: `tools/compare_sch`, `docs/GATE_B.md`
 - **Ensol sch_maker adoption (2026-09-01):** validated 612-byte map — `+12` mV setpoint, `+16` mA current, `+20` s duration, `+28`/`+32` end V/I; parser + compiler updated; golden capacheck regression
+- **Corpus evidence pass (2026-09-02):** 23,281 schedules mined; canonical 612-byte
+  sampling, DOD, capacity-reference, and loop fields registered as `corpus_inferred`.
+- **Readiness semantics (2026-09-02):** automated tooling success is reported separately
+  from Gate B exit; `gate_b_passed` remains false until real controlled-pair/reopen evidence.
+- Writer Q_nom is fail-safe and explicit: only
+  `CellProfile.nominal_capacity_mAh` may drive compilation; stack/filename inference is
+  viewer-only.
 
 **Blocking items (see also §11):** PNE voltage/L-level encoding; dual capacity models (viewer vs writer Q_nom).
 
@@ -709,7 +716,7 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 | Date | Gate | Severity | Issue | Status | Resolution / next action |
 |------|------|----------|-------|--------|--------------------------|
 | 2026-08-31 | B | blocking | PNE voltage/L-level encoding (`+12` mode vs `+16` fVref) | open | Needs controlled pair per target profile (B0) |
-| 2026-08-31 | B | blocking | Dual capacity models (CellProfile vs stack-inferred Q_nom) | open | Single Q_nom contract before writer compile (B0, D capacity harness) |
+| 2026-08-31 | B | blocking | Dual capacity models (CellProfile vs stack-inferred Q_nom) | resolved | Writer uses explicit `CellProfile.nominal_capacity_mAh`; inferred Q_nom is display-only |
 | 2026-08-31 | B | normal | Controlled-pair metadata incomplete → evidence promotion unsafe | open | Implement B5 intake schema validation |
 | 2026-08-31 | C | normal | 89/93 lab fixtures use `0x10004/696`, not 612-byte layout | open | C6 after 612 slice; separate field map (not +84 append) |
 | 2026-08-31 | E | safety | Resume may renumber steps without goto remap proof | open | Block or remap only after semantic confirmation; track under E1/resume |

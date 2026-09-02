@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
+from pne_scheduler.engine.c_rate import WRITER_Q_NOM_SOURCE
+from pne_scheduler.schema.fields import FieldConfidence, get_step_field
 from pne_scheduler.tools.compare_step_layouts import build_step_layout_diff_report
+from pne_scheduler.tools.run_gate_b_validation import _controlled_pair_evidence
 from pne_scheduler.validate.assb_parser_diff import (
     build_assb_parser_diff_report,
     compare_fixture_parsers,
@@ -47,3 +51,40 @@ def test_assb_parser_diff_report_on_representative_fixtures() -> None:
     report = build_assb_parser_diff_report(existing)
     assert report["summary"]["fixture_count"] == len(existing)
     assert report["summary"]["layout_match_count"] == len(existing)
+
+
+def test_writer_q_nom_contract_is_explicit_project_input() -> None:
+    assert WRITER_Q_NOM_SOURCE == "cell_profile.nominal_capacity_mAh"
+
+
+def test_corpus_evidence_matches_canonical_v612_registry() -> None:
+    evidence = json.loads(
+        (ROOT / "planning" / "GATE_B_CORPUS_EVIDENCE.json").read_text(encoding="utf-8")
+    )
+    assert evidence["schema"] == "pne_scheduler.gate_b_corpus_evidence/v1"
+    assert evidence["scope"]["sch_files"] == 23281
+    assert evidence["scope"]["parsed_files"] == 23275
+
+    expected = {
+        88: "loop_reset_flag",
+        332: "record_dV_mV",
+        340: "record_time_s",
+        384: "dod_percent",
+        496: "cap_mode",
+        497: "cap_ref_step",
+        564: "loop_goto_ensol",
+    }
+    for offset, name in expected.items():
+        field = get_step_field(0x00010003, offset)
+        assert field is not None
+        assert field.name == name
+        assert field.confidence == FieldConfidence.CORPUS_INFERRED
+        assert field.writer_ready is False
+
+
+def test_controlled_pair_inventory_excludes_fillable_template() -> None:
+    inventory = _controlled_pair_evidence()
+    assert inventory["directory"] == "example/gate_b_pairs"
+    assert inventory["valid_intake_count"] <= inventory["intake_count"]
+    assert inventory["reopen_verified_count"] <= inventory["valid_intake_count"]
+    assert inventory["complete_evidence_count"] <= inventory["valid_intake_count"]

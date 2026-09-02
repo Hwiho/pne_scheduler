@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import subprocess
 import sys
@@ -12,14 +13,24 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 
 from pne_scheduler.tools.compare_step_layouts import build_step_layout_diff_report  # noqa: E402
+from pne_scheduler.tools.compare_sch import compare_sch_files  # noqa: E402
+from pne_scheduler.engine.c_rate import WRITER_Q_NOM_SOURCE  # noqa: E402
+from pne_scheduler.schema.fields import (  # noqa: E402
+    get_step_fields,
+    validate_step_field_registry,
+)
 from pne_scheduler.validate.assb_parser_diff import (  # noqa: E402
     build_assb_parser_diff_report,
     compare_fixture_parsers,
     offset_parity_summary,
 )
-from pne_scheduler.validate.intake import validate_intake_file  # noqa: E402
+from pne_scheduler.validate.intake import (  # noqa: E402
+    validate_intake_file,
+    validate_intake_with_compare_report,
+)
 
 REPORT_JSON = ROOT / "planning" / "GATE_B_VALIDATION_REPORT.json"
+CONTROLLED_PAIR_DIR = ROOT / "example" / "gate_b_pairs"
 GATE_B_TESTS = [
     "tests/test_gate_b_tooling.py",
     "tests/test_golden_semantic.py",
@@ -28,6 +39,7 @@ GATE_B_TESTS = [
     "tests/test_ensol_v612_golden.py",
     "tests/test_compiler_offsets.py",
     "tests/test_unit_contract.py",
+    "tests/test_schema_evidence.py",
     "tests/test_assb_offset_parity.py",
     "tests/test_fixture_catalog.py",
 ]
@@ -72,6 +84,78 @@ def _fixture_parser_checks() -> dict:
     }
 
 
+def _controlled_pair_evidence() -> dict:
+    """Inventory real intake files without treating the fillable template as evidence."""
+    intake_paths = (
+        sorted(CONTROLLED_PAIR_DIR.rglob("intake.json"))
+        if CONTROLLED_PAIR_DIR.is_dir()
+        else []
+    )
+    rows = []
+    for path in intake_paths:
+        try:
+            result = validate_intake_file(path)
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError, json.JSONDecodeError) as exc:
+            rows.append(
+                {
+                    "path": str(path.relative_to(ROOT)),
+                    "valid": False,
+                    "reopen_verified": False,
+                    "errors": [str(exc)],
+                }
+            )
+            continue
+        errors = list(result.errors)
+        warnings = list(result.warnings)
+        before_path = path.parent / str(payload.get("before_file", ""))
+        after_path = path.parent / str(payload.get("after_file", ""))
+        pair_clean = False
+        if before_path.is_file() and after_path.is_file():
+            compare_report = compare_sch_files(before_path, after_path)
+            combined = validate_intake_with_compare_report(payload, compare_report)
+            errors = list(combined.errors)
+            warnings = list(combined.warnings)
+            pair_clean = combined.valid
+        else:
+            errors.append("before_file and after_file must exist next to intake.json")
+        equipment = payload.get("equipment", {})
+        screenshots = payload.get("screenshots") or []
+        reopen_verified = payload.get("ctspro_reopen_verified") is True
+        evidence_complete = (
+            not errors
+            and pair_clean
+            and reopen_verified
+            and bool(equipment.get("ctspro_version"))
+            and bool(equipment.get("channel_profile"))
+            and bool(screenshots)
+        )
+        rows.append(
+            {
+                "path": str(path.relative_to(ROOT)),
+                "valid": not errors,
+                "pair_clean": pair_clean,
+                "reopen_verified": reopen_verified,
+                "evidence_complete": evidence_complete,
+                "equipment": equipment.get("label"),
+                "ui_field": payload.get("ui_field"),
+                "errors": errors,
+                "warnings": warnings,
+            }
+        )
+    valid = [row for row in rows if row["valid"]]
+    reopened = [row for row in valid if row["reopen_verified"]]
+    complete = [row for row in valid if row["evidence_complete"]]
+    return {
+        "directory": str(CONTROLLED_PAIR_DIR.relative_to(ROOT)),
+        "intake_count": len(rows),
+        "valid_intake_count": len(valid),
+        "reopen_verified_count": len(reopened),
+        "complete_evidence_count": len(complete),
+        "intakes": rows,
+    }
+
+
 def build_gate_b_report() -> dict:
     intake_template = ROOT / "example" / "validation-intake.template.json"
     intake_result = validate_intake_file(intake_template) if intake_template.is_file() else None
@@ -79,21 +163,48 @@ def build_gate_b_report() -> dict:
     parity = offset_parity_summary()
     pytest_result = _run_pytest()
     parser_checks = _fixture_parser_checks()
+    field_registry_errors = validate_step_field_registry()
+    controlled_pairs = _controlled_pair_evidence()
 
-    checks = {
+    tooling_checks = {
+        "pytest_subset": pytest_result["passed"],
         "B3_fixture_catalog": pytest_result["passed"],
         "B1_step_layout_612_696": step_layout["sampled_step_records"]["612"] > 0
         and step_layout["sampled_step_records"]["696"] > 0,
+        "B1_canonical_field_registry": not field_registry_errors
+        and bool(get_step_fields(0x00010003))
+        and bool(get_step_fields(0x00010004)),
         "B2_assb_offset_parity": bool(parity.get("shared_pairs")),
         "B2_parser_layout_match": parser_checks["all_layout_match"],
         "B4_semantic_golden_tests": pytest_result["passed"],
         "B5_intake_template_valid": intake_result.valid if intake_result else False,
+        "B0_explicit_writer_q_nom_contract": (
+            WRITER_Q_NOM_SOURCE == "cell_profile.nominal_capacity_mAh"
+        ),
     }
+    repository_ready = all(tooling_checks.values())
+    controlled_pair_ready = (
+        controlled_pairs["complete_evidence_count"] > 0
+        and controlled_pairs["complete_evidence_count"]
+        == controlled_pairs["intake_count"]
+    )
+    gate_b_passed = repository_ready and controlled_pair_ready
+    status = (
+        "passed"
+        if gate_b_passed
+        else "ready_for_controlled_pairs"
+        if repository_ready
+        else "repository_work_remaining"
+    )
     return {
-        "schema": "pne_scheduler.gate_b_validation_report/v1",
+        "schema": "pne_scheduler.gate_b_validation_report/v2",
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "checks": checks,
-        "all_passed": all(checks.values()),
+        "status": status,
+        "tooling_checks": tooling_checks,
+        "tooling_passed": repository_ready,
+        "repository_ready_for_controlled_pairs": repository_ready,
+        "gate_b_passed": gate_b_passed,
+        "all_passed": gate_b_passed,
         "pytest": pytest_result,
         "offset_parity": {
             "shared_pairs": len(parity.get("shared_pairs", [])),
@@ -110,23 +221,76 @@ def build_gate_b_report() -> dict:
             "errors": list(intake_result.errors) if intake_result else [],
             "warnings": list(intake_result.warnings) if intake_result else [],
         },
-        "gate_b_tasks": {
-            "B0_raw_unit_contract": checks["B4_semantic_golden_tests"],
-            "B1_field_tables": checks["B1_step_layout_612_696"],
-            "B2_parser_alignment": checks["B2_parser_layout_match"],
-            "B3_read_regression": checks["B3_fixture_catalog"],
-            "B4_semantic_goldens": checks["B4_semantic_golden_tests"],
-            "B5_intake_validation": checks["B5_intake_template_valid"],
+        "canonical_field_registry": {
+            "valid": not field_registry_errors,
+            "errors": list(field_registry_errors),
+            "writer_ready_field_count": sum(
+                field.writer_ready
+                for version in (0x00010002, 0x00010003, 0x00010004)
+                for field in get_step_fields(version)
+            ),
         },
+        "q_nom_contract": {
+            "writer_source": WRITER_Q_NOM_SOURCE,
+            "inferred_geometry_allowed_for_writer": False,
+            "viewer_may_display_inferred_q_nom": True,
+        },
+        "controlled_pair_evidence": controlled_pairs,
+        "gate_b_tasks": {
+            "B0_raw_unit_contract": {
+                "repository_ready": tooling_checks["B0_explicit_writer_q_nom_contract"],
+                "external_evidence_complete": controlled_pair_ready,
+            },
+            "B1_field_tables": {
+                "repository_ready": tooling_checks["B1_canonical_field_registry"],
+                "external_evidence_complete": controlled_pair_ready,
+            },
+            "B2_parser_alignment": {
+                "repository_ready": tooling_checks["B2_parser_layout_match"],
+                "external_evidence_complete": controlled_pair_ready,
+            },
+            "B3_read_regression": {
+                "repository_ready": tooling_checks["B3_fixture_catalog"],
+                "external_evidence_complete": True,
+            },
+            "B4_semantic_goldens": {
+                "repository_ready": tooling_checks["B4_semantic_golden_tests"],
+                "external_evidence_complete": controlled_pair_ready,
+            },
+            "B5_intake_validation": {
+                "repository_ready": tooling_checks["B5_intake_template_valid"],
+                "external_evidence_complete": controlled_pair_ready,
+            },
+        },
+        "remaining_external_requirements": (
+            []
+            if controlled_pair_ready
+            else [
+                "Add real CTSPro-created before/after intake files under example/gate_b_pairs/",
+                "Record CTSPro build and channel profile in each intake",
+                "Set ctspro_reopen_verified=true only after reopening the exact output hash",
+                "Promote individual fields to writer-ready only from clean pair evidence",
+            ]
+        ),
         "next_actions": [
-            "Collect controlled before/after pairs per docs/GATE_B.md (B5 evidence)",
-            "Promote writer-ready fields only after CTSPro reopen check",
-            "Resolve ASSB documented divergences in schema/ensol_v612.py",
+            (
+                "Collect controlled before/after pairs per docs/GATE_B.md"
+                if repository_ready
+                else "Complete failing repository tooling checks before collecting pairs"
+            ),
+            "Run with --require-gate-exit after controlled-pair evidence is added",
         ],
     }
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--require-gate-exit",
+        action="store_true",
+        help="Exit nonzero unless real controlled-pair evidence completes Gate B.",
+    )
+    args = parser.parse_args()
     report = build_gate_b_report()
     REPORT_JSON.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -136,9 +300,12 @@ def main() -> None:
     refresh_annex()
 
     print(f"Wrote {REPORT_JSON}")
-    print("Gate B checks:", report["checks"])
-    print("all_passed:", report["all_passed"])
-    if not report["all_passed"]:
+    print("Gate B status:", report["status"])
+    print("repository_ready_for_controlled_pairs:", report["repository_ready_for_controlled_pairs"])
+    print("gate_b_passed:", report["gate_b_passed"])
+    if not report["repository_ready_for_controlled_pairs"]:
+        sys.exit(1)
+    if args.require_gate_exit and not report["gate_b_passed"]:
         sys.exit(1)
 
 
