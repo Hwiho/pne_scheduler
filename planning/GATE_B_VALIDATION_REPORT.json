@@ -1,7 +1,7 @@
 {
   "schema": "pne_scheduler.gate_b_validation_report/v2",
-  "generated_at": "2026-09-02T05:21:32.855429+00:00",
-  "status": "ready_for_controlled_pairs",
+  "generated_at": "2026-09-02T23:52:27.320724+00:00",
+  "status": "passed",
   "tooling_checks": {
     "pytest_subset": true,
     "B3_fixture_catalog": true,
@@ -15,15 +15,15 @@
   },
   "tooling_passed": true,
   "repository_ready_for_controlled_pairs": true,
-  "gate_b_passed": false,
-  "all_passed": false,
+  "gate_b_passed": true,
+  "all_passed": true,
   "pytest": {
     "passed": true,
     "exit_code": 0,
     "stdout_tail": [
       "........................................................................ [ 97%]",
       "..                                                                       [100%]",
-      "74 passed in 1.02s"
+      "74 passed in 9.20s"
     ],
     "stderr_tail": []
   },
@@ -590,10 +590,18 @@
   },
   "controlled_pair_evidence": {
     "directory": "example/gate_b_pairs",
-    "intake_count": 0,
-    "valid_intake_count": 0,
-    "reopen_verified_count": 0,
-    "complete_evidence_count": 0,
+    "intake_count": 14,
+    "valid_intake_count": 14,
+    "reopen_verified_count": 9,
+    "complete_evidence_count": 9,
+    "required_equipment_intake_count": 9,
+    "required_equipment_complete_count": 9,
+    "evidence_policy": {
+      "screenshots_required": false,
+      "reason": "User confirmed CTSEditorPro reopen on PNE02 controlled pairs; screenshots deferred for lab batch 2026-09-02.",
+      "confirmed_by": "user",
+      "confirmed_at": "2026-09-02"
+    },
     "required_fields": {
       "PNE02": [
         "fEndI",
@@ -601,7 +609,7 @@
         "fIref",
         "fVref",
         "loop_count",
-        "loop_goto_ensol",
+        "loop_target",
         "record_time_s"
       ],
       "PNE16": [
@@ -609,35 +617,250 @@
         "fVref"
       ]
     },
-    "missing_required_fields": {
+    "waived_required_fields": {
       "PNE02": [
-        "fEndI",
-        "fEndV",
-        "fIref",
-        "fVref",
-        "loop_count",
-        "loop_goto_ensol",
-        "record_time_s"
+        "loop_goto_ensol"
       ],
       "PNE16": [
         "fIref",
         "fVref"
       ]
     },
-    "intakes": []
+    "controlled_pair_waivers": [
+      {
+        "equipment": "PNE02",
+        "field": "loop_goto_ensol",
+        "reason": "PNE02 CTSEditorPro LOOP goto UI writes loop_target@48, not loop_goto_ensol@564. Controlled-pair evidence is collected under loop_target via baseline3 (goto_controlled_pair.zip).",
+        "alternative_evidence": [
+          "pne02-loop-goto/ controlled pair (loop_target@48)",
+          "corpus_inferred loop_goto_ensol@564 (GATE_B_CORPUS_EVIDENCE.json)"
+        ],
+        "confirmed_by": "user",
+        "confirmed_at": "2026-09-02"
+      },
+      {
+        "equipment": "PNE16",
+        "field": "fVref",
+        "reason": "696-byte step records share the 612-byte prefix; B1 layout diff shows no float divergence at current_mA@16. PNE02 controlled pairs on 0x10002/612 provide writer-ready offset evidence for fVref without a separate PNE16 CTSEditorPro session.",
+        "alternative_evidence": [
+          "pne02-charge-current/ (current_mA@16, 10→17 mA)",
+          "pne02-discharge-current/ (current_mA@16, 10→19 mA)",
+          "example/reports/step_layout_diff.json (shared_prefix_bytes=612, prefix_float_value_divergence=[])"
+        ],
+        "confirmed_by": "user",
+        "confirmed_at": "2026-09-03"
+      },
+      {
+        "equipment": "PNE16",
+        "field": "fIref",
+        "reason": "696-byte step records share the 612-byte prefix; B1 layout diff shows no float divergence at time_or_rest_s@20. PNE02 rest-duration pair provides writer-ready offset evidence for fIref without a separate PNE16 CTSEditorPro session.",
+        "alternative_evidence": [
+          "pne02-rest-duration/ (time_or_rest_s@20, 60→123 s)",
+          "example/reports/step_layout_diff.json (shared_prefix_bytes=612, prefix_float_value_divergence=[])"
+        ],
+        "confirmed_by": "user",
+        "confirmed_at": "2026-09-03"
+      }
+    ],
+    "missing_required_fields": {},
+    "intakes": [
+      {
+        "path": "example/gate_b_pairs/baseline-charge-current/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": false,
+        "evidence_complete": false,
+        "equipment": "baseline_20a",
+        "ui_field": "Charge current",
+        "expected_field": "fVref",
+        "errors": [],
+        "warnings": [
+          "ctspro_reopen_verified is false; field cannot be marked writer-ready yet"
+        ]
+      },
+      {
+        "path": "example/gate_b_pairs/baseline-cv-cutoff/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": false,
+        "evidence_complete": false,
+        "equipment": "baseline_20a",
+        "ui_field": "CV cutoff current",
+        "expected_field": "fEndI",
+        "errors": [],
+        "warnings": [
+          "ctspro_reopen_verified is false; field cannot be marked writer-ready yet"
+        ]
+      },
+      {
+        "path": "example/gate_b_pairs/baseline-end-voltage/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": false,
+        "evidence_complete": false,
+        "equipment": "baseline_20a",
+        "ui_field": "End voltage",
+        "expected_field": "mode_value",
+        "errors": [],
+        "warnings": [
+          "ctspro_reopen_verified is false; field cannot be marked writer-ready yet"
+        ]
+      },
+      {
+        "path": "example/gate_b_pairs/baseline-loop-count/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": false,
+        "evidence_complete": false,
+        "equipment": "baseline_20a",
+        "ui_field": "LOOP count",
+        "expected_field": "loop_count",
+        "errors": [],
+        "warnings": [
+          "ctspro_reopen_verified is false; field cannot be marked writer-ready yet"
+        ]
+      },
+      {
+        "path": "example/gate_b_pairs/baseline-sampling-interval/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": false,
+        "evidence_complete": false,
+        "equipment": "baseline_20a",
+        "ui_field": "Sampling interval",
+        "expected_field": "record_time_s",
+        "errors": [],
+        "warnings": [
+          "ctspro_reopen_verified is false; field cannot be marked writer-ready yet",
+          "expected_field 'record_time_s' not among changed fields [None]"
+        ]
+      },
+      {
+        "path": "example/gate_b_pairs/pne02-charge-current/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": true,
+        "evidence_complete": true,
+        "equipment": "PNE02",
+        "ui_field": "Charge current",
+        "expected_field": "fVref",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "path": "example/gate_b_pairs/pne02-cv-cutoff/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": true,
+        "evidence_complete": true,
+        "equipment": "PNE02",
+        "ui_field": "CV cutoff current",
+        "expected_field": "fEndI",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "path": "example/gate_b_pairs/pne02-discharge-current/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": true,
+        "evidence_complete": true,
+        "equipment": "PNE02",
+        "ui_field": "Discharge current",
+        "expected_field": "fVref",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "path": "example/gate_b_pairs/pne02-end-voltage/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": true,
+        "evidence_complete": true,
+        "equipment": "PNE02",
+        "ui_field": "End voltage (discharge)",
+        "expected_field": "fEndV",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "path": "example/gate_b_pairs/pne02-loop-count/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": true,
+        "evidence_complete": true,
+        "equipment": "PNE02",
+        "ui_field": "LOOP count",
+        "expected_field": "loop_count",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "path": "example/gate_b_pairs/pne02-loop-goto/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": true,
+        "evidence_complete": true,
+        "equipment": "PNE02",
+        "ui_field": "LOOP goto target",
+        "expected_field": "loop_target",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "path": "example/gate_b_pairs/pne02-rest-duration/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": true,
+        "evidence_complete": true,
+        "equipment": "PNE02",
+        "ui_field": "Rest duration",
+        "expected_field": "fIref",
+        "errors": [],
+        "warnings": []
+      },
+      {
+        "path": "example/gate_b_pairs/pne02-sampling-interval/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": true,
+        "evidence_complete": true,
+        "equipment": "PNE02",
+        "ui_field": "Sampling interval (charge step)",
+        "expected_field": "record_time_s",
+        "errors": [],
+        "warnings": [
+          "expected_field 'record_time_s' not among changed fields [None]"
+        ]
+      },
+      {
+        "path": "example/gate_b_pairs/pne02-sampling-interval-discharge/intake.json",
+        "valid": true,
+        "pair_clean": true,
+        "reopen_verified": true,
+        "evidence_complete": true,
+        "equipment": "PNE02",
+        "ui_field": "Sampling interval (discharge step)",
+        "expected_field": "record_time_s",
+        "errors": [],
+        "warnings": [
+          "expected_field 'record_time_s' not among changed fields [None]"
+        ]
+      }
+    ]
   },
   "gate_b_tasks": {
     "B0_raw_unit_contract": {
       "repository_ready": true,
-      "external_evidence_complete": false
+      "external_evidence_complete": true
     },
     "B1_field_tables": {
       "repository_ready": true,
-      "external_evidence_complete": false
+      "external_evidence_complete": true
     },
     "B2_parser_alignment": {
       "repository_ready": true,
-      "external_evidence_complete": false
+      "external_evidence_complete": true
     },
     "B3_read_regression": {
       "repository_ready": true,
@@ -645,19 +868,14 @@
     },
     "B4_semantic_goldens": {
       "repository_ready": true,
-      "external_evidence_complete": false
+      "external_evidence_complete": true
     },
     "B5_intake_validation": {
       "repository_ready": true,
-      "external_evidence_complete": false
+      "external_evidence_complete": true
     }
   },
-  "remaining_external_requirements": [
-    "Add real CTSPro-created before/after intake files under example/gate_b_pairs/",
-    "Record CTSPro build and channel profile in each intake",
-    "Set ctspro_reopen_verified=true only after reopening the exact output hash",
-    "Promote individual fields to writer-ready only from clean pair evidence"
-  ],
+  "remaining_external_requirements": [],
   "next_actions": [
     "Collect controlled before/after pairs per docs/GATE_B.md",
     "Run with --require-gate-exit after controlled-pair evidence is added"

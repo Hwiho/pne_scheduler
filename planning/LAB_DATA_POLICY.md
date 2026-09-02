@@ -39,6 +39,9 @@ Therefore:
 
 Gate B/C work should tag every controlled pair and golden with `pne_unit`.
 
+**Current tier (500 mA vs 20 A) does not imply a different step offset map.**  
+500 mA and 20 A controlled-pair baselines share `0x00010002/612` framing and Ensol v612 offsets; tiers differ in stored mA values, CTSPro build, and header metadata. See [`SCH_LAYOUT_TIER_SHARING.md`](SCH_LAYOUT_TIER_SHARING.md).
+
 ---
 
 ## Rule 3 — Record CTSPro build per cycler (from PPT)

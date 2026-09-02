@@ -1,0 +1,78 @@
+{
+  "schema": "pne_scheduler.sch_diff/v2",
+  "before": {
+    "path": "C:\\Users\\LGES\\Cursor\\pne_scheduler\\example\\gate_b_pairs\\baseline-end-voltage\\before.sch",
+    "size": 4080,
+    "sha256": "9f5d95cfe7782571c1abc0daf39cfc1c5baa443f2291bbf0af5175a817dffb17",
+    "version": "0x00010002",
+    "payload_offset": 1632,
+    "step_size": 612,
+    "step_count": 4,
+    "parsed_end": 4080,
+    "unparsed_size": 0
+  },
+  "after": {
+    "path": "C:\\Users\\LGES\\Cursor\\pne_scheduler\\example\\gate_b_pairs\\baseline-end-voltage\\after.sch",
+    "size": 4080,
+    "sha256": "e966676077295f869cf22b0412fb0f52591fe8bab4ee20a919c94c5ee9dedb86",
+    "version": "0x00010002",
+    "payload_offset": 1632,
+    "step_size": 612,
+    "step_count": 4,
+    "parsed_end": 4080,
+    "unparsed_size": 0
+  },
+  "compatible": true,
+  "warnings": [],
+  "header_changes": [],
+  "unparsed_tail_changes": [],
+  "step_changes": [
+    {
+      "step_no": 1,
+      "before_type": 257,
+      "after_type": 257,
+      "changed_byte_count": 2,
+      "ranges": [
+        {
+          "start": 13,
+          "end_exclusive": 15,
+          "length": 2,
+          "before_hex": "007a",
+          "after_hex": "d880"
+        }
+      ],
+      "words": [
+        {
+          "offset": 12,
+          "field": "mode_value",
+          "confidence": "corpus_inferred",
+          "dtype": "float32",
+          "evidence": "Ensol v612: volt_or_vlim_mV @+12 — CCCV charge V (mV), CCDi discharge V-limit (mV); golden capacheck PNE02 verified.",
+          "writer_ready": false,
+          "primary_before": 4000.0,
+          "primary_after": 4123.0,
+          "before": {
+            "hex": "00007a45",
+            "uint32": 1165623296,
+            "int32": 1165623296,
+            "float32": 4000.0
+          },
+          "after": {
+            "hex": "00d88045",
+            "uint32": 1166071808,
+            "int32": 1166071808,
+            "float32": 4123.0
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "files_identical": false,
+    "header_changed_byte_count": 0,
+    "changed_step_count": 1,
+    "step_changed_byte_count": 2,
+    "unparsed_changed_byte_count": 0,
+    "controlled_pair_clean": true
+  }
+}

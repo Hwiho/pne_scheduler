@@ -1,0 +1,78 @@
+{
+  "schema": "pne_scheduler.sch_diff/v2",
+  "before": {
+    "path": "C:\\Users\\LGES\\Cursor\\pne_scheduler\\example\\gate_b_pairs\\pne02-end-voltage\\before.sch",
+    "size": 4080,
+    "sha256": "7ef6d580c10f0ad223286141dbc1dc7080c019abd070e972091994c5e44e42d7",
+    "version": "0x00010002",
+    "payload_offset": 1632,
+    "step_size": 612,
+    "step_count": 4,
+    "parsed_end": 4080,
+    "unparsed_size": 0
+  },
+  "after": {
+    "path": "C:\\Users\\LGES\\Cursor\\pne_scheduler\\example\\gate_b_pairs\\pne02-end-voltage\\after.sch",
+    "size": 4080,
+    "sha256": "8b2e956df183a9229cd87e8c58466c1656a3f55169e8bd09d246c26be406b95f",
+    "version": "0x00010002",
+    "payload_offset": 1632,
+    "step_size": 612,
+    "step_count": 4,
+    "parsed_end": 4080,
+    "unparsed_size": 0
+  },
+  "compatible": true,
+  "warnings": [],
+  "header_changes": [],
+  "unparsed_tail_changes": [],
+  "step_changes": [
+    {
+      "step_no": 2,
+      "before_type": 514,
+      "after_type": 514,
+      "changed_byte_count": 2,
+      "ranges": [
+        {
+          "start": 29,
+          "end_exclusive": 31,
+          "length": 2,
+          "before_hex": "401c",
+          "after_hex": "3043"
+        }
+      ],
+      "words": [
+        {
+          "offset": 28,
+          "field": "fEndV",
+          "confidence": "corpus_inferred",
+          "dtype": "float32",
+          "evidence": "Ensol v612: voltage_cutoff_mV @+28 — CCDi end voltage (mV); golden capacheck discharge step.",
+          "writer_ready": false,
+          "primary_before": 2500.0,
+          "primary_after": 3123.0,
+          "before": {
+            "hex": "00401c45",
+            "uint32": 1159479296,
+            "int32": 1159479296,
+            "float32": 2500.0
+          },
+          "after": {
+            "hex": "00304345",
+            "uint32": 1162031104,
+            "int32": 1162031104,
+            "float32": 3123.0
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "files_identical": false,
+    "header_changed_byte_count": 0,
+    "changed_step_count": 1,
+    "step_changed_byte_count": 2,
+    "unparsed_changed_byte_count": 0,
+    "controlled_pair_clean": true
+  }
+}

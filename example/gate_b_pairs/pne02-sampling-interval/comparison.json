@@ -1,0 +1,78 @@
+{
+  "schema": "pne_scheduler.sch_diff/v2",
+  "before": {
+    "path": "C:\\Users\\LGES\\Cursor\\pne_scheduler\\example\\gate_b_pairs\\pne02-sampling-interval\\before.sch",
+    "size": 4080,
+    "sha256": "7ef6d580c10f0ad223286141dbc1dc7080c019abd070e972091994c5e44e42d7",
+    "version": "0x00010002",
+    "payload_offset": 1632,
+    "step_size": 612,
+    "step_count": 4,
+    "parsed_end": 4080,
+    "unparsed_size": 0
+  },
+  "after": {
+    "path": "C:\\Users\\LGES\\Cursor\\pne_scheduler\\example\\gate_b_pairs\\pne02-sampling-interval\\after.sch",
+    "size": 4080,
+    "sha256": "1346a7c267a299218213873a8bbd2bccce27cab3e39bcbdf48fbf8626b19ef77",
+    "version": "0x00010002",
+    "payload_offset": 1632,
+    "step_size": 612,
+    "step_count": 4,
+    "parsed_end": 4080,
+    "unparsed_size": 0
+  },
+  "compatible": true,
+  "warnings": [],
+  "header_changes": [],
+  "unparsed_tail_changes": [],
+  "step_changes": [
+    {
+      "step_no": 1,
+      "before_type": 257,
+      "after_type": 257,
+      "changed_byte_count": 1,
+      "ranges": [
+        {
+          "start": 342,
+          "end_exclusive": 343,
+          "length": 1,
+          "before_hex": "70",
+          "after_hex": "f0"
+        }
+      ],
+      "words": [
+        {
+          "offset": 340,
+          "field": null,
+          "confidence": "unknown",
+          "dtype": null,
+          "evidence": null,
+          "writer_ready": false,
+          "primary_before": null,
+          "primary_after": null,
+          "before": {
+            "hex": "00007042",
+            "uint32": 1114636288,
+            "int32": 1114636288,
+            "float32": 60.0
+          },
+          "after": {
+            "hex": "0000f042",
+            "uint32": 1123024896,
+            "int32": 1123024896,
+            "float32": 120.0
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "files_identical": false,
+    "header_changed_byte_count": 0,
+    "changed_step_count": 1,
+    "step_changed_byte_count": 1,
+    "unparsed_changed_byte_count": 0,
+    "controlled_pair_clean": true
+  }
+}

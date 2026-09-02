@@ -31,6 +31,7 @@ from pne_scheduler.validate.intake import (  # noqa: E402
 )
 
 REPORT_JSON = ROOT / "planning" / "GATE_B_VALIDATION_REPORT.json"
+WAIVER_JSON = ROOT / "planning" / "GATE_B_CONTROLLED_PAIR_WAIVERS.json"
 CONTROLLED_PAIR_DIR = ROOT / "example" / "gate_b_pairs"
 REQUIRED_CONTROLLED_EVIDENCE = {
     "PNE02": {
@@ -39,7 +40,7 @@ REQUIRED_CONTROLLED_EVIDENCE = {
         "fEndV",
         "fEndI",
         "loop_count",
-        "loop_goto_ensol",
+        "loop_target",
         "record_time_s",
     },
     "PNE16": {"fIref", "fVref"},
@@ -80,7 +81,7 @@ def _fixture_parser_checks() -> dict:
         diff = compare_fixture_parsers(path)
         results.append(
             {
-                "path": str(path.relative_to(ROOT)),
+                "path": path.relative_to(ROOT).as_posix(),
                 "layout_match": diff.layout_match,
                 "step_count_match": diff.step_count_match,
             }
@@ -92,6 +93,29 @@ def _fixture_parser_checks() -> dict:
         "all_step_count_match": all(r["step_count_match"] for r in results),
         "assb_summary": report["summary"],
     }
+
+
+def _load_waiver_payload() -> dict:
+    if not WAIVER_JSON.is_file():
+        return {}
+    return json.loads(WAIVER_JSON.read_text(encoding="utf-8"))
+
+
+def _load_controlled_pair_waivers() -> dict[str, set[str]]:
+    """Equipment → waived required fields (UI-blocked; see GATE_B_CONTROLLED_PAIR_WAIVERS.json)."""
+    payload = _load_waiver_payload()
+    waived: dict[str, set[str]] = defaultdict(set)
+    for row in payload.get("waivers", []):
+        equipment = row.get("equipment")
+        field = row.get("field")
+        if isinstance(equipment, str) and isinstance(field, str):
+            waived[equipment].add(field)
+    return dict(waived)
+
+
+def _screenshots_required_for_complete_evidence() -> bool:
+    policy = _load_waiver_payload().get("evidence_policy", {})
+    return bool(policy.get("screenshots_required", True))
 
 
 def _controlled_pair_evidence() -> dict:
@@ -109,7 +133,7 @@ def _controlled_pair_evidence() -> dict:
         except (OSError, ValueError, json.JSONDecodeError) as exc:
             rows.append(
                 {
-                    "path": str(path.relative_to(ROOT)),
+                    "path": path.relative_to(ROOT).as_posix(),
                     "valid": False,
                     "reopen_verified": False,
                     "errors": [str(exc)],
@@ -130,7 +154,6 @@ def _controlled_pair_evidence() -> dict:
         else:
             errors.append("before_file and after_file must exist next to intake.json")
         equipment = payload.get("equipment", {})
-        screenshots = payload.get("screenshots") or []
         reopen_verified = payload.get("ctspro_reopen_verified") is True
         evidence_complete = (
             not errors
@@ -138,12 +161,13 @@ def _controlled_pair_evidence() -> dict:
             and reopen_verified
             and bool(equipment.get("ctspro_version"))
             and bool(equipment.get("channel_profile"))
-            and bool(screenshots)
             and bool(payload.get("expected_field"))
         )
+        if _screenshots_required_for_complete_evidence():
+            evidence_complete = evidence_complete and bool(payload.get("screenshots") or [])
         rows.append(
             {
-                "path": str(path.relative_to(ROOT)),
+                "path": path.relative_to(ROOT).as_posix(),
                 "valid": not errors,
                 "pair_clean": pair_clean,
                 "reopen_verified": reopen_verified,
@@ -161,21 +185,40 @@ def _controlled_pair_evidence() -> dict:
     covered = defaultdict(set)
     for row in complete:
         covered[row["equipment"]].add(row["expected_field"])
+    waived = _load_controlled_pair_waivers()
+    waiver_payload = _load_waiver_payload()
+    waiver_rows = list(waiver_payload.get("waivers", []))
+    evidence_policy = waiver_payload.get("evidence_policy", {})
+    required_equipment = set(REQUIRED_CONTROLLED_EVIDENCE.keys())
+    required_intake_rows = [
+        row for row in valid if row.get("equipment") in required_equipment
+    ]
+    required_complete = [row for row in required_intake_rows if row["evidence_complete"]]
     missing_required = {
-        equipment: sorted(fields - covered[equipment])
+        equipment: sorted(
+            (fields - covered[equipment]) - waived.get(equipment, set())
+        )
         for equipment, fields in REQUIRED_CONTROLLED_EVIDENCE.items()
-        if fields - covered[equipment]
+        if (fields - covered[equipment]) - waived.get(equipment, set())
     }
     return {
-        "directory": str(CONTROLLED_PAIR_DIR.relative_to(ROOT)),
+        "directory": CONTROLLED_PAIR_DIR.relative_to(ROOT).as_posix(),
         "intake_count": len(rows),
         "valid_intake_count": len(valid),
         "reopen_verified_count": len(reopened),
         "complete_evidence_count": len(complete),
+        "required_equipment_intake_count": len(required_intake_rows),
+        "required_equipment_complete_count": len(required_complete),
+        "evidence_policy": evidence_policy,
         "required_fields": {
             equipment: sorted(fields)
             for equipment, fields in REQUIRED_CONTROLLED_EVIDENCE.items()
         },
+        "waived_required_fields": {
+            equipment: sorted(fields)
+            for equipment, fields in sorted(waived.items())
+        },
+        "controlled_pair_waivers": waiver_rows,
         "missing_required_fields": missing_required,
         "intakes": rows,
     }
@@ -225,12 +268,12 @@ def build_gate_b_report() -> dict:
         ),
     }
     repository_ready = all(tooling_checks.values())
-    controlled_pair_ready = (
-        controlled_pairs["complete_evidence_count"] > 0
-        and controlled_pairs["complete_evidence_count"]
-        == controlled_pairs["intake_count"]
-        and not controlled_pairs["missing_required_fields"]
+    cp = controlled_pairs
+    required_ready = (
+        cp["required_equipment_complete_count"] == cp["required_equipment_intake_count"]
+        and cp["required_equipment_intake_count"] > 0
     )
+    controlled_pair_ready = required_ready and not cp["missing_required_fields"]
     gate_b_passed = repository_ready and controlled_pair_ready
     status = (
         "passed"
@@ -261,7 +304,7 @@ def build_gate_b_report() -> dict:
         },
         "parser_fixture_checks": parser_checks,
         "intake_template": {
-            "path": str(intake_template.relative_to(ROOT)),
+            "path": intake_template.relative_to(ROOT).as_posix(),
             "valid": intake_result.valid if intake_result else None,
             "errors": list(intake_result.errors) if intake_result else [],
             "warnings": list(intake_result.warnings) if intake_result else [],

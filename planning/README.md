@@ -10,6 +10,7 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 |----------|---------|
 | [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md) | Directory map, code rules, cleanup workflow |
 | [`LAB_DATA_POLICY.md`](LAB_DATA_POLICY.md) | PNE##.zip only, per-unit layout, CTS build |
+| [`SCH_LAYOUT_TIER_SHARING.md`](SCH_LAYOUT_TIER_SHARING.md) | 500 mA vs 20 A — shared offsets, separate evidence |
 | [`ROADMAP.md`](ROADMAP.md) | SCH structure analysis & implementation roadmap |
 | [`LAB_CORPUS_REPORT.md`](LAB_CORPUS_REPORT.md) | **Generated** per-cycler zip analysis (human-readable) |
 
@@ -22,6 +23,7 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 | [`PNE_UNIT_CORPUS.json`](PNE_UNIT_CORPUS.json) | Corpus scan output |
 | [`PNE_UNIT_COMPARISON.json`](PNE_UNIT_COMPARISON.json) | Cross-unit diff output |
 | [`GATE_B_CORPUS_EVIDENCE.json`](GATE_B_CORPUS_EVIDENCE.json) | Corpus-inferred 612-byte field evidence |
+| [`SCH_LAYOUT_TIER_SHARING.json`](SCH_LAYOUT_TIER_SHARING.json) | 500 mA vs 20 A layout comparison (fixtures) |
 | [`GATE_B_VALIDATION_REPORT.json`](GATE_B_VALIDATION_REPORT.json) | Repository readiness vs actual Gate B exit |
 | [`Q_NOM_POLICY.json`](Q_NOM_POLICY.json) | Explicit writer vs inferred viewer capacity contract |
 | [`GOLDEN_FIXTURES_LOCKED.json`](GOLDEN_FIXTURES_LOCKED.json) | Locked golden test paths |

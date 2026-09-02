@@ -1,0 +1,965 @@
+{
+  "schema": "pne_scheduler.schedule_mdb_analysis/v1",
+  "path": "c:\\Schedule.mdb",
+  "size_bytes": 17174528,
+  "format": "Microsoft Jet DB (Standard Jet DB)",
+  "contains_raw_sch_blobs": false,
+  "notes": [
+    "Schedule.mdb is the CTSEditorPro relational schedule catalog, not a raw .sch archive.",
+    "Schedules are stored as TestName + Step rows; .sch export compiles these rows to binary.",
+    "Step table parsing may fail on overflow/memo pages; use CTSPro export for full step dumps."
+  ],
+  "table_count": 24,
+  "tables": {
+    "AxisInfo": {
+      "row_count": 32,
+      "columns": [
+        "Index",
+        "IsUsedForXAxis",
+        "PropertyIndex",
+        "Name",
+        "TransducerName",
+        "YAxisIndexList"
+      ],
+      "sample_rows": [
+        {
+          "Index": 0,
+          "IsUsedForXAxis": true,
+          "PropertyIndex": 0,
+          "Name": "Time",
+          "TransducerName": "Time",
+          "YAxisIndexList": "2,3,5,4,6,7,12,13,15,17,18,19,20,21,22,23,24,25,26,"
+        },
+        {
+          "Index": 1,
+          "IsUsedForXAxis": true,
+          "PropertyIndex": 1,
+          "Name": "Cycle",
+          "TransducerName": "None",
+          "YAxisIndexList": "0,2,3,5,4,6,7,9,10,11,12,13,15,27,28,29,30,31,19,20,21,22,23,24,25,26,"
+        },
+        {
+          "Index": 2,
+          "IsUsedForXAxis": true,
+          "PropertyIndex": 2,
+          "Name": "Voltage",
+          "TransducerName": "Voltage",
+          "YAxisIndexList": "3,5,4,6,7,16,"
+        }
+      ]
+    },
+    "BatteryModel": {
+      "row_count": 49,
+      "columns": [
+        "ModelID",
+        "No",
+        "CreatedTime",
+        "ModelName",
+        "Description",
+        "Creator"
+      ],
+      "sample_rows": [
+        {
+          "ModelID": 1,
+          "No": 1,
+          "CreatedTime": "2006-10-09 09:56:37",
+          "ModelName": "Sample",
+          "Description": "PNE ÆíÁý ¿¹Á¦",
+          "Creator": "pne"
+        },
+        {
+          "ModelID": 5,
+          "No": 2,
+          "CreatedTime": "2023-10-20 19:32:28",
+          "ModelName": "PNE",
+          "Description": null,
+          "Creator": null
+        },
+        {
+          "ModelID": 6,
+          "No": 3,
+          "CreatedTime": "2023-12-21 20:54:34",
+          "ModelName": "±è¿ëÂù",
+          "Description": null,
+          "Creator": null
+        }
+      ]
+    },
+    "CellState": {
+      "row_count": 0,
+      "columns": [
+        "ID",
+        "TraySerial",
+        "ChNo",
+        "CellCode",
+        "CellGrade"
+      ],
+      "sample_rows": []
+    },
+    "CellType": {
+      "row_count": 0,
+      "columns": [
+        "CellType",
+        "Description"
+      ],
+      "sample_rows": []
+    },
+    "ChannelCode": {
+      "row_count": 308,
+      "columns": [
+        "Code",
+        "Messge",
+        "Description"
+      ],
+      "sample_rows": [
+        {
+          "Code": 0,
+          "Messge": "Á¤»ó",
+          "Description": "Á¤»ó Cell( Code 64 ~ 95)"
+        },
+        {
+          "Code": 1,
+          "Messge": "NonCell",
+          "Description": "NonCell"
+        },
+        {
+          "Code": 2,
+          "Messge": "Àåºñ¿À·ù",
+          "Description": "Àåºñ»ó¿¡ ¿À·ù·Î ÆÇ¸íµÈ°Í (Code 208 ~ 255)"
+        }
+      ]
+    },
+    "Check": {
+      "row_count": 808,
+      "columns": [
+        "CheckID",
+        "TestID",
+        "MaxV",
+        "MinV",
+        "CurrentRange",
+        "OCVLimit",
+        "TrickleCurrent",
+        "TrickleTime",
+        "DeltaVoltage",
+        "MaxFaultBattery",
+        "AutoTime",
+        "AutoProYN",
+        "PreTestCheck"
+      ],
+      "sample_rows": [
+        {
+          "CheckID": 18,
+          "TestID": 18,
+          "MaxV": 0.0,
+          "MinV": 0.0,
+          "CurrentRange": 0.0,
+          "OCVLimit": 0.0,
+          "TrickleCurrent": 0.0,
+          "TrickleTime": 0,
+          "DeltaVoltage": 0.0,
+          "MaxFaultBattery": 0,
+          "AutoTime": "(Empty Date)",
+          "AutoProYN": false,
+          "PreTestCheck": false
+        },
+        {
+          "CheckID": 19,
+          "TestID": 19,
+          "MaxV": 0.0,
+          "MinV": 0.0,
+          "CurrentRange": 0.0,
+          "OCVLimit": 0.0,
+          "TrickleCurrent": 0.0,
+          "TrickleTime": 0,
+          "DeltaVoltage": 0.0,
+          "MaxFaultBattery": 0,
+          "AutoTime": "(Empty Date)",
+          "AutoProYN": false,
+          "PreTestCheck": false
+        },
+        {
+          "CheckID": 20,
+          "TestID": 20,
+          "MaxV": 0.0,
+          "MinV": 0.0,
+          "CurrentRange": 0.0,
+          "OCVLimit": 0.0,
+          "TrickleCurrent": 0.0,
+          "TrickleTime": 0,
+          "DeltaVoltage": 0.0,
+          "MaxFaultBattery": 0,
+          "AutoTime": "(Empty Date)",
+          "AutoProYN": false,
+          "PreTestCheck": false
+        }
+      ]
+    },
+    "EmgCode": {
+      "row_count": 93,
+      "columns": [
+        "Code",
+        "Message",
+        "Description"
+      ],
+      "sample_rows": [
+        {
+          "Code": 0,
+          "Message": "Á¤»ó »óÅÂ",
+          "Description": "Á¤»ó »óÅÂÀÔ´Ï´Ù."
+        },
+        {
+          "Code": 1,
+          "Message": "¼ø°£ Á¤Àü ¹ß»ý",
+          "Description": "AC ÀÔ·Â Àü¿øÀÌ ¼ø°£Á¤ÀüÀÌ ¹ß»ýÇÏ¿´½À´Ï´Ù.0.mÀ¯"
+        },
+        {
+          "Code": 2,
+          "Message": "¿ÏÀü Á¤Àü ¹ß»ý",
+          "Description": "AC ÀÔ·Â Àü¿øÀÌ °¨Áö µÇÁö ¾Ê½À´Ï´Ù. Àü¿øÀÔ·Â¼±ÀÌ³ª UPS¸¦ È®ÀÎÇÏ½Ê½Ã¿ä."
+        }
+      ]
+    },
+    "Grade": {
+      "row_count": 0,
+      "columns": [
+        "GradeID",
+        "StepID",
+        "GradeItem",
+        "Value",
+        "Value1",
+        "GradeCode",
+        "GradeStep"
+      ],
+      "sample_rows": []
+    },
+    "GradeItem": {
+      "row_count": 4,
+      "columns": [
+        "ItemID",
+        "ItemName"
+      ],
+      "sample_rows": [
+        {
+          "ItemID": 0,
+          "ItemName": "None"
+        },
+        {
+          "ItemID": 1,
+          "ItemName": "Voltage(OCV)"
+        },
+        {
+          "ItemID": 2,
+          "ItemName": "Capacity"
+        }
+      ]
+    },
+    "JigID": {
+      "row_count": 4,
+      "columns": [
+        "ModuleID",
+        "JigNo",
+        "ID"
+      ],
+      "sample_rows": [
+        {
+          "ModuleID": 1,
+          "JigNo": 1,
+          "ID": "M01S0001"
+        },
+        {
+          "ModuleID": 1,
+          "JigNo": 2,
+          "ID": "M01S0002"
+        },
+        {
+          "ModuleID": 1,
+          "JigNo": 3,
+          "ID": "M01S0003"
+        }
+      ]
+    },
+    "LineColor": {
+      "row_count": 20,
+      "columns": [
+        "Red",
+        "Green",
+        "Blue"
+      ],
+      "sample_rows": [
+        {
+          "Red": -1,
+          "Green": 0,
+          "Blue": 0
+        },
+        {
+          "Red": -1,
+          "Green": -128,
+          "Blue": -128
+        },
+        {
+          "Red": -1,
+          "Green": -128,
+          "Blue": 0
+        }
+      ]
+    },
+    "ModelInfo": {
+      "row_count": 0,
+      "columns": [
+        "Name",
+        "Width",
+        "Height",
+        "Depth",
+        "Capacity",
+        "Factor1",
+        "Description",
+        "Creator",
+        "CreatedTime"
+      ],
+      "sample_rows": []
+    },
+    "PinArrayType": {
+      "row_count": 2,
+      "columns": [
+        "ArrayType",
+        "Row",
+        "Col"
+      ],
+      "sample_rows": [
+        {
+          "ArrayType": 1,
+          "Row": 16,
+          "Col": 16
+        },
+        {
+          "ArrayType": 2,
+          "Row": 32,
+          "Col": 8
+        }
+      ]
+    },
+    "ProcType": {
+      "row_count": 26,
+      "columns": [
+        "ProcType",
+        "ProcID",
+        "Description"
+      ],
+      "sample_rows": [
+        {
+          "ProcType": 0,
+          "ProcID": 0,
+          "Description": "°ü°è¾øÀ½"
+        },
+        {
+          "ProcType": 1,
+          "ProcID": 1,
+          "Description": "Charge"
+        },
+        {
+          "ProcType": 2,
+          "ProcID": 2,
+          "Description": "DisCharge"
+        }
+      ]
+    },
+    "Property": {
+      "row_count": 34,
+      "columns": [
+        "Index",
+        "UnitTransfer",
+        "Name",
+        "UnitNotation"
+      ],
+      "sample_rows": [
+        {
+          "Index": 0,
+          "UnitTransfer": 1.0,
+          "Name": "Time",
+          "UnitNotation": "sec"
+        },
+        {
+          "Index": 0,
+          "UnitTransfer": 60.0,
+          "Name": "Time",
+          "UnitNotation": "min"
+        },
+        {
+          "Index": 0,
+          "UnitTransfer": 3600.0,
+          "Name": "Time",
+          "UnitNotation": "hour"
+        }
+      ]
+    },
+    "Step": {
+      "error": "'NoneType' object is not subscriptable",
+      "columns_inferred": [
+        "StepID",
+        "TestID",
+        "StepNo",
+        "StepType",
+        "StepMode",
+        "Vref",
+        "Iref",
+        "EndTime",
+        "EndV",
+        "EndI",
+        "EndCapacity",
+        "End_dV",
+        "End_dI",
+        "OverV",
+        "LimitV",
+        "OverI",
+        "LimitI",
+        "OverCapacity",
+        "LimitCapacity",
+        "OverImpedance",
+        "LimitImpedance",
+        "DeltaTime",
+        "DeltaV",
+        "DeltaI",
+        "Grade",
+        "VoltageReport",
+        "CurrentReport",
+        "CapacityReport",
+        "TimeReport",
+        "ImpedanceReport",
+        "WattReport",
+        "WattHourReport",
+        "CompTime1",
+        "CompValue1",
+        "CompTime2",
+        "CompValue2",
+        "CompTime3",
+        "CompValue3",
+        "DeltaTime1"
+      ]
+    },
+    "StepMode": {
+      "row_count": 5,
+      "columns": [
+        "ModeID",
+        "ModeName"
+      ],
+      "sample_rows": [
+        {
+          "ModeID": 0,
+          "ModeName": null
+        },
+        {
+          "ModeID": 1,
+          "ModeName": "CC-CV"
+        },
+        {
+          "ModeID": 2,
+          "ModeName": "CC"
+        }
+      ]
+    },
+    "StepType": {
+      "row_count": 7,
+      "columns": [
+        "TypeID",
+        "TypeName"
+      ],
+      "sample_rows": [
+        {
+          "TypeID": 0,
+          "TypeName": "None"
+        },
+        {
+          "TypeID": 1,
+          "TypeName": "Charge"
+        },
+        {
+          "TypeID": 2,
+          "TypeName": "Discharge"
+        }
+      ]
+    },
+    "SystemConfig": {
+      "row_count": 2,
+      "columns": [
+        "ModuleID",
+        "ModuleType",
+        "MaxVoltage",
+        "MinVoltage",
+        "MaxCurrent",
+        "MinCurrent",
+        "OverTemperature",
+        "UnderTemperature",
+        "DifferTemp",
+        "AutoProcess",
+        "UseTempLimitFlag",
+        "OverGas",
+        "UseGasLimitFlag",
+        "LineMode",
+        "SaveInterval",
+        "InstallChCount",
+        "IP_Address",
+        "VSpec",
+        "ISpec",
+        "ControllerType",
+        "ProgramVer",
+        "Data1",
+        "Data2",
+        "Data3",
+        "Data4"
+      ],
+      "sample_rows": [
+        {
+          "ModuleID": 1,
+          "ModuleType": 2,
+          "MaxVoltage": 5000.0,
+          "MinVoltage": -1000.0,
+          "MaxCurrent": 3000.0,
+          "MinCurrent": -3000.0,
+          "OverTemperature": 80,
+          "UnderTemperature": 0,
+          "DifferTemp": 10,
+          "AutoProcess": false,
+          "UseTempLimitFlag": false,
+          "OverGas": 0,
+          "UseGasLimitFlag": false,
+          "LineMode": 0,
+          "SaveInterval": 2,
+          "InstallChCount": 64,
+          "IP_Address": "192.168.6.15",
+          "VSpec": "5000/",
+          "ISpec": "500000/50000/5000/",
+          "ControllerType": null,
+          "ProgramVer": null,
+          "Data1": null,
+          "Data2": null,
+          "Data3": null,
+          "Data4": null
+        },
+        {
+          "ModuleID": 2,
+          "ModuleType": null,
+          "MaxVoltage": null,
+          "MinVoltage": 0.0,
+          "MaxCurrent": 0.0,
+          "MinCurrent": 0.0,
+          "OverTemperature": 0,
+          "UnderTemperature": 0,
+          "DifferTemp": 0,
+          "AutoProcess": false,
+          "UseTempLimitFlag": false,
+          "OverGas": 0,
+          "UseGasLimitFlag": false,
+          "LineMode": 0,
+          "SaveInterval": 0,
+          "InstallChCount": 64,
+          "IP_Address": "192.168.6.16",
+          "VSpec": "5000/",
+          "ISpec": "500000/50000/5000/",
+          "ControllerType": null,
+          "ProgramVer": null,
+          "Data1": null,
+          "Data2": null,
+          "Data3": null,
+          "Data4": null
+        }
+      ]
+    },
+    "TestName": {
+      "row_count": 808,
+      "columns": [
+        "TestID",
+        "ModelID",
+        "ModifiedTime",
+        "PreTestCheck",
+        "ProcTypeID",
+        "TestNo",
+        "TestName",
+        "Description",
+        "Creator"
+      ],
+      "sample_rows": [
+        {
+          "TestID": 18,
+          "ModelID": 1,
+          "ModifiedTime": "2007-12-21 06:47:58",
+          "PreTestCheck": false,
+          "ProcTypeID": -1,
+          "TestNo": 1,
+          "TestName": "Ãæ¹æÀü",
+          "Description": "ÀúÀü·ù",
+          "Creator": null
+        },
+        {
+          "TestID": 19,
+          "ModelID": 1,
+          "ModifiedTime": "2007-12-21 16:30:09",
+          "PreTestCheck": false,
+          "ProcTypeID": -1,
+          "TestNo": 2,
+          "TestName": "30A Ãæ¹æÀü",
+          "Description": null,
+          "Creator": null
+        },
+        {
+          "TestID": 20,
+          "ModelID": 1,
+          "ModifiedTime": "2007-12-21 16:31:58",
+          "PreTestCheck": false,
+          "ProcTypeID": -1,
+          "TestNo": 3,
+          "TestName": "30A Ãæ¹æÀü",
+          "Description": "¹æÀüÃæÀü",
+          "Creator": ""
+        }
+      ]
+    },
+    "TestType": {
+      "row_count": 4,
+      "columns": [
+        "TestType",
+        "TestTypeName",
+        "ExeStep"
+      ],
+      "sample_rows": [
+        {
+          "TestType": 1,
+          "TestTypeName": "Precharge°øÁ¤",
+          "ExeStep": "PC-CODEIRS"
+        },
+        {
+          "TestType": 2,
+          "TestTypeName": "¿ë·®ÃøÁ¤",
+          "ExeStep": "FO-CODEIRS"
+        },
+        {
+          "TestType": 3,
+          "TestTypeName": "OCV°øÁ¤",
+          "ExeStep": "IR-OZE"
+        }
+      ]
+    },
+    "Tray": {
+      "row_count": 0,
+      "columns": [
+        "ID",
+        "TraySerial",
+        "TrayType",
+        "TrayNo",
+        "JigID",
+        "TeskID",
+        "RegistedTime",
+        "TrayName",
+        "UserName",
+        "Description",
+        "ModelKey",
+        "TestKey",
+        "StepIndex",
+        "LotNo",
+        "TestSerialNo",
+        "TestDateTime",
+        "CellNo",
+        "InputCellNo",
+        "NormalCount",
+        "FailCount",
+        "CellCode",
+        "GradeCode",
+        "OperatorID",
+        "ModuleID",
+        "GroupIndex"
+      ],
+      "sample_rows": []
+    },
+    "TrayType": {
+      "row_count": 2,
+      "columns": [
+        "TrayType",
+        "Row",
+        "Col",
+        "CellType",
+        "TypeName"
+      ],
+      "sample_rows": [
+        {
+          "TrayType": 1,
+          "Row": 16,
+          "Col": 16,
+          "CellType": null,
+          "TypeName": "¿øÅëÇü"
+        },
+        {
+          "TrayType": 2,
+          "Row": 32,
+          "Col": 8,
+          "CellType": null,
+          "TypeName": "°¢Çü"
+        }
+      ]
+    },
+    "User": {
+      "row_count": 0,
+      "columns": [
+        "Index",
+        "UserID",
+        "Password",
+        "Name",
+        "Authority",
+        "RegistedDate",
+        "Description",
+        "AutoLogOut",
+        "AutoLogOutTime"
+      ],
+      "sample_rows": []
+    }
+  },
+  "entity_model": {
+    "BatteryModel": "Schedule list / folder (UI 목록명, e.g. Sample)",
+    "TestName": "One schedule profile (UI 스케줄명, e.g. baseline); primary key TestID",
+    "Step": "Ordered step rows for each TestID (charge/discharge/loop/rest/end)",
+    "Check": "Per-schedule safety limits (maps to SCH header safety block)",
+    "StepType": "Lookup: Charge, Discharge, Rest, OCV, Loop, End, ...",
+    "StepMode": "Lookup: CC-CV, CC, CV, OCV",
+    "SystemConfig": "Installed cycler module limits and network metadata",
+    "Property": "Logged channel property units (Time, Voltage mV, Current mA, ...)"
+  },
+  "counts": {
+    "schedules": 808,
+    "battery_models": 49,
+    "safety_records": 808,
+    "schedules_per_model_top10": [
+      [
+        "¹ÚÈñ¿¬",
+        89
+      ],
+      [
+        "Á¶½ÂÇö",
+        72
+      ],
+      [
+        "Á¤ÁöÀÎ",
+        50
+      ],
+      [
+        "±ÇÁöÀº",
+        47
+      ],
+      [
+        "±è±¤Èñ",
+        43
+      ],
+      [
+        "È«¼®Çö",
+        38
+      ],
+      [
+        "Â÷È¿Çö",
+        34
+      ],
+      [
+        "ÀÌ¿¹ÀÎ",
+        30
+      ],
+      [
+        "ÀÌµµÁß",
+        30
+      ],
+      [
+        "¾È»óÇõ",
+        26
+      ]
+    ]
+  },
+  "step_columns_inferred": [
+    "StepID",
+    "TestID",
+    "StepNo",
+    "StepType",
+    "StepMode",
+    "Vref",
+    "Iref",
+    "EndTime",
+    "EndV",
+    "EndI",
+    "EndCapacity",
+    "End_dV",
+    "End_dI",
+    "OverV",
+    "LimitV",
+    "OverI",
+    "LimitI",
+    "OverCapacity",
+    "LimitCapacity",
+    "OverImpedance",
+    "LimitImpedance",
+    "DeltaTime",
+    "DeltaV",
+    "DeltaI",
+    "Grade",
+    "VoltageReport",
+    "CurrentReport",
+    "CapacityReport",
+    "TimeReport",
+    "ImpedanceReport",
+    "WattReport",
+    "WattHourReport",
+    "CompTime1",
+    "CompValue1",
+    "CompTime2",
+    "CompValue2",
+    "CompTime3",
+    "CompValue3",
+    "DeltaTime1"
+  ],
+  "baseline_like_safety_hits": [
+    {
+      "TestID": 52,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 15.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 55,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 56,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 57,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 107,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 123,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 124,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 187,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 234,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 252,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 125,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 126,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 138,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 141,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 142,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 143,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 144,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 145,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 150,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    },
+    {
+      "TestID": 154,
+      "MaxV_mV": 4300.0,
+      "MinV_mV": 1500.0,
+      "CurrentRange": 0.0,
+      "DeltaVoltage": 70.0
+    }
+  ],
+  "sch_field_mapping_hypothesis": {
+    "Check.MaxV": "SCH header max voltage (mV)",
+    "Check.MinV": "SCH header min voltage (mV)",
+    "Check.DeltaVoltage": "often max temperature (°C) in sample data",
+    "Step.Vref": "step current setpoint (mA) on charge/discharge rows",
+    "Step.EndV": "voltage termination (mV)",
+    "Step.EndI": "CV cutoff current (mA)",
+    "Step.EndCapacity": "capacity termination",
+    "Step.DeltaTime": "record/sampling interval (s)",
+    "loop_count": "LOOP row only; stored in .sch step record, not a separate Step column"
+  }
+}

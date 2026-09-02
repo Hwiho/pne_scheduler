@@ -1,0 +1,74 @@
+{
+  "output": "example\\gate_b_pairs\\baseline3-loop-goto.sch",
+  "template_source": "PNE02.zip::PNE02/[10.0] 0.33C cycle_se200.sch",
+  "layout": "0x00010003/612",
+  "payload_offset": 1760,
+  "file_size": 5432,
+  "pne_unit": "PNE02",
+  "ctspro_build_ppt": "CYCC-1004-S01-R004-N01",
+  "purpose": "LOOP goto controlled-pair template (multiple goto targets in CTSPro UI)",
+  "default_loop_goto_ensol": 1,
+  "controlled_pair_hint": {
+    "directory": "pne02-loop-goto",
+    "ui_field": "LOOP goto target",
+    "before_value": {
+      "value": 1,
+      "unit": "step_no"
+    },
+    "after_value": {
+      "value": 2,
+      "unit": "step_no"
+    },
+    "expected_field": "loop_goto_ensol"
+  },
+  "steps": [
+    {
+      "step_no": 1,
+      "step_type": "CCCV",
+      "f_vref": 4000.0,
+      "f_iref": 10.0,
+      "f_end_v": 0.0,
+      "f_end_i": 2.0
+    },
+    {
+      "step_no": 2,
+      "step_type": "REST",
+      "f_vref": 0.0,
+      "f_iref": 0.0,
+      "f_end_v": 0.0,
+      "f_end_i": 0.0
+    },
+    {
+      "step_no": 3,
+      "step_type": "CC_DCHG",
+      "f_vref": 2000.0,
+      "f_iref": 10.0,
+      "f_end_v": 2500.0,
+      "f_end_i": 0.0
+    },
+    {
+      "step_no": 4,
+      "step_type": "REST",
+      "f_vref": 0.0,
+      "f_iref": 0.0,
+      "f_end_v": 0.0,
+      "f_end_i": 0.0
+    },
+    {
+      "step_no": 5,
+      "step_type": "LOOP",
+      "f_vref": 0.0,
+      "f_iref": 0.0,
+      "f_end_v": 0.0,
+      "f_end_i": 0.0
+    },
+    {
+      "step_no": 6,
+      "step_type": "END",
+      "f_vref": 0.0,
+      "f_iref": 0.0,
+      "f_end_v": 0.0,
+      "f_end_i": 0.0
+    }
+  ]
+}

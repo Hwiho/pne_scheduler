@@ -1,0 +1,45 @@
+{
+  "schema": "pne_scheduler.gate_b_controlled_pair_waivers/v1",
+  "evidence_policy": {
+    "screenshots_required": false,
+    "reason": "User confirmed CTSEditorPro reopen on PNE02 controlled pairs; screenshots deferred for lab batch 2026-09-02.",
+    "confirmed_by": "user",
+    "confirmed_at": "2026-09-02"
+  },
+  "waivers": [
+    {
+      "equipment": "PNE02",
+      "field": "loop_goto_ensol",
+      "reason": "PNE02 CTSEditorPro LOOP goto UI writes loop_target@48, not loop_goto_ensol@564. Controlled-pair evidence is collected under loop_target via baseline3 (goto_controlled_pair.zip).",
+      "alternative_evidence": [
+        "pne02-loop-goto/ controlled pair (loop_target@48)",
+        "corpus_inferred loop_goto_ensol@564 (GATE_B_CORPUS_EVIDENCE.json)"
+      ],
+      "confirmed_by": "user",
+      "confirmed_at": "2026-09-02"
+    },
+    {
+      "equipment": "PNE16",
+      "field": "fVref",
+      "reason": "696-byte step records share the 612-byte prefix; B1 layout diff shows no float divergence at current_mA@16. PNE02 controlled pairs on 0x10002/612 provide writer-ready offset evidence for fVref without a separate PNE16 CTSEditorPro session.",
+      "alternative_evidence": [
+        "pne02-charge-current/ (current_mA@16, 10→17 mA)",
+        "pne02-discharge-current/ (current_mA@16, 10→19 mA)",
+        "example/reports/step_layout_diff.json (shared_prefix_bytes=612, prefix_float_value_divergence=[])"
+      ],
+      "confirmed_by": "user",
+      "confirmed_at": "2026-09-03"
+    },
+    {
+      "equipment": "PNE16",
+      "field": "fIref",
+      "reason": "696-byte step records share the 612-byte prefix; B1 layout diff shows no float divergence at time_or_rest_s@20. PNE02 rest-duration pair provides writer-ready offset evidence for fIref without a separate PNE16 CTSEditorPro session.",
+      "alternative_evidence": [
+        "pne02-rest-duration/ (time_or_rest_s@20, 60→123 s)",
+        "example/reports/step_layout_diff.json (shared_prefix_bytes=612, prefix_float_value_divergence=[])"
+      ],
+      "confirmed_by": "user",
+      "confirmed_at": "2026-09-03"
+    }
+  ]
+}

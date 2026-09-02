@@ -1,0 +1,28 @@
+{
+  "schema": "pne_scheduler.validation_intake/v1",
+  "equipment": {
+    "label": "PNE02",
+    "rating": "500mA",
+    "ctspro_version": "CYCC-1004-S01-R004-N01",
+    "channel_profile": "김휘호/baseline2",
+    "source": "user_confirmed"
+  },
+  "scope": "discovery",
+  "before_file": "before.sch",
+  "after_file": "after.sch",
+  "changed_step": 1,
+  "ui_field": "CV cutoff current",
+  "before_value": {
+    "value": 2,
+    "unit": "mA"
+  },
+  "after_value": {
+    "value": 3,
+    "unit": "mA"
+  },
+  "expected_field": "fEndI",
+  "executed_on_equipment": false,
+  "ctspro_reopen_verified": true,
+  "screenshots": [],
+  "notes": "Imported from PNE02_controlled_pair.zip (user confirmed PNE02). Layout 0x00010002/612 (4080 B). CTSPro save filenames differ; header bytes were normalized to before.sch for single-field diff. CV-cutoff save co-writes cap_mode@496 (1→0 on after); before step1 cap496 was normalized 1→0 to match PNE02 corpus default and isolate fEndI@32. User confirmed all after.sch reopen in CTSEditorPro on PNE02 (2026-09-02); per-pair screenshots still optional for strict Gate B."
+}

@@ -1,0 +1,113 @@
+{
+  "schema": "pne_scheduler.sch_layout_tier_sharing/v1",
+  "generated_at": "2026-09-02",
+  "summary": "500mA and 20A controlled-pair baselines share the same SCH step record layout and Ensol v612 offsets; tiers differ in stored values, CTSPro build, and header metadata—not in field map.",
+  "shared_across_current_tiers": {
+    "nFileVersion_family": ["0x00010002", "0x00010003", "0x00010004"],
+    "step_size_bytes": 612,
+    "step_record_offsets": {
+      "volt_or_vlim_mV": 12,
+      "current_mA": 16,
+      "time_or_rest_s": 20,
+      "voltage_cutoff_mV": 28,
+      "cv_cutoff_mA": 32,
+      "loop_target_legacy": 48,
+      "loop_count": 52,
+      "record_time_s": 340,
+      "cap_mode": 496,
+      "loop_goto_ensol": 564
+    },
+    "reference": [
+      "schema/ensol_v612.py",
+      "schema/fields.py",
+      "docs/GATE_B.md"
+    ]
+  },
+  "controlled_pair_fixture_comparison": {
+    "20A": {
+      "path": "example/gate_b_pairs/baseline-charge-current/before.sch",
+      "equipment_label": "baseline_20a",
+      "rating": "20A",
+      "ctspro_build": "CYCGN-P1107-S01-R001-N022",
+      "layout": "0x00010002/612",
+      "file_size": 4080,
+      "payload_offset": 1632,
+      "step_count": 4,
+      "step_signature": "CCCV-CC_DCHG-LOOP-END"
+    },
+    "500mA": {
+      "path": "example/gate_b_pairs/pne02-charge-current/before.sch",
+      "equipment_label": "PNE02",
+      "rating": "500mA",
+      "ctspro_build": "CYCC-1004-S01-R004-N01",
+      "layout": "0x00010002/612",
+      "file_size": 4080,
+      "payload_offset": 1632,
+      "step_count": 4,
+      "step_signature": "CCCV-CC_DCHG-LOOP-END"
+    },
+    "layout_compatible": true,
+    "payload_byte_diff_count": 13,
+    "header_byte_diff_count": 56,
+    "value_differences_not_structure": [
+      {
+        "step": 1,
+        "offset": 16,
+        "field": "current_mA",
+        "20A": 10000.0,
+        "500mA": 10.0
+      },
+      {
+        "step": 1,
+        "offset": 32,
+        "field": "cv_cutoff_mA",
+        "20A": 2000.0,
+        "500mA": 2.0
+      },
+      {
+        "step": 2,
+        "offset": 16,
+        "field": "current_mA",
+        "20A": 9000.0,
+        "500mA": 10.0
+      },
+      {
+        "step": 1,
+        "offset": 496,
+        "field": "cap_mode",
+        "20A": 0,
+        "500mA": 1,
+        "note": "PNE02 baseline2 saves often use 1; corpus norm is 0"
+      }
+    ]
+  },
+  "corpus_layout_note": {
+    "500mA_PNE02": {
+      "zip": "PNE02.zip",
+      "dominant_version": "0x00010003",
+      "also_observed": ["0x00010002", "0x00010004"]
+    },
+    "20A_PNE12": {
+      "zip": "PNE12.zip",
+      "dominant_version": "0x00010003",
+      "also_observed": ["0x00010002"]
+    },
+    "interpretation": "Current tier does not select a different step-size or offset table; file length and step count vary by schedule content."
+  },
+  "policy": {
+    "shared": [
+      "Parser offset map (Ensol v612 / schema/fields.py)",
+      "compare_sch field alignment",
+      "Step type codes (CCCV, CC_DCHG, LOOP, END, REST)"
+    ],
+    "must_not_mix_for_writer_evidence": [
+      "equipment.label + rating tier on controlled pairs",
+      "ctspro_version / channel_profile attribution",
+      "current scale when promoting writer-ready (10 mA vs 10000 mA)"
+    ],
+    "gate_b_required_fields_per_tier": {
+      "PNE02_500mA": "example/gate_b_pairs/pne02-*/",
+      "baseline_20A": "example/gate_b_pairs/baseline-*/ (discovery / cross-tier structural reference only)"
+    }
+  }
+}

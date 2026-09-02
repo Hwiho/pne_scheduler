@@ -1,0 +1,28 @@
+{
+  "schema": "pne_scheduler.validation_intake/v1",
+  "equipment": {
+    "label": "PNE02",
+    "rating": "500mA",
+    "ctspro_version": "CYCC-1004-S01-R004-N01",
+    "channel_profile": "김휘호/baseline3-loop-goto",
+    "source": "user_confirmed"
+  },
+  "scope": "discovery",
+  "before_file": "before.sch",
+  "after_file": "after.sch",
+  "changed_step": 17,
+  "ui_field": "LOOP goto target",
+  "before_value": {
+    "value": 1,
+    "unit": "step_no"
+  },
+  "after_value": {
+    "value": 7,
+    "unit": "step_no"
+  },
+  "expected_field": "loop_target",
+  "executed_on_equipment": false,
+  "ctspro_reopen_verified": true,
+  "screenshots": [],
+  "notes": "Imported from goto_controlled_pair.zip. CTSEditorPro expanded baseline3 to 18 steps (0x10002/612, 12648 B) on save; controlled change is on LOOP step 17: loop_target@48 (legacy goto). loop_goto_ensol@564 stayed 1 in both files — PNE02 UI writes goto to offset +48, not +564. User confirmed all after.sch reopen in CTSEditorPro on PNE02 (2026-09-02); per-pair screenshots still optional for strict Gate B."
+}

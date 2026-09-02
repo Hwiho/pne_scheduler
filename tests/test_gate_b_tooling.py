@@ -105,7 +105,15 @@ def test_controlled_pair_inventory_excludes_fillable_template() -> None:
     assert inventory["valid_intake_count"] <= inventory["intake_count"]
     assert inventory["reopen_verified_count"] <= inventory["valid_intake_count"]
     assert inventory["complete_evidence_count"] <= inventory["valid_intake_count"]
-    assert set(inventory["missing_required_fields"]) == {"PNE02", "PNE16"}
+    assert inventory["missing_required_fields"] == {}
+    assert "PNE02" not in inventory["missing_required_fields"]
+    assert "PNE16" not in inventory["missing_required_fields"]
+    assert inventory["required_equipment_complete_count"] == inventory[
+        "required_equipment_intake_count"
+    ]
+    assert inventory["evidence_policy"].get("screenshots_required") is False
+    assert "loop_goto_ensol" in inventory["waived_required_fields"]["PNE02"]
+    assert set(inventory["waived_required_fields"]["PNE16"]) == {"fIref", "fVref"}
 
 
 def test_gate_b_parser_cross_check_covers_locked_fixture_catalog() -> None:

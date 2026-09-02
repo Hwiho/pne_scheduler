@@ -1,0 +1,28 @@
+{
+  "schema": "pne_scheduler.validation_intake/v1",
+  "equipment": {
+    "label": "baseline_20a",
+    "rating": "20A",
+    "ctspro_version": "CYCGN-P1107-S01-R001-N022",
+    "channel_profile": "Sample/baseline",
+    "source": "user_attributed"
+  },
+  "scope": "discovery",
+  "before_file": "before.sch",
+  "after_file": "after.sch",
+  "changed_step": 1,
+  "ui_field": "Charge current",
+  "before_value": {
+    "value": 10000,
+    "unit": "mA"
+  },
+  "after_value": {
+    "value": 17000,
+    "unit": "mA"
+  },
+  "expected_field": "fVref",
+  "executed_on_equipment": false,
+  "ctspro_reopen_verified": false,
+  "screenshots": [],
+  "notes": "Imported from Baseline_controlled_pair.zip. Layout 0x00010002/612. CTSPro saved each variant under a different filename; header bytes were normalized to before.sch for single-field diff. PNE unit and CTSPro build still need user confirmation."
+}

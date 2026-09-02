@@ -1,0 +1,78 @@
+{
+  "schema": "pne_scheduler.sch_diff/v2",
+  "before": {
+    "path": "C:\\Users\\LGES\\Cursor\\pne_scheduler\\example\\gate_b_pairs\\pne02-rest-duration\\before.sch",
+    "size": 4692,
+    "sha256": "9dc74166266b6493c82f0b26d4111e6131044200e2fd9812a6ff4b0bd4ee52cc",
+    "version": "0x00010002",
+    "payload_offset": 1632,
+    "step_size": 612,
+    "step_count": 5,
+    "parsed_end": 4692,
+    "unparsed_size": 0
+  },
+  "after": {
+    "path": "C:\\Users\\LGES\\Cursor\\pne_scheduler\\example\\gate_b_pairs\\pne02-rest-duration\\after.sch",
+    "size": 4692,
+    "sha256": "4e7f22df67867d19e45b44c7095ee1431e1e3b6dcdbbcf0c6ef726aa9e3b15a0",
+    "version": "0x00010002",
+    "payload_offset": 1632,
+    "step_size": 612,
+    "step_count": 5,
+    "parsed_end": 4692,
+    "unparsed_size": 0
+  },
+  "compatible": true,
+  "warnings": [],
+  "header_changes": [],
+  "unparsed_tail_changes": [],
+  "step_changes": [
+    {
+      "step_no": 2,
+      "before_type": 3,
+      "after_type": 3,
+      "changed_byte_count": 1,
+      "ranges": [
+        {
+          "start": 22,
+          "end_exclusive": 23,
+          "length": 1,
+          "before_hex": "70",
+          "after_hex": "f6"
+        }
+      ],
+      "words": [
+        {
+          "offset": 20,
+          "field": "fIref",
+          "confidence": "corpus_inferred",
+          "dtype": "float32",
+          "evidence": "Legacy name; Ensol v612: time_or_rest_s @+20 — CC time limit or REST duration (seconds).",
+          "writer_ready": false,
+          "primary_before": 60.0,
+          "primary_after": 123.0,
+          "before": {
+            "hex": "00007042",
+            "uint32": 1114636288,
+            "int32": 1114636288,
+            "float32": 60.0
+          },
+          "after": {
+            "hex": "0000f642",
+            "uint32": 1123418112,
+            "int32": 1123418112,
+            "float32": 123.0
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "files_identical": false,
+    "header_changed_byte_count": 0,
+    "changed_step_count": 1,
+    "step_changed_byte_count": 1,
+    "unparsed_changed_byte_count": 0,
+    "controlled_pair_clean": true
+  }
+}

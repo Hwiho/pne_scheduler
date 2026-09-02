@@ -1,0 +1,28 @@
+{
+  "schema": "pne_scheduler.validation_intake/v1",
+  "equipment": {
+    "label": "PNE02",
+    "rating": "500mA",
+    "ctspro_version": "CYCC-1004-S01-R004-N01",
+    "channel_profile": "김휘호/baseline2",
+    "source": "user_confirmed"
+  },
+  "scope": "discovery",
+  "before_file": "before.sch",
+  "after_file": "after.sch",
+  "changed_step": 2,
+  "ui_field": "Discharge current",
+  "before_value": {
+    "value": 10,
+    "unit": "mA"
+  },
+  "after_value": {
+    "value": 19,
+    "unit": "mA"
+  },
+  "expected_field": "fVref",
+  "executed_on_equipment": false,
+  "ctspro_reopen_verified": true,
+  "screenshots": [],
+  "notes": "Imported from PNE02_controlled_pair.zip (user confirmed PNE02). Layout 0x00010002/612 (4080 B). CTSPro save filenames differ; header bytes were normalized to before.sch for single-field diff. User confirmed all after.sch reopen in CTSEditorPro on PNE02 (2026-09-02); per-pair screenshots still optional for strict Gate B."
+}
