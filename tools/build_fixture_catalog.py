@@ -87,7 +87,11 @@ def build_catalog() -> dict:
             )
 
     fixtures = []
-    for path in sorted(FIXTURE_ROOT.rglob("*.sch")):
+    fixture_paths = sorted(
+        FIXTURE_ROOT.rglob("*.sch"),
+        key=lambda path: path.relative_to(FIXTURE_ROOT).as_posix().casefold(),
+    )
+    for path in fixture_paths:
         document = read_sch_binary(path)
         relative_path = path.relative_to(FIXTURE_ROOT).as_posix()
         data = path.read_bytes()

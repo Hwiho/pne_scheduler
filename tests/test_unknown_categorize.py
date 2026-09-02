@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from pne_scheduler.classify.sch_binary_profile import distinct_current_levels
 from pne_scheduler.classify.training_labels import (
     VERIFIED_LABELS_SCHEMA,
     classify_with_verified_labels,
@@ -20,6 +21,12 @@ from pne_scheduler.classify.unknown_categorize import (
     suggest_from_signature,
     tokenize_filename,
 )
+
+
+def test_distinct_current_levels_collapses_small_setpoint_drift() -> None:
+    levels = distinct_current_levels([10.0, 10.5, 20.0, 50.0, 50.5])
+    assert levels == [10.0, 20.0, 50.0]
+
 
 FIXTURE_ZIP = Path(__file__).resolve().parents[1] / "example" / "fixtures" / "capacheck_zip"
 

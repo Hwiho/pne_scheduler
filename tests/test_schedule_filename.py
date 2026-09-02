@@ -38,6 +38,12 @@ FIXTURE_ROOT = Path(__file__).resolve().parents[1] / "example" / "fixtures" / "c
         ("0.33C SOC30 setting.sch", ScheduleCategory.SOC_SETTING, None),
         ("ratetest_100mAh.sch", ScheduleCategory.RATE_TEST, None),
         ("[10.0] 0.1C RATE_se200.sch", ScheduleCategory.RATE_TEST, None),
+        (
+            "251121_3350_Charge rate capability_L4.2581.sch",
+            ScheduleCategory.RATE_CAPABILITY,
+            None,
+        ),
+        ("고출력_율특성_평가.sch", ScheduleCategory.RATE_CAPABILITY, None),
         ("[10.0] 0.33C cycle_se200.sch", ScheduleCategory.CYCLE_LIFE, None),
         ("0.1C safety4-DISCHARGE.sch", ScheduleCategory.DISCHARGE, None),
         ("00217475_260210_OCV_rest.sch", ScheduleCategory.OCV, None),
@@ -116,6 +122,25 @@ def test_classify_schedule_uses_signature_labels(tmp_path: Path) -> None:
     )
     assert match.category == ScheduleCategory.HPPC
     assert match.matched_rule == "signature_label"
+
+
+def test_binary_multi_current_rate_test_is_rate_capability(monkeypatch: pytest.MonkeyPatch) -> None:
+    from pne_scheduler.classify import schedule_classifier
+
+    monkeypatch.setattr(
+        schedule_classifier,
+        "binary_profile",
+        lambda _data: {"current_level_count": 4},
+    )
+    match = schedule_classifier.classify_schedule(
+        "opaque_rate_test.sch",
+        b"binary",
+        verified_labels={},
+        use_signature_labels=False,
+    )
+    assert match.category == ScheduleCategory.RATE_CAPABILITY
+    assert match.matched_rule == "multi_current_rate_capability"
+    assert match.suggested_module == "rate_test"
 
 
 def test_qpeed_soc_setting_is_sub_experiment_of_qpeed() -> None:
