@@ -1,0 +1,178 @@
+{
+  "schema": "pne_scheduler.assb_parser_diff/v1",
+  "offset_parity": {
+    "schema": "pne_scheduler.assb_offset_parity/v1",
+    "shared_pairs": [
+      {
+        "assb_name": "SCH_REFERENCE_CURRENT_OFFSET",
+        "assb_offset": 16,
+        "pne_name": "OFFSET_F_VREF",
+        "pne_offset": 16
+      },
+      {
+        "assb_name": "SCH_END_CURRENT_OFFSET",
+        "assb_offset": 32,
+        "pne_name": "OFFSET_F_END_I",
+        "pne_offset": 32
+      },
+      {
+        "assb_name": "fEndC",
+        "assb_offset": 36,
+        "pne_name": "OFFSET_F_END_C",
+        "pne_offset": 36
+      }
+    ],
+    "documented_divergences": [
+      {
+        "assb_name": "nGotoStepID",
+        "assb_offset": 84,
+        "pne_name": "OFFSET_N_GOTO_STEP_ID",
+        "pne_offset": 92,
+        "reason": "pne_scheduler corpus regression; ASSB legacy PNE_file_structures offset"
+      },
+      {
+        "assb_name": "fSocRate",
+        "assb_offset": 384,
+        "pne_name": "OFFSET_F_SOC_RATE",
+        "pne_offset": 392,
+        "reason": "pne_scheduler corpus regression (+8 bytes vs ASSB)"
+      },
+      {
+        "assb_name": "fMaxCapacity",
+        "assb_offset": 412,
+        "pne_name": "OFFSET_F_MAX_CAPACITY",
+        "pne_offset": 428,
+        "reason": "pne_scheduler corpus regression (+16 bytes vs ASSB)"
+      },
+      {
+        "assb_name": "bUseActualCapa",
+        "assb_offset": 496,
+        "pne_name": "OFFSET_B_USE_ACTUAL_CAPA",
+        "pne_offset": 512,
+        "reason": "pne_scheduler corpus regression (+16 bytes vs ASSB)"
+      },
+      {
+        "assb_name": "bUseDataStepNo",
+        "assb_offset": 497,
+        "pne_name": "OFFSET_B_USE_DATA_STEP_NO",
+        "pne_offset": 513,
+        "reason": "pne_scheduler corpus regression (+16 bytes vs ASSB)"
+      }
+    ],
+    "assb_offset_table": {
+      "SCH_REFERENCE_CURRENT_OFFSET": 16,
+      "SCH_END_CURRENT_OFFSET": 32,
+      "fEndC": 36,
+      "nLoopInfoEndSocGoto": 80,
+      "nGotoStepID": 84,
+      "fSocRate": 384,
+      "fMaxCapacity": 412,
+      "bUseActualCapa": 496,
+      "bUseDataStepNo": 497
+    },
+    "pne_scheduler_offset_table": {
+      "OFFSET_F_VREF": 16,
+      "OFFSET_F_IREF": 20,
+      "OFFSET_F_END_TIME": 24,
+      "OFFSET_F_END_V": 28,
+      "OFFSET_F_END_I": 32,
+      "OFFSET_F_END_C": 36,
+      "OFFSET_LOOP_GOTO": 48,
+      "OFFSET_LOOP_COUNT": 52,
+      "OFFSET_N_GOTO_STEP_ID": 92,
+      "OFFSET_F_SOC_RATE": 392,
+      "OFFSET_F_MAX_CAPACITY": 428,
+      "OFFSET_B_USE_ACTUAL_CAPA": 512,
+      "OFFSET_B_USE_DATA_STEP_NO": 513
+    }
+  },
+  "fixtures": [
+    {
+      "path": "fixtures\\capacheck_zip\\00207966_260803_727도급셀_Set8_45도 Cycle.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 73,
+      "native_step_count": 73,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    },
+    {
+      "path": "fixtures\\capacheck_zip\\07100766_260511_SJ1300_dry_40um_RPT_500cycle.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 41,
+      "native_step_count": 41,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    },
+    {
+      "path": "fixtures\\capacheck_zip\\07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 167,
+      "native_step_count": 167,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    },
+    {
+      "path": "fixtures\\capacheck_zip\\3.BM_C1%_FM.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 9,
+      "native_step_count": 9,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    },
+    {
+      "path": "fixtures\\capacheck_zip\\9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 15,
+      "native_step_count": 15,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    },
+    {
+      "path": "fixtures\\hppc\\HPPC_Full range.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 62,
+      "native_step_count": 62,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    },
+    {
+      "path": "fixtures\\sch_lab_zip\\00207966_250611_capa.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 3,
+      "native_step_count": 3,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    },
+    {
+      "path": "fixtures\\sch_lab_zip\\07100766_260522_Set1_SJ900_wet_QC_1_charge.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 24,
+      "native_step_count": 24,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    },
+    {
+      "path": "fixtures\\hppc\\HPPC_Full range.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 62,
+      "native_step_count": 62,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    }
+  ],
+  "summary": {
+    "fixture_count": 9,
+    "layout_match_count": 9,
+    "step_count_match_count": 9,
+    "fixtures_with_field_mismatches": 0
+  }
+}

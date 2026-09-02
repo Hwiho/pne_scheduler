@@ -6,3 +6,5 @@ dist/
 build/
 .env
 .env.*
+*.zip
+!example/corpus_zips/*.zip

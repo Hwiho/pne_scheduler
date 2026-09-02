@@ -1,0 +1,2457 @@
+{
+  "schema": "pne_scheduler.pne_unit_comparison/v1",
+  "units": {
+    "PNE01": {
+      "unit": "PNE01",
+      "zip": "PNE01.zip",
+      "ctspro_build": null,
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
+      "sch_count": 36,
+      "parse_errors": 0,
+      "unknown_pct": 8.3,
+      "categories_top": {
+        "capacheck": 20,
+        "doe": 8,
+        "rpt": 5,
+        "unknown": 3
+      },
+      "category_share": {
+        "capacheck": 55.6,
+        "doe": 22.2,
+        "rpt": 13.9
+      },
+      "versions": {
+        "0x00010003": 21,
+        "0x00010002": 15
+      },
+      "step_sizes": {
+        "612": 36
+      },
+      "payload_offsets": {
+        "1760": 21,
+        "1632": 15
+      },
+      "top_layouts": [
+        [
+          "0x00010002/612B/15st",
+          11
+        ],
+        [
+          "0x00010003/612B/15st",
+          9
+        ],
+        [
+          "0x00010003/612B/48st",
+          5
+        ],
+        [
+          "0x00010003/612B/51st",
+          5
+        ],
+        [
+          "0x00010002/612B/48st",
+          4
+        ],
+        [
+          "0x00010003/612B/9st",
+          2
+        ]
+      ],
+      "top_step_counts": [
+        [
+          15,
+          20
+        ],
+        [
+          48,
+          9
+        ],
+        [
+          51,
+          5
+        ],
+        [
+          9,
+          2
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 167,
+        "both": 14
+      },
+      "loop_both_pct": 7.7,
+      "current_mA": {
+        "median": 28.182,
+        "p90": 97.294,
+        "max": 128.85,
+        "top_modes": [
+          [
+            21.621,
+            54
+          ],
+          [
+            27.786,
+            27
+          ],
+          [
+            28.182,
+            27
+          ],
+          [
+            97.294,
+            18
+          ],
+          [
+            28.347,
+            18
+          ],
+          [
+            6.486,
+            12
+          ],
+          [
+            32.431,
+            12
+          ],
+          [
+            126.3,
+            9
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          34
+        ],
+        [
+          0.15,
+          32
+        ],
+        [
+          0.152,
+          16
+        ],
+        [
+          0.1,
+          14
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 654,
+        "1": 351
+      },
+      "safety_header_top": [
+        {
+          "maxV_mV": 4300,
+          "minV_mV": 1500,
+          "maxI_mA": 200,
+          "minI_mA": 140,
+          "count": 11
+        }
+      ],
+      "distinct_protocols": 3
+    },
+    "PNE02": {
+      "unit": "PNE02",
+      "zip": "PNE02.zip",
+      "ctspro_build": "CYCC-1004-S01-R004-N01",
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        },
+        {
+          "file_version": "0x00010004",
+          "payload_offset": 1844,
+          "step_size": 696,
+          "dominant": false
+        }
+      ],
+      "sch_count": 3449,
+      "parse_errors": 1,
+      "unknown_pct": 57.3,
+      "categories_top": {
+        "unknown": 1978,
+        "rate_test": 518,
+        "cycle_life": 231,
+        "formation": 179,
+        "charge": 126,
+        "capacheck": 114,
+        "hppc": 82,
+        "qpeed": 81,
+        "rpt": 56,
+        "gitt": 17,
+        "rest": 14,
+        "discharge": 12,
+        "soc_setting": 9,
+        "ocv": 8,
+        "qc": 8
+      },
+      "category_share": {
+        "rate_test": 15.0,
+        "cycle_life": 6.7,
+        "formation": 5.2,
+        "charge": 3.7,
+        "capacheck": 3.3,
+        "hppc": 2.4,
+        "qpeed": 2.3,
+        "rpt": 1.6,
+        "gitt": 0.5
+      },
+      "versions": {
+        "0x00010003": 3344,
+        "0x00010002": 102,
+        "0x00010004": 2
+      },
+      "step_sizes": {
+        "612": 3446,
+        "696": 2
+      },
+      "payload_offsets": {
+        "1760": 3344,
+        "1632": 102,
+        "1844": 2
+      },
+      "top_layouts": [
+        [
+          "0x00010003/612B/39st",
+          1280
+        ],
+        [
+          "0x00010003/612B/9st",
+          636
+        ],
+        [
+          "0x00010003/612B/30st",
+          218
+        ],
+        [
+          "0x00010003/612B/15st",
+          145
+        ],
+        [
+          "0x00010003/612B/7st",
+          93
+        ],
+        [
+          "0x00010003/612B/6st",
+          75
+        ],
+        [
+          "0x00010002/612B/39st",
+          64
+        ],
+        [
+          "0x00010003/612B/69st",
+          55
+        ]
+      ],
+      "top_step_counts": [
+        [
+          39,
+          1345
+        ],
+        [
+          9,
+          637
+        ],
+        [
+          30,
+          220
+        ],
+        [
+          15,
+          146
+        ],
+        [
+          7,
+          93
+        ],
+        [
+          6,
+          75
+        ],
+        [
+          69,
+          62
+        ],
+        [
+          41,
+          51
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 20202,
+        "both": 300,
+        "neither": 23,
+        "only_48": 3
+      },
+      "loop_both_pct": 1.5,
+      "current_mA": {
+        "median": 6.632,
+        "p90": 60.376,
+        "max": 37763.375,
+        "top_modes": [
+          [
+            6.08,
+            577
+          ],
+          [
+            6.225,
+            428
+          ],
+          [
+            1.782,
+            266
+          ],
+          [
+            17.97,
+            179
+          ],
+          [
+            6.155,
+            174
+          ],
+          [
+            24.196,
+            168
+          ],
+          [
+            24.133,
+            166
+          ],
+          [
+            22.898,
+            160
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          10823
+        ],
+        [
+          0.303,
+          1848
+        ],
+        [
+          0.3,
+          612
+        ],
+        [
+          0.15,
+          608
+        ],
+        [
+          0.2,
+          246
+        ],
+        [
+          0.152,
+          157
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 71837,
+        "1": 46904
+      },
+      "safety_header_top": [],
+      "distinct_protocols": 19
+    },
+    "PNE03": {
+      "unit": "PNE03",
+      "zip": "PNE03.zip",
+      "ctspro_build": null,
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        },
+        {
+          "file_version": "0x00010004",
+          "payload_offset": 1844,
+          "step_size": 696,
+          "dominant": false
+        }
+      ],
+      "sch_count": 1541,
+      "parse_errors": 0,
+      "unknown_pct": 45.0,
+      "categories_top": {
+        "unknown": 694,
+        "formation": 208,
+        "cycle_life": 195,
+        "rate_test": 126,
+        "rpt": 99,
+        "hppc": 91,
+        "capacheck": 51,
+        "discharge": 20,
+        "eis": 13,
+        "ocv": 12,
+        "dcir": 8,
+        "soc_setting": 6,
+        "storage": 5,
+        "charge": 4,
+        "rest": 4
+      },
+      "category_share": {
+        "formation": 13.5,
+        "cycle_life": 12.7,
+        "rate_test": 8.2,
+        "rpt": 6.4,
+        "hppc": 5.9,
+        "capacheck": 3.3,
+        "discharge": 1.3,
+        "eis": 0.8,
+        "ocv": 0.8
+      },
+      "versions": {
+        "0x00010003": 1484,
+        "0x00010002": 49,
+        "0x00010004": 8
+      },
+      "step_sizes": {
+        "612": 1533,
+        "696": 8
+      },
+      "payload_offsets": {
+        "1760": 1484,
+        "1632": 49,
+        "1844": 8
+      },
+      "top_layouts": [
+        [
+          "0x00010003/612B/15st",
+          333
+        ],
+        [
+          "0x00010003/612B/9st",
+          255
+        ],
+        [
+          "0x00010003/612B/6st",
+          57
+        ],
+        [
+          "0x00010003/612B/21st",
+          47
+        ],
+        [
+          "0x00010003/612B/22st",
+          43
+        ],
+        [
+          "0x00010003/612B/19st",
+          39
+        ],
+        [
+          "0x00010003/612B/27st",
+          39
+        ],
+        [
+          "0x00010003/612B/12st",
+          38
+        ]
+      ],
+      "top_step_counts": [
+        [
+          15,
+          342
+        ],
+        [
+          9,
+          262
+        ],
+        [
+          6,
+          57
+        ],
+        [
+          21,
+          48
+        ],
+        [
+          22,
+          43
+        ],
+        [
+          12,
+          41
+        ],
+        [
+          27,
+          40
+        ],
+        [
+          19,
+          39
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 7890,
+        "both": 331,
+        "neither": 57,
+        "only_48": 1
+      },
+      "loop_both_pct": 4.0,
+      "current_mA": {
+        "median": 64.0,
+        "p90": 351.725,
+        "max": 6000.0,
+        "top_modes": [
+          [
+            98.0,
+            1019
+          ],
+          [
+            327.0,
+            725
+          ],
+          [
+            10.0,
+            373
+          ],
+          [
+            25.0,
+            309
+          ],
+          [
+            19.0,
+            261
+          ],
+          [
+            16.0,
+            253
+          ],
+          [
+            5.0,
+            251
+          ],
+          [
+            490.0,
+            237
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          1171
+        ],
+        [
+          0.15,
+          210
+        ],
+        [
+          0.2,
+          167
+        ],
+        [
+          0.48,
+          142
+        ],
+        [
+          0.303,
+          120
+        ],
+        [
+          0.4,
+          90
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 26861,
+        "1": 16164
+      },
+      "safety_header_top": [
+        {
+          "maxV_mV": 4500,
+          "minV_mV": 1500,
+          "maxI_mA": 6000,
+          "minI_mA": 1000,
+          "count": 1
+        }
+      ],
+      "distinct_protocols": 16
+    },
+    "PNE04": {
+      "unit": "PNE04",
+      "zip": "PNE04.zip",
+      "ctspro_build": null,
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
+      "sch_count": 3273,
+      "parse_errors": 0,
+      "unknown_pct": 80.8,
+      "categories_top": {
+        "unknown": 2645,
+        "hppc": 224,
+        "rate_test": 165,
+        "cycle_life": 111,
+        "formation": 64,
+        "discharge": 22,
+        "charge": 13,
+        "dcir": 11,
+        "storage": 7,
+        "rpt": 5,
+        "ocv": 3,
+        "qc": 2,
+        "rest": 1
+      },
+      "category_share": {
+        "hppc": 6.8,
+        "rate_test": 5.0,
+        "cycle_life": 3.4,
+        "formation": 2.0,
+        "discharge": 0.7,
+        "charge": 0.4,
+        "dcir": 0.3,
+        "storage": 0.2,
+        "rpt": 0.2
+      },
+      "versions": {
+        "0x00010003": 3245,
+        "0x00010002": 28
+      },
+      "step_sizes": {
+        "612": 3273
+      },
+      "payload_offsets": {
+        "1760": 3245,
+        "1632": 28
+      },
+      "top_layouts": [
+        [
+          "0x00010003/612B/9st",
+          1022
+        ],
+        [
+          "0x00010003/612B/30st",
+          704
+        ],
+        [
+          "0x00010003/612B/39st",
+          387
+        ],
+        [
+          "0x00010003/612B/6st",
+          180
+        ],
+        [
+          "0x00010003/612B/104st",
+          117
+        ],
+        [
+          "0x00010003/612B/13st",
+          111
+        ],
+        [
+          "0x00010003/612B/71st",
+          104
+        ],
+        [
+          "0x00010003/612B/55st",
+          78
+        ]
+      ],
+      "top_step_counts": [
+        [
+          9,
+          1025
+        ],
+        [
+          30,
+          705
+        ],
+        [
+          39,
+          387
+        ],
+        [
+          6,
+          180
+        ],
+        [
+          104,
+          122
+        ],
+        [
+          13,
+          111
+        ],
+        [
+          71,
+          108
+        ],
+        [
+          55,
+          86
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 17478,
+        "both": 796
+      },
+      "loop_both_pct": 4.4,
+      "current_mA": {
+        "median": 2.0,
+        "p90": 23.58,
+        "max": 8153.0,
+        "top_modes": [
+          [
+            1.977,
+            177
+          ],
+          [
+            1.878,
+            167
+          ],
+          [
+            1.935,
+            164
+          ],
+          [
+            1.874,
+            158
+          ],
+          [
+            1.252,
+            156
+          ],
+          [
+            1.922,
+            152
+          ],
+          [
+            1.85,
+            132
+          ],
+          [
+            1.915,
+            131
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          9711
+        ],
+        [
+          0.303,
+          1295
+        ],
+        [
+          0.3,
+          188
+        ],
+        [
+          0.2,
+          147
+        ],
+        [
+          0.501,
+          37
+        ],
+        [
+          0.499,
+          35
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 64560,
+        "1": 31170
+      },
+      "safety_header_top": [],
+      "distinct_protocols": 12
+    },
+    "PNE05": {
+      "unit": "PNE05",
+      "zip": "PNE05.zip",
+      "ctspro_build": null,
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
+      "sch_count": 1874,
+      "parse_errors": 0,
+      "unknown_pct": 64.2,
+      "categories_top": {
+        "unknown": 1203,
+        "hppc": 199,
+        "cycle_life": 166,
+        "formation": 145,
+        "rate_test": 66,
+        "storage": 53,
+        "rpt": 25,
+        "charge": 7,
+        "capacheck": 4,
+        "doe": 3,
+        "rest": 1,
+        "ocv": 1,
+        "gitt": 1
+      },
+      "category_share": {
+        "hppc": 10.6,
+        "cycle_life": 8.9,
+        "formation": 7.7,
+        "rate_test": 3.5,
+        "storage": 2.8,
+        "rpt": 1.3,
+        "charge": 0.4,
+        "capacheck": 0.2,
+        "doe": 0.2
+      },
+      "versions": {
+        "0x00010003": 1855,
+        "0x00010002": 19
+      },
+      "step_sizes": {
+        "612": 1874
+      },
+      "payload_offsets": {
+        "1760": 1855,
+        "1632": 19
+      },
+      "top_layouts": [
+        [
+          "0x00010003/612B/39st",
+          549
+        ],
+        [
+          "0x00010003/612B/9st",
+          288
+        ],
+        [
+          "0x00010003/612B/30st",
+          225
+        ],
+        [
+          "0x00010003/612B/104st",
+          138
+        ],
+        [
+          "0x00010003/612B/15st",
+          98
+        ],
+        [
+          "0x00010003/612B/33st",
+          77
+        ],
+        [
+          "0x00010003/612B/31st",
+          54
+        ],
+        [
+          "0x00010003/612B/37st",
+          52
+        ]
+      ],
+      "top_step_counts": [
+        [
+          39,
+          555
+        ],
+        [
+          9,
+          289
+        ],
+        [
+          30,
+          225
+        ],
+        [
+          104,
+          140
+        ],
+        [
+          15,
+          102
+        ],
+        [
+          33,
+          77
+        ],
+        [
+          31,
+          55
+        ],
+        [
+          37,
+          52
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 13021,
+        "both": 748
+      },
+      "loop_both_pct": 5.4,
+      "current_mA": {
+        "median": 5.723,
+        "p90": 27.088,
+        "max": 499.0,
+        "top_modes": [
+          [
+            1.068,
+            166
+          ],
+          [
+            1.252,
+            141
+          ],
+          [
+            1.128,
+            130
+          ],
+          [
+            1.748,
+            129
+          ],
+          [
+            1.22,
+            124
+          ],
+          [
+            1.248,
+            118
+          ],
+          [
+            6.318,
+            116
+          ],
+          [
+            1.11,
+            104
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          7713
+        ],
+        [
+          0.303,
+          937
+        ],
+        [
+          0.3,
+          206
+        ],
+        [
+          0.2,
+          89
+        ],
+        [
+          0.501,
+          47
+        ],
+        [
+          0.499,
+          41
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 48661,
+        "1": 23783
+      },
+      "safety_header_top": [],
+      "distinct_protocols": 12
+    },
+    "PNE06": {
+      "unit": "PNE06",
+      "zip": "PNE06.zip",
+      "ctspro_build": null,
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        }
+      ],
+      "sch_count": 1074,
+      "parse_errors": 0,
+      "unknown_pct": 86.0,
+      "categories_top": {
+        "unknown": 924,
+        "cycle_life": 98,
+        "rate_test": 23,
+        "storage": 12,
+        "formation": 10,
+        "hppc": 4,
+        "charge": 3
+      },
+      "category_share": {
+        "cycle_life": 9.1,
+        "rate_test": 2.1,
+        "storage": 1.1,
+        "formation": 0.9,
+        "hppc": 0.4,
+        "charge": 0.3
+      },
+      "versions": {
+        "0x00010003": 1074
+      },
+      "step_sizes": {
+        "612": 1074
+      },
+      "payload_offsets": {
+        "1760": 1074
+      },
+      "top_layouts": [
+        [
+          "0x00010003/612B/39st",
+          346
+        ],
+        [
+          "0x00010003/612B/68st",
+          204
+        ],
+        [
+          "0x00010003/612B/45st",
+          171
+        ],
+        [
+          "0x00010003/612B/62st",
+          107
+        ],
+        [
+          "0x00010003/612B/9st",
+          84
+        ],
+        [
+          "0x00010003/612B/33st",
+          52
+        ],
+        [
+          "0x00010003/612B/15st",
+          48
+        ],
+        [
+          "0x00010003/612B/83st",
+          18
+        ]
+      ],
+      "top_step_counts": [
+        [
+          39,
+          346
+        ],
+        [
+          68,
+          204
+        ],
+        [
+          45,
+          171
+        ],
+        [
+          62,
+          107
+        ],
+        [
+          9,
+          84
+        ],
+        [
+          33,
+          52
+        ],
+        [
+          15,
+          48
+        ],
+        [
+          83,
+          18
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 8820,
+        "both": 316
+      },
+      "loop_both_pct": 3.5,
+      "current_mA": {
+        "median": 7.45,
+        "p90": 64.0,
+        "max": 374.88,
+        "top_modes": [
+          [
+            7.45,
+            1300
+          ],
+          [
+            6.042,
+            660
+          ],
+          [
+            74.5,
+            451
+          ],
+          [
+            6.4,
+            401
+          ],
+          [
+            7.369,
+            377
+          ],
+          [
+            6.3,
+            364
+          ],
+          [
+            6.2,
+            289
+          ],
+          [
+            6.5,
+            268
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          4273
+        ],
+        [
+          0.501,
+          592
+        ],
+        [
+          0.303,
+          470
+        ],
+        [
+          0.2,
+          312
+        ],
+        [
+          0.1,
+          267
+        ],
+        [
+          0.05,
+          214
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 29962,
+        "1": 17358
+      },
+      "safety_header_top": [],
+      "distinct_protocols": 6
+    },
+    "PNE07": {
+      "unit": "PNE07",
+      "zip": "PNE07.zip",
+      "ctspro_build": null,
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
+      "sch_count": 1459,
+      "parse_errors": 0,
+      "unknown_pct": 86.1,
+      "categories_top": {
+        "unknown": 1256,
+        "qpeed": 69,
+        "hppc": 51,
+        "rate_test": 39,
+        "cycle_life": 23,
+        "formation": 16,
+        "rpt": 3,
+        "charge": 2
+      },
+      "category_share": {
+        "qpeed": 4.7,
+        "hppc": 3.5,
+        "rate_test": 2.7,
+        "cycle_life": 1.6,
+        "formation": 1.1,
+        "rpt": 0.2,
+        "charge": 0.1
+      },
+      "versions": {
+        "0x00010003": 1447,
+        "0x00010002": 12
+      },
+      "step_sizes": {
+        "612": 1459
+      },
+      "payload_offsets": {
+        "1760": 1447,
+        "1632": 12
+      },
+      "top_layouts": [
+        [
+          "0x00010003/612B/39st",
+          809
+        ],
+        [
+          "0x00010003/612B/68st",
+          158
+        ],
+        [
+          "0x00010003/612B/62st",
+          85
+        ],
+        [
+          "0x00010003/612B/77st",
+          55
+        ],
+        [
+          "0x00010003/612B/9st",
+          52
+        ],
+        [
+          "0x00010003/612B/101st",
+          44
+        ],
+        [
+          "0x00010003/612B/53st",
+          38
+        ],
+        [
+          "0x00010003/612B/47st",
+          38
+        ]
+      ],
+      "top_step_counts": [
+        [
+          39,
+          809
+        ],
+        [
+          68,
+          159
+        ],
+        [
+          62,
+          86
+        ],
+        [
+          77,
+          64
+        ],
+        [
+          9,
+          52
+        ],
+        [
+          101,
+          44
+        ],
+        [
+          53,
+          38
+        ],
+        [
+          47,
+          38
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 12358,
+        "both": 297
+      },
+      "loop_both_pct": 2.3,
+      "current_mA": {
+        "median": 8.05,
+        "p90": 64.5,
+        "max": 499.0,
+        "top_modes": [
+          [
+            6.3,
+            889
+          ],
+          [
+            7.8,
+            542
+          ],
+          [
+            6.25,
+            455
+          ],
+          [
+            8.05,
+            444
+          ],
+          [
+            6.49,
+            291
+          ],
+          [
+            6.425,
+            280
+          ],
+          [
+            6.35,
+            259
+          ],
+          [
+            6.0,
+            209
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          6250
+        ],
+        [
+          0.05,
+          567
+        ],
+        [
+          0.152,
+          537
+        ],
+        [
+          0.1,
+          399
+        ],
+        [
+          0.303,
+          399
+        ],
+        [
+          0.501,
+          352
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 43800,
+        "1": 26629
+      },
+      "safety_header_top": [],
+      "distinct_protocols": 7
+    },
+    "PNE08": {
+      "unit": "PNE08",
+      "zip": "PNE08.zip",
+      "ctspro_build": null,
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
+      "sch_count": 2221,
+      "parse_errors": 0,
+      "unknown_pct": 60.8,
+      "categories_top": {
+        "unknown": 1350,
+        "formation": 245,
+        "rate_test": 186,
+        "rpt": 173,
+        "cycle_life": 80,
+        "hppc": 78,
+        "qpeed": 44,
+        "charge": 20,
+        "ocv": 17,
+        "capacheck": 8,
+        "discharge": 6,
+        "gitt": 5,
+        "storage": 5,
+        "eis": 3,
+        "rest": 1
+      },
+      "category_share": {
+        "formation": 11.0,
+        "rate_test": 8.4,
+        "rpt": 7.8,
+        "cycle_life": 3.6,
+        "hppc": 3.5,
+        "qpeed": 2.0,
+        "charge": 0.9,
+        "ocv": 0.8,
+        "capacheck": 0.4
+      },
+      "versions": {
+        "0x00010003": 2173,
+        "0x00010002": 48
+      },
+      "step_sizes": {
+        "612": 2221
+      },
+      "payload_offsets": {
+        "1760": 2173,
+        "1632": 48
+      },
+      "top_layouts": [
+        [
+          "0x00010003/612B/9st",
+          463
+        ],
+        [
+          "0x00010003/612B/15st",
+          286
+        ],
+        [
+          "0x00010003/612B/31st",
+          177
+        ],
+        [
+          "0x00010003/612B/30st",
+          166
+        ],
+        [
+          "0x00010003/612B/39st",
+          161
+        ],
+        [
+          "0x00010003/612B/25st",
+          84
+        ],
+        [
+          "0x00010003/612B/61st",
+          74
+        ],
+        [
+          "0x00010003/612B/7st",
+          66
+        ]
+      ],
+      "top_step_counts": [
+        [
+          9,
+          464
+        ],
+        [
+          15,
+          293
+        ],
+        [
+          31,
+          177
+        ],
+        [
+          30,
+          167
+        ],
+        [
+          39,
+          162
+        ],
+        [
+          25,
+          85
+        ],
+        [
+          61,
+          83
+        ],
+        [
+          7,
+          66
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 11721,
+        "both": 345
+      },
+      "loop_both_pct": 2.9,
+      "current_mA": {
+        "median": 9.12,
+        "p90": 66.545,
+        "max": 174076.0,
+        "top_modes": [
+          [
+            6.225,
+            601
+          ],
+          [
+            21.78,
+            254
+          ],
+          [
+            8.363,
+            234
+          ],
+          [
+            8.052,
+            180
+          ],
+          [
+            6.6,
+            170
+          ],
+          [
+            8.004,
+            170
+          ],
+          [
+            11.715,
+            127
+          ],
+          [
+            16.1,
+            124
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          5380
+        ],
+        [
+          0.3,
+          750
+        ],
+        [
+          0.303,
+          733
+        ],
+        [
+          0.152,
+          215
+        ],
+        [
+          0.2,
+          199
+        ],
+        [
+          0.1,
+          143
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 39688,
+        "1": 28067
+      },
+      "safety_header_top": [
+        {
+          "maxV_mV": 4300,
+          "minV_mV": 1,
+          "maxI_mA": 600,
+          "minI_mA": 500,
+          "count": 2
+        },
+        {
+          "maxV_mV": 4300,
+          "minV_mV": 1,
+          "maxI_mA": 600,
+          "minI_mA": 600,
+          "count": 1
+        },
+        {
+          "maxV_mV": 4300,
+          "minV_mV": 1500,
+          "maxI_mA": 600000,
+          "minI_mA": 100000,
+          "count": 1
+        },
+        {
+          "maxV_mV": 4300,
+          "minV_mV": 5,
+          "maxI_mA": 600,
+          "minI_mA": 500,
+          "count": 1
+        }
+      ],
+      "distinct_protocols": 14
+    },
+    "PNE09": {
+      "unit": "PNE09",
+      "zip": "PNE09.zip",
+      "ctspro_build": null,
+      "sch_layouts_observed": [],
+      "sch_count": 2121,
+      "parse_errors": 0,
+      "unknown_pct": 50.5,
+      "categories_top": {
+        "unknown": 1072,
+        "rate_test": 404,
+        "hppc": 148,
+        "formation": 106,
+        "qpeed": 93,
+        "cycle_life": 75,
+        "storage": 60,
+        "rpt": 51,
+        "charge": 47,
+        "ocv": 19,
+        "eis": 17,
+        "discharge": 12,
+        "rest": 5,
+        "safety": 4,
+        "dcir": 4
+      },
+      "category_share": {
+        "rate_test": 19.0,
+        "hppc": 7.0,
+        "formation": 5.0,
+        "qpeed": 4.4,
+        "cycle_life": 3.5,
+        "storage": 2.8,
+        "rpt": 2.4,
+        "charge": 2.2,
+        "ocv": 0.9
+      },
+      "versions": {
+        "0x00010003": 2060,
+        "0x00010002": 60,
+        "0x00010004": 1
+      },
+      "step_sizes": {
+        "612": 2120,
+        "696": 1
+      },
+      "payload_offsets": {
+        "1760": 2060,
+        "1632": 60,
+        "1844": 1
+      },
+      "top_layouts": [
+        [
+          "0x00010003/612B/15st",
+          434
+        ],
+        [
+          "0x00010003/612B/9st",
+          204
+        ],
+        [
+          "0x00010003/612B/63st",
+          188
+        ],
+        [
+          "0x00010003/612B/39st",
+          163
+        ],
+        [
+          "0x00010003/612B/7st",
+          116
+        ],
+        [
+          "0x00010003/612B/101st",
+          98
+        ],
+        [
+          "0x00010003/612B/60st",
+          64
+        ],
+        [
+          "0x00010003/612B/13st",
+          63
+        ]
+      ],
+      "top_step_counts": [
+        [
+          15,
+          435
+        ],
+        [
+          9,
+          208
+        ],
+        [
+          63,
+          188
+        ],
+        [
+          39,
+          164
+        ],
+        [
+          7,
+          117
+        ],
+        [
+          101,
+          106
+        ],
+        [
+          60,
+          81
+        ],
+        [
+          33,
+          65
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 13137,
+        "both": 276,
+        "neither": 3
+      },
+      "loop_both_pct": 2.1,
+      "current_mA": {
+        "median": 16.3,
+        "p90": 82.5,
+        "max": 174227.0,
+        "top_modes": [
+          [
+            8.25,
+            1423
+          ],
+          [
+            27.225,
+            429
+          ],
+          [
+            17.967,
+            289
+          ],
+          [
+            6.64,
+            252
+          ],
+          [
+            41.25,
+            245
+          ],
+          [
+            82.5,
+            222
+          ],
+          [
+            8.0,
+            200
+          ],
+          [
+            6.7,
+            180
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          5894
+        ],
+        [
+          0.303,
+          1030
+        ],
+        [
+          0.152,
+          880
+        ],
+        [
+          0.05,
+          242
+        ],
+        [
+          0.2,
+          237
+        ],
+        [
+          0.151,
+          221
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 43723,
+        "1": 33997
+      },
+      "safety_header_top": [
+        {
+          "maxV_mV": 4300,
+          "minV_mV": 100,
+          "maxI_mA": 600,
+          "minI_mA": 400,
+          "count": 6
+        },
+        {
+          "maxV_mV": 4300,
+          "minV_mV": 1500,
+          "maxI_mA": 600000,
+          "minI_mA": 100000,
+          "count": 5
+        },
+        {
+          "maxV_mV": 4300,
+          "minV_mV": 100,
+          "maxI_mA": 600,
+          "minI_mA": 600,
+          "count": 3
+        },
+        {
+          "maxV_mV": 4300,
+          "minV_mV": 100,
+          "maxI_mA": 600000,
+          "minI_mA": 100000,
+          "count": 1
+        }
+      ],
+      "distinct_protocols": 16
+    },
+    "PNE22": {
+      "unit": "PNE22",
+      "zip": "PNE22.zip",
+      "ctspro_build": null,
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
+      "sch_count": 1660,
+      "parse_errors": 0,
+      "unknown_pct": 56.3,
+      "categories_top": {
+        "unknown": 935,
+        "rate_test": 225,
+        "formation": 127,
+        "rpt": 114,
+        "hppc": 76,
+        "cycle_life": 66,
+        "storage": 26,
+        "capacheck": 23,
+        "qpeed": 20,
+        "ocv": 16,
+        "discharge": 10,
+        "gitt": 8,
+        "eis": 7,
+        "soc_setting": 4,
+        "rest": 2
+      },
+      "category_share": {
+        "rate_test": 13.6,
+        "formation": 7.7,
+        "rpt": 6.9,
+        "hppc": 4.6,
+        "cycle_life": 4.0,
+        "storage": 1.6,
+        "capacheck": 1.4,
+        "qpeed": 1.2,
+        "ocv": 1.0
+      },
+      "versions": {
+        "0x00010003": 1588,
+        "0x00010002": 72
+      },
+      "step_sizes": {
+        "612": 1660
+      },
+      "payload_offsets": {
+        "1760": 1588,
+        "1632": 72
+      },
+      "top_layouts": [
+        [
+          "0x00010003/612B/9st",
+          454
+        ],
+        [
+          "0x00010003/612B/39st",
+          359
+        ],
+        [
+          "0x00010003/612B/15st",
+          132
+        ],
+        [
+          "0x00010003/612B/7st",
+          103
+        ],
+        [
+          "0x00010003/612B/19st",
+          57
+        ],
+        [
+          "0x00010003/612B/23st",
+          47
+        ],
+        [
+          "0x00010003/612B/30st",
+          47
+        ],
+        [
+          "0x00010003/612B/56st",
+          41
+        ]
+      ],
+      "top_step_counts": [
+        [
+          9,
+          468
+        ],
+        [
+          39,
+          383
+        ],
+        [
+          15,
+          136
+        ],
+        [
+          7,
+          103
+        ],
+        [
+          19,
+          57
+        ],
+        [
+          23,
+          47
+        ],
+        [
+          30,
+          47
+        ],
+        [
+          61,
+          46
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 7712,
+        "both": 79
+      },
+      "loop_both_pct": 1.0,
+      "current_mA": {
+        "median": 6.306,
+        "p90": 26.513,
+        "max": 82300.0,
+        "top_modes": [
+          [
+            1.833,
+            159
+          ],
+          [
+            5.932,
+            132
+          ],
+          [
+            1.842,
+            131
+          ],
+          [
+            1.86,
+            129
+          ],
+          [
+            1.21,
+            128
+          ],
+          [
+            6.317,
+            99
+          ],
+          [
+            7.544,
+            97
+          ],
+          [
+            1.22,
+            96
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          3713
+        ],
+        [
+          0.303,
+          538
+        ],
+        [
+          0.15,
+          139
+        ],
+        [
+          0.152,
+          100
+        ],
+        [
+          0.025,
+          76
+        ],
+        [
+          0.3,
+          76
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 28543,
+        "1": 11996
+      },
+      "safety_header_top": [
+        {
+          "maxV_mV": 4300,
+          "minV_mV": 1,
+          "maxI_mA": 600,
+          "minI_mA": 500,
+          "count": 1
+        },
+        {
+          "maxV_mV": 4300,
+          "minV_mV": 1500,
+          "maxI_mA": 500,
+          "minI_mA": 100,
+          "count": 1
+        }
+      ],
+      "distinct_protocols": 15
+    }
+  },
+  "shared_across_units": {
+    "dominant_version": "0x00010003",
+    "dominant_step_size": 612,
+    "dominant_payload_v3": 1760,
+    "dominant_payload_v2": 1632,
+    "loop_primary_offset": "+564",
+    "current_unit_in_sch": "mA",
+    "cv_cutoff_ratio_mode": 0.5
+  },
+  "category_divergence": [
+    {
+      "unit": "PNE01",
+      "category": "capacheck",
+      "unit_share_pct": 55.6,
+      "corpus_share_pct": 1.2,
+      "delta_pp": 54.4
+    },
+    {
+      "unit": "PNE01",
+      "category": "doe",
+      "unit_share_pct": 22.2,
+      "corpus_share_pct": 0.1,
+      "delta_pp": 22.2
+    },
+    {
+      "unit": "PNE01",
+      "category": "rpt",
+      "unit_share_pct": 13.9,
+      "corpus_share_pct": 2.8,
+      "delta_pp": 11.0
+    },
+    {
+      "unit": "PNE09",
+      "category": "rate_test",
+      "unit_share_pct": 19.0,
+      "corpus_share_pct": 9.4,
+      "delta_pp": 9.7
+    },
+    {
+      "unit": "PNE03",
+      "category": "formation",
+      "unit_share_pct": 13.5,
+      "corpus_share_pct": 5.9,
+      "delta_pp": 7.6
+    },
+    {
+      "unit": "PNE06",
+      "category": "rate_test",
+      "unit_share_pct": 2.1,
+      "corpus_share_pct": 9.4,
+      "delta_pp": -7.2
+    },
+    {
+      "unit": "PNE03",
+      "category": "cycle_life",
+      "unit_share_pct": 12.7,
+      "corpus_share_pct": 5.6,
+      "delta_pp": 7.1
+    },
+    {
+      "unit": "PNE07",
+      "category": "rate_test",
+      "unit_share_pct": 2.7,
+      "corpus_share_pct": 9.4,
+      "delta_pp": -6.7
+    },
+    {
+      "unit": "PNE05",
+      "category": "rate_test",
+      "unit_share_pct": 3.5,
+      "corpus_share_pct": 9.4,
+      "delta_pp": -5.9
+    },
+    {
+      "unit": "PNE02",
+      "category": "rate_test",
+      "unit_share_pct": 15.0,
+      "corpus_share_pct": 9.4,
+      "delta_pp": 5.6
+    },
+    {
+      "unit": "PNE05",
+      "category": "hppc",
+      "unit_share_pct": 10.6,
+      "corpus_share_pct": 5.1,
+      "delta_pp": 5.5
+    },
+    {
+      "unit": "PNE08",
+      "category": "formation",
+      "unit_share_pct": 11.0,
+      "corpus_share_pct": 5.9,
+      "delta_pp": 5.1
+    },
+    {
+      "unit": "PNE06",
+      "category": "formation",
+      "unit_share_pct": 0.9,
+      "corpus_share_pct": 5.9,
+      "delta_pp": -5.0
+    },
+    {
+      "unit": "PNE08",
+      "category": "rpt",
+      "unit_share_pct": 7.8,
+      "corpus_share_pct": 2.8,
+      "delta_pp": 4.9
+    },
+    {
+      "unit": "PNE07",
+      "category": "formation",
+      "unit_share_pct": 1.1,
+      "corpus_share_pct": 5.9,
+      "delta_pp": -4.8
+    },
+    {
+      "unit": "PNE06",
+      "category": "hppc",
+      "unit_share_pct": 0.4,
+      "corpus_share_pct": 5.1,
+      "delta_pp": -4.7
+    },
+    {
+      "unit": "PNE04",
+      "category": "rate_test",
+      "unit_share_pct": 5.0,
+      "corpus_share_pct": 9.4,
+      "delta_pp": -4.3
+    },
+    {
+      "unit": "PNE22",
+      "category": "rate_test",
+      "unit_share_pct": 13.6,
+      "corpus_share_pct": 9.4,
+      "delta_pp": 4.2
+    },
+    {
+      "unit": "PNE07",
+      "category": "cycle_life",
+      "unit_share_pct": 1.6,
+      "corpus_share_pct": 5.6,
+      "delta_pp": -4.0
+    },
+    {
+      "unit": "PNE22",
+      "category": "rpt",
+      "unit_share_pct": 6.9,
+      "corpus_share_pct": 2.8,
+      "delta_pp": 4.0
+    },
+    {
+      "unit": "PNE04",
+      "category": "formation",
+      "unit_share_pct": 2.0,
+      "corpus_share_pct": 5.9,
+      "delta_pp": -3.9
+    },
+    {
+      "unit": "PNE03",
+      "category": "rpt",
+      "unit_share_pct": 6.4,
+      "corpus_share_pct": 2.8,
+      "delta_pp": 3.6
+    },
+    {
+      "unit": "PNE06",
+      "category": "cycle_life",
+      "unit_share_pct": 9.1,
+      "corpus_share_pct": 5.6,
+      "delta_pp": 3.5
+    },
+    {
+      "unit": "PNE05",
+      "category": "cycle_life",
+      "unit_share_pct": 8.9,
+      "corpus_share_pct": 5.6,
+      "delta_pp": 3.3
+    },
+    {
+      "unit": "PNE07",
+      "category": "qpeed",
+      "unit_share_pct": 4.7,
+      "corpus_share_pct": 1.6,
+      "delta_pp": 3.1
+    },
+    {
+      "unit": "PNE02",
+      "category": "hppc",
+      "unit_share_pct": 2.4,
+      "corpus_share_pct": 5.1,
+      "delta_pp": -2.7
+    },
+    {
+      "unit": "PNE04",
+      "category": "rpt",
+      "unit_share_pct": 0.2,
+      "corpus_share_pct": 2.8,
+      "delta_pp": -2.7
+    },
+    {
+      "unit": "PNE09",
+      "category": "qpeed",
+      "unit_share_pct": 4.4,
+      "corpus_share_pct": 1.6,
+      "delta_pp": 2.7
+    },
+    {
+      "unit": "PNE07",
+      "category": "rpt",
+      "unit_share_pct": 0.2,
+      "corpus_share_pct": 2.8,
+      "delta_pp": -2.6
+    },
+    {
+      "unit": "PNE02",
+      "category": "charge",
+      "unit_share_pct": 3.7,
+      "corpus_share_pct": 1.2,
+      "delta_pp": 2.5
+    }
+  ],
+  "unit_unique_traits": {
+    "PNE01": [
+      "696B step records: none",
+      "safety header populated: maxI=200 mA (11 files)",
+      "high typical current (median 28.182 mA vs corpus 7.8)"
+    ],
+    "PNE02": [
+      "696B step records: 2 files",
+      "0x10004 (696 formation): 2 files",
+      "safety header @0x3D8: mostly empty"
+    ],
+    "PNE03": [
+      "696B step records: 8 files",
+      "0x10004 (696 formation): 8 files",
+      "safety header populated: maxI=6000 mA (1 files)",
+      "high typical current (median 64.0 mA vs corpus 7.8)"
+    ],
+    "PNE04": [
+      "696B step records: none",
+      "safety header @0x3D8: mostly empty",
+      "low typical current (median 2.0 mA vs corpus 7.8)"
+    ],
+    "PNE05": [
+      "696B step records: none",
+      "safety header @0x3D8: mostly empty"
+    ],
+    "PNE06": [
+      "696B step records: none",
+      "safety header @0x3D8: mostly empty"
+    ],
+    "PNE07": [
+      "696B step records: none",
+      "safety header @0x3D8: mostly empty"
+    ],
+    "PNE08": [
+      "696B step records: none",
+      "safety header populated: maxI=600 mA (2 files)"
+    ],
+    "PNE09": [
+      "696B step records: 1 files",
+      "0x10004 (696 formation): 1 files",
+      "safety header populated: maxI=600 mA (6 files)"
+    ],
+    "PNE22": [
+      "696B step records: none",
+      "safety header populated: maxI=600 mA (1 files)"
+    ]
+  },
+  "summary_table": [
+    {
+      "unit": "PNE01",
+      "files": 36,
+      "unknown_pct": 8.3,
+      "protocols": 3,
+      "median_mA": 28.182,
+      "max_mA": 128.85,
+      "step_696": 0,
+      "loop_both_pct": 7.7,
+      "top_layout": "0x00010002/612B/15st"
+    },
+    {
+      "unit": "PNE02",
+      "files": 3449,
+      "unknown_pct": 57.3,
+      "protocols": 19,
+      "median_mA": 6.632,
+      "max_mA": 37763.375,
+      "step_696": 2,
+      "loop_both_pct": 1.5,
+      "top_layout": "0x00010003/612B/39st"
+    },
+    {
+      "unit": "PNE03",
+      "files": 1541,
+      "unknown_pct": 45.0,
+      "protocols": 16,
+      "median_mA": 64.0,
+      "max_mA": 6000.0,
+      "step_696": 8,
+      "loop_both_pct": 4.0,
+      "top_layout": "0x00010003/612B/15st"
+    },
+    {
+      "unit": "PNE04",
+      "files": 3273,
+      "unknown_pct": 80.8,
+      "protocols": 12,
+      "median_mA": 2.0,
+      "max_mA": 8153.0,
+      "step_696": 0,
+      "loop_both_pct": 4.4,
+      "top_layout": "0x00010003/612B/9st"
+    },
+    {
+      "unit": "PNE05",
+      "files": 1874,
+      "unknown_pct": 64.2,
+      "protocols": 12,
+      "median_mA": 5.723,
+      "max_mA": 499.0,
+      "step_696": 0,
+      "loop_both_pct": 5.4,
+      "top_layout": "0x00010003/612B/39st"
+    },
+    {
+      "unit": "PNE06",
+      "files": 1074,
+      "unknown_pct": 86.0,
+      "protocols": 6,
+      "median_mA": 7.45,
+      "max_mA": 374.88,
+      "step_696": 0,
+      "loop_both_pct": 3.5,
+      "top_layout": "0x00010003/612B/39st"
+    },
+    {
+      "unit": "PNE07",
+      "files": 1459,
+      "unknown_pct": 86.1,
+      "protocols": 7,
+      "median_mA": 8.05,
+      "max_mA": 499.0,
+      "step_696": 0,
+      "loop_both_pct": 2.3,
+      "top_layout": "0x00010003/612B/39st"
+    },
+    {
+      "unit": "PNE08",
+      "files": 2221,
+      "unknown_pct": 60.8,
+      "protocols": 14,
+      "median_mA": 9.12,
+      "max_mA": 174076.0,
+      "step_696": 0,
+      "loop_both_pct": 2.9,
+      "top_layout": "0x00010003/612B/9st"
+    },
+    {
+      "unit": "PNE09",
+      "files": 2121,
+      "unknown_pct": 50.5,
+      "protocols": 16,
+      "median_mA": 16.3,
+      "max_mA": 174227.0,
+      "step_696": 1,
+      "loop_both_pct": 2.1,
+      "top_layout": "0x00010003/612B/15st"
+    },
+    {
+      "unit": "PNE22",
+      "files": 1660,
+      "unknown_pct": 56.3,
+      "protocols": 15,
+      "median_mA": 6.306,
+      "max_mA": 82300.0,
+      "step_696": 0,
+      "loop_both_pct": 1.0,
+      "top_layout": "0x00010003/612B/9st"
+    }
+  ]
+}

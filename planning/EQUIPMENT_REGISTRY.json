@@ -1,0 +1,165 @@
+{
+  "schema": "pne_scheduler.equipment_registry/v1",
+  "intake_date": "2026-09-02",
+  "policies": {
+    "cycler_analysis_zip_naming": "Only archives named PNE##.zip (unit number in zip filename) are used for per-cycler SCH binary and equipment analysis.",
+    "per_unit_sch_layout": "SCH framing and field maps may differ by PNE unit; registry holds per-unit observed and confirmed layouts.",
+    "cts_version_per_unit": "CTSPro build from PPT must be recorded per unit; binary layout may vary by CTS build as well as nFileVersion."
+  },
+  "ratings_ref": "planning/EQUIPMENT_CURRENT_RATINGS.json",
+  "units": {
+    "PNE01": {
+      "corpus_zip": "PNE01.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 500,
+      "rating": "500mA",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null
+    },
+    "PNE02": {
+      "corpus_zip": "PNE02.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "aliases": ["PNE2", "PNE 2"],
+      "rating_mA": 500,
+      "rating": "500mA",
+      "ctspro_build": "CYCC-1004-S01-R004-N01",
+      "ctspro_build_source": "golden_fixture_intake_ppt",
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false },
+        { "file_version": "0x00010004", "payload_offset": 1844, "step_size": 696, "dominant": false }
+      ],
+      "sch_layouts_confirmed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "golden_ids": ["golden-cycle-612-long", "golden-capacheck-612-b0"] }
+      ],
+      "writer_layout_key": "0x00010003/612"
+    },
+    "PNE03": {
+      "corpus_zip": "PNE03.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 6000,
+      "rating": "6A",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false },
+        { "file_version": "0x00010004", "payload_offset": 1844, "step_size": 696, "dominant": false }
+      ],
+      "writer_layout_key": null
+    },
+    "PNE04": {
+      "corpus_zip": "PNE04.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 500,
+      "rating": "500mA",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null
+    },
+    "PNE05": {
+      "corpus_zip": "PNE05.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 500,
+      "rating": "500mA",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null
+    },
+    "PNE06": {
+      "corpus_zip": "PNE06.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 500,
+      "rating": "500mA",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true }
+      ],
+      "writer_layout_key": null,
+      "notes": "Corpus 2026-09-02: 1074 sch, 86% unknown filenames; 0x10003/612 only"
+    },
+    "PNE07": {
+      "corpus_zip": "PNE07.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 500,
+      "rating": "500mA",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Corpus 2026-09-02: 1459 sch, 86% unknown; qpeed-heavy classified share"
+    },
+    "PNE08": {
+      "corpus_zip": "PNE08.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 500,
+      "rating": "500mA",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Corpus 2026-09-02: 2221 sch; formation/rpt rich; some files exceed 500mA in SCH mA field (C-rate×Q_nom)"
+    },
+    "PNE09": {
+      "corpus_zip": "PNE09.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 500,
+      "rating": "500mA",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false },
+        { "file_version": "0x00010004", "payload_offset": 1844, "step_size": 696, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Corpus 2026-09-02: 2121 sch, 50.5% unknown; rate_test/hppc heavy; 1×696B file"
+    },
+    "PNE16": {
+      "corpus_zip": null,
+      "corpus_zip_allowed_for_analysis": false,
+      "rating_mA": 6000,
+      "rating": "6A",
+      "ctspro_build": "CYCC-1004-S01-R004-N01",
+      "ctspro_build_source": "golden_fixture_intake_ppt",
+      "sch_layouts_confirmed": [
+        { "file_version": "0x00010004", "payload_offset": 1844, "step_size": 696, "golden_ids": ["golden-formation-696", "golden-cycle-696"] }
+      ],
+      "writer_layout_key": "0x00010004/696",
+      "notes": "Golden fixtures only until PNE16.zip is provided"
+    },
+    "PNE22": {
+      "corpus_zip": "PNE22.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 100,
+      "rating": "100mA",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null
+    }
+  }
+}

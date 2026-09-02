@@ -7,6 +7,10 @@
 | 2026-08-31 | Initial draft: documented the structure based on `sch_file_structure_20250211.xlsx`, ASSB_Analyzer_dev, and the Ensol PNE converter; established the roadmap for a visual modular schedule builder |
 | 2026-08-31 | Created the `pne_scheduler/` package — IR, C-rate, module stubs, CLI, and example `.schproj` |
 | 2026-08-31 | Reassessed repository status — secured the original SCH archive and reprioritized implementation and validation |
+| 2026-09-01 | Ensol sch_maker zip ingested; 612-byte mV/mA offset map adopted (`schema/ensol_v612.py`) |
+| 2026-09-02 | Lab data policy: only `PNE##.zip` for cycler analysis; per-unit SCH layout + CTS build registry (`LAB_DATA_POLICY.md`, `EQUIPMENT_REGISTRY.json`) |
+| 2026-09-02 | Project directory map + code rules: [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md) |
+| 2026-09-02 | MD docs consolidated: [`planning/README.md`](README.md), [`LAB_CORPUS_REPORT.md`](LAB_CORPUS_REPORT.md), [`docs/README.md`](../docs/README.md), [`docs/GATE_B.md`](../docs/GATE_B.md) |
 
 ---
 
@@ -30,6 +34,7 @@ Enable creation of `.sch` binary schedule files for PNE cyclers **without using 
 | `schema/reference/sch_file_structure_20250211.xlsx` | Expected official PNE field definitions (by version) | Canonical reference; JSON export in same folder |
 | `ASSB_Analyzer_dev` → `assb_analyzer/io/pne_converter.py` | Reading, validation, and metadata extraction | Optional external validator; not included in the repository |
 | `_vendor/Ensol_PNE_framework/pne_app/io/pne_converter.py` | Partial reader for CycleNum and DCIR reference | Local vendor copy |
+| `vendor/ensol_sch_maker_ref/` (`Ensol_sch_maker` zip) | **Working 612-byte writer/reader**, mV/mA offsets, rescaler, block expanders | Adopted → `schema/ensol_v612.py`, parser/compiler fixes; see `planning/ENSOL_SCH_MAKER_ADOPTION.md` |
 | `assb_analyzer/io/cell_c_rate_reference.py` | C-rate ↔ capacity ↔ current (analysis side) | **Logic reusable by the writer** |
 | `assb_analyzer/io/classification_bulk_apply.py` | Comparison of identical SCH structure fingerprints | Bulk application of compatible Source values |
 
@@ -375,7 +380,38 @@ than offline file generation and they depend on unresolved schemas.
 
 ## 6. Implementation Roadmap
 
-### 6.1 Repository Assessment Results as of 2026-08-31
+Work proceeds **Gate A → B → C → D → E → F** in order. Do not start a later Gate until the
+current Gate’s exit criteria are met (or an explicit waiver is recorded in §11).
+
+```
+Gate A  개발 기반          ✅ complete (local)
+  ↓
+Gate B  바이너리 스키마    🔄 in progress  ← current focus
+  ↓
+Gate C  호환 SCH writer
+  ↓
+Gate D  모듈 픽스처 검증
+  ↓
+Gate E  편집 UX / 고급 기능
+  ↓
+Gate F  운영 릴리스 / 추적성
+```
+
+### 6.0 Gate maintenance rules
+
+When new problems appear during implementation:
+
+1. **Log first** — add a row to §11 *Discovered issues backlog* with date, gate, severity, and owner.
+2. **Assign a gate** — blocking schema/writer issues stay in B or C; module fidelity → D; UX → E; release process → F.
+3. **Update the active gate** — move tasks into that gate’s task table and mark status (`open` / `in progress` / `done`).
+4. **Record resolution** — close the §11 row when exit criteria or a documented waiver is met.
+5. **Do not skip gates** — if Gate C is blocked by a B item, fix B first; do not mark C complete with a hidden dependency.
+
+Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` · `⚠️ blocked`
+
+---
+
+### 6.1 Repository Assessment Results as of 2026-09-01
 
 | Area | Status | Evidence / assessment |
 |------|--------|-----------------------|
@@ -389,129 +425,165 @@ than offline file generation and they depend on unresolved schemas.
 | SCH writer | **Incomplete/guarded** | Uses a 512-byte placeholder header; CLI output now requires explicit experimental acknowledgement and remains offline-only |
 | Round-trip validator | **Incomplete** | The repository can re-read output, but currently compares only step count and has no independent semantic field comparison |
 | GUI | **Partially complete** | Viewer/resume/bulk editor exist; first flow editor supports module connections, graph validation, property editing, save/load, and step preview |
-| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 100 tests |
+| Test execution environment | **Restored** | Editable install and wheel import succeed; local suite **112 passed** (sync README badge) |
 
-### 6.2 Gate A — Restore the Development Baseline (Highest Priority)
+---
 
-| # | Task | Completion criteria |
-|---|------|---------------------|
-| A1 | Fix `pyproject.toml` package discovery/source layout | `import pne_scheduler` succeeds after an editable install in a clean environment |
-| A2 | Establish the test command and CI baseline | All `python -m pytest tests/ -q` tests pass, and the actual pass count matches the README |
-| A3 | Add fixture inventory tests | Automatically verify the SCH counts in the ZIPs (8, 93) and the presence of the HPPC fixture |
+### 6.2 Gate A — Restore the Development Baseline
 
-Gate A is complete for local development. Hosted CI remains a separate release requirement
-under F6; local pass counts alone are not equipment-compatibility evidence.
+| | |
+|---|---|
+| **Status** | ✅ **Complete** (local) |
+| **Depends on** | — |
+| **Exit criteria** | Clean editable install; pytest green; 102-fixture inventory locked |
+| **Next gate** | Gate B |
+
+| # | Task | Status | Completion criteria |
+|---|------|--------|---------------------|
+| A1 | Fix `pyproject.toml` package discovery/source layout | ✅ | `import pne_scheduler` succeeds after editable install in a clean environment |
+| A2 | Establish the test command and CI baseline | ✅ local | `python -m pytest tests/ -q` passes; README badge matches count |
+| A3 | Add fixture inventory tests | ✅ | ZIP counts (8, 93) + HPPC presence verified automatically |
+
+**Notes:** Hosted CI is deferred to **F6**; local pass count is not equipment-compatibility evidence.
 
 **Progress record**
-- A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
-- A3 complete: automatically verified that the two ZIPs match the 8-file and 93-file extracted directory listings, for a total of 102 files including HPPC
-- A2 complete locally: confirmed `100 passed` and synchronized the README test badge;
-  adding a hosted CI workflow remains a separate repository-infrastructure task
+- A1: package/subpackage imports verified from editable install and clean-target wheel
+- A3: 8 + 93 + 1 HPPC = 102 fixtures locked
+- A2: 112 tests pass locally; README still shows 100 — update badge when convenient
+
+---
 
 ### 6.3 Gate B — Establish the Binary Schema as the Single Source of Truth
 
-| # | Task | Completion criteria |
-|---|------|---------------------|
-| B0 | Define PNE raw-unit/profile mapping | Resolve mV/mA scaling, offset `+12` mode value, L-level encoding at `+16`, and INI current-range behavior per target profile |
-| B1 | Create header/step field tables for the 612/696 layouts | Manage offset, dtype, size, and version source in one place in the code |
-| B2 | Resolve parser/schema/compiler offset discrepancies | In particular, compare `fEndV`, `fEndI`, and `fEndC` against originals, Excel, and ASSB results |
-| B3 | Read regression over all 102 original files | Detect version, payload offset, step size/count for all 8 + 93 + HPPC files |
-| B4 | Semantic golden tests for representative fixtures | Step types and core values for Formation/Cycle/RPT/QPEED/HPPC match golden data |
-| B5 | Validate controlled-pair intake metadata | Reject incomplete equipment/version/value provenance before promoting field confidence |
+| | |
+|---|---|
+| **Status** | 🔄 **In progress** ← **current focus** |
+| **Depends on** | Gate A |
+| **Exit criteria** | Raw-unit contract resolved; parser/schema/compiler agree; semantic goldens for representative fixtures; intake metadata gates evidence promotion |
+| **Next gate** | Gate C (do not start C1+ until B0 and B5 are done) |
 
-The end-condition offsets in `schema/v0x00010003_612.py`, `io/sch_parser.py`, and
-`engine/compiler.py` have been unified based on analysis of the original corpus. Analysis
-values generated before the correction are treated only as reference material; the regenerated
-manifest and golden tests are authoritative.
+| # | Task | Status | Completion criteria |
+|---|------|--------|---------------------|
+| B0 | Define PNE raw-unit/profile mapping | 🔄 | mV/mA scaling, offset `+12`/`+16`/`+20`, INI current-range per target profile |
+| B1 | Header/step field tables for 612/696 | 🔄 | Offset, dtype, size, version in one registry (`schema/fields.py`) |
+| B2 | Parser/schema/compiler offset alignment | 🔄 | `fEndV`, `fEndI`, `fEndC` match originals, Excel, ASSB where applicable |
+| B3 | Read regression over all 102 files | ✅ | Version, payload offset, step size/count cataloged |
+| B4 | Semantic golden tests | 🔄 | `GOLDEN_SEMANTIC_EXPECTATIONS.json` + 7 fixture byte checks; parser cross-check |
+| B5 | Controlled-pair intake validation | ⏳ | Reject incomplete equipment/CTSPro/value provenance before promoting field confidence |
+
+**Recommended order inside Gate B:** B0 → B5 → B2 → B4 → finish B1 unknowns.
 
 **Progress record**
-- B1 partially complete: `schema/fields.py` records known offsets with explicit evidence
-  confidence and validates dtype, size, overlap, bounds, and writer-ready confidence; unknown
-  and late version-specific fields remain intentionally opaque
-- The evidence registry is now the canonical source for shared offsets, including LOOP
-  target/count; legacy 612-byte exports are derived from it to prevent parallel-map drift
-- B3 complete: `example/fixtures/catalog.json` locks SHA-256, version, payload offset,
-  step size, step count, and equipment provenance for all 102 checked-in fixtures
-- Layout detection now uses the v2/v3/v4 registry first and retains structural scanning
-  only as a guarded fallback for unknown producers
-- Controlled before/after evidence can be ingested with
-  `pne_scheduler.tools.compare_sch` and `docs/SCH_VALIDATION_INTAKE.md`
+- B1 partial: evidence registry with confidence levels; LOOP at `+48/+52` confirmed
+- B3: `example/fixtures/catalog.json` locks geometry and provenance for 102 files
+- End-condition offsets unified: `fEndV=28`, `fEndI=32`, `fEndC=36` across parser/schema/compiler
+- Intake tooling: `tools/compare_sch`, `docs/GATE_B.md`
+- **Ensol sch_maker adoption (2026-09-01):** validated 612-byte map — `+12` mV setpoint, `+16` mA current, `+20` s duration, `+28`/`+32` end V/I; parser + compiler updated; golden capacheck regression
+
+**Blocking items (see also §11):** PNE voltage/L-level encoding; dual capacity models (viewer vs writer Q_nom).
+
+---
 
 ### 6.4 Gate C — Actually Compatible SCH Writer
 
-| # | Task | Completion criteria |
-|---|------|---------------------|
-| C0 | Guard experimental output | Default CLI refuses from-scratch output; explicit acknowledgement still prints a non-equipment warning |
-| C0.1 | Build validation manifest | Every output records source/template hash, target profile, changed fields, evidence levels, and validation results |
-| C0.2 | Template-preserving patch vertical slice | Change only allowlisted writer-ready fields in an approved CTSPro template and prove all other bytes are preserved |
-| C1 | Full header/test-info/cell-check writer for `0x00010003` | Generate the defined payload offset and size without placeholders |
-| C2 | Complete the step compiler | Write mode, end conditions, loop/goto, sampling, SOC, and DCR fields |
-| C3 | Make the internal round-trip validator independent | Semantic write → read comparison without an external ASSB installation |
-| C4 | Cross-validate against the external parser | Internal parser results match ASSB results when available |
-| C5 | PNE PC/equipment smoke test | Successfully load a Rest → CC Charge → END file and record the checklist |
-| C6 | Extend writer for `0x00010004/696` | Semantically compare the dominant lab archive format (89/93) with representative fixtures |
+| | |
+|---|---|
+| **Status** | 🔄 **Started** (safety shell only; core writer ⏳) |
+| **Depends on** | Gate B exit (especially B0, B5) |
+| **Exit criteria** | 612 writer round-trips semantically; 696 lab parity; PNE PC smoke test recorded; no placeholder header |
+| **Next gate** | Gate D |
 
-The 612-byte implementation is the first vertical slice for establishing the schema. Support
-for 696-byte records is essential for actual lab parity, so the writer must not be marked fully
-complete until C6 is finished. Until a successful PNE load, do not document CLI `build`
-output as “equipment-executable.”
+| # | Task | Status | Completion criteria |
+|---|------|--------|---------------------|
+| C0 | Guard experimental output | ✅ | Default CLI blocks `build`; explicit flag + equipment warning |
+| C0.1 | Build validation manifest | ⏳ | Every output records template hash, profile, changed fields, evidence, validation |
+| C0.2 | Template-preserving patch slice | 🔄 | Allowlisted writer-ready fields only; all other bytes preserved |
+| C1 | Full header for `0x00010003` | ⏳ | Payload offset/size without 512-byte placeholder |
+| C2 | Complete step compiler | ⏳ | mode, end conditions, loop/goto, sampling, SOC, DCR |
+| C3 | Internal round-trip validator | ⏳ | Semantic write → read without external ASSB |
+| C4 | External parser cross-check | ⏳ | Internal results match vendored ASSB when run |
+| C5 | PNE PC/equipment smoke test | ⏳ | Rest → CC Charge → END loads; checklist recorded |
+| C6 | Extend to `0x00010004/696` | ⏳ | Dominant lab format (89/93 fixtures) semantically verified |
+
+**Recommended order inside Gate C:** C0.2 finish → C1 → C2 → C3 → C4 → C5 → C6.
+
+**Rules**
+- 612-byte slice first; **do not mark Gate C complete until C6 passes**
+- Until C5 passes, never label CLI `build` output as equipment-executable
 
 **Progress record**
-- C0 complete: `build` requires `--allow-experimental-output`, prints an equipment warning,
-  and has regression coverage for both blocked and acknowledged paths
-- C0.2 partially complete: `patch-sch` verifies the exact template SHA-256, preserves header,
-  file length, topology, and undeclared bytes, re-reads output structurally, and emits a
-  provenance report; every write requires explicit analysis-only acknowledgement, and
-  semantic fields remain blocked unless separately enabled for offline work
-- Controlled diff reports now include source SHA-256, parsed geometry, change totals, and
-  unparsed-tail detection so evidence cannot silently ignore bytes after END
+- C0: `--allow-experimental-output` gate with regression tests
+- C0.2 partial: `patch-sch` SHA-256 lock, byte preservation, structural re-read, provenance report; semantic fields still blocked pending B5 evidence
+
+---
 
 ### 6.5 Gate D — Experiment Module Fixture Fidelity
 
-| Priority | Module | Validation fixture / criteria |
-|----------|--------|-------------------------------|
-| P0 | Integration harness | `expand → compile → internal parse → semantic compare`, with no external parser required |
-| P0 | Capacity model contract | A given Cell Profile produces the same Q_nom/current in viewer inference and writer compilation |
-| P0 | Formation, Cycle Life, Rest | Compare step topology, current, voltage, and loop semantics with representative originals |
-| P0 | RPT, DC-IR | Semantic diff of SOC reference, DCR window, and goto relationships |
-| P1 | HPPC | Compare the SOC staircase and bidirectional pulses in `HPPC_Full range.sch` |
-| P1 | capacheck, QPEED, in-situ cycle | Compare golden topology for the 8-file bimodal archive |
+| | |
+|---|---|
+| **Status** | ⏳ **Not started** (module `expand` prototypes exist) |
+| **Depends on** | Gate C exit (C2, C3 minimum) |
+| **Exit criteria** | Every P0 module passes `validate → expand → compile → parse → semantic compare` in one integration test |
+| **Next gate** | Gate E |
 
-Each module must pass `validate`, `expand`, binary compile, and round-trip in a single
-integration test before it is marked complete.
+| Priority | Module / harness | Status | Validation fixture / criteria |
+|----------|------------------|--------|-------------------------------|
+| P0 | Integration harness | ⏳ | End-to-end pipeline without external parser |
+| P0 | Capacity model contract | ⏳ | Same Q_nom/current in viewer inference and writer compile |
+| P0 | Formation, Cycle Life, Rest | ⏳ | Topology, I/V, loop vs representative originals |
+| P0 | RPT, DC-IR | ⏳ | SOC reference, DCR window, goto semantics |
+| P1 | HPPC | ⏳ | SOC staircase + pulses in `HPPC_Full range.sch` |
+| P1 | capacheck, QPEED, in-situ | ⏳ | Golden topology for 8-file bimodal archive |
+
+**Recommended order inside Gate D:** harness → capacity contract → Formation/Rest → Cycle Life → RPT/DC-IR → HPPC → capacheck/QPEED.
+
+---
 
 ### 6.6 Gate E — Editing UX and Advanced Features
 
-1. Fixture-based regression tests for the existing viewer/resume/bulk editor
-2. Flow editor module palette, connection canvas, property panel, and live preview
-3. Validation feedback and blocking of unsafe conditions before export
-4. `.sch` → IR import, 0x00010007/EIS, and fingerprint integration
-5. pne_studio integration
+| | |
+|---|---|
+| **Status** | 🔄 **Partial** (read/edit tools exist; export UX ⏳) |
+| **Depends on** | Gate C exit (semantic export requires trusted writer) |
+| **Exit criteria** | Flow editor production-ready; unsafe export blocked; optional `.sch` → IR import |
+| **Next gate** | Gate F |
 
-Gate E proceeds after writer compatibility is secured in Gate C.
+| # | Task | Status | Completion criteria |
+|---|------|--------|---------------------|
+| E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage |
+| E2 | Flow editor (palette, canvas, properties, preview) | 🔄 | Linear DAG editor usable for real projects |
+| E3 | Pre-export validation UX | ⏳ | Block invalid loops, missing END, V/I violations |
+| E4 | `.sch` → IR import (read-only) | ⏳ | Reverse-parse for review/clone before editable round-trip |
+| E5 | Advanced: 0x00010007/EIS, fingerprint | ⏳ | Deferred until C6 + explicit schema work |
+| E6 | pne_studio2 integration | ⏳ | Shared cell profile and export workflow |
 
 **Progress record**
-- A first linear-flow editor is available through `pne_scheduler flow` and
-  `run_pne_scheduler_flow.py`
-- The editor rejects cycles and branching, supports `.schproj` load/save and Cell Profile
-  editing, and warns about disconnected graphs or non-final/multiple END steps
-- Drag positioning, richer property widgets, undo/redo, semantic SCH export, and GUI
-  automation remain incomplete
+- `pne_scheduler flow` / `run_pne_scheduler_flow.py`: linear graph, `.schproj` load/save, Cell Profile, step preview
+- Remaining: drag layout, rich widgets, undo/redo, **semantic SCH export**, GUI automation
+
+**Rule:** Do not prioritize E3/E4 semantic export until Gate C is complete.
+
+---
 
 ### 6.7 Gate F — Operational Release and Traceability
 
-| # | Task | Completion criteria |
-|---|------|---------------------|
-| F1 | Target equipment compatibility report | Export names the intended PNE unit/range, CTSPro version, layout, and unresolved assumptions |
-| F2 | Reopen approval record | CTSPro opens the exact SHA-256 artifact and the operator records the result |
-| F3 | Equipment smoke-test protocol | Empty-channel or approved dummy-cell procedure, abort criteria, expected readings, and signed result |
-| F4 | Artifact immutability | The smoke-tested hash is identical to the released hash; regenerated files require reapproval |
-| F5 | Release status labels | Distinguish `analysis-only`, `CTSPro-reopen-verified`, and `equipment-verified` in CLI/UI output |
-| F6 | Hosted CI | Packaging, all fixture tests, schema invariants, and documentation checks run on every pull request |
+| | |
+|---|---|
+| **Status** | ⏳ **Not started** |
+| **Depends on** | Gate C minimum (C5); full product sign-off needs Gate D |
+| **Exit criteria** | Equipment-verified artifact with immutable hash, documented profile, hosted CI |
+| **Next gate** | — (maintenance / version bumps) |
 
-No feature may display “equipment-ready” until F1–F4 pass for the exact artifact and target
-profile. Verification on one current range or CTSPro version does not automatically transfer
-to another profile.
+| # | Task | Status | Completion criteria |
+|---|------|--------|---------------------|
+| F1 | Target equipment compatibility report | ⏳ | PNE unit/range, CTSPro version, layout, open assumptions |
+| F2 | Reopen approval record | ⏳ | Exact SHA-256 opens in CTSPro; operator result logged |
+| F3 | Equipment smoke-test protocol | ⏳ | Dummy-cell procedure, abort criteria, signed result |
+| F4 | Artifact immutability | ⏳ | Released hash == smoke-tested hash; reapproval on change |
+| F5 | Release status labels | ⏳ | `analysis-only` / `CTSPro-reopen-verified` / `equipment-verified` in CLI/UI |
+| F6 | Hosted CI | ⏳ | Packaging, fixtures, schema invariants, doc checks on every PR |
+
+**Rule:** No “equipment-ready” label until F1–F4 pass for the **exact** artifact and target profile.
 
 ---
 
@@ -577,8 +649,8 @@ tests to be skipped.
 | Mismatch between lab format and writer target | **Confirmed** | 89 of 93 files use `0x10004/696`; proceed with Gate C6 immediately after 612 validation |
 | Automatic selection of 612 vs 696 byte step size | Partially understood | Validate version→size mapping against the 102 secured measured sch files |
 | PNE raw current unit (mA vs A) | Depends on ini range | Compare Cell range profile with ASSB `unit_scale` |
-| PNE voltage/L-level encoding | **Blocking writer** | Controlled pairs must distinguish offset `+12` mV setpoints from the legacy `fVref` slot at `+16` |
-| Dual capacity models | **Blocking writer** | Reconcile explicit `CellProfile.nominal_capacity_mAh` with stack/L-level inferred Q_nom before compiling current |
+| PNE voltage/L-level encoding | **Partially resolved (612)** | Ensol map: `+12` mV (not `+16`); L-level fVref heuristic only for 15–80 V range; QPEED still needs pair |
+| Dual capacity models | **Writer path resolved** | Writer uses explicit `cell_capacity_mAh` (= 1C mA); viewer may still infer Q_nom |
 | Internal structure of `FILE_GRADE`, `STRUCT_EIS_SET` | Only names are present in Excel | Defer 0x00010007 to Phase 4 |
 | Recommended Δt/ΔV/ΔQ values | UNKNOWN in cyclediag | Reverse-extract from internal standard sch samples |
 | Writer validation on physical equipment | Not started | PNE PC load test is mandatory in Gate C5 |
@@ -593,20 +665,26 @@ tests to be skipped.
 
 ---
 
-## 9. Immediate Next Actions
+## 9. Current focus (active gate)
 
-1. ✅ **Restore packaging** — completed editable install and clean-target wheel import validation
-2. ✅ **Add automatic fixture checks** — established 101 archive/extracted files + 1 HPPC file as test inputs
-3. ✅ **Resolve internal offset conflict** — unified parser/schema/compiler locations for `fEndV/fEndI/fEndC`
-4. **Validate intake metadata** — make controlled before/after pairs reject incomplete equipment, CTSPro, and changed-value provenance
-5. ✅ **Full reader regression test** — locked layout, step count, hash, and EOF geometry for all 102 files
-6. **Resolve the raw-unit/capacity contract** — offset `+12`, `+16`, mV/mA scaling, INI range, and one Q_nom source
-7. **Externally confirm field semantics** — prioritize nonzero `fEndC`, sampling, DCR, and goto controlled pairs
-8. **Implement safe patch vertical slice** — approved 612-byte template, allowlisted field, exact preservation report
-9. **Implement writer header** — complete the from-scratch schema/writer vertical slice for `0x00010003/612`
-10. **696-byte lab parity** — extend patching/writing for `0x00010004/696`, which accounts for 89/93 lab fixtures
-11. **End-to-end module validation** — Formation → Cycle Life → RPT/DC-IR order
-12. **Release-gated PNE test** — reopen, exact hash, target profile, and approved equipment procedure
+**Active gate: B** — binary schema as single source of truth.
+
+Execute in this order:
+
+| Step | Gate | Action |
+|------|------|--------|
+| 1 | B5 | Validate intake metadata — reject incomplete controlled-pair provenance |
+| 2 | B0 | Resolve raw-unit/capacity contract (`+12`, `+16`, mV/mA, INI range, one Q_nom source) |
+| 3 | B2/B4 | Externally confirm field semantics (`fEndC`, sampling, DCR, goto) via controlled pairs |
+| 4 | C0.2 | Finish safe patch vertical slice (writer-ready allowlist + preservation report) |
+| 5 | C1–C3 | Writer header + full compiler + internal round-trip |
+| 6 | C6 | 696-byte lab parity (89/93 fixtures) |
+| 7 | D | Module E2E validation (Formation → Cycle → RPT/DC-IR) |
+| 8 | F | Release-gated PNE smoke test |
+
+Completed prerequisites: Gate A; B3; internal end-condition offset unification.
+
+When a step surfaces a new blocker, log it in §11 before changing gate order.
 
 ---
 
@@ -614,9 +692,29 @@ tests to be skipped.
 
 | Path | Content |
 |------|---------|
-| `c:\sch_file_structure_20250211.xlsx` | Official PNE field specification |
+| `schema/reference/sch_file_structure_20250211.xlsx` | Official PNE field specification |
 | `ASSB_Analyzer_dev/assb_analyzer/io/pne_converter.py` | SCH parser (read), current conditions, DCIR SOC rules |
 | `ASSB_Analyzer_dev/assb_analyzer/io/cell_c_rate_reference.py` | C-rate ↔ capacity |
 | `ASSB_Analyzer_dev/assb_analyzer/io/classification_bulk_apply.py` | SCH structure fingerprint |
 | `_vendor/Ensol_PNE_framework/pne_app/io/pne_converter.py` | Local partial reader |
 | `pne_studio2/assets/presets/06_assb_design_stack.json` | Cell design preset (reference for capacity estimation) |
+
+---
+
+## 11. Discovered issues backlog
+
+New problems found during implementation are recorded here first, then promoted into the
+relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
+
+| Date | Gate | Severity | Issue | Status | Resolution / next action |
+|------|------|----------|-------|--------|--------------------------|
+| 2026-08-31 | B | blocking | PNE voltage/L-level encoding (`+12` mode vs `+16` fVref) | open | Needs controlled pair per target profile (B0) |
+| 2026-08-31 | B | blocking | Dual capacity models (CellProfile vs stack-inferred Q_nom) | open | Single Q_nom contract before writer compile (B0, D capacity harness) |
+| 2026-08-31 | B | normal | Controlled-pair metadata incomplete → evidence promotion unsafe | open | Implement B5 intake schema validation |
+| 2026-08-31 | C | normal | 89/93 lab fixtures use `0x10004/696`, not 612-byte layout | open | C6 after 612 slice; separate field map (not +84 append) |
+| 2026-08-31 | E | safety | Resume may renumber steps without goto remap proof | open | Block or remap only after semantic confirmation; track under E1/resume |
+| 2026-09-01 | B | low | README test badge (100) lags actual count (125) | open | Sync badge in README when touching docs |
+| 2026-09-01 | B | normal | B5 intake validator implemented; awaiting real pair files | in progress | `validate/intake.py`, `schema/validation_intake.schema.json` |
+| 2026-09-01 | B | normal | fEndV unit mismatch (fixture mV vs compiler V) | resolved | Ensol adoption; `tests/test_unit_contract.py` |
+| 2026-09-01 | B/D | normal | Golden fixtures locked from user intake (7 selected, PNE02+PNE16) | in progress | `planning/GOLDEN_FIXTURES_LOCKED.json` |
+| | | | *(add new rows here)* | | |

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Battery Scheduler</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Top bar ─────────────────────────────────────────────────────────── -->
+<nav class="navbar navbar-dark bg-dark px-3 py-2">
+  <span class="navbar-brand fw-bold"><i class="bi bi-battery-charging"></i> Battery Scheduler</span>
+  <div class="d-flex align-items-center gap-3">
+    <div class="d-flex align-items-center gap-2">
+      <label class="text-white-50 small mb-0">스케줄명</label>
+      <input id="scheduleName" type="text" class="form-control form-control-sm" style="width:200px"
+             value="MySchedule" placeholder="스케줄 이름">
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <label class="text-white-50 small mb-0">셀 용량</label>
+      <input id="cellCapacity" type="number" class="form-control form-control-sm" style="width:90px"
+             value="100" min="1" step="1">
+      <span class="text-white-50 small">mAh</span>
+    </div>
+    <button class="btn btn-outline-light btn-sm" data-bs-toggle="collapse" data-bs-target="#safetyPanel">
+      <i class="bi bi-shield"></i> 안전 한계
+    </button>
+    <div class="vr bg-secondary"></div>
+    <button class="btn btn-outline-warning btn-sm" onclick="saveSchedule()"><i class="bi bi-save"></i> 저장</button>
+    <button class="btn btn-outline-info btn-sm" onclick="showLoadModal()"><i class="bi bi-folder2-open"></i> 불러오기</button>
+    <button class="btn btn-outline-success btn-sm" onclick="showPreview()"><i class="bi bi-diagram-3"></i> 미리보기</button>
+    <button class="btn btn-success btn-sm" onclick="exportSch()"><i class="bi bi-download"></i> .sch 내보내기</button>
+  </div>
+</nav>
+
+<!-- Safety panel (collapse) -->
+<div class="collapse bg-dark border-bottom border-secondary px-4 py-2" id="safetyPanel">
+  <div class="d-flex flex-wrap gap-3 align-items-center py-1">
+    <span class="text-white-50 small fw-bold">안전 한계</span>
+    <div class="d-flex align-items-center gap-1">
+      <label class="text-white-50 small mb-0">최대전압</label>
+      <input id="safeMaxV" type="number" class="form-control form-control-sm" style="width:65px" value="4.3" step="0.1">
+      <span class="text-white-50 small">V</span>
+    </div>
+    <div class="d-flex align-items-center gap-1">
+      <label class="text-white-50 small mb-0">최소전압</label>
+      <input id="safeMinV" type="number" class="form-control form-control-sm" style="width:65px" value="0" step="0.1">
+      <span class="text-white-50 small">V</span>
+    </div>
+    <div class="d-flex align-items-center gap-1">
+      <label class="text-white-50 small mb-0">최대전류</label>
+      <input id="safeMaxI" type="number" class="form-control form-control-sm" style="width:75px" value="0" step="1">
+      <span class="text-white-50 small">mA</span>
+    </div>
+    <div class="d-flex align-items-center gap-1">
+      <label class="text-white-50 small mb-0">최소전류</label>
+      <input id="safeMinI" type="number" class="form-control form-control-sm" style="width:75px" value="0" step="1">
+      <span class="text-white-50 small">mA</span>
+    </div>
+    <div class="d-flex align-items-center gap-1">
+      <label class="text-white-50 small mb-0">최대용량</label>
+      <input id="safeMaxCap" type="number" class="form-control form-control-sm" style="width:80px" value="200" step="10">
+      <span class="text-white-50 small">mAh</span>
+    </div>
+    <div class="d-flex align-items-center gap-1">
+      <label class="text-white-50 small mb-0">최대온도</label>
+      <input id="safeMaxT" type="number" class="form-control form-control-sm" style="width:65px" value="70" step="1">
+      <span class="text-white-50 small">°C</span>
+    </div>
+    <span class="text-white-50 small">(0 = 무제한)</span>
+  </div>
+</div>
+
+<!-- ── Main layout ─────────────────────────────────────────────────────── -->
+<div class="d-flex" style="height:calc(100vh - 56px); overflow:hidden">
+
+  <!-- Left: Block palette -->
+  <div class="palette-panel bg-light border-end p-3" style="width:200px; overflow-y:auto">
+    <p class="text-muted small fw-bold mb-2">블록 추가</p>
+
+    <p class="text-muted small mb-1 mt-3">준비</p>
+    <button class="btn btn-palette w-100 mb-2" onclick="addBlock('capacity_check')">
+      <i class="bi bi-rulers"></i> Capacity Check
+    </button>
+    <button class="btn btn-palette w-100 mb-2" onclick="addBlock('soc_setting')">
+      <i class="bi bi-percent"></i> SOC Setting
+    </button>
+    <button class="btn btn-palette w-100 mb-2" onclick="addBlock('rest')">
+      <i class="bi bi-pause-circle"></i> Rest
+    </button>
+
+    <p class="text-muted small mb-1 mt-3">단순 충방전</p>
+    <button class="btn btn-palette w-100 mb-2" onclick="addBlock('charge')">
+      <i class="bi bi-battery-charging"></i> Charge
+    </button>
+    <button class="btn btn-palette w-100 mb-2" onclick="addBlock('discharge')">
+      <i class="bi bi-battery"></i> Discharge
+    </button>
+
+    <p class="text-muted small mb-1 mt-3">시험</p>
+    <button class="btn btn-palette w-100 mb-2" onclick="addBlock('cycle')">
+      <i class="bi bi-arrow-repeat"></i> Cycle
+    </button>
+    <button class="btn btn-palette w-100 mb-2" onclick="addBlock('rate_test')">
+      <i class="bi bi-speedometer2"></i> Rate Test
+    </button>
+    <button class="btn btn-palette w-100 mb-2" onclick="addBlock('pulse_test')">
+      <i class="bi bi-activity"></i> Pulse Test
+    </button>
+  </div>
+
+  <!-- Center: Canvas -->
+  <div class="canvas-panel flex-grow-1 p-3" style="overflow-y:auto; background:#f8f9fa">
+    <div id="blockCanvas" class="block-canvas">
+      <div id="emptyHint" class="empty-hint text-muted text-center py-5">
+        <i class="bi bi-plus-circle" style="font-size:2rem"></i>
+        <p class="mt-2">왼쪽에서 블록을 추가하세요</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Parameter editor -->
+  <div class="param-panel border-start bg-white p-3" style="width:320px; overflow-y:auto">
+    <div id="paramPlaceholder" class="text-muted text-center py-5">
+      <i class="bi bi-arrow-left-circle" style="font-size:2rem"></i>
+      <p class="mt-2 small">블록을 클릭하면<br>파라미터를 편집합니다</p>
+    </div>
+    <div id="paramEditor" style="display:none">
+      <h6 id="paramTitle" class="fw-bold mb-3"></h6>
+      <div id="paramFields"></div>
+      <button class="btn btn-primary w-100 mt-3" onclick="applyParams()">
+        <i class="bi bi-check-lg"></i> 적용
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Preview Modal ───────────────────────────────────────────────────── -->
+<div class="modal fade" id="previewModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-diagram-3"></i> 스텝 다이어그램 미리보기</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="min-height:400px; overflow:auto">
+        <div id="previewLoading" class="text-center py-5">
+          <div class="spinner-border text-primary"></div>
+          <p class="mt-2 text-muted">다이어그램 생성 중...</p>
+        </div>
+        <div id="previewDiagram" style="display:none"></div>
+        <div id="previewError" class="alert alert-danger" style="display:none"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" onclick="exportSch()">
+          <i class="bi bi-download"></i> .sch 내보내기
+        </button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Load Modal ─────────────────────────────────────────────────────── -->
+<div class="modal fade" id="loadModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="bi bi-folder2-open"></i> 저장된 스케줄 불러오기</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <label class="form-label small text-muted">.sch 파일 불러오기</label>
+        <div class="input-group input-group-sm mb-3">
+          <input id="schImportFile" type="file" class="form-control" accept=".sch">
+          <button class="btn btn-outline-info" onclick="importSchFile()">
+            <i class="bi bi-upload"></i> 불러오기
+          </button>
+        </div>
+        <hr>
+        <label class="form-label small text-muted">저장된 JSON 스케줄</label>
+        <div id="savedFileList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast notification ─────────────────────────────────────────────── -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="appToast" class="toast align-items-center text-white border-0" role="alert">
+    <div class="d-flex">
+      <div id="toastBody" class="toast-body"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>

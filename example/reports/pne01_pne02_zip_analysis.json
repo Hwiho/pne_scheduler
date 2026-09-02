@@ -1,0 +1,169 @@
+{
+  "PNE01": {
+    "zip": "PNE01.zip",
+    "sch_count": 36,
+    "categories": {
+      "capacheck": 20,
+      "unknown": 11,
+      "rpt": 5
+    },
+    "qpeed_variants": {},
+    "filename_tokens": {
+      "protocol_hint=derating": 20,
+      "date=07100395": 17,
+      "L_level=5.5": 12,
+      "c_rate_hint=1.5": 5,
+      "protocol_hint=rpt": 5,
+      "capacity_mAh=100": 4,
+      "pressure_MPa=0.7": 2,
+      "pressure_MPa=1.0": 2,
+      "pressure_MPa=1.5": 2,
+      "pressure_MPa=2.0": 2,
+      "capacity_mAh=87.273": 1,
+      "capacity_mAh=85.99": 1,
+      "capacity_mAh=86.674": 1,
+      "capacity_mAh=86.061": 1,
+      "capacity_mAh=86.326": 1,
+      "capacity_mAh=86.812": 1,
+      "capacity_mAh=86.238": 1,
+      "date=07100766": 1,
+      "capacity_mAh=85.623": 1,
+      "capacity_mAh=86.214": 1,
+      "capacity_mAh=85.691": 1,
+      "capacity_mAh=85.683": 1,
+      "capacity_mAh=85.78": 1,
+      "capacity_mAh=64.863": 1
+    },
+    "layout_signatures": {
+      "0x00010002/612B/2steps": 11,
+      "0x00010003/612B/2steps": 16,
+      "0x00010003/612B/5steps": 5,
+      "0x00010002/612B/5steps": 4
+    },
+    "parse_errors": 36,
+    "samples_by_category": {
+      "capacheck": [],
+      "unknown": [],
+      "rpt": []
+    },
+    "representative": [],
+    "layout_scan": {
+      "files_scanned": 36,
+      "by_version_step_size": {
+        "0x00010002/612": 15,
+        "0x00010003/612": 21
+      },
+      "versions": {
+        "0x00010002": 15,
+        "0x00010003": 21
+      },
+      "step_sizes": {
+        "612": 36
+      }
+    }
+  },
+  "PNE02": {
+    "zip": "PNE02.zip",
+    "sch_count": 3449,
+    "categories": {
+      "unknown": 2905,
+      "cycle_life": 140,
+      "formation": 170,
+      "capacheck": 76,
+      "qpeed": 81,
+      "rpt": 74,
+      "insitu_cycle": 3
+    },
+    "qpeed_variants": {
+      "full": 70,
+      "soc_setting": 11
+    },
+    "filename_tokens": {
+      "protocol_hint=cycle": 295,
+      "c_rate_hint=1": 162,
+      "c_rate_hint=0.33": 158,
+      "protocol_hint=formation": 150,
+      "date=07004563": 144,
+      "date=00207966": 120,
+      "date=07006392": 113,
+      "date=00228713": 106,
+      "c_rate_hint=0.1": 99,
+      "protocol_hint=hppc": 84,
+      "protocol_hint=rpt": 81,
+      "L_level=1": 78,
+      "date=00219150": 74,
+      "date=07000872": 74,
+      "date=07004627": 72,
+      "date=07006398": 69,
+      "protocol_hint=qpeed": 68,
+      "date=07100766": 64,
+      "protocol_hint=capacheck": 61,
+      "c_rate_hint=2": 60,
+      "c_rate_hint=0.5": 57,
+      "date=07001992": 48,
+      "pressure_MPa=2": 44,
+      "pressure_MPa=1.5": 43,
+      "date=07100395": 42,
+      "date=07005364": 40,
+      "date=07000519": 37,
+      "date=07100234": 37,
+      "date=00224327": 35,
+      "date=07002331": 35,
+      "date=07004616": 35,
+      "date=07001096": 33,
+      "date=07005844": 32,
+      "date=07000489": 26,
+      "pressure_MPa=10": 25,
+      "L_level=4.3": 22,
+      "c_rate_hint=100": 21,
+      "pressure_MPa=1.0": 20,
+      "date=00209060": 20,
+      "pressure_MPa=6.5": 20
+    },
+    "layout_signatures": {
+      "0x00010003/612B/2steps": 2804,
+      "0x00010002/612B/2steps": 94,
+      "0x00010003/612B/4steps": 33,
+      "0x00010003/612B/5steps": 303,
+      "0x00010003/612B/9steps": 14,
+      "0x00010003/612B/12steps": 38,
+      "0x00010003/612B/6steps": 71,
+      "0x00010003/612B/7steps": 17,
+      "0x00010003/612B/3steps": 10,
+      "0x00010004/696B/2steps": 2,
+      "0x00010003/612B/10steps": 19,
+      "0x00010003/612B/15steps": 3,
+      "0x00010003/612B/11steps": 11,
+      "0x00010003/612B/23steps": 14,
+      "0x00010003/612B/0steps": 7,
+      "0x00010002/612B/6steps": 2,
+      "0x00010002/612B/5steps": 5,
+      "0x00010002/612B/12steps": 1
+    },
+    "parse_errors": 3449,
+    "samples_by_category": {
+      "unknown": [],
+      "cycle_life": [],
+      "formation": [],
+      "capacheck": [],
+      "qpeed": [],
+      "rpt": [],
+      "insitu_cycle": []
+    },
+    "representative": [],
+    "layout_scan": {
+      "files_scanned": 500,
+      "by_version_step_size": {
+        "0x00010003/612": 499,
+        "0x00010002/612": 1
+      },
+      "versions": {
+        "0x00010003": 499,
+        "0x00010002": 1
+      },
+      "step_sizes": {
+        "612": 500
+      }
+    }
+  }
+}

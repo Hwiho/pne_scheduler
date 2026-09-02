@@ -1,0 +1,122 @@
+[
+  {
+    "reason": "696-byte formation (lab dominant)",
+    "path": "sch_lab_zip/00207966_260422_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch",
+    "category": "formation",
+    "version": "0x00010004",
+    "step_count": 7,
+    "step_size": 696,
+    "equipment": "PNE16",
+    "equipment_confidence": "probable"
+  },
+  {
+    "reason": "short cycle life (easy to read)",
+    "path": "sch_lab_zip/00207966_250916_Gr-SiC_288kgf_1.0Mpa_0.5C cycle.sch",
+    "category": "cycle_life",
+    "version": "0x00010004",
+    "step_count": 25,
+    "step_size": 696,
+    "equipment": "PNE16",
+    "equipment_confidence": "probable"
+  },
+  {
+    "reason": "short cycle life (easy to read)",
+    "path": "sch_lab_zip/00207966_250916_Gr-SiC_288kgf_1.5Mpa_0.5C cycle.sch",
+    "category": "cycle_life",
+    "version": "0x00010004",
+    "step_count": 25,
+    "step_size": 696,
+    "equipment": "PNE16",
+    "equipment_confidence": "probable"
+  },
+  {
+    "reason": "long cycle life (loop stress)",
+    "path": "capacheck_zip/00207966_260803_727도급셀_Set8_45도 Cycle.sch",
+    "category": "cycle_life",
+    "version": "0x00010003",
+    "step_count": 73,
+    "step_size": 612,
+    "equipment": null,
+    "equipment_confidence": "unknown"
+  },
+  {
+    "reason": "RPT schedule",
+    "path": "capacheck_zip/차효현_3350_L.4.36_NP1.08_RPT_SOC50 End_챔버미연동.sch",
+    "category": "rpt",
+    "version": "0x00010002",
+    "step_count": 19,
+    "step_size": 612,
+    "equipment": null,
+    "equipment_confidence": "unknown"
+  },
+  {
+    "reason": "RPT schedule",
+    "path": "capacheck_zip/07100766_260511_SJ1300_dry_40um_RPT_500cycle.sch",
+    "category": "rpt",
+    "version": "0x00010004",
+    "step_count": 41,
+    "step_size": 696,
+    "equipment": null,
+    "equipment_confidence": "unknown"
+  },
+  {
+    "reason": "612-byte capacheck (B0 unit probe)",
+    "path": "capacheck_zip/07100766_260713_Set9_QPEED_SOC_setting_BM_SJ1300_6040_C_NCN.sch",
+    "category": "qpeed",
+    "version": "0x00010003",
+    "step_count": 11,
+    "step_size": 612,
+    "equipment": "PNE02",
+    "equipment_confidence": "probable"
+  },
+  {
+    "reason": "696-byte capacheck",
+    "path": "capacheck_zip/3.BM_C1%_FM.sch",
+    "category": "formation",
+    "version": "0x00010004",
+    "step_count": 9,
+    "step_size": 696,
+    "equipment": null,
+    "equipment_confidence": "unknown"
+  },
+  {
+    "reason": "QPEED (fast charge / L-level fVref)",
+    "path": "capacheck_zip/07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch",
+    "category": "qpeed",
+    "version": "0x00010003",
+    "step_count": 167,
+    "step_size": 612,
+    "equipment": "PNE02",
+    "equipment_confidence": "probable"
+  },
+  {
+    "reason": "HPPC full range",
+    "path": "hppc/HPPC_Full range.sch",
+    "category": "unknown",
+    "version": "0x00010002",
+    "step_count": 62,
+    "step_size": 612,
+    "equipment": null,
+    "equipment_confidence": "unknown"
+  },
+  {
+    "reason": "696 unknown (lab bulk format)",
+    "path": "sch_lab_zip/00207966_250611_capa.sch",
+    "category": "unknown",
+    "version": "0x00010004",
+    "step_count": 3,
+    "step_size": 696,
+    "equipment": "PNE16",
+    "equipment_confidence": "probable"
+  },
+  {
+    "reason": "696 unknown (lab bulk format)",
+    "path": "sch_lab_zip/00207966_250611_capa2.sch",
+    "category": "unknown",
+    "version": "0x00010004",
+    "step_count": 3,
+    "step_size": 696,
+    "equipment": "PNE16",
+    "equipment_confidence": "probable"
+  }
+]

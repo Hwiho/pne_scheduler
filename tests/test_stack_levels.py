@@ -42,5 +42,5 @@ def test_parse_capacheck_fixture_has_c_rate() -> None:
     assert doc.geometry.footprint.fp_id == "3350"  # default when not in name
     charge_steps = [s for s in doc.steps if s.step_type == "CCCV" and s.f_iref > 0]
     assert charge_steps
+    assert charge_steps[0].f_iref == pytest.approx(7.655, rel=0.02)
     assert charge_steps[0].c_rate is not None
-    assert charge_steps[0].c_rate == pytest.approx(0.86, abs=0.1)

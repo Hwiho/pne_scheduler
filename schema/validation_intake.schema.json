@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pne_scheduler.validation_intake/v1",
+  "title": "PNE SCH controlled-pair intake metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "equipment",
+    "scope",
+    "before_file",
+    "after_file",
+    "changed_step",
+    "ui_field",
+    "before_value",
+    "after_value",
+    "executed_on_equipment",
+    "ctspro_reopen_verified"
+  ],
+  "properties": {
+    "schema": {
+      "const": "pne_scheduler.validation_intake/v1"
+    },
+    "equipment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "rating", "source"],
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "e.g. PNE16 — must not be inferred from filename alone"
+        },
+        "rating": {
+          "type": "string",
+          "minLength": 1,
+          "description": "e.g. 6A or 100mA"
+        },
+        "ctspro_version": {
+          "type": ["string", "null"],
+          "description": "CYCC build or CTSMonPro GUI string"
+        },
+        "channel_profile": {
+          "type": ["string", "null"],
+          "description": "INI / channel range profile if known"
+        },
+        "source": {
+          "type": "string",
+          "enum": ["user_confirmed", "user_attributed", "fixture_catalog", "unknown"]
+        }
+      }
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["fixture_specific_provenance", "operational_context_only", "discovery"]
+    },
+    "before_file": { "type": "string", "minLength": 1 },
+    "after_file": { "type": "string", "minLength": 1 },
+    "changed_step": { "type": "integer", "minimum": 1 },
+    "ui_field": { "type": "string", "minLength": 1 },
+    "before_value": { "$ref": "#/$defs/measured_value" },
+    "after_value": { "$ref": "#/$defs/measured_value" },
+    "expected_field": {
+      "type": ["string", "null"],
+      "description": "schema/fields.py name if known; null for discovery pairs"
+    },
+    "executed_on_equipment": { "const": false },
+    "ctspro_reopen_verified": { "type": "boolean" },
+    "screenshots": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "notes": { "type": ["string", "null"] }
+  },
+  "$defs": {
+    "measured_value": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "value": { "type": "number" },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "description": "e.g. mA, mV, s"
+        }
+      }
+    }
+  }
+}

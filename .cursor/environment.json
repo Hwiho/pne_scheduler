@@ -1,0 +1,4 @@
+{
+  "install": "pip install -e \".[dev]\"",
+  "test": "python -m pytest tests/ -q --tb=short"
+}

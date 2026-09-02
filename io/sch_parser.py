@@ -19,11 +19,14 @@ from ..schema.enums import (
 )
 from ..engine.c_rate import snap_c_rate
 from ..protocol import ProtocolInference, infer_protocol_from_schedule
-from ..schema.fields import (
-    OFFSET_F_END_C,
-    OFFSET_F_END_I,
-    OFFSET_F_END_V,
+from ..schema.ensol_v612 import (
+    OFF_CURRENT_MA,
+    OFF_CV_CUTOFF_MA,
+    OFF_TIME_OR_REST_S,
+    OFF_VOLT_OR_VLIM_MV,
+    OFF_VOLTAGE_CUTOFF_MV,
 )
+from ..schema.fields import OFFSET_F_END_C
 from ..stack import CellGeometryInference, c_rate_from_current, infer_cell_geometry, l_from_fvref
 from .layout import detect_sch_layout
 
@@ -97,8 +100,8 @@ def parse_schedule_file(path: str | Path) -> ScheduleDocument:
     classification = classify_schedule_filename(resolved)
     geometry = infer_cell_geometry(
         resolved.name,
-        [s.f_vref for s in raw_steps],
-        [s.f_iref for s in raw_steps],
+        [s.setpoint_mV for s in raw_steps],
+        [s.current_mA for s in raw_steps],
     )
 
     fp = geometry.footprint
@@ -109,15 +112,16 @@ def parse_schedule_file(path: str | Path) -> ScheduleDocument:
     for step in raw_steps:
         step_l = None
         step_l_detail = ""
-        if step.f_vref >= 15.0:
-            guess = l_from_fvref(step.f_vref)
+        setpoint_mV = step.setpoint_mV
+        if 15.0 <= setpoint_mV <= 80.0:
+            guess = l_from_fvref(setpoint_mV)
             if guess is not None:
                 step_l = guess.l_value
                 step_l_detail = guess.detail
 
         l_for_c = step_l if step_l is not None else file_l
         c_rate = c_rate_from_current(
-            step.f_iref,
+            step.current_mA,
             footprint=fp,
             cell_mode=mode,
             l_value=l_for_c,
@@ -129,9 +133,9 @@ def parse_schedule_file(path: str | Path) -> ScheduleDocument:
                 step_no=step.step_no,
                 step_type=step.step_type,
                 step_type_code=step.step_type_code,
-                f_vref=step.f_vref,
-                f_iref=step.f_iref,
-                f_end_time=step.f_end_time,
+                f_vref=step.setpoint_mV,
+                f_iref=step.current_mA,
+                f_end_time=step.duration_s,
                 f_end_v=step.f_end_v,
                 f_end_i=step.f_end_i,
                 f_end_c=step.f_end_c,
@@ -165,12 +169,27 @@ class _RawStep:
     step_no: int
     step_type_code: int
     step_type: str
-    f_vref: float
-    f_iref: float
-    f_end_time: float
+    setpoint_mV: float
+    current_mA: float
+    duration_s: float
     f_end_v: float
     f_end_i: float
     f_end_c: float
+
+    @property
+    def f_vref(self) -> float:
+        """Legacy alias: setpoint word at +12 (mV)."""
+        return self.setpoint_mV
+
+    @property
+    def f_iref(self) -> float:
+        """Legacy alias: phase current at +16 (mA)."""
+        return self.current_mA
+
+    @property
+    def f_end_time(self) -> float:
+        """Legacy alias: duration / time limit at +20 (s)."""
+        return self.duration_s
 
 
 def _detect_layout(data: bytes) -> tuple[int, int] | None:
@@ -194,11 +213,11 @@ def _read_steps(data: bytes, payload_offset: int, step_size: int) -> list[_RawSt
                 step_no=step_no,
                 step_type_code=step_type_code,
                 step_type=TYPE_NAMES.get(step_type_code, hex(step_type_code)),
-                f_vref=struct.unpack_from("<f", data, base + 16)[0],
-                f_iref=struct.unpack_from("<f", data, base + 20)[0],
-                f_end_time=struct.unpack_from("<f", data, base + 24)[0],
-                f_end_v=struct.unpack_from("<f", data, base + OFFSET_F_END_V)[0],
-                f_end_i=struct.unpack_from("<f", data, base + OFFSET_F_END_I)[0],
+                setpoint_mV=struct.unpack_from("<f", data, base + OFF_VOLT_OR_VLIM_MV)[0],
+                current_mA=struct.unpack_from("<f", data, base + OFF_CURRENT_MA)[0],
+                duration_s=struct.unpack_from("<f", data, base + OFF_TIME_OR_REST_S)[0],
+                f_end_v=struct.unpack_from("<f", data, base + OFF_VOLTAGE_CUTOFF_MV)[0],
+                f_end_i=struct.unpack_from("<f", data, base + OFF_CV_CUTOFF_MA)[0],
                 f_end_c=struct.unpack_from("<f", data, base + OFFSET_F_END_C)[0],
             )
         )

@@ -151,7 +151,7 @@ python -m pne_scheduler resume original.sch channel_StepEnd.csv -o resumed.sch -
 - A mid-step interruption resumes from the same SCH step.
 - LOOP schedules estimate remaining loops; `--loops` overrides the estimate.
 
-See [docs/RESUME.md](docs/RESUME.md) for details.
+See [docs/README.md](docs/README.md) for resume, protocol, and CLI details.
 
 ## Lab protocol defaults
 
@@ -163,7 +163,7 @@ See [docs/RESUME.md](docs/RESUME.md) for details.
 | **In-situ cycle** | 0.5C | No RPT block |
 | **RPT** | C/3 discharge | DC-IR at SOC 80/50/20, 1.0–1.5C |
 
-See [docs/PROTOCOL.md](docs/PROTOCOL.md) for details.
+See [docs/README.md](docs/README.md) for protocol defaults and module rules.
 
 ## Package structure
 
@@ -201,10 +201,9 @@ python -m pytest tests/ -q
 
 ## Documentation
 
-- [User guide](docs/GUIDE.md)
-- [Protocol and C-rate](docs/PROTOCOL.md)
-- [Interrupted-experiment resume](docs/RESUME.md)
-- [SCH validation intake](docs/SCH_VALIDATION_INTAKE.md)
+- [User guide](docs/README.md) — CLI, protocol, resume
+- [Gate B validation](docs/GATE_B.md)
+- [Planning index](planning/README.md)
 - [Roadmap](planning/ROADMAP.md)
 
 ## Related repository

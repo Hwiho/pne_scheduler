@@ -1,0 +1,223 @@
+{
+  "schema": "pne_scheduler.golden_fixtures_locked/v1",
+  "intake_source": "example/gate_b_export/GOLDEN_FIXTURE_INTAKE.md",
+  "intake_date": "2026-09-01",
+  "status": "user_confirmed_selection",
+  "lab_defaults": {
+    "primary_pne_unit_3pjt": null,
+    "ctspro_build": null,
+    "q_nom_source": null,
+    "typical_q_nom_mAh": null,
+    "viewer_display": "current_mA + estimated C-rate",
+    "writer_contract": "user enters C-rate labels (1C, 2C) and explicit 1C current (mA); writer stores current in SCH"
+  },
+  "domain_rules_from_user": [
+    "Filename contains FM (without capacheck) → formation, not capacheck.",
+    "Formation and capacheck are different experiment families.",
+    "Derating and capacheck are the same protocol family.",
+    "QPEED SOC setting is a distinct sub-type under QPEED (see classify QpeedVariant.SOC_SETTING)."
+  ],
+  "equipment_profiles": {
+    "PNE01": {
+      "rating": "500mA",
+      "rating_mA": 500,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE02": {
+      "aliases": ["PNE2", "PNE 2"],
+      "rating": "500mA",
+      "rating_mA": 500,
+      "rating_source": "user_guideline_2026-09-02",
+      "software_build_ppt": "CYCC-1004-S01-R004-N01",
+      "fixtures_confirmed": 6
+    },
+    "PNE03": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE11": {
+      "rating": "500mA",
+      "rating_mA": 500,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE12": {
+      "rating": "20A",
+      "rating_mA": 20000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE14": {
+      "rating": "20A",
+      "rating_mA": 20000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE16": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_guideline_2026-09-02",
+      "software_build_ppt": "CYCC-1004-S01-R004-N01",
+      "fixtures_confirmed": 2
+    },
+    "PNE17": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE19": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE21": {
+      "rating": "100mA",
+      "rating_mA": 100,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE22": {
+      "rating": "100mA",
+      "rating_mA": 100,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE26": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE27": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE28": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE29": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE30": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE32": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE33": {
+      "rating": "10A",
+      "rating_mA": 10000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE34": {
+      "rating": "20A",
+      "rating_mA": 20000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE35": {
+      "rating": "20A",
+      "rating_mA": 20000,
+      "rating_source": "user_guideline_2026-09-02"
+    },
+    "PNE37": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_guideline_2026-09-02"
+    }
+  },
+  "equipment_ratings_ref": "planning/EQUIPMENT_CURRENT_RATINGS.json",
+  "equipment_registry_ref": "planning/EQUIPMENT_REGISTRY.json",
+  "lab_data_policy_ref": "planning/LAB_DATA_POLICY.md",
+  "corpus_units_pending_rating": ["PNE04", "PNE05"],
+  "selected": [
+    {
+      "id": "golden-formation-696",
+      "path": "sch_lab_zip/00207966_260422_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch",
+      "category": "formation",
+      "format": "0x00010004/696",
+      "step_count": 7,
+      "pne_unit": "PNE16",
+      "equipment_source": "user_confirmed"
+    },
+    {
+      "id": "golden-cycle-696",
+      "path": "sch_lab_zip/00207966_250916_Gr-SiC_288kgf_1.5Mpa_0.5C cycle.sch",
+      "category": "cycle_life",
+      "format": "0x00010004/696",
+      "step_count": 25,
+      "pne_unit": "PNE16",
+      "equipment_source": "user_confirmed"
+    },
+    {
+      "id": "golden-cycle-612-long",
+      "path": "capacheck_zip/00207966_260803_727도급셀_Set8_45도 Cycle.sch",
+      "category": "cycle_life",
+      "format": "0x00010003/612",
+      "step_count": 73,
+      "pne_unit": "PNE02",
+      "equipment_source": "user_confirmed"
+    },
+    {
+      "id": "golden-rpt-612",
+      "path": "capacheck_zip/차효현_3350_L.4.36_NP1.08_RPT_SOC50 End_챔버미연동.sch",
+      "category": "rpt",
+      "format": "0x00010002/612",
+      "step_count": 19,
+      "pne_unit": "PNE02",
+      "equipment_source": "user_confirmed"
+    },
+    {
+      "id": "golden-qpeed-612",
+      "path": "capacheck_zip/07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch",
+      "category": "qpeed",
+      "qpeed_variant": "full",
+      "format": "0x00010003/612",
+      "step_count": 167,
+      "pne_unit": "PNE02",
+      "equipment_source": "user_confirmed"
+    },
+    {
+      "id": "golden-hppc-612",
+      "path": "hppc/HPPC_Full range.sch",
+      "category": "hppc",
+      "format": "0x00010002/612",
+      "step_count": 62,
+      "pne_unit": "PNE02",
+      "equipment_source": "user_confirmed"
+    },
+    {
+      "id": "golden-capacheck-612-b0",
+      "path": "capacheck_zip/9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
+      "category": "capacheck",
+      "format": "0x00010003/612",
+      "step_count": 15,
+      "pne_unit": "PNE02",
+      "equipment_source": "user_confirmed",
+      "notes": "B0 unit probe; fEndV=2500 mV on discharge"
+    }
+  ],
+  "deferred": [
+    {
+      "path": "capacheck_zip/07100766_260713_Set9_QPEED_SOC_setting_BM_SJ1300_6040_C_NCN.sch",
+      "category": "qpeed",
+      "qpeed_variant": "soc_setting",
+      "pne_unit": "PNE02",
+      "select": "no",
+      "notes": "User requested distinct QPEED SOC setting item; add to golden set when semantic tests are ready"
+    },
+    {
+      "path": "capacheck_zip/3.BM_C1%_FM.sch",
+      "category": "formation",
+      "select": "no",
+      "notes": "FM filename → formation per user; not capacheck"
+    }
+  ],
+  "rejected": [
+    "sch_lab_zip/00207966_250916_Gr-SiC_288kgf_1.0Mpa_0.5C cycle.sch",
+    "capacheck_zip/07100766_260511_SJ1300_dry_40um_RPT_500cycle.sch"
+  ]
+}

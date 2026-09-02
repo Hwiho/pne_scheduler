@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "schedule_name": "CycleLife_0.5C_50cyc_no_rest",
+    "test_type": "cyclelife",
+    "cell_capacity_mAh": 100,
+    "author": "test_user",
+    "safety": {
+      "max_voltage_V": 4.2,
+      "min_voltage_V": 2.5,
+      "max_current_mA": 100,
+      "max_capacity_mAh": 100,
+      "max_temp_C": 70
+    }
+  },
+  "pre_loop": [
+    {
+      "type": "rest",
+      "duration": "3h",
+      "record_time": "30s"
+    }
+  ],
+  "loop": {
+    "count": 50,
+    "reset_capacity": true,
+    "steps": [
+      {
+        "type": "cccv_charge",
+        "voltage_V": 4.2,
+        "current": "0.05C",
+        "time_limit": "2d",
+        "cv_cutoff": "0.05C",
+        "record_time": "30s"
+      },
+      {
+        "type": "cc_discharge",
+        "current": "0.05C",
+        "voltage_cutoff_V": 2.5,
+        "record_time": "30s"
+      }
+    ]
+  }
+}

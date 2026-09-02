@@ -1,0 +1,84 @@
+[
+  {
+    "unit": "PNE 2",
+    "aliases": ["PNE02", "PNE2"],
+    "current_range": "500 mA",
+    "rating_source": "user_confirmed",
+    "software": "CYCC-1004-S01-R004-N01"
+  },
+  {
+    "unit": "PNE 4",
+    "current_range": "500 mA",
+    "software": "CYCC-1004-S01-R004-N01"
+  },
+  {
+    "unit": "PNE 5",
+    "current_range": "500 mA",
+    "software": "CYCC-1006-S01-R004-N01"
+  },
+  {
+    "unit": "PNE 11",
+    "current_range": "500 mA",
+    "software": "CYCC-1006-S01-R006-N01 (CTSMonPro GUI)"
+  },
+  {
+    "unit": "PNE 19",
+    "current_range": "6 A",
+    "software": "CYCGN-P1107-S01-R001-N026"
+  },
+  {
+    "unit": "PNE 22",
+    "current_range": "100 mA",
+    "software": "CYCC-1004-S01-R004-N01"
+  },
+  {
+    "unit": "PNE 23",
+    "current_range": "100 mA",
+    "software": "CYCC-1004-S01-R002-N01 (CTSMonPro GUI)"
+  },
+  {
+    "unit": "PNE 24-1",
+    "current_range": "100 mA",
+    "software": "CYCC-1004-S01-R004-N01"
+  },
+  {
+    "unit": "PNE 24-2",
+    "current_range": "100 mA",
+    "software": "CYCC-1004-S01-R004-N01"
+  },
+  {
+    "unit": "PNE 25",
+    "current_range": "6 A",
+    "software": "CYCC-1004-S01-R004-N01"
+  },
+  {
+    "unit": "PNE 30",
+    "current_range": "6 A",
+    "software": "CYCGN-P1107-S01-R001-N026 (CTSMonPro GUI)"
+  },
+  {
+    "unit": "PNE 21",
+    "current_range": "100 mA (ASSB 3PJT)",
+    "software": "CYCC-1004-S01-R004-N01 (CTSMonPro GUI)"
+  },
+  {
+    "unit": "PNE 16",
+    "current_range": "6 A (ASSB 3PJT)",
+    "software": "_see slide 3_"
+  },
+  {
+    "unit": "PNE 12",
+    "current_range": "10, 20 A (ASSB 3PJT)",
+    "software": "_see slide 4_"
+  },
+  {
+    "unit": "PNE 8",
+    "current_range": "500 mA / 20 A",
+    "software": "_see slide 5_"
+  },
+  {
+    "unit": "PNE 3 / 17",
+    "current_range": "6, 10 A",
+    "software": "_see slide 6_"
+  }
+]

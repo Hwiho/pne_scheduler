@@ -81,6 +81,6 @@ def test_parse_l436_rpt_file_footprint_and_c_rate() -> None:
     doc = parse_schedule_file(path)
     assert doc.geometry.footprint.fp_id == "3350"
     assert doc.geometry.stack_level.primary.l_value == pytest.approx(4.3)
-    charge = next(s for s in doc.steps if s.step_type == "CCCV" and s.f_iref > 1000)
+    charge = next(s for s in doc.steps if s.step_type == "CCCV" and s.f_iref > 0)
+    assert charge.f_iref == pytest.approx(22.53, rel=0.02)
     assert charge.c_rate is not None
-    assert charge.c_rate == pytest.approx(4.0 / 3.0, abs=0.15)

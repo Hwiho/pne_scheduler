@@ -1,0 +1,78 @@
+{
+  "schema": "pne_scheduler.equipment_current_ratings/v1",
+  "source": "User guideline — recommended max charge/discharge current per PNE unit",
+  "intake_date": "2026-09-02",
+  "notes": [
+    "Recommended maximum current (권장 최대전류), not minimum resolution.",
+    "SCH files may store higher mA values (cell Q_nom × C-rate); validate against this tier in writer/linter.",
+    "PNE04–PNE09 confirmed 500mA tier by user (2026-09-02)."
+  ],
+  "tiers": [
+    {
+      "rating": "100mA",
+      "rating_mA": 100,
+      "units": ["PNE21", "PNE22"]
+    },
+    {
+      "rating": "500mA",
+      "rating_mA": 500,
+      "units": ["PNE01", "PNE02", "PNE04", "PNE05", "PNE06", "PNE07", "PNE08", "PNE09", "PNE11"]
+    },
+    {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "units": [
+        "PNE03",
+        "PNE16",
+        "PNE17",
+        "PNE19",
+        "PNE26",
+        "PNE27",
+        "PNE28",
+        "PNE29",
+        "PNE30",
+        "PNE32",
+        "PNE37"
+      ]
+    },
+    {
+      "rating": "10A",
+      "rating_mA": 10000,
+      "units": ["PNE33"]
+    },
+    {
+      "rating": "20A",
+      "rating_mA": 20000,
+      "units": ["PNE12", "PNE14", "PNE34", "PNE35"]
+    }
+  ],
+  "by_unit": {
+    "PNE01": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
+    "PNE02": { "rating": "500mA", "rating_mA": 500, "tier": "500mA", "aliases": ["PNE2", "PNE 2"] },
+    "PNE03": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE04": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
+    "PNE05": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
+    "PNE06": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
+    "PNE07": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
+    "PNE08": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
+    "PNE09": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
+    "PNE11": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
+    "PNE12": { "rating": "20A", "rating_mA": 20000, "tier": "20A" },
+    "PNE14": { "rating": "20A", "rating_mA": 20000, "tier": "20A" },
+    "PNE16": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE17": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE19": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE21": { "rating": "100mA", "rating_mA": 100, "tier": "100mA" },
+    "PNE22": { "rating": "100mA", "rating_mA": 100, "tier": "100mA" },
+    "PNE26": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE27": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE28": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE29": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE30": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE32": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE33": { "rating": "10A", "rating_mA": 10000, "tier": "10A" },
+    "PNE34": { "rating": "20A", "rating_mA": 20000, "tier": "20A" },
+    "PNE35": { "rating": "20A", "rating_mA": 20000, "tier": "20A" },
+    "PNE37": { "rating": "6A", "rating_mA": 6000, "tier": "6A" }
+  }
+}

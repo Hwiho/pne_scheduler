@@ -15,6 +15,20 @@ class ScheduleCategory(StrEnum):
     INSITU_CYCLE = "insitu_cycle"
     RPT = "rpt"
     QPEED = "qpeed"
+    HPPC = "hppc"
+    RATE_TEST = "rate_test"
+    SOC_SETTING = "soc_setting"
+    DCIR = "dcir"
+    GITT = "gitt"
+    OCV = "ocv"
+    EIS = "eis"
+    STORAGE = "storage"
+    SAFETY = "safety"
+    QC = "qc"
+    CHARGE = "charge"
+    DISCHARGE = "discharge"
+    REST = "rest"
+    DOE = "doe"
     UNKNOWN = "unknown"
 
 
@@ -24,6 +38,8 @@ class ProtocolVariant(StrEnum):
     NONE = "none"
     DERATING = "derating"  # capacheck protocol alias
     INSITU = "insitu"  # cycle without RPT
+    DRY = "dry"
+    WET = "wet"
 
 
 class QpeedVariant(StrEnum):
@@ -40,11 +56,77 @@ CATEGORY_TO_MODULE: dict[ScheduleCategory, str] = {
     ScheduleCategory.INSITU_CYCLE: "insitu_cycle",
     ScheduleCategory.RPT: "rpt",
     ScheduleCategory.QPEED: "qpeed",
+    ScheduleCategory.HPPC: "hppc",
+    ScheduleCategory.RATE_TEST: "rate_test",
+    ScheduleCategory.SOC_SETTING: "soc_setting",
+    ScheduleCategory.DCIR: "dcir",
+    ScheduleCategory.GITT: "dcir",
+    ScheduleCategory.OCV: "ocv",
+    ScheduleCategory.EIS: "eis",
+    ScheduleCategory.STORAGE: "storage",
+    ScheduleCategory.SAFETY: "safety",
+    ScheduleCategory.QC: "qpeed",
+    ScheduleCategory.CHARGE: "charge",
+    ScheduleCategory.DISCHARGE: "discharge",
+    ScheduleCategory.REST: "rest",
+    ScheduleCategory.DOE: "doe",
 }
 
 _QPEED_PATTERN = re.compile(r"qpeed", re.IGNORECASE)
 _QPEED_SOC_SETTING_PATTERN = re.compile(r"soc[_\s-]*setting", re.IGNORECASE)
+_HPPC_PATTERN = re.compile(r"hppc|pulse\s+test|pulse\s+heat", re.IGNORECASE)
+_RATE_TEST_PATTERN = re.compile(
+    r"rate[_\s-]?test|ratetest|mAh\s*rate|rate\+cycle|\brate\.sch|"
+    r"(?:^|[\s_\[\]#])(?:\d+(?:\.\d+)?c\s*)?rate(?:[_\s.+]|$)|"
+    r"ch_rate|soc_rate|_rate(?:_|\.|$)|"
+    r"[\s_-](?:0?\.\d+|[0-9]{1,2})'?\s*C(?:\.sch|[-_]|$)",
+    re.IGNORECASE,
+)
+_STANDALONE_SOC_SETTING_PATTERN = re.compile(
+    r"soc[_\s-]*\d+[_\s-]*setting|soc\s*\d+\s*setting",
+    re.IGNORECASE,
+)
+_CAPA_GENERIC_PATTERN = re.compile(
+    r"capa_rate|capa[\s_-]soc|\bcapa\b|capcheck|capa[_\s-]*check|initial[_\s-]*check|init[_\s-]*check",
+    re.IGNORECASE,
+)
+_GITT_PATTERN = re.compile(r"gitt|pitt", re.IGNORECASE)
+_DCIR_PATTERN = re.compile(r"dcir|dcr", re.IGNORECASE)
+_OCV_PATTERN = re.compile(r"(?<![a-z])ocv(?![a-z])", re.IGNORECASE)
+_EIS_PATTERN = re.compile(r"(?<![a-z])eis(?![a-z])", re.IGNORECASE)
+_STORAGE_PATTERN = re.compile(r"storage|soak|\baging\b|ageing", re.IGNORECASE)
+_SAFETY_PATTERN = re.compile(r"safety", re.IGNORECASE)
+_QC_PATTERN = re.compile(r"\bqc\b|qcharge|fast[\s_-]?charge", re.IGNORECASE)
+_DISCHARGE_PATTERN = re.compile(r"discharge|_dchg\b|\bdchg\b|\bDCH\b", re.IGNORECASE)
+_CHARGE_PATTERN = re.compile(
+    r"charge|_chg\b|\bchg\b|_Ch\b|\bCH\s+for|\bCH\b(?=\s)",
+    re.IGNORECASE,
+)
+_REST_PATTERN = re.compile(r"(?<![a-z])rest(?![a-z])|preheat|preheating", re.IGNORECASE)
+_DOE_PATTERN = re.compile(
+    r"불균일|donut|asympad|tape\s*x|nobottom|\btilt\b|cross\d+%",
+    re.IGNORECASE,
+)
+_DRY_WET_PATTERN = re.compile(r"\bdry\b|\bwet\b", re.IGNORECASE)
+_CYCLE_PATTERN = re.compile(
+    r"cycle|2cycle|\d+cycle|\bcyc\b|0\.5\s*c\s*cycle|\d+\s*℃\s*cycle|"
+    r"swell|breathing|\bcont(?:\.sch|$|\s)",
+    re.IGNORECASE,
+)
+_CURRENT_DENSITY_PATTERN = re.compile(r"mA\s*/\s*cm|mAcm2|ma/cm", re.IGNORECASE)
+# FM / formation / form (not capacheck). Compound names like Form_RPT stay RPT/rate/cycle.
+_FORMATION_PATTERN = re.compile(
+    r"(?:"
+    r"(?:^|[_\s\[\(])fm(?:$|[_\s.\)\]-])"
+    r"|(?:^|[_\s-])formation(?:$|[_\s.+\-()])"
+    r"|포메이션"
+    r"|c1\s*%"
+    r"|(?:^|[_\s-])form(?!_rpt|_rate|_cycle|\+)(?:\.sch|\.{2}sch|_|$|\s)"
+    r")",
+    re.IGNORECASE,
+)
 
+# First matching rule wins; keep specific families before broad keywords.
 _RULES: tuple[tuple[str, re.Pattern[str], ScheduleCategory], ...] = (
     (
         "capacheck_keyword",
@@ -62,13 +144,58 @@ _RULES: tuple[tuple[str, re.Pattern[str], ScheduleCategory], ...] = (
         ScheduleCategory.CAPACHECK,
     ),
     (
+        "storage_keyword",
+        _STORAGE_PATTERN,
+        ScheduleCategory.STORAGE,
+    ),
+    (
+        "capa_generic_keyword",
+        _CAPA_GENERIC_PATTERN,
+        ScheduleCategory.CAPACHECK,
+    ),
+    (
         "qpeed_keyword",
         _QPEED_PATTERN,
         ScheduleCategory.QPEED,
     ),
     (
-        "formation_fm",
-        re.compile(r"(?:^|[_\s-])fm(?:$|[_\s.-])|formation|c1\s*%", re.IGNORECASE),
+        "hppc_keyword",
+        _HPPC_PATTERN,
+        ScheduleCategory.HPPC,
+    ),
+    (
+        "soc_setting_keyword",
+        _STANDALONE_SOC_SETTING_PATTERN,
+        ScheduleCategory.SOC_SETTING,
+    ),
+    (
+        "rate_test_keyword",
+        _RATE_TEST_PATTERN,
+        ScheduleCategory.RATE_TEST,
+    ),
+    (
+        "gitt_keyword",
+        _GITT_PATTERN,
+        ScheduleCategory.GITT,
+    ),
+    (
+        "eis_keyword",
+        _EIS_PATTERN,
+        ScheduleCategory.EIS,
+    ),
+    (
+        "ocv_keyword",
+        _OCV_PATTERN,
+        ScheduleCategory.OCV,
+    ),
+    (
+        "qc_keyword",
+        _QC_PATTERN,
+        ScheduleCategory.QC,
+    ),
+    (
+        "formation_keyword",
+        _FORMATION_PATTERN,
         ScheduleCategory.FORMATION,
     ),
     (
@@ -77,13 +204,53 @@ _RULES: tuple[tuple[str, re.Pattern[str], ScheduleCategory], ...] = (
         ScheduleCategory.RPT,
     ),
     (
+        "dcir_keyword",
+        _DCIR_PATTERN,
+        ScheduleCategory.DCIR,
+    ),
+    (
+        "discharge_keyword",
+        _DISCHARGE_PATTERN,
+        ScheduleCategory.DISCHARGE,
+    ),
+    (
+        "current_density_keyword",
+        _CURRENT_DENSITY_PATTERN,
+        ScheduleCategory.CHARGE,
+    ),
+    (
+        "charge_keyword",
+        _CHARGE_PATTERN,
+        ScheduleCategory.CHARGE,
+    ),
+    (
+        "rest_keyword",
+        _REST_PATTERN,
+        ScheduleCategory.REST,
+    ),
+    (
+        "safety_keyword",
+        _SAFETY_PATTERN,
+        ScheduleCategory.SAFETY,
+    ),
+    (
+        "doe_keyword",
+        _DOE_PATTERN,
+        ScheduleCategory.DOE,
+    ),
+    (
         "insitu_cycle_keyword",
         re.compile(r"insitu|in[\s-]?situ", re.IGNORECASE),
         ScheduleCategory.INSITU_CYCLE,
     ),
     (
+        "dry_wet_cycle_keyword",
+        _DRY_WET_PATTERN,
+        ScheduleCategory.CYCLE_LIFE,
+    ),
+    (
         "cycle_life_keyword",
-        re.compile(r"\bcycle\b|0\.5\s*c\s*cycle|\d+\s*℃\s*cycle", re.IGNORECASE),
+        _CYCLE_PATTERN,
         ScheduleCategory.CYCLE_LIFE,
     ),
 )
@@ -100,7 +267,7 @@ class ScheduleFilenameMatch:
 
     @property
     def is_qpeed_soc_setting(self) -> bool:
-        return (
+        return self.category == ScheduleCategory.SOC_SETTING or (
             self.category == ScheduleCategory.QPEED
             and self.qpeed_variant == QpeedVariant.SOC_SETTING
         )
@@ -115,12 +282,15 @@ def _qpeed_variant_from_name(name: str) -> QpeedVariant:
 def _protocol_variant_from_name(name: str, category: ScheduleCategory) -> ProtocolVariant:
     if category == ScheduleCategory.CAPACHECK and re.search(r"derating", name, re.IGNORECASE):
         return ProtocolVariant.DERATING
-    if category == ScheduleCategory.INSITU_CYCLE:
-        return ProtocolVariant.INSITU
-    if category == ScheduleCategory.CYCLE_LIFE and re.search(
+    if category in (ScheduleCategory.INSITU_CYCLE, ScheduleCategory.CYCLE_LIFE) and re.search(
         r"insitu|in[\s-]?situ", name, re.IGNORECASE
     ):
         return ProtocolVariant.INSITU
+    if category == ScheduleCategory.CYCLE_LIFE:
+        if re.search(r"\bdry\b", name, re.IGNORECASE):
+            return ProtocolVariant.DRY
+        if re.search(r"\bwet\b", name, re.IGNORECASE):
+            return ProtocolVariant.WET
     return ProtocolVariant.NONE
 
 

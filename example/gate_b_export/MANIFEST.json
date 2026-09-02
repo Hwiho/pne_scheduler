@@ -1,0 +1,20 @@
+{
+  "export_dir": "C:\\Users\\LGES\\Cursor\\pne_scheduler\\example\\gate_b_export",
+  "ppt_source": "c:\\260721_황화물전고체전지1PJT_PNE version.pptx",
+  "copied_sch_count": 12,
+  "copied_sch_files": [
+    "00207966_260422_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch",
+    "00207966_250916_Gr-SiC_288kgf_1.0Mpa_0.5C cycle.sch",
+    "00207966_250916_Gr-SiC_288kgf_1.5Mpa_0.5C cycle.sch",
+    "00207966_260803_727도급셀_Set8_45도 Cycle.sch",
+    "차효현_3350_L.4.36_NP1.08_RPT_SOC50 End_챔버미연동.sch",
+    "07100766_260511_SJ1300_dry_40um_RPT_500cycle.sch",
+    "07100766_260713_Set9_QPEED_SOC_setting_BM_SJ1300_6040_C_NCN.sch",
+    "3.BM_C1%_FM.sch",
+    "07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch",
+    "HPPC_Full range.sch",
+    "00207966_250611_capa.sch",
+    "00207966_250611_capa2.sch"
+  ],
+  "candidate_count": 12
+}

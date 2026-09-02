@@ -1,0 +1,3508 @@
+{
+  "PNE01": {
+    "zip": "PNE01.zip",
+    "sch_count": 36,
+    "categories": {
+      "capacheck": 20,
+      "unknown": 11,
+      "rpt": 5
+    },
+    "inferred_unknown_breakdown": {
+      "other": 11
+    },
+    "top_layouts": [
+      [
+        "0x00010002/612B/15st",
+        11
+      ],
+      [
+        "0x00010003/612B/15st",
+        9
+      ],
+      [
+        "0x00010003/612B/51st",
+        5
+      ],
+      [
+        "0x00010003/612B/48st",
+        5
+      ],
+      [
+        "0x00010002/612B/48st",
+        4
+      ],
+      [
+        "0x00010003/612B/9st",
+        2
+      ]
+    ],
+    "current_mA_stats": {
+      "min": 5.0,
+      "max": 29.091,
+      "p50": 21.621,
+      "samples_over_500mA": 0,
+      "count": 152
+    },
+    "samples": {
+      "capacheck": [
+        {
+          "file": "01.N3-2_0821도급_L5.5_45도_derating_87.273mAh.sch",
+          "binary": {
+            "version": "0x00010002",
+            "step_size": 612,
+            "step_count": 15,
+            "types": {
+              "0x0003": 5,
+              "LOOP": 3,
+              "0x0007": 2,
+              "CCCV": 2,
+              "CC_DCHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.727,
+                "T_s": 172800.0,
+                "CV_mA": 4.364
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 8.727,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 29.091,
+                "T_s": 172800.0,
+                "CV_mA": 4.364
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 29.091,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "02.N3-2_0821도급_L5.5_45도_derating_85.99mAh.sch",
+          "binary": {
+            "version": "0x00010002",
+            "step_size": 612,
+            "step_count": 15,
+            "types": {
+              "0x0003": 5,
+              "LOOP": 3,
+              "0x0007": 2,
+              "CCCV": 2,
+              "CC_DCHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.599,
+                "T_s": 172800.0,
+                "CV_mA": 4.3
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 8.599,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 28.663,
+                "T_s": 172800.0,
+                "CV_mA": 4.3
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 28.663,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "03.N3-2_0821도급_L5.5_45도_derating_86.674mAh.sch",
+          "binary": {
+            "version": "0x00010002",
+            "step_size": 612,
+            "step_count": 15,
+            "types": {
+              "0x0003": 5,
+              "LOOP": 3,
+              "0x0007": 2,
+              "CCCV": 2,
+              "CC_DCHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.667,
+                "T_s": 172800.0,
+                "CV_mA": 4.334
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 8.667,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 28.891,
+                "T_s": 172800.0,
+                "CV_mA": 4.334
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 28.891,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              }
+            ]
+          }
+        }
+      ],
+      "other": [
+        {
+          "file": "07100395_260724_불균일가압by테이프_Ref.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 51,
+            "types": {
+              "0x0003": 17,
+              "LOOP": 9,
+              "0x0007": 8,
+              "CCCV": 4,
+              "CC_DCHG": 10,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.486,
+                "T_s": 172800.0,
+                "CV_mA": 3.243
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 6.486,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 21.621,
+                "T_s": 14400.0,
+                "CV_mA": 3.243
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 21.621,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 21.621,
+                "T_s": 14400.0,
+                "CV_mA": 3.243
+              }
+            ]
+          }
+        },
+        {
+          "file": "07100395_260724_불균일가압by테이프_center_200um.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 51,
+            "types": {
+              "0x0003": 17,
+              "LOOP": 9,
+              "0x0007": 8,
+              "CCCV": 4,
+              "CC_DCHG": 10,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.486,
+                "T_s": 172800.0,
+                "CV_mA": 3.243
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 6.486,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 21.621,
+                "T_s": 14400.0,
+                "CV_mA": 3.243
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 21.621,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 21.621,
+                "T_s": 14400.0,
+                "CV_mA": 3.243
+              }
+            ]
+          }
+        },
+        {
+          "file": "07100395_260724_불균일가압by테이프_corner_200um.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 51,
+            "types": {
+              "0x0003": 17,
+              "LOOP": 9,
+              "0x0007": 8,
+              "CCCV": 4,
+              "CC_DCHG": 10,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.486,
+                "T_s": 172800.0,
+                "CV_mA": 3.243
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 6.486,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 21.621,
+                "T_s": 14400.0,
+                "CV_mA": 3.243
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 21.621,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 21.621,
+                "T_s": 14400.0,
+                "CV_mA": 3.243
+              }
+            ]
+          }
+        }
+      ],
+      "rpt": [
+        {
+          "file": "260821_불균일가압_Form_RPT_Cycle_100mAh_DCIR1.5C_84.2mAh.sch",
+          "binary": {
+            "version": "0x00010002",
+            "step_size": 612,
+            "step_count": 48,
+            "types": {
+              "CCCV": 4,
+              "0x0003": 16,
+              "CC_DCHG": 10,
+              "LOOP": 8,
+              "0x0007": 7,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.42,
+                "T_s": 172800.0,
+                "CV_mA": 4.21
+              },
+              {
+                "step": 3,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 8.42,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 7,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 27.786,
+                "T_s": 14400.0,
+                "CV_mA": 4.21
+              },
+              {
+                "step": 9,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 27.786,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 13,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 27.786,
+                "T_s": 14400.0,
+                "CV_mA": 4.21
+              }
+            ]
+          }
+        },
+        {
+          "file": "260821_불균일가압_Form_RPT_Cycle_100mAh_DCIR1.5C_85.4mAh.sch",
+          "binary": {
+            "version": "0x00010002",
+            "step_size": 612,
+            "step_count": 48,
+            "types": {
+              "CCCV": 4,
+              "0x0003": 16,
+              "CC_DCHG": 10,
+              "LOOP": 8,
+              "0x0007": 7,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.54,
+                "T_s": 172800.0,
+                "CV_mA": 4.27
+              },
+              {
+                "step": 3,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 8.54,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 7,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 28.182,
+                "T_s": 14400.0,
+                "CV_mA": 4.27
+              },
+              {
+                "step": 9,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 28.182,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 13,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 28.182,
+                "T_s": 14400.0,
+                "CV_mA": 4.27
+              }
+            ]
+          }
+        },
+        {
+          "file": "260821_불균일가압_Form_RPT_Cycle_100mAh_DCIR1.5C_85.9mAh.sch",
+          "binary": {
+            "version": "0x00010002",
+            "step_size": 612,
+            "step_count": 48,
+            "types": {
+              "CCCV": 4,
+              "0x0003": 16,
+              "CC_DCHG": 10,
+              "LOOP": 8,
+              "0x0007": 7,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.59,
+                "T_s": 172800.0,
+                "CV_mA": 4.295
+              },
+              {
+                "step": 3,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 8.59,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 7,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 28.347,
+                "T_s": 14400.0,
+                "CV_mA": 4.295
+              },
+              {
+                "step": 9,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 28.347,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 13,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 28.347,
+                "T_s": 14400.0,
+                "CV_mA": 4.295
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "PNE02": {
+    "zip": "PNE02.zip",
+    "sch_count": 3449,
+    "categories": {
+      "unknown": 2905,
+      "cycle_life": 140,
+      "formation": 170,
+      "capacheck": 76,
+      "qpeed": 81,
+      "rpt": 74,
+      "insitu_cycle": 3
+    },
+    "inferred_unknown_breakdown": {
+      "other": 2181,
+      "rate_test": 297,
+      "charge_only": 121,
+      "hppc": 80,
+      "soc_setting": 70,
+      "mono_stack": 61,
+      "stack_cell": 43,
+      "step_template": 23,
+      "rest_only": 12,
+      "ocv": 8,
+      "dcir": 4,
+      "storage": 2,
+      "eis": 2,
+      "safety": 1
+    },
+    "top_layouts": [
+      [
+        "0x00010003/612B/39st",
+        1280
+      ],
+      [
+        "0x00010003/612B/9st",
+        636
+      ],
+      [
+        "0x00010003/612B/30st",
+        218
+      ],
+      [
+        "0x00010003/612B/15st",
+        145
+      ],
+      [
+        "0x00010003/612B/7st",
+        93
+      ],
+      [
+        "0x00010003/612B/6st",
+        75
+      ],
+      [
+        "0x00010002/612B/39st",
+        64
+      ],
+      [
+        "0x00010003/612B/69st",
+        55
+      ],
+      [
+        "0x00010003/612B/41st",
+        50
+      ],
+      [
+        "0x00010003/612B/87st",
+        47
+      ],
+      [
+        "0x00010003/612B/13st",
+        41
+      ],
+      [
+        "0x00010003/612B/66st",
+        38
+      ],
+      [
+        "0x00010003/612B/57st",
+        34
+      ],
+      [
+        "0x00010003/612B/33st",
+        33
+      ],
+      [
+        "0x00010003/612B/54st",
+        31
+      ]
+    ],
+    "current_mA_stats": {
+      "min": 0.1,
+      "max": 1858.0,
+      "p50": 6.058,
+      "samples_over_500mA": 2,
+      "count": 14214
+    },
+    "samples": {
+      "rate_test": [
+        {
+          "file": "0.05C+11.1mAh rate.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 39,
+            "types": {
+              "0x0003": 13,
+              "LOOP": 7,
+              "0x0007": 6,
+              "CCCV": 6,
+              "CC_DCHG": 6,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 0.554,
+                "T_s": 259200.0,
+                "CV_mA": 0.111
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2900.0,
+                "I_mA": 0.554,
+                "T_s": 259200.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 1.108,
+                "T_s": 172800.0,
+                "CV_mA": 0.554
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2900.0,
+                "I_mA": 1.108,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 1.108,
+                "T_s": 172800.0,
+                "CV_mA": 0.554
+              }
+            ]
+          }
+        },
+        {
+          "file": "0.05C+54.6mAh rate.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 39,
+            "types": {
+              "0x0003": 13,
+              "LOOP": 7,
+              "0x0007": 6,
+              "CCCV": 6,
+              "CC_DCHG": 6,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 2.73,
+                "T_s": 259200.0,
+                "CV_mA": 0.546
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2900.0,
+                "I_mA": 2.73,
+                "T_s": 259200.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 5.46,
+                "T_s": 172800.0,
+                "CV_mA": 2.73
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2900.0,
+                "I_mA": 5.46,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 5.46,
+                "T_s": 172800.0,
+                "CV_mA": 2.73
+              }
+            ]
+          }
+        },
+        {
+          "file": "0.05C+58.45mAh rate.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 39,
+            "types": {
+              "0x0003": 13,
+              "LOOP": 7,
+              "0x0007": 6,
+              "CCCV": 6,
+              "CC_DCHG": 6,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 2.922,
+                "T_s": 172800.0,
+                "CV_mA": 0.584
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 2.922,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 5.845,
+                "T_s": 172800.0,
+                "CV_mA": 2.922
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 5.845,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 5.845,
+                "T_s": 172800.0,
+                "CV_mA": 2.922
+              }
+            ]
+          }
+        }
+      ],
+      "cycle_life": [
+        {
+          "file": "0.05C+60.75mAh rate+Cycle.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 54,
+            "types": {
+              "0x0003": 18,
+              "LOOP": 10,
+              "0x0007": 9,
+              "CCCV": 8,
+              "CC_DCHG": 8,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 3.038,
+                "T_s": 259200.0,
+                "CV_mA": 0.608
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2900.0,
+                "I_mA": 3.038,
+                "T_s": 259200.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.075,
+                "T_s": 172800.0,
+                "CV_mA": 3.038
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2900.0,
+                "I_mA": 6.075,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.075,
+                "T_s": 172800.0,
+                "CV_mA": 3.038
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260304_set1_SJ900_45╡╡ 0.5C cycle_no1_.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 41,
+            "types": {
+              "0x0003": 15,
+              "LOOP": 6,
+              "0x0007": 5,
+              "CCCV": 5,
+              "CC_DCHG": 9,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 25.818,
+                "T_s": 21600.0,
+                "CV_mA": 3.873
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 25.818,
+                "T_s": 21600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 25.818,
+                "T_s": 21600.0,
+                "CV_mA": 3.873
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 25.818,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 14,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 77.453,
+                "T_s": 30.0,
+                "endV_mV": 2500.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260304_set2_SJ1300_60-40_45╡╡ 0.5C cycle_no1_3_4.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 41,
+            "types": {
+              "0x0003": 15,
+              "LOOP": 6,
+              "0x0007": 5,
+              "CCCV": 5,
+              "CC_DCHG": 9,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 24.775,
+                "T_s": 21600.0,
+                "CV_mA": 3.716
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 24.775,
+                "T_s": 21600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 24.775,
+                "T_s": 21600.0,
+                "CV_mA": 3.716
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 24.775,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 14,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 74.324,
+                "T_s": 30.0,
+                "endV_mV": 2500.0
+              }
+            ]
+          }
+        }
+      ],
+      "safety": [
+        {
+          "file": "0.1C safety4-DISCHARGE.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 4,
+            "types": {
+              "CC_DCHG": 1,
+              "0x0003": 1,
+              "LOOP": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 0.924,
+                "T_s": 259200.0,
+                "endV_mV": 3000.0
+              }
+            ]
+          }
+        }
+      ],
+      "soc_setting": [
+        {
+          "file": "0.1mAcm2_SoC20_4.3based.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 7,
+            "types": {
+              "0x0003": 2,
+              "LOOP": 2,
+              "0x0007": 1,
+              "CC_CHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CC_CHG",
+                "V_mV": 5000.0,
+                "I_mA": 0.324,
+                "T_s": 9600.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "0.1mAcm2_SoC5_4.3based.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 7,
+            "types": {
+              "0x0003": 2,
+              "LOOP": 2,
+              "0x0007": 1,
+              "CC_CHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CC_CHG",
+                "V_mV": 5000.0,
+                "I_mA": 0.324,
+                "T_s": 2400.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "0.33C SOC30 setting.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 17,
+            "types": {
+              "0x0003": 5,
+              "LOOP": 4,
+              "0x0007": 3,
+              "CC_DCHG": 2,
+              "CCCV": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 246.119,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 8,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 246.119,
+                "T_s": 14400.0,
+                "CV_mA": 40.018
+              },
+              {
+                "step": 10,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 246.119,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 14,
+                "type": "CCCV",
+                "V_mV": 3538.0,
+                "I_mA": 246.119,
+                "T_s": 14400.0,
+                "CV_mA": 40.018
+              }
+            ]
+          }
+        }
+      ],
+      "other": [
+        {
+          "file": "0.5mA.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 5,
+            "types": {
+              "CC_DCHG": 1,
+              "0x0003": 1,
+              "CCCV": 1,
+              "LOOP": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CC_DCHG",
+                "V_mV": 2300.0,
+                "I_mA": 0.5,
+                "T_s": 10.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 3,
+                "type": "CCCV",
+                "V_mV": 4500.0,
+                "I_mA": 0.5,
+                "T_s": 10.0,
+                "CV_mA": 0.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260330_└╜▒╪╞≥░í_Set4_60╡╡ QC 1cyc ╗τ└ⁿ╞≥░í.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 18,
+            "types": {
+              "0x0003": 4,
+              "LOOP": 3,
+              "0x0007": 2,
+              "CC_CHG": 6,
+              "CCCV": 1,
+              "CC_DCHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CC_CHG",
+                "V_mV": 4250.0,
+                "I_mA": 24.583,
+                "T_s": 3600.0
+              },
+              {
+                "step": 8,
+                "type": "CC_CHG",
+                "V_mV": 4200.0,
+                "I_mA": 184.369,
+                "T_s": 359.0
+              },
+              {
+                "step": 9,
+                "type": "CC_CHG",
+                "V_mV": 4200.0,
+                "I_mA": 147.495,
+                "T_s": 517.0
+              },
+              {
+                "step": 10,
+                "type": "CC_CHG",
+                "V_mV": 4200.0,
+                "I_mA": 110.621,
+                "T_s": 174.0
+              },
+              {
+                "step": 11,
+                "type": "CC_CHG",
+                "V_mV": 4200.0,
+                "I_mA": 73.748,
+                "T_s": 227.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260401_└╜▒╪╞≥░í_Set4_60╡╡ QC 1cyc ╗τ└ⁿ╞≥░í_3C ├▀░í.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 19,
+            "types": {
+              "0x0003": 4,
+              "LOOP": 3,
+              "0x0007": 2,
+              "CC_CHG": 7,
+              "CCCV": 1,
+              "CC_DCHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CC_CHG",
+                "V_mV": 4250.0,
+                "I_mA": 24.583,
+                "T_s": 3600.0
+              },
+              {
+                "step": 8,
+                "type": "CC_CHG",
+                "V_mV": 4200.0,
+                "I_mA": 221.243,
+                "T_s": 233.0
+              },
+              {
+                "step": 9,
+                "type": "CC_CHG",
+                "V_mV": 4200.0,
+                "I_mA": 184.369,
+                "T_s": 393.0
+              },
+              {
+                "step": 10,
+                "type": "CC_CHG",
+                "V_mV": 4200.0,
+                "I_mA": 147.495,
+                "T_s": 124.0
+              },
+              {
+                "step": 11,
+                "type": "CC_CHG",
+                "V_mV": 4200.0,
+                "I_mA": 110.621,
+                "T_s": 174.0
+              }
+            ]
+          }
+        }
+      ],
+      "formation": [
+        {
+          "file": "00207966_260116_╖╬╡∙╞≥░í_L4.3_FM.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 9,
+            "types": {
+              "0x0003": 3,
+              "LOOP": 2,
+              "0x0007": 1,
+              "CCCV": 1,
+              "CC_DCHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.56,
+                "T_s": 54000.0,
+                "CV_mA": 3.28
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 6.56,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260116_╖╬╡∙╞≥░í_L5.0_FM.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 9,
+            "types": {
+              "0x0003": 3,
+              "LOOP": 2,
+              "0x0007": 1,
+              "CCCV": 1,
+              "CC_DCHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 7.47,
+                "T_s": 54000.0,
+                "CV_mA": 3.73
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 7.47,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260116_╖╬╡∙╞≥░í_L5.6_FM.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 9,
+            "types": {
+              "0x0003": 3,
+              "LOOP": 2,
+              "0x0007": 1,
+              "CCCV": 1,
+              "CC_DCHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.41,
+                "T_s": 54000.0,
+                "CV_mA": 4.21
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 8.41,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              }
+            ]
+          }
+        }
+      ],
+      "hppc": [
+        {
+          "file": "00207966_260121_╖╬╡∙╞≥░í_45╡╡ Full HPPC_before cycle_L4.3_no9_11_12.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 62,
+            "types": {
+              "0x0003": 20,
+              "LOOP": 13,
+              "0x0007": 12,
+              "CCCV": 3,
+              "CC_DCHG": 9,
+              "CC_CHG": 4,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.322,
+                "T_s": 57600.0,
+                "CV_mA": 3.161
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 6.322,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 21.074,
+                "T_s": 57600.0,
+                "CV_mA": 3.161
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 21.074,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.322,
+                "T_s": 57600.0,
+                "CV_mA": 3.161
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260121_╖╬╡∙╞≥░í_45╡╡ Full HPPC_before cycle_L4.3_no9_11_12_re.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 62,
+            "types": {
+              "0x0003": 20,
+              "LOOP": 13,
+              "0x0007": 12,
+              "CCCV": 3,
+              "CC_DCHG": 9,
+              "CC_CHG": 4,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.322,
+                "T_s": 57600.0,
+                "CV_mA": 3.161
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 6.322,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 21.074,
+                "T_s": 57600.0,
+                "CV_mA": 3.161
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 21.074,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.322,
+                "T_s": 57600.0,
+                "CV_mA": 3.161
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260121_╖╬╡∙╞≥░í_45╡╡ Full HPPC_before cycle_L5.6_no8_12_6.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 62,
+            "types": {
+              "0x0003": 20,
+              "LOOP": 13,
+              "0x0007": 12,
+              "CCCV": 3,
+              "CC_DCHG": 9,
+              "CC_CHG": 4,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.324,
+                "T_s": 57600.0,
+                "CV_mA": 4.162
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 8.324,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 27.747,
+                "T_s": 57600.0,
+                "CV_mA": 4.162
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 27.747,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.324,
+                "T_s": 57600.0,
+                "CV_mA": 4.162
+              }
+            ]
+          }
+        }
+      ],
+      "capacheck": [
+        {
+          "file": "00207966_260121_╖╬╡∙╞≥░í_Capacheck before QPEED_L4.3_no8_10_13.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 41,
+            "types": {
+              "0x0003": 15,
+              "LOOP": 6,
+              "0x0007": 5,
+              "CCCV": 3,
+              "CC_DCHG": 9,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.438,
+                "T_s": 54000.0,
+                "CV_mA": 3.219
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 6.438,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 21.458,
+                "T_s": 54000.0,
+                "CV_mA": 3.219
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 21.458,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.438,
+                "T_s": 54000.0,
+                "CV_mA": 3.219
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260121_╖╬╡∙╞≥░í_Capacheck before QPEED_L5.0_no7_3_6.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 41,
+            "types": {
+              "0x0003": 15,
+              "LOOP": 6,
+              "0x0007": 5,
+              "CCCV": 3,
+              "CC_DCHG": 9,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 7.286,
+                "T_s": 54000.0,
+                "CV_mA": 3.643
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 7.286,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 24.287,
+                "T_s": 54000.0,
+                "CV_mA": 3.643
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 24.287,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 7.286,
+                "T_s": 54000.0,
+                "CV_mA": 3.643
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260121_╖╬╡∙╞≥░í_Capacheck before QPEED_L5.6_no11.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 41,
+            "types": {
+              "0x0003": 15,
+              "LOOP": 6,
+              "0x0007": 5,
+              "CCCV": 3,
+              "CC_DCHG": 9,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.358,
+                "T_s": 54000.0,
+                "CV_mA": 4.179
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 8.358,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 27.861,
+                "T_s": 54000.0,
+                "CV_mA": 4.179
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 27.861,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.358,
+                "T_s": 54000.0,
+                "CV_mA": 4.179
+              }
+            ]
+          }
+        }
+      ],
+      "qpeed": [
+        {
+          "file": "00207966_260126_╖╬╡∙╞≥░í_3Mpa_60╡╡ QPEED_L4.3_no8_10_13.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 134,
+            "types": {
+              "0x0003": 61,
+              "CC_DCHG": 13,
+              "CCCV": 13,
+              "0x0102": 12,
+              "LOOP": 12,
+              "0x0007": 11,
+              "CC_CHG": 11,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 2,
+                "type": "CC_DCHG",
+                "V_mV": 2400.0,
+                "I_mA": 6.288,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.288,
+                "T_s": 57600.0,
+                "CV_mA": 3.144
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2400.0,
+                "I_mA": 6.288,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 8,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 20.96,
+                "T_s": 57600.0,
+                "CV_mA": 6.288
+              },
+              {
+                "step": 14,
+                "type": "CC_CHG",
+                "V_mV": 4300.0,
+                "I_mA": 6.288,
+                "T_s": 57600.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260126_╖╬╡∙╞≥░í_3Mpa_60╡╡ QPEED_L5.0_no7_3_6.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 134,
+            "types": {
+              "0x0003": 61,
+              "CC_DCHG": 13,
+              "CCCV": 13,
+              "0x0102": 12,
+              "LOOP": 12,
+              "0x0007": 11,
+              "CC_CHG": 11,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 2,
+                "type": "CC_DCHG",
+                "V_mV": 2400.0,
+                "I_mA": 7.18,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 7.18,
+                "T_s": 57600.0,
+                "CV_mA": 3.59
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2400.0,
+                "I_mA": 7.18,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 8,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 23.934,
+                "T_s": 57600.0,
+                "CV_mA": 7.18
+              },
+              {
+                "step": 14,
+                "type": "CC_CHG",
+                "V_mV": 4300.0,
+                "I_mA": 7.18,
+                "T_s": 57600.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260126_╖╬╡∙╞≥░í_3Mpa_60╡╡ QPEED_L5.6_no9_10_11.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 134,
+            "types": {
+              "0x0003": 61,
+              "CC_DCHG": 13,
+              "CCCV": 13,
+              "0x0102": 12,
+              "LOOP": 12,
+              "0x0007": 11,
+              "CC_CHG": 11,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 2,
+                "type": "CC_DCHG",
+                "V_mV": 2400.0,
+                "I_mA": 8.182,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 8.182,
+                "T_s": 57600.0,
+                "CV_mA": 4.091
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2400.0,
+                "I_mA": 8.182,
+                "T_s": 57600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 8,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 27.273,
+                "T_s": 57600.0,
+                "CV_mA": 8.182
+              },
+              {
+                "step": 14,
+                "type": "CC_CHG",
+                "V_mV": 4300.0,
+                "I_mA": 8.182,
+                "T_s": 57600.0
+              }
+            ]
+          }
+        }
+      ],
+      "rpt": [
+        {
+          "file": "00207966_260706_626╡╡▒▐╝┐_Set2_0.7Mpa_45╡╡ RPT_BOL.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 41,
+            "types": {
+              "0x0003": 15,
+              "LOOP": 6,
+              "0x0007": 5,
+              "CCCV": 5,
+              "CC_DCHG": 9,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 7.724,
+                "T_s": 54000.0,
+                "CV_mA": 3.862
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 7.724,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 25.747,
+                "T_s": 21600.0,
+                "CV_mA": 3.862
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 25.747,
+                "T_s": 21600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 25.747,
+                "T_s": 21600.0,
+                "CV_mA": 3.862
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260706_626╡╡▒▐╝┐_Set2_1.0Mpa_45╡╡ RPT_BOL.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 41,
+            "types": {
+              "0x0003": 15,
+              "LOOP": 6,
+              "0x0007": 5,
+              "CCCV": 5,
+              "CC_DCHG": 9,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 7.724,
+                "T_s": 54000.0,
+                "CV_mA": 3.862
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 7.724,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 25.747,
+                "T_s": 21600.0,
+                "CV_mA": 3.862
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 25.747,
+                "T_s": 21600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 25.747,
+                "T_s": 21600.0,
+                "CV_mA": 3.862
+              }
+            ]
+          }
+        },
+        {
+          "file": "00207966_260706_626╡╡▒▐╝┐_Set2_1.5Mpa_45╡╡ RPT_BOL.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 41,
+            "types": {
+              "0x0003": 15,
+              "LOOP": 6,
+              "0x0007": 5,
+              "CCCV": 5,
+              "CC_DCHG": 9,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 7.724,
+                "T_s": 54000.0,
+                "CV_mA": 3.862
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 7.724,
+                "T_s": 54000.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 25.747,
+                "T_s": 21600.0,
+                "CV_mA": 3.862
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 25.747,
+                "T_s": 21600.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 25.747,
+                "T_s": 21600.0,
+                "CV_mA": 3.862
+              }
+            ]
+          }
+        }
+      ],
+      "charge_only": [
+        {
+          "file": "00209060_250214_HDK_3_4_5_0.1C charge.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 7,
+            "types": {
+              "0x0003": 2,
+              "LOOP": 2,
+              "0x0007": 1,
+              "CCCV": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.864,
+                "T_s": 172800.0,
+                "CV_mA": 0.932
+              }
+            ]
+          }
+        },
+        {
+          "file": "00228713_250422 [└╠╡╡┴▀] Set1_AgC L0.6_╛τ▒╪4_step charge_3350.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 81,
+            "types": {
+              "0x0003": 27,
+              "LOOP": 14,
+              "0x0007": 13,
+              "CCCV": 6,
+              "CC_DCHG": 13,
+              "CC_CHG": 7,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 6.228,
+                "T_s": 54000.0,
+                "CV_mA": 3.114
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 6.228,
+                "T_s": 86400.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 6.228,
+                "T_s": 54000.0,
+                "CV_mA": 3.114
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 20.552,
+                "T_s": 86400.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 6.228,
+                "T_s": 54000.0,
+                "CV_mA": 3.114
+              }
+            ]
+          }
+        },
+        {
+          "file": "00228713_250422 [└╠╡╡┴▀] Set2_AgC L0.9_╛τ▒╪4_step charge_3350.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 81,
+            "types": {
+              "0x0003": 27,
+              "LOOP": 14,
+              "0x0007": 13,
+              "CCCV": 6,
+              "CC_DCHG": 13,
+              "CC_CHG": 7,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 6.228,
+                "T_s": 54000.0,
+                "CV_mA": 3.114
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 6.228,
+                "T_s": 86400.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 6.228,
+                "T_s": 54000.0,
+                "CV_mA": 3.114
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 20.552,
+                "T_s": 86400.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 6.228,
+                "T_s": 54000.0,
+                "CV_mA": 3.114
+              }
+            ]
+          }
+        }
+      ],
+      "step_template": [
+        {
+          "file": "00215570_230704_set5_REF_step.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 39,
+            "types": {
+              "0x0003": 13,
+              "LOOP": 7,
+              "0x0007": 6,
+              "CCCV": 6,
+              "CC_DCHG": 6,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.882,
+                "T_s": 172800.0,
+                "CV_mA": 0.941
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.882,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.882,
+                "T_s": 172800.0,
+                "CV_mA": 0.941
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 6.212,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.882,
+                "T_s": 172800.0,
+                "CV_mA": 0.941
+              }
+            ]
+          }
+        },
+        {
+          "file": "00215570_230704_set5_REF_step_2C-1.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 12,
+            "types": {
+              "CCCV": 2,
+              "0x0003": 4,
+              "CC_DCHG": 2,
+              "LOOP": 2,
+              "0x0007": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.882,
+                "T_s": 172800.0,
+                "CV_mA": 0.941
+              },
+              {
+                "step": 3,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.882,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 7,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 37.64,
+                "T_s": 172800.0,
+                "CV_mA": 1.882
+              },
+              {
+                "step": 9,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 6.212,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "00215570_230704_set5_REF_step_2C.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 6,
+            "types": {
+              "CCCV": 1,
+              "0x0003": 2,
+              "CC_DCHG": 1,
+              "LOOP": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 37.64,
+                "T_s": 172800.0,
+                "CV_mA": 1.882
+              },
+              {
+                "step": 3,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 6.212,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              }
+            ]
+          }
+        }
+      ],
+      "ocv": [
+        {
+          "file": "00217475_260210_▒Φ┴ñ╟÷_60dC OCV.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 17,
+            "types": {
+              "0x0003": 5,
+              "LOOP": 4,
+              "0x0007": 3,
+              "CCCV": 2,
+              "CC_DCHG": 1,
+              "0x0102": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 21.0,
+                "T_s": 14400.0,
+                "CV_mA": 3.0
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 21.0,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.0,
+                "T_s": 0.0,
+                "CV_mA": 3.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "00228044_260120_OCV Tracking_L4.29_mono_1.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 13,
+            "types": {
+              "0x0003": 4,
+              "LOOP": 3,
+              "0x0007": 2,
+              "CCCV": 2,
+              "CC_DCHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.66,
+                "T_s": 54000.0,
+                "CV_mA": 3.33
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 6.66,
+                "T_s": 0.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 3707.0,
+                "I_mA": 21.977,
+                "T_s": 14400.0,
+                "CV_mA": 3.33
+              }
+            ]
+          }
+        },
+        {
+          "file": "00228044_260120_OCV Tracking_L4.29_mono_2 3.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 13,
+            "types": {
+              "0x0003": 4,
+              "LOOP": 3,
+              "0x0007": 2,
+              "CCCV": 2,
+              "CC_DCHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.66,
+                "T_s": 54000.0,
+                "CV_mA": 3.33
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 6.66,
+                "T_s": 0.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 3707.0,
+                "I_mA": 21.977,
+                "T_s": 14400.0,
+                "CV_mA": 3.33
+              }
+            ]
+          }
+        }
+      ],
+      "stack_cell": [
+        {
+          "file": "00219131_231017_Stack_Cathode Double CIP_10Mpa.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 39,
+            "types": {
+              "0x0003": 13,
+              "LOOP": 7,
+              "0x0007": 6,
+              "CCCV": 6,
+              "CC_DCHG": 6,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 3.564,
+                "T_s": 172800.0,
+                "CV_mA": 1.782
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 3.564,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 3.564,
+                "T_s": 172800.0,
+                "CV_mA": 1.782
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 11.761,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 3.564,
+                "T_s": 172800.0,
+                "CV_mA": 1.782
+              }
+            ]
+          }
+        },
+        {
+          "file": "00219150_230421_stack_set17_1_CIP300_LD5.5.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 39,
+            "types": {
+              "0x0003": 13,
+              "LOOP": 7,
+              "0x0007": 6,
+              "CCCV": 6,
+              "CC_DCHG": 6,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 5.881,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              }
+            ]
+          }
+        },
+        {
+          "file": "00219150_230421_stack_set17_2_CIP500_LD5.5.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 39,
+            "types": {
+              "0x0003": 13,
+              "LOOP": 7,
+              "0x0007": 6,
+              "CCCV": 6,
+              "CC_DCHG": 6,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 5.881,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              }
+            ]
+          }
+        }
+      ],
+      "mono_stack": [
+        {
+          "file": "00219150_230407_stack_set15_1_mono preheating 1min.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 39,
+            "types": {
+              "0x0003": 13,
+              "LOOP": 7,
+              "0x0007": 6,
+              "CCCV": 6,
+              "CC_DCHG": 6,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 5.881,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              }
+            ]
+          }
+        },
+        {
+          "file": "00219150_230407_stack_set15_2_mono preheating 5min.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 39,
+            "types": {
+              "0x0003": 13,
+              "LOOP": 7,
+              "0x0007": 6,
+              "CCCV": 6,
+              "CC_DCHG": 6,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 5.881,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              }
+            ]
+          }
+        },
+        {
+          "file": "00219150_230407_stack_set15_3_mono preheating 10min.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 39,
+            "types": {
+              "0x0003": 13,
+              "LOOP": 7,
+              "0x0007": 6,
+              "CCCV": 6,
+              "CC_DCHG": 6,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 5.881,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.782,
+                "T_s": 172800.0,
+                "CV_mA": 0.891
+              }
+            ]
+          }
+        }
+      ],
+      "rest_only": [
+        {
+          "file": "07000872_250624_jhy_L1L4_Rest1h_24C_pne2.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 15,
+            "types": {
+              "CCCV": 2,
+              "0x0003": 5,
+              "CC_DCHG": 2,
+              "LOOP": 2,
+              "0x0007": 1,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 5.798,
+                "T_s": 172800.0,
+                "CV_mA": 2.899
+              },
+              {
+                "step": 3,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 5.798,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 7,
+                "type": "CC_CHG",
+                "V_mV": 5000.0,
+                "I_mA": 139.15,
+                "T_s": 172800.0
+              },
+              {
+                "step": 8,
+                "type": "CC_CHG",
+                "V_mV": 5000.0,
+                "I_mA": 139.15,
+                "T_s": 172800.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 139.15,
+                "T_s": 172800.0,
+                "CV_mA": 5.798
+              }
+            ]
+          }
+        },
+        {
+          "file": "07000872_250624_jhy_L1L4_noRest_033C_ref_pne2.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 14,
+            "types": {
+              "CCCV": 2,
+              "0x0003": 4,
+              "CC_DCHG": 2,
+              "LOOP": 2,
+              "0x0007": 1,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 5.691,
+                "T_s": 172800.0,
+                "CV_mA": 2.845
+              },
+              {
+                "step": 3,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 5.691,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 7,
+                "type": "CC_CHG",
+                "V_mV": 5000.0,
+                "I_mA": 136.57,
+                "T_s": 172800.0
+              },
+              {
+                "step": 8,
+                "type": "CC_CHG",
+                "V_mV": 5000.0,
+                "I_mA": 136.57,
+                "T_s": 172800.0
+              },
+              {
+                "step": 9,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 18.78,
+                "T_s": 172800.0,
+                "CV_mA": 5.691
+              }
+            ]
+          }
+        },
+        {
+          "file": "07000872_250624_jhy_L1L4_rest1h_033C_ref_pne2.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 15,
+            "types": {
+              "CCCV": 2,
+              "0x0003": 5,
+              "CC_DCHG": 2,
+              "LOOP": 2,
+              "0x0007": 1,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 5.521,
+                "T_s": 172800.0,
+                "CV_mA": 2.76
+              },
+              {
+                "step": 3,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 5.521,
+                "T_s": 172800.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 7,
+                "type": "CC_CHG",
+                "V_mV": 5000.0,
+                "I_mA": 132.51,
+                "T_s": 172800.0
+              },
+              {
+                "step": 8,
+                "type": "CC_CHG",
+                "V_mV": 5000.0,
+                "I_mA": 132.51,
+                "T_s": 172800.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 18.22,
+                "T_s": 172800.0,
+                "CV_mA": 5.521
+              }
+            ]
+          }
+        }
+      ],
+      "insitu_cycle": [
+        {
+          "file": "07100395_260129_└╠▒╘│▓_In situ XRD_0.5C.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 6,
+            "types": {
+              "CCCV": 1,
+              "0x0003": 2,
+              "CC_DCHG": 1,
+              "LOOP": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.535,
+                "T_s": 172800.0,
+                "CV_mA": 0.654
+              },
+              {
+                "step": 3,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 6.535,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "07100395_260303_InsituXRD_1-100cyc.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 6,
+            "types": {
+              "CCCV": 1,
+              "0x0003": 2,
+              "CC_DCHG": 1,
+              "LOOP": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 1,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 7.453,
+                "T_s": 172800.0,
+                "CV_mA": 0.745
+              },
+              {
+                "step": 3,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 7.453,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "07100395_260326_InsituXRD_Rest_set2.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 29,
+            "types": {
+              "0x0003": 9,
+              "LOOP": 6,
+              "0x0007": 5,
+              "CCCV": 3,
+              "CC_DCHG": 4,
+              "CC_CHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 1.491,
+                "T_s": 172800.0,
+                "CV_mA": 0.745
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 1.491,
+                "T_s": 0.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 4.919,
+                "T_s": 172800.0,
+                "CV_mA": 0.745
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 4.919,
+                "T_s": 0.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 4.919,
+                "T_s": 172800.0,
+                "CV_mA": 0.745
+              }
+            ]
+          }
+        }
+      ],
+      "storage": [
+        {
+          "file": "220526-LDJ-A334-STORAGE CAPA CHECK.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 9,
+            "types": {
+              "0x0003": 3,
+              "LOOP": 2,
+              "0x0007": 1,
+              "CCCV": 1,
+              "CC_DCHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.049,
+                "T_s": 259200.0,
+                "CV_mA": 0.524
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.049,
+                "T_s": 259200.0,
+                "endV_mV": 3000.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "220607_LDJ-storage capa.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 9,
+            "types": {
+              "0x0003": 3,
+              "LOOP": 2,
+              "0x0007": 1,
+              "CCCV": 1,
+              "CC_DCHG": 1,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 0.958,
+                "T_s": 259200.0,
+                "CV_mA": 0.479
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 0.958,
+                "T_s": 259200.0,
+                "endV_mV": 3000.0
+              }
+            ]
+          }
+        }
+      ],
+      "eis": [
+        {
+          "file": "221011 [└τ▒µ] Dry EIS cell.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 15,
+            "types": {
+              "0x0003": 5,
+              "LOOP": 3,
+              "0x0007": 2,
+              "CCCV": 2,
+              "CC_DCHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.442,
+                "T_s": 86400.0,
+                "CV_mA": 0.721
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.442,
+                "T_s": 0.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 4.759,
+                "T_s": 43200.0,
+                "CV_mA": 1.442
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 4.759,
+                "T_s": 0.0,
+                "endV_mV": 3000.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "221011 [└τ▒µ] Wet EIS cell.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 15,
+            "types": {
+              "0x0003": 5,
+              "LOOP": 3,
+              "0x0007": 2,
+              "CCCV": 2,
+              "CC_DCHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.442,
+                "T_s": 86400.0,
+                "CV_mA": 0.721
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.442,
+                "T_s": 0.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 4.759,
+                "T_s": 43200.0,
+                "CV_mA": 1.442
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 4.759,
+                "T_s": 0.0,
+                "endV_mV": 3000.0
+              }
+            ]
+          }
+        }
+      ],
+      "dcir": [
+        {
+          "file": "└╠┴÷╟÷_241115_DCIR_REF_cycle re.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 36,
+            "types": {
+              "0x0003": 12,
+              "LOOP": 7,
+              "0x0007": 6,
+              "CCCV": 3,
+              "CC_DCHG": 5,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.825,
+                "T_s": 86400.0,
+                "CV_mA": 0.913
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.825,
+                "T_s": 86400.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.825,
+                "T_s": 86400.0,
+                "CV_mA": 0.913
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.825,
+                "T_s": 21600.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 18.25,
+                "T_s": 30.0,
+                "endV_mV": 3000.0
+              }
+            ]
+          }
+        },
+        {
+          "file": "└╠┴÷╟÷_241115_DCIR_REF_├¿╣÷╣╠┐¼╡┐.sch",
+          "binary": {
+            "version": "0x00010002",
+            "step_size": 612,
+            "step_count": 60,
+            "types": {
+              "0x0003": 20,
+              "LOOP": 11,
+              "0x0007": 10,
+              "CCCV": 7,
+              "CC_DCHG": 9,
+              "CC_CHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.825,
+                "T_s": 86400.0,
+                "CV_mA": 0.913
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 1.825,
+                "T_s": 86400.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.825,
+                "T_s": 86400.0,
+                "CV_mA": 0.913
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2500.0,
+                "I_mA": 6.024,
+                "T_s": 18000.0,
+                "endV_mV": 3000.0
+              },
+              {
+                "step": 16,
+                "type": "CCCV",
+                "V_mV": 4250.0,
+                "I_mA": 1.825,
+                "T_s": 86400.0,
+                "CV_mA": 0.913
+              }
+            ]
+          }
+        },
+        {
+          "file": "║╥▒╒└╧░í╛╨2_Form_Cycle_64.863 mAhmAh_DCIR1.5C.sch",
+          "binary": {
+            "version": "0x00010003",
+            "step_size": 612,
+            "step_count": 15,
+            "types": {
+              "0x0003": 5,
+              "LOOP": 3,
+              "0x0007": 2,
+              "CCCV": 2,
+              "CC_DCHG": 2,
+              "0x0006": 1
+            },
+            "anchors": [
+              {
+                "step": 4,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 6.486,
+                "T_s": 172800.0,
+                "CV_mA": 3.243
+              },
+              {
+                "step": 6,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 6.486,
+                "T_s": 172800.0,
+                "endV_mV": 2500.0
+              },
+              {
+                "step": 10,
+                "type": "CCCV",
+                "V_mV": 4200.0,
+                "I_mA": 32.431,
+                "T_s": 14400.0,
+                "CV_mA": 3.243
+              },
+              {
+                "step": 12,
+                "type": "CC_DCHG",
+                "V_mV": 2000.0,
+                "I_mA": 32.431,
+                "T_s": 14400.0,
+                "endV_mV": 2500.0
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

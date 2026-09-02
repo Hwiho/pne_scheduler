@@ -1,0 +1,184 @@
+{
+  "schedule_name": "MySchedule",
+  "cell_capacity_mAh": 100,
+  "author": "user",
+  "safety": {
+    "max_voltage_V": 4.3,
+    "min_voltage_V": 0,
+    "max_current_mA": 0,
+    "min_current_mA": 0,
+    "max_capacity_mAh": 200,
+    "max_temp_C": 70
+  },
+  "blocks": [
+    {
+      "id": "blk_1",
+      "type": "rest",
+      "params": {
+        "duration_min": 30,
+        "record_time_s": 30,
+        "voltage_change_mV": 10
+      }
+    },
+    {
+      "id": "blk_2",
+      "type": "capacity_check",
+      "params": {
+        "charge_c_rate": 0.1,
+        "charge_voltage_V": 4.2,
+        "cv_cutoff_c": 0.05,
+        "discharge_c_rate": 0.1,
+        "discharge_voltage_V": 2.5,
+        "record_time_s": 30,
+        "rest_after_charge_min": 30,
+        "rest_after_discharge_min": 30,
+        "time_limit_h": 48,
+        "voltage_change_mV": 10
+      }
+    },
+    {
+      "id": "blk_3",
+      "type": "capacity_check",
+      "params": {
+        "charge_c_rate": 0.33,
+        "charge_voltage_V": 4.2,
+        "cv_cutoff_c": 0.05,
+        "discharge_c_rate": 0.33,
+        "discharge_voltage_V": 2.5,
+        "record_time_s": 30,
+        "rest_after_charge_min": 30,
+        "rest_after_discharge_min": 30,
+        "time_limit_h": 48,
+        "voltage_change_mV": 10
+      }
+    },
+    {
+      "id": "blk_4",
+      "type": "pulse_test",
+      "params": {
+        "capacity_ref_block_id": "blk_6",
+        "charge_c_rate": 0.33,
+        "charge_voltage_V": 4.2,
+        "cv_cutoff_c": 0.05,
+        "discharge_voltage_V": 2.5,
+        "pulse_c_rate": 1.5,
+        "pulse_duration_s": 30,
+        "record_time_pulse_s": 0.1,
+        "record_time_rest_s": 1,
+        "recovery_min": 30,
+        "rest_min": 30,
+        "return_c_rate": 0.33,
+        "return_pulse": true,
+        "soc_interval_percent": 20,
+        "soc_mode": "interval",
+        "soc_points": [
+          80,
+          60,
+          40,
+          20
+        ],
+        "soc_step_c_rate": 0.33,
+        "stabilization_min": 60,
+        "time_limit_h": 48,
+        "voltage_change_mV": 10
+      }
+    },
+    {
+      "id": "blk_5",
+      "type": "pulse_test",
+      "params": {
+        "capacity_ref_block_id": "",
+        "charge_c_rate": 0.33,
+        "charge_voltage_V": 4.2,
+        "cv_cutoff_c": 0.05,
+        "discharge_voltage_V": 2.5,
+        "pulse_c_rate": 1.5,
+        "pulse_duration_s": 30,
+        "record_time_pulse_s": 0.1,
+        "record_time_rest_s": 1,
+        "recovery_min": 30,
+        "rest_min": 30,
+        "return_c_rate": 0.33,
+        "return_pulse": true,
+        "soc_interval_percent": 10,
+        "soc_mode": "specific",
+        "soc_points": [
+          80,
+          50,
+          20
+        ],
+        "soc_step_c_rate": 0.33,
+        "stabilization_min": 60,
+        "time_limit_h": 48,
+        "voltage_change_mV": 10
+      }
+    },
+    {
+      "id": "blk_6",
+      "type": "cycle",
+      "params": {
+        "charge_c_rate": 0.5,
+        "charge_mode": "cccv",
+        "charge_voltage_V": 4.2,
+        "count": 50,
+        "cv_cutoff_c": 0.05,
+        "discharge_c_rate": 0.5,
+        "discharge_voltage_V": 2.5,
+        "record_time_s": 30,
+        "rest_after_charge_min": 30,
+        "rest_after_discharge_min": 30,
+        "time_limit_h": 48,
+        "voltage_change_mV": 10
+      }
+    },
+    {
+      "id": "blk_7",
+      "type": "cycle",
+      "params": {
+        "charge_c_rate": 0.5,
+        "charge_mode": "cc",
+        "charge_voltage_V": 4.2,
+        "count": 100,
+        "cv_cutoff_c": 0.05,
+        "discharge_c_rate": 0.5,
+        "discharge_voltage_V": 2.5,
+        "record_time_s": 30,
+        "rest_after_charge_min": 30,
+        "rest_after_discharge_min": 30,
+        "time_limit_h": 48,
+        "voltage_change_mV": 10
+      }
+    },
+    {
+      "id": "blk_8",
+      "type": "pulse_test",
+      "params": {
+        "capacity_ref_block_id": "",
+        "charge_c_rate": 0.2,
+        "charge_voltage_V": 4.2,
+        "cv_cutoff_c": 0.05,
+        "discharge_voltage_V": 2.5,
+        "pulse_c_rate": 1.5,
+        "pulse_duration_s": 30,
+        "record_time_pulse_s": 1,
+        "record_time_rest_s": 30,
+        "recovery_min": 30,
+        "rest_min": 30,
+        "return_c_rate": 0.1,
+        "return_pulse": true,
+        "soc_interval_percent": 10,
+        "soc_mode": "interval",
+        "soc_points": [
+          80,
+          60,
+          40,
+          20
+        ],
+        "soc_step_c_rate": 0.1,
+        "stabilization_min": 60,
+        "time_limit_h": 48,
+        "voltage_change_mV": 10
+      }
+    }
+  ]
+}

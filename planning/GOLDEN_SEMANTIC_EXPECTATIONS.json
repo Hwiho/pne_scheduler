@@ -1,0 +1,150 @@
+{
+  "schema": "pne_scheduler.golden_semantic/v1",
+  "source": "planning/GOLDEN_FIXTURES_LOCKED.json",
+  "offset_map": "schema/ensol_v612.py",
+  "notes": [
+    "Core Ensol v612 offsets apply to 612-byte steps; 696-byte golden steps use the same +12/+16/+20/+28/+32 layout for these fields.",
+    "Values extracted from locked fixtures 2026-09-01; used by tests/test_golden_semantic.py."
+  ],
+  "fixtures": [
+    {
+      "id": "golden-formation-696",
+      "path": "sch_lab_zip/00207966_260422_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch",
+      "checks": [
+        {
+          "step_no": 4,
+          "step_type": "CC_CHG",
+          "volt_or_vlim_mV": 3600.0,
+          "current_mA": 120.0,
+          "time_or_rest_s": 7200.0,
+          "voltage_cutoff_mV": 3447.0
+        }
+      ]
+    },
+    {
+      "id": "golden-cycle-696",
+      "path": "sch_lab_zip/00207966_250916_Gr-SiC_288kgf_1.5Mpa_0.5C cycle.sch",
+      "checks": [
+        {
+          "step_no": 4,
+          "step_type": "CCCV",
+          "volt_or_vlim_mV": 4200.0,
+          "current_mA": 100.0,
+          "time_or_rest_s": 54000.0,
+          "cv_cutoff_mA": 50.0
+        },
+        {
+          "step_no": 6,
+          "step_type": "CC_DCHG",
+          "volt_or_vlim_mV": 2400.0,
+          "current_mA": 100.0,
+          "time_or_rest_s": 54000.0,
+          "voltage_cutoff_mV": 2500.0
+        }
+      ]
+    },
+    {
+      "id": "golden-cycle-612-long",
+      "path": "capacheck_zip/00207966_260803_727도급셀_Set8_45도 Cycle.sch",
+      "checks": [
+        {
+          "step_no": 4,
+          "step_type": "CCCV",
+          "volt_or_vlim_mV": 4200.0,
+          "current_mA": 24.254,
+          "time_or_rest_s": 21600.0,
+          "cv_cutoff_mA": 3.638
+        },
+        {
+          "step_no": 6,
+          "step_type": "CC_DCHG",
+          "volt_or_vlim_mV": 2000.0,
+          "current_mA": 24.254,
+          "time_or_rest_s": 21600.0,
+          "voltage_cutoff_mV": 2500.0
+        }
+      ]
+    },
+    {
+      "id": "golden-rpt-612",
+      "path": "capacheck_zip/차효현_3350_L.4.36_NP1.08_RPT_SOC50 End_챔버미연동.sch",
+      "checks": [
+        {
+          "step_no": 4,
+          "step_type": "CCCV",
+          "volt_or_vlim_mV": 4200.0,
+          "current_mA": 22.53,
+          "time_or_rest_s": 28800.0,
+          "cv_cutoff_mA": 3.38
+        },
+        {
+          "step_no": 6,
+          "step_type": "CC_DCHG",
+          "volt_or_vlim_mV": 2000.0,
+          "current_mA": 22.53,
+          "time_or_rest_s": 28800.0,
+          "voltage_cutoff_mV": 2500.0
+        }
+      ]
+    },
+    {
+      "id": "golden-qpeed-612",
+      "path": "capacheck_zip/07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch",
+      "checks": [
+        {
+          "step_no": 4,
+          "step_type": "CCCV",
+          "volt_or_vlim_mV": 4200.0,
+          "current_mA": 24.196,
+          "time_or_rest_s": 21600.0,
+          "cv_cutoff_mA": 7.259
+        }
+      ]
+    },
+    {
+      "id": "golden-hppc-612",
+      "path": "hppc/HPPC_Full range.sch",
+      "checks": [
+        {
+          "step_no": 4,
+          "step_type": "CCCV",
+          "volt_or_vlim_mV": 4200.0,
+          "current_mA": 8.324,
+          "time_or_rest_s": 57600.0,
+          "cv_cutoff_mA": 4.162
+        },
+        {
+          "step_no": 6,
+          "step_type": "CC_DCHG",
+          "volt_or_vlim_mV": 2000.0,
+          "current_mA": 8.324,
+          "time_or_rest_s": 57600.0,
+          "voltage_cutoff_mV": 2500.0
+        }
+      ]
+    },
+    {
+      "id": "golden-capacheck-612-b0",
+      "path": "capacheck_zip/9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
+      "checks": [
+        {
+          "step_no": 4,
+          "step_type": "CCCV",
+          "volt_or_vlim_mV": 4200.0,
+          "current_mA": 7.655,
+          "time_or_rest_s": 21600.0,
+          "cv_cutoff_mA": 3.828
+        },
+        {
+          "step_no": 6,
+          "step_type": "CC_DCHG",
+          "volt_or_vlim_mV": 2000.0,
+          "current_mA": 7.655,
+          "time_or_rest_s": 21600.0,
+          "voltage_cutoff_mV": 2500.0,
+          "cap_mode_byte_496": 1
+        }
+      ]
+    }
+  ]
+}

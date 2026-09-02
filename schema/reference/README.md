@@ -26,7 +26,7 @@ python pne_scheduler/tools/export_sch_schema_xlsx.py
 ## How this repo uses it
 
 - `schema/fields.py` — evidence-qualified offsets used by parser/writer (may lag Excel until validated against fixtures + controlled pairs)
-- `docs/SCH_VALIDATION_INTAKE.md` — before/after `.sch` pairs to promote field confidence
+- `docs/GATE_B.md` — before/after `.sch` pairs to promote field confidence
 - `planning/ROADMAP.md` Gate B — schema as single source of truth
 
 > **Note:** Excel column order defines logical struct layout. Actual on-disk byte offsets must still be verified against real `.sch` fixtures and CTSPro-controlled pairs.

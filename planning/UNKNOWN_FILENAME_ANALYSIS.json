@@ -1,0 +1,169 @@
+{
+  "total_unknown": 7458,
+  "per_unit": {
+    "PNE01": {
+      "unknown_count": 3
+    },
+    "PNE02": {
+      "unknown_count": 1978
+    },
+    "PNE03": {
+      "unknown_count": 694
+    },
+    "PNE04": {
+      "unknown_count": 2645
+    },
+    "PNE05": {
+      "unknown_count": 1203
+    },
+    "PNE22": {
+      "unknown_count": 935
+    }
+  },
+  "rule_hits": {
+    "soc_only": 253,
+    "c_rate_token": 244,
+    "stack_mono": 139,
+    "ch_dch_token": 21,
+    "wip": 9,
+    "lt_profile": 5,
+    "preheat": 3,
+    "xrm": 1,
+    "cip": 1,
+    "std_ref": 1
+  },
+  "examples": {
+    "wip": [
+      "00214700_230120 [╜┬▒µ] Set02 ╟┴╕« jig300 a WIP.sch",
+      "00214700_230120 [╜┬▒µ] Set03 ╟┴╕« jig200 a WIP.sch",
+      "220331 [├╓╢⌡] Set06 CB78 WIP └╜▒╪.sch",
+      "240617_07004563_IP_R1 WIP.sch"
+    ],
+    "stack_mono": [
+      "00219150_230517_STACK_set19_asymmetry mono open jig.sch",
+      "00219150_230901_STACK_set32_1_WIP mono hana zone TR.sch",
+      "00219150_230901_STACK_set32_2_WIP mono hana zone TL.sch",
+      "00224327_260325_ela_4stack_10min.sch"
+    ],
+    "preheat": [
+      "00219150_230726_STACK_set15_1_B_wip pre heating 1min.sch",
+      "00219150_230726_STACK_set15_2_B_wip pre heating 5min.sch",
+      "00219150_230726_STACK_set15_4_B_wip pre heating 30min.sch"
+    ],
+    "c_rate_token": [
+      "00219150_230803_STACK_set27_A_Ctype 1919C Al plate CIP.sch",
+      "00219150_230817_STACK_set27_C_Atype 1919C.sch",
+      "00228713_250617 [└╠╡╡┴▀] Set1_2C CC plating_AgC 1to2 L0.5_3350.sch",
+      "00228713_250617 [└╠╡╡┴▀] Set2_2C CC plating_AgC 1to3 L0.4_3350.sch"
+    ],
+    "xrm": [
+      "00219150_230824_STACK_set24_AA all in one_after XRM.sch"
+    ],
+    "ch_dch_token": [
+      "07000872_250310_JHY_Ref_SOC_Ch_L1_L6_pre_1.sch",
+      "07000872_250310_JHY_Ref_SOC_Ch_L1_L6_pre_2_3.sch",
+      "16.8mAh 01C CH.sch",
+      "07001096_250905_LWR_DCH_DurationTime_OC_F0010.sch"
+    ],
+    "soc_only": [
+      "07005364_250514_JHY_SOC08_033C_SOC100_║╨╝«.sch",
+      "07006392_250402 [▒Φ▒ñ╚±] Set3_AgLTOC_2_SOC100.sch",
+      "07006392_250515 [▒Φ▒ñ╚±] AgC CPE_SOC100.sch",
+      "07100395_260330_XRD ├°┴ñ └ⁿ┤▐ SOC0 ╝╝╞├.sch"
+    ],
+    "cip": [
+      "220331 [├╓╢⌡] Set05 CB78 CIP ╛τ└╜▒╪.sch"
+    ],
+    "std_ref": [
+      "220706_[KDH]_Set23_KTR602 standardization.sch"
+    ],
+    "lt_profile": [
+      "07005869_240910_JKgen2_LT6Cathode_F0010_.sch",
+      "07005869_240910_Ref_LT6Cathode_F0010_.sch",
+      "07005869_240910_SLXS_LT6Cathode_F0010_.sch",
+      "07005869_240910_SLXS_LT6Cathode_F0010__000.sch"
+    ]
+  },
+  "unmatched_sample": [
+    "07100395_260826_260821_ref.sch",
+    "5mV.sch",
+    "07100766_260728_5mV_SJ1300_6040_C.sch",
+    "0.5mA.sch",
+    "00207966_260626_618╡╡▒▐╝┐_set 0_25╡╡ └·╟╫├°┴ñ ╚─_45╡╡ └·╟╫├°┴ñ.sch",
+    "00207966_260626_618╡╡▒▐╝┐_set 2_25╡╡ └·╟╫├°┴ñ ╚─_45╡╡ └·╟╫├°┴ñ.sch",
+    "00207966_260626_618╡╡▒▐╝┐_set 3_25╡╡ └·╟╫├°┴ñ ╚─_45╡╡ └·╟╫├°┴ñ.sch",
+    "00207966_260626_618╡╡▒▐╝┐_set 4_25╡╡ └·╟╫├°┴ñ ╚─_45╡╡ └·╟╫├°┴ñ.sch",
+    "00207966_260626_618╡╡▒▐╝┐_set 5_25╡╡ └·╟╫├°┴ñ ╚─_45╡╡ └·╟╫├°┴ñ.sch",
+    "00207966_260629_N3-1_25╡╡ └·╟╫├°┴ñ.sch",
+    "00209060_241204_HDK_4_Framto_FeNi40_8um_2_3_re.sch",
+    "00209060_241204_HDK_5_Framto_FeNi25_3_re.sch",
+    "00209060_241204_HDK_6_SKNX_FeNi70_1_re.sch",
+    "00209060_250124_HDK_4_NiCu_7Mpa.sch",
+    "00209060_250207_HDK_1_Ref.sch",
+    "00209060_250207_HDK_Ref.sch",
+    "00209060_250207_HDK_Ref_000.sch",
+    "00209060_250214_HDK_1_Ref.sch",
+    "00209060_250214_HDK_2_Pri_Ag.sch",
+    "00209060_250307_HDK_1_ref.sch",
+    "00209060_250307_HDK_2_Civen_Ni.sch",
+    "00209060_250307_HDK_3_SKNX_Ni90.sch",
+    "00209060_250307_HDK_3_SKNX_Ni90_000.sch",
+    "00209060_250404_HDK_3_NIF.sch",
+    "00209060_250404_HDK_4_NIFP.sch",
+    "00209060_250502_HDK_4_1_╡┐╛τ_Ni50_250529.sch",
+    "00209060_250508_HDK_5_BGN_Primer.sch",
+    "00215365_240909_ref_sk05t+si_sk08t_pne2_01.sch",
+    "00215365_240909_ref_sk05t+si_sk08t_pne2_02.sch",
+    "00215365_240909_ref_sk05t+si_sk08t_pne2_03.sch",
+    "00215365_240909_ref_sk05t+si_sk08t_pne2_04.sch",
+    "00215365_240909_ref_sk05t+si_sk08t_pne2_05.sch",
+    "00215365_240909_ref_sk05t+si_sk08t_pne2_06.sch",
+    "00215365_240909_ref_sk05t+si_sk08t_pne2_07.sch",
+    "00215365_240909_ref_sk05t+si_sk08t_pne2_08.sch",
+    "00215365_240909_ref_sk05t+si_sk08t_pne2_09.sch",
+    "00215365_240909_ref_sk05t+si_sk08t_pne2_10.sch",
+    "00215365_241025_1818_SKPU_3_5_8_01.sch",
+    "00215365_241025_1818_SKPU_3_5_8_02.sch",
+    "00215365_241025_1818_SKPU_3_5_8_03.sch",
+    "00215365_241025_1818_SKPU_3_5_8_04.sch",
+    "00215365_241025_1818_SKPU_3_5_8_05.sch",
+    "00215365_241025_1818_SKPU_3_5_8_06.sch",
+    "00215365_241025_1818_SKPU_3_5_8_07.sch",
+    "00215365_241025_1818_SKPU_3_5_8_08.sch",
+    "00215365_241025_1818_SKPU_3_5_8_09.sch",
+    "00215471_221005_[KDH]_CNF_0-5.sch",
+    "00215471_221005_[KDH]_S40_f_EB02_up.sch",
+    "00215471_221222_[KDH]_set44_ref_30um-3.sch",
+    "00215471_221222_[KDH]_set44_S40-f_30um.sch",
+    "00215471_221227_[KDH]_set45_T1707_BB.sch",
+    "00215471_230105_[KDH] S33_ref_30um.sch",
+    "00215471_230105_[KDH] S40f_T2004_30um.sch",
+    "00215471_230126 [KDH] Ref_30um_Low-loading.sch",
+    "00215471_230202 [KDH] Ref_30um_Low-loading.sch",
+    "00215471_230207 [KDH] Ref_30um_cathode.sch",
+    "00215471_230207 [KDH] set4_BN210.sch",
+    "00215471_230209 [KDH] set4_BN210.sch",
+    "00215471_230209 [KDH] set4_ref-30um.sch",
+    "00215471_230214 [KDH] set5_C2_T1707-5_30.sch",
+    "00215471_230214 [KDH] set5_S33_T1707-5_30.sch",
+    "00215471_230214 [KDH] set5_S40_T1707-5_30.sch",
+    "00215570_230417_1_CB115_7per_18.5mAh.sch",
+    "00215570_230417_1_REF_18.8mAh.sch",
+    "00215570_230417_1_REF_18.8mAh_000.sch",
+    "00215570_230417_3_heraeusAgC_18.3mAh.sch",
+    "00215570_230417_4_SUS_19.7mAh.sch",
+    "00215570_230704_set5_REF_step.sch",
+    "00215570_230704_set6_REF_wostep.sch",
+    "00219131_231017_Stack_Cathode Double CIP_10Mpa.sch",
+    "00219150_221228_KYE_set2_C frame bi cell.sch",
+    "00219150_230105_KYE_set3.sch",
+    "00219150_230112_KYE_set5.sch",
+    "00219150_230119_KYE_set6.sch",
+    "00219150_230119_KYE_set8.sch",
+    "00219150_230126_KYE_set6.sch",
+    "00219150_230126_KYE_set7.sch",
+    "00219150_230126_KYE_set8.sch",
+    "00219150_230202_KYE_set9_3.sch",
+    "00219150_230202_KYE_set9_4.sch"
+  ]
+}
