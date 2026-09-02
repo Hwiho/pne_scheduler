@@ -95,3 +95,22 @@ def test_infer_protocol_capacheck_pattern() -> None:
     ]
     result = infer_protocol_from_schedule("test.sch", steps)
     assert result.protocol.value == "capacheck"
+
+
+def test_infer_protocol_rate_capability_from_multiple_rates() -> None:
+    class Step:
+        def __init__(self, crate: float) -> None:
+            self.f_iref = 1000.0
+            self.c_rate = crate
+            self.c_rate_preset = crate
+            self.c_rate_label = f"{crate:g}C"
+            self.step_type = "CC_DCHG"
+
+    steps = [Step(0.2), Step(0.5), Step(1.0), Step(2.0)]
+    result = infer_protocol_from_schedule(
+        "sample_rate_test.sch",
+        steps,
+        filename_category="rate_test",
+    )
+    assert result.protocol.value == "rate_capability"
+    assert result.expected_c_rates == ("0.2C", "0.5C", "1C", "2C")

@@ -26,6 +26,7 @@ class InferredProtocol(StrEnum):
     INSITU_CYCLE = "insitu_cycle"
     RPT = "rpt"
     QC = "qc"
+    RATE_CAPABILITY = "rate_capability"
     UNKNOWN = "unknown"
 
 
@@ -57,6 +58,15 @@ def _active_c_rates(steps: list[object]) -> list[float]:
     return rates
 
 
+def _distinct_rates(rates: list[float], *, rtol: float = 0.08) -> list[float]:
+    distinct: list[float] = []
+    for rate in sorted(rates):
+        if any(abs(rate - known) / max(rate, known) <= rtol for known in distinct):
+            continue
+        distinct.append(rate)
+    return distinct
+
+
 def _has_rpt_pattern(steps: list[object], rates: list[float]) -> bool:
     filename_hint = False
     has_c3 = any(_close(r, RPT_DISCHARGE_C_RATE) for r in rates)
@@ -78,6 +88,24 @@ def infer_protocol_from_schedule(
     """Infer lab protocol from C-rate fingerprints and filename."""
     name = filename.lower()
     rates = _active_c_rates(steps)
+    distinct_rates = _distinct_rates(rates)
+
+    if (
+        filename_category == "rate_capability"
+        or "rate capability" in name
+        or "rate_capability" in name
+        or (
+            filename_category == "rate_test"
+            and len(distinct_rates) >= 3
+        )
+    ):
+        labels = tuple(f"{rate:g}C" for rate in distinct_rates)
+        return ProtocolInference(
+            protocol=InferredProtocol.RATE_CAPABILITY,
+            confidence=0.9 if filename_category == "rate_capability" else 0.8,
+            detail=f"multiple C-rate levels ({len(distinct_rates)})",
+            expected_c_rates=labels,
+        )
 
     if filename_category == "formation" or _filename_is_formation(name):
         return ProtocolInference(

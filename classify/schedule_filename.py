@@ -16,6 +16,7 @@ class ScheduleCategory(StrEnum):
     RPT = "rpt"
     QPEED = "qpeed"
     HPPC = "hppc"
+    RATE_CAPABILITY = "rate_capability"
     RATE_TEST = "rate_test"
     SOC_SETTING = "soc_setting"
     DCIR = "dcir"
@@ -58,6 +59,7 @@ CATEGORY_TO_MODULE: dict[ScheduleCategory, str] = {
     ScheduleCategory.RPT: "rpt",
     ScheduleCategory.QPEED: "qpeed",
     ScheduleCategory.HPPC: "hppc",
+    ScheduleCategory.RATE_CAPABILITY: "rate_test",
     ScheduleCategory.RATE_TEST: "rate_test",
     ScheduleCategory.SOC_SETTING: "soc_setting",
     ScheduleCategory.DCIR: "dcir",
@@ -77,6 +79,12 @@ CATEGORY_TO_MODULE: dict[ScheduleCategory, str] = {
 _QPEED_PATTERN = re.compile(r"qpeed", re.IGNORECASE)
 _QPEED_SOC_SETTING_PATTERN = re.compile(r"soc[_\s-]*setting", re.IGNORECASE)
 _HPPC_PATTERN = re.compile(r"hppc|pulse\s+test|pulse\s+heat", re.IGNORECASE)
+_RATE_CAPABILITY_PATTERN = re.compile(
+    r"rate[\s_-]*cap(?:ability)?|multi[\s_-]*rate|"
+    r"(?:c[\s_-]*)?rate[\s_-]*(?:평가|evaluation|performance)|"
+    r"율\s*특성|다율",
+    re.IGNORECASE,
+)
 _RATE_TEST_PATTERN = re.compile(
     r"rate[_\s-]?test|ratetest|mAh\s*rate|rate\+cycle|\brate\.sch|"
     r"(?:^|[\s_\[\]#])(?:\d+(?:\.\d+)?c\s*)?rate(?:[_\s.+]|$)|"
@@ -180,6 +188,11 @@ _RULES: tuple[tuple[str, re.Pattern[str], ScheduleCategory], ...] = (
         "cyc_abbrev_keyword",
         re.compile(r"\d+cyc\b", re.IGNORECASE),
         ScheduleCategory.CYCLE_LIFE,
+    ),
+    (
+        "rate_capability_keyword",
+        _RATE_CAPABILITY_PATTERN,
+        ScheduleCategory.RATE_CAPABILITY,
     ),
     (
         "rate_test_keyword",

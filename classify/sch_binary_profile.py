@@ -49,6 +49,23 @@ def _type_short(type_code: int) -> str:
     return _TYPE_SHORT.get(masked, f"T{masked:04x}")
 
 
+def distinct_current_levels(
+    currents: list[float],
+    *,
+    relative_tolerance: float = 0.08,
+) -> list[float]:
+    """Collapse near-identical positive setpoints into distinct current levels."""
+    levels: list[float] = []
+    for current in sorted(value for value in currents if value > 0):
+        if any(
+            abs(current - level) / max(current, level) <= relative_tolerance
+            for level in levels
+        ):
+            continue
+        levels.append(current)
+    return levels
+
+
 def step_signature_from_data(data: bytes) -> str | None:
     """Return a compact step-type sequence, e.g. ``CCCV-REST-CC_DCHG-LOOP-END``."""
     profile = binary_profile(data)
@@ -107,6 +124,7 @@ def binary_profile(data: bytes) -> dict | None:
                 currents.append(i_ma)
                 max_current = max(max_current, i_ma)
 
+    current_levels = distinct_current_levels(currents)
     return {
         "version": f"0x{version:08x}" if version is not None else None,
         "payload_offset": payload,
@@ -119,4 +137,6 @@ def binary_profile(data: bytes) -> dict | None:
         "loop_count_max": max(loop_counts) if loop_counts else None,
         "current_mA_max": round(max_current, 4) if max_current else None,
         "current_mA_p50": round(sorted(currents)[len(currents) // 2], 4) if currents else None,
+        "current_mA_levels": [round(value, 4) for value in current_levels],
+        "current_level_count": len(current_levels),
     }

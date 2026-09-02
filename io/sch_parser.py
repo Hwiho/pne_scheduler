@@ -6,7 +6,7 @@ import struct
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from ..classify import ScheduleFilenameMatch, classify_schedule_filename
+from ..classify import ScheduleFilenameMatch, classify_schedule
 from ..schema.enums import (
     SCH_STEP_TYPE_CC_CHARGE,
     SCH_STEP_TYPE_CC_DISCHARGE,
@@ -97,7 +97,7 @@ def parse_schedule_file(path: str | Path) -> ScheduleDocument:
     sch_version = struct.unpack_from("<I", data, 4)[0] if len(data) >= 8 else None
     raw_steps = _read_steps(data, payload_offset, step_size)
 
-    classification = classify_schedule_filename(resolved)
+    classification = classify_schedule(resolved, data)
     geometry = infer_cell_geometry(
         resolved.name,
         [s.setpoint_mV for s in raw_steps],
