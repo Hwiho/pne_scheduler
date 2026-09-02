@@ -95,6 +95,41 @@
       "caution": "Target semantics and precedence over legacy offset +48 remain externally unverified."
     }
   },
+  "assb_divergence_resolution": {
+    "nGotoStepID": {
+      "assb_offset": 84,
+      "legacy_pne_offset": 92,
+      "status": "externally_unresolved",
+      "reason": "Neither location has enough labelled target-only evidence."
+    },
+    "fSocRate": {
+      "assb_offset": 384,
+      "legacy_pne_offset": 392,
+      "status": "corpus_resolved_to_ensol_semantics",
+      "canonical_field": "dod_percent@384",
+      "evidence": "554/856 filename SOC values match stored 100-SOC at +384."
+    },
+    "fMaxCapacity": {
+      "assb_offset": 412,
+      "legacy_pne_offset": 428,
+      "status": "externally_unresolved",
+      "reason": "No direct filename-value relationship establishes either field."
+    },
+    "bUseActualCapa": {
+      "assb_offset": 496,
+      "legacy_pne_offset": 512,
+      "status": "corpus_resolved_to_ensol_semantics",
+      "canonical_field": "cap_mode@496",
+      "evidence": "Golden capacheck plus 658 normalized pair comparisons."
+    },
+    "bUseDataStepNo": {
+      "assb_offset": 497,
+      "legacy_pne_offset": 513,
+      "status": "corpus_resolved_to_ensol_semantics",
+      "canonical_field": "cap_ref_step@497",
+      "evidence": "Ensol map plus 28 normalized pair comparisons."
+    }
+  },
   "limitations": [
     "No mined pair is a strict CTSPro controlled pair with a single UI-originated change and reopen evidence.",
     "Only 15 PNE corpus schedules use the 696-byte layout; late 612-byte offsets must not be transferred to 696.",

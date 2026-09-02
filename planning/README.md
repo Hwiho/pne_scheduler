@@ -23,6 +23,7 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 | [`PNE_UNIT_COMPARISON.json`](PNE_UNIT_COMPARISON.json) | Cross-unit diff output |
 | [`GATE_B_CORPUS_EVIDENCE.json`](GATE_B_CORPUS_EVIDENCE.json) | Corpus-inferred 612-byte field evidence |
 | [`GATE_B_VALIDATION_REPORT.json`](GATE_B_VALIDATION_REPORT.json) | Repository readiness vs actual Gate B exit |
+| [`Q_NOM_POLICY.json`](Q_NOM_POLICY.json) | Explicit writer vs inferred viewer capacity contract |
 | [`GOLDEN_FIXTURES_LOCKED.json`](GOLDEN_FIXTURES_LOCKED.json) | Locked golden test paths |
 
 ## Gate B / fixtures

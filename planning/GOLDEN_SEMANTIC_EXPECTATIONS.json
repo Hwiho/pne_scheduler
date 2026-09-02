@@ -133,7 +133,9 @@
           "volt_or_vlim_mV": 4200.0,
           "current_mA": 7.655,
           "time_or_rest_s": 21600.0,
-          "cv_cutoff_mA": 3.828
+          "cv_cutoff_mA": 3.828,
+          "record_dV_mV": 10.0,
+          "record_time_s": 60.0
         },
         {
           "step_no": 6,
@@ -143,6 +145,14 @@
           "time_or_rest_s": 21600.0,
           "voltage_cutoff_mV": 2500.0,
           "cap_mode_byte_496": 1
+        }
+      ],
+      "loop_checks": [
+        {
+          "step_no": 14,
+          "loop_count": 2,
+          "loop_goto_legacy": 0,
+          "loop_goto_ensol": 1
         }
       ]
     }
