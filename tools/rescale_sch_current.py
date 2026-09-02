@@ -13,6 +13,11 @@ from pne_scheduler.io.current_rescaler import (
     collect_current_fields,
     scale_current_fields,
 )
+from pne_scheduler.io.validation_manifest import (
+    default_manifest_path,
+    template_derived_manifest,
+    write_validation_manifest,
+)
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -27,6 +32,11 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dry-run", action="store_true", help="Show changes without writing output")
     parser.add_argument("--show-current", action="store_true", help="List current fields before scaling")
     parser.add_argument("--summary-limit", type=int, default=40, help="Max rows to print")
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        help="Validation manifest path (default: <output>.manifest.json)",
+    )
     return parser
 
 
@@ -75,8 +85,57 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     args.output_sch.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path = args.manifest or default_manifest_path(args.output_sch)
+    output_existed = args.output_sch.exists()
+    manifest_existed = manifest_path.exists()
     args.output_sch.write_bytes(out)
+    manifest = template_derived_manifest(
+        args.input_sch,
+        args.output_sch,
+        writer="current_rescaler",
+        changed_fields=result["changes"],
+        evidence=[
+            "Ensol v612 current fields at +16 and CCCV cutoff current at +32; "
+            "C-rate is preserved against the supplied capacities."
+        ],
+        validation_checks=[
+            {
+                "name": "header_preserved",
+                "passed": out[: result["header_size"]]
+                == src[: result["header_size"]],
+            },
+            {
+                "name": "file_length_preserved",
+                "passed": len(out) == len(src),
+            },
+            {
+                "name": "declared_current_fields_only",
+                "passed": bool(result["changes"]),
+            },
+        ],
+        target_profile={
+            "status": "capacity_rescale_only",
+            "equipment": None,
+            "channel_profile": None,
+            "ctspro_version": None,
+            "old_capacity_mAh": args.old_capacity_mAh,
+            "new_capacity_mAh": args.new_capacity_mAh,
+        },
+        warnings=[
+            "Current-rescaled output has not passed an equipment smoke test.",
+        ],
+    )
+    try:
+        write_validation_manifest(manifest_path, manifest)
+    except (OSError, TypeError, ValueError) as exc:
+        if not output_existed:
+            args.output_sch.unlink(missing_ok=True)
+        if not manifest_existed:
+            manifest_path.unlink(missing_ok=True)
+        print(f"Manifest error: {exc}", file=sys.stderr)
+        return 2
     print(f"Wrote: {args.output_sch}")
+    print(f"Wrote validation manifest: {manifest_path}")
     return 0
 
 

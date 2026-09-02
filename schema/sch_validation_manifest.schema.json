@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pne_scheduler.sch_validation_manifest/v1",
+  "title": "PNE SCH guarded-writer validation manifest",
+  "type": "object",
+  "required": [
+    "schema",
+    "writer",
+    "status",
+    "equipment_executable",
+    "template",
+    "target_profile",
+    "output",
+    "changed_fields",
+    "evidence",
+    "validation",
+    "warnings"
+  ],
+  "properties": {
+    "schema": {
+      "const": "pne_scheduler.sch_validation_manifest/v1"
+    },
+    "writer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": ["experimental", "analysis_only", "equipment_validated"]
+    },
+    "equipment_executable": {
+      "type": "boolean"
+    },
+    "template": {
+      "type": ["object", "null"]
+    },
+    "source_project": {
+      "type": "object"
+    },
+    "target_profile": {
+      "type": "object"
+    },
+    "output": {
+      "type": "object",
+      "required": ["path", "sha256", "size"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "changed_fields": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "evidence": {
+      "type": "array"
+    },
+    "validation": {
+      "type": "object",
+      "required": ["all_passed", "checks", "equipment_smoke_test"],
+      "properties": {
+        "all_passed": { "type": "boolean" },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "passed"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "passed": { "type": "boolean" }
+            }
+          }
+        },
+        "equipment_smoke_test": {
+          "type": "string",
+          "enum": ["not_run", "passed", "failed"]
+        }
+      }
+    },
+    "warnings": {
+      "type": "array"
+    }
+  }
+}

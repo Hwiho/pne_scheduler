@@ -80,6 +80,8 @@ def test_template_writer_preserves_every_undeclared_byte(tmp_path: Path) -> None
     assert result.report["changed_fields"] == result.report["applied"]
     assert result.report["changed_fields"][0]["evidence"]
     assert result.report["validation"]["all_passed"] is True
+    assert result.report["validation"]["diff"]["compatible"] is True
+    assert result.report["validation"]["diff"]["controlled_pair_clean"] is True
     assert result.report["validation"]["equipment_smoke_test"] == "not_run"
     assert result.report["header_preserved"] is True
     assert result.report["file_length_preserved"] is True
@@ -156,6 +158,7 @@ def test_patch_cli_writes_report_and_warns(tmp_path: Path, capsys) -> None:
     assert manifest["changed_fields"][0]["field"] == "fEndV"
     assert manifest["changed_fields"][0]["evidence"]
     assert manifest["validation"]["all_passed"] is True
+    assert manifest["validation"]["diff"]["controlled_pair_clean"] is True
     assert "Do not execute" in capsys.readouterr().out
 
 

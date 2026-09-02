@@ -15,6 +15,11 @@ from ..io.sch_binary import (
     renumber_steps,
     write_sch_binary,
 )
+from ..io.validation_manifest import (
+    default_manifest_path,
+    template_derived_manifest,
+    write_validation_manifest,
+)
 from ..schema.enums import SCH_STEP_TYPE_END, SCH_STEP_TYPE_LOOP
 from .checkpoint import ExperimentCheckpoint, detect_checkpoint
 
@@ -42,6 +47,7 @@ class ResumeResult:
     plan: ResumePlan
     output_path: Path
     document: SchBinaryDocument
+    manifest_path: Path
 
 
 def build_resume_plan(
@@ -92,6 +98,7 @@ def splice_resume_schedule(
     *,
     resume_sch_step: int | None = None,
     remaining_loop_count: int | None = None,
+    validation_manifest_path: str | Path | None = None,
 ) -> ResumeResult:
     plan = build_resume_plan(
         sch_path,
@@ -122,10 +129,71 @@ def splice_resume_schedule(
     )
 
     out = Path(output_path)
+    manifest_path = (
+        Path(validation_manifest_path)
+        if validation_manifest_path is not None
+        else default_manifest_path(out)
+    )
+    output_existed = out.exists()
+    manifest_existed = manifest_path.exists()
     write_sch_binary(resumed, out)
 
     plan.resumed_step_count = len(selected)
-    return ResumeResult(plan=plan, output_path=out, document=resumed)
+    written = read_sch_binary(out)
+    changed_fields = [
+        {
+            "operation": "splice_and_renumber",
+            "source_start_step": plan.resume_sch_step,
+            "source_step_count": plan.original_step_count,
+            "output_step_count": plan.resumed_step_count,
+        }
+    ]
+    if plan.remaining_loop_count is not None:
+        changed_fields.append(
+            {
+                "operation": "set_remaining_loop_count",
+                "value": plan.remaining_loop_count,
+            }
+        )
+    manifest = template_derived_manifest(
+        plan.source_sch,
+        out,
+        writer="resume_splice",
+        changed_fields=changed_fields,
+        evidence=[
+            "Source header and selected step records are preserved before explicit "
+            "renumbering, loop adjustment, and END insertion."
+        ],
+        validation_checks=[
+            {
+                "name": "header_preserved",
+                "passed": written.header == doc.header,
+            },
+            {
+                "name": "structural_reread",
+                "passed": written.step_count == len(selected)
+                and written.steps[-1].is_end,
+            },
+        ],
+        warnings=[
+            *plan.warnings,
+            "Resume output has not passed an equipment smoke test.",
+        ],
+    )
+    try:
+        write_validation_manifest(manifest_path, manifest)
+    except (OSError, TypeError, ValueError):
+        if not output_existed:
+            out.unlink(missing_ok=True)
+        if not manifest_existed:
+            manifest_path.unlink(missing_ok=True)
+        raise
+    return ResumeResult(
+        plan=plan,
+        output_path=out,
+        document=resumed,
+        manifest_path=manifest_path,
+    )
 
 
 def _find_loop_step(steps: tuple[SchBinaryStep, ...]) -> tuple[SchBinaryStep | None, int | None]:

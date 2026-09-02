@@ -244,6 +244,10 @@ def apply_sch_patch(
         output.unlink(missing_ok=True)
         raise ValueError("Patched output failed structural re-read validation")
 
+    from ..tools.compare_sch import compare_sch_files
+
+    diff_report = compare_sch_files(template, output)
+    diff_summary = diff_report["summary"]
     output_bytes = bytes(body)
     validation_checks = [
         {
@@ -265,6 +269,12 @@ def apply_sch_patch(
         {
             "name": "structural_reread",
             "passed": True,
+        },
+        {
+            "name": "binary_diff_compatible",
+            "passed": diff_report["compatible"]
+            and diff_summary["header_changed_byte_count"] == 0
+            and diff_summary["unparsed_changed_byte_count"] == 0,
         },
     ]
     return SchPatchResult(
@@ -297,12 +307,17 @@ def apply_sch_patch(
             },
             "changed_fields": applied,
             "applied": applied,
+            "evidence": sorted({item["evidence"] for item in applied}),
             "changed_byte_count": len(changed_offsets),
             "header_preserved": output_bytes[: doc.payload_offset] == doc.header,
             "file_length_preserved": len(output_bytes) == len(source),
             "validation": {
                 "all_passed": all(check["passed"] for check in validation_checks),
                 "checks": validation_checks,
+                "diff": {
+                    "compatible": diff_report["compatible"],
+                    **diff_summary,
+                },
                 "equipment_smoke_test": "not_run",
             },
             "warnings": warnings,

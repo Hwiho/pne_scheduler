@@ -52,6 +52,11 @@ def _build_parser() -> argparse.ArgumentParser:
     resume.add_argument("--step", type=int, help="Override resume SCH step")
     resume.add_argument("--loops", type=int, help="Override remaining loop count")
     resume.add_argument("--plan-only", action="store_true", help="Print plan without writing")
+    resume.add_argument(
+        "--manifest",
+        type=Path,
+        help="Validation manifest path (default: <output>.manifest.json)",
+    )
 
     bulk = sub.add_parser("bulk-edit", help="Bulk-edit module params in a .schproj")
     bulk.add_argument("project", type=Path, help="Input .schproj path")
@@ -199,8 +204,10 @@ def main(argv: list[str] | None = None) -> int:
             args.output,
             resume_sch_step=args.step,
             remaining_loop_count=args.loops,
+            validation_manifest_path=args.manifest,
         )
         print(f"Wrote {result.output_path}")
+        print(f"Wrote validation manifest to {result.manifest_path}")
         print(result.plan.splice_summary)
         return 0
 
