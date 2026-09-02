@@ -1,6 +1,6 @@
 {
   "schema": "pne_scheduler.gate_b_validation_report/v1",
-  "generated_at": "2026-09-02T04:01:16.552564+00:00",
+  "generated_at": "2026-09-02T04:33:24.313621+00:00",
   "checks": {
     "B3_fixture_catalog": true,
     "B1_step_layout_612_696": true,
@@ -15,7 +15,7 @@
     "exit_code": 0,
     "stdout_tail": [
       ".............................................................            [100%]",
-      "61 passed in 2.34s"
+      "61 passed in 2.94s"
     ],
     "stderr_tail": []
   },

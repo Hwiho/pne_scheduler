@@ -21,7 +21,7 @@
         "00214700_230918_[╜┬╢⌠▒µ]_├µ╣µ└ⁿ▒Γ ╞≥░í_set1_PNE1╚ú▒Γ_231023_└╠╗τ.sch",
         "00214700_230918_[╜┬╢⌠▒µ]_├µ╣µ└ⁿ▒Γ ╞≥░í_set1_PNE1╚ú▒Γ_231024_└╠╗τ.sch"
       ],
-      "priority_score": 936.55
+      "priority_score": 915.69
     },
     {
       "cluster_id": "PNE04|CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END|none",
@@ -62,7 +62,7 @@
         "250513_Dry_1818_604F_SOC100.sch",
         "250520_Dry_1818_612F_SOC100.sch"
       ],
-      "priority_score": 100.93
+      "priority_score": 100.86
     },
     {
       "cluster_id": "PNE04|CCCV-T0003-CC_DCHG-T0003-LOOP-END|none",
@@ -81,7 +81,7 @@
         "07002459_1160C3.sch",
         "07002459_1160C4.sch"
       ],
-      "priority_score": 91.32
+      "priority_score": 95.69
     },
     {
       "cluster_id": "PNE04|T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END|none",
@@ -119,7 +119,7 @@
         "_100226621_240220_GS test wWC_20MPa_3 45.sch",
         "00226621_240207_Dry C_GS64_cyc.sch"
       ],
-      "priority_score": 40.3
+      "priority_score": 41.73
     },
     {
       "cluster_id": "PNE04|CCCV-T0003-CC_DCHG-T0003-LOOP-END|c_rate_token",
@@ -129,9 +129,9 @@
         "c_rate_token"
       ],
       "count": 33,
-      "suggested_category": "rate_test",
+      "suggested_category": "cycle_life",
       "category_votes": {
-        "rate_test": 33
+        "cycle_life": 33
       },
       "examples": [
         "07002459_260703_Dry_3350_1242C.sch",
@@ -140,7 +140,7 @@
         "07002459_Dry3350_1213C.sch",
         "07002459_Dry3350_1214C.sch"
       ],
-      "priority_score": 34.24
+      "priority_score": 35.88
     },
     {
       "cluster_id": "PNE04|T0003-LOOP-T0007-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END|c_rate_token",
@@ -199,7 +199,7 @@
         "260414_LNF 6um DSC.sch",
         "DSC_1049-1050.sch"
       ],
-      "priority_score": 14.0
+      "priority_score": 13.99
     },
     {
       "cluster_id": "PNE04|T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END|none",
@@ -256,7 +256,7 @@
         "07005283_251105_Dry_1818_870RC_87 PTFE05_LBG0125.sch",
         "07005283_251211_Dry_1818_917RC_LS2 LT.sch"
       ],
-      "priority_score": 12.49
+      "priority_score": 12.47
     },
     {
       "cluster_id": "PNE04|CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END|none",
@@ -351,7 +351,7 @@
         "230410_oCB30.sch",
         "230410_YJH_oCB30.sch"
       ],
-      "priority_score": 6.75
+      "priority_score": 6.74
     },
     {
       "cluster_id": "PNE04|CC_DCHG-T0003-LOOP-END|none",
@@ -427,7 +427,7 @@
         "00215540_240213_UCSD_Li2S_1818mono_002.sch",
         "FRL_Li2S.sch"
       ],
-      "priority_score": 5.18
+      "priority_score": 5.0
     },
     {
       "cluster_id": "PNE04|T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END|none",
@@ -463,7 +463,7 @@
         "3350 mono_Gr_Bi40_L5_╕╕╣µ.sch",
         "3350 mono_Gr_Ref._L4.94_╕╕╣µ.sch"
       ],
-      "priority_score": 4.55
+      "priority_score": 4.56
     },
     {
       "cluster_id": "PNE04|T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END|none",
@@ -612,7 +612,7 @@
       "examples": [
         "00217474_230623_[┴ñ▒µ]_┐┬╡╡║░XRD rate▒ε┴÷╕╕.sch"
       ],
-      "priority_score": 3.64
+      "priority_score": 3.63
     },
     {
       "cluster_id": "PNE04|CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END|stack_mono",
@@ -721,6 +721,24 @@
       "priority_score": 2.25
     },
     {
+      "cluster_id": "PNE04|CCCV-T0003-CC_DCHG-T0003-LOOP-END|stack_mono",
+      "unit": "PNE04",
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END",
+      "filename_probes": [
+        "stack_mono"
+      ],
+      "count": 2,
+      "suggested_category": "cycle_life",
+      "category_votes": {
+        "cycle_life": 2
+      },
+      "examples": [
+        "221208 ╛τ▒╪part mono cell_KSH╝÷┴ñ.sch",
+        "221208 ╛τ▒╪part mono cell_▒Φ╕φ╝÷.sch"
+      ],
+      "priority_score": 2.17
+    },
+    {
       "cluster_id": "PNE04|CCCV-T0003-LOOP-END|soc_only,soc_setting_loose",
       "unit": "PNE04",
       "step_signature": "CCCV-T0003-LOOP-END",
@@ -738,25 +756,6 @@
         "Dry_3350_585F_SOC100_re.sch"
       ],
       "priority_score": 2.14
-    },
-    {
-      "cluster_id": "PNE04|T0003-LOOP-T0007-CCCV-T0003-LOOP-END|soc_only,soc_setting_loose",
-      "unit": "PNE04",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-LOOP-END",
-      "filename_probes": [
-        "soc_only",
-        "soc_setting_loose"
-      ],
-      "count": 2,
-      "suggested_category": "soc_setting",
-      "category_votes": {
-        "soc_setting": 2
-      },
-      "examples": [
-        "260417_Dry_1818_1113F_SOC100_re.sch",
-        "Dry_1818_1113F_SOC100_re.sch"
-      ],
-      "priority_score": 2.1
     }
   ],
   "unresolved_tokens": [
@@ -1093,214 +1092,214 @@
       "step_signature": "T0003-LOOP-T0007-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
-      "stem": "250423_Dry_3350_585F_SOC100_re(├µ└ⁿ╕╕ └╠╛ε╝¡).sch",
+      "stem": "00209060_240328_HDK_SUS_Sumi_tokin_re.sch",
       "suggested_category": "cycle_life",
-      "confidence": 0.5714,
+      "confidence": 0.5874,
       "method": "binary_signature",
-      "step_signature": "CCCV-T0003-LOOP-END"
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
-      "stem": "Dry_3350_585F_SOC100_re.sch",
+      "stem": "07002459_1160C1.sch",
       "suggested_category": "cycle_life",
-      "confidence": 0.5714,
+      "confidence": 0.5874,
       "method": "binary_signature",
-      "step_signature": "CCCV-T0003-LOOP-END"
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
-      "stem": "0┴╓┬≈ Dry_1818_796.sch",
-      "suggested_category": "storage",
-      "confidence": 0.5556,
+      "stem": "07002459_1160C2.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
       "method": "binary_signature",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
-      "stem": "0┴╓┬≈ Dry_1818_797.sch",
-      "suggested_category": "storage",
-      "confidence": 0.5556,
+      "stem": "07002459_1160C3.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
       "method": "binary_signature",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
-      "stem": "░φ┐┬└·└σ_250919_Dry_1818_796 0┴╓┬≈.sch",
-      "suggested_category": "storage",
-      "confidence": 0.5556,
+      "stem": "07002459_1160C4.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
       "method": "binary_signature",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
-      "stem": "░φ┐┬└·└σ_250919_Dry_1818_797 0┴╓┬≈.sch",
-      "suggested_category": "storage",
-      "confidence": 0.5556,
+      "stem": "07002459_1160C5.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
       "method": "binary_signature",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END"
-    },
-    {
-      "stem": "00217474_230623_[┴ñ▒µ]_┐┬╡╡║░XRD rate▒ε┴÷╕╕.sch",
-      "suggested_category": "soc_setting",
-      "confidence": 0.55,
-      "method": "filename_probe:xrd",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END"
-    },
-    {
-      "stem": "00217474_230623_[┴ñ▒µ]_┐┬╡╡║░XRD_60╡╡ 0.33C ├µ└ⁿ.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-LOOP-END"
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_260703_Dry_3350_1242C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_260703_Dry_3350_1243C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_260703_Dry_3350_1244C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+    },
+    {
+      "stem": "07002459_CH91_test.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_Dry3350_1213C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_Dry3350_1214C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_Dry3350_1215C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_Dry3350_1216C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_Dry3350_1217C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_Dry3350_1218C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_Dry3350_1219C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_Dry3350_1220C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
       "stem": "07002459_Dry3350_1221C.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
-      "stem": "17.2mAh 0.1C 0.05C full CH.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-LOOP-END"
-    },
-    {
-      "stem": "19.5mAh 0.1C .sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END"
-    },
-    {
-      "stem": "1C=14.31.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-END"
-    },
-    {
-      "stem": "1C=16.05.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-END"
-    },
-    {
-      "stem": "1C=16.33.sch",
-      "suggested_category": "rate_test",
-      "confidence": 0.55,
-      "method": "filename_probe:c_rate_token",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-END"
-    },
-    {
-      "stem": "221026 ╛τ▒╪part mono cell.sch",
+      "stem": "07004563_230822_1-1_Ref_Re.sch",
       "suggested_category": "cycle_life",
-      "confidence": 0.55,
-      "method": "filename_probe:stack_mono",
-      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END"
-    },
-    {
-      "stem": "221208 ╛τ▒╪part mono cell.sch",
-      "suggested_category": "cycle_life",
-      "confidence": 0.55,
-      "method": "filename_probe:stack_mono",
-      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END"
-    },
-    {
-      "stem": "221208 ╛τ▒╪part mono cell_KSH╝÷┴ñ.sch",
-      "suggested_category": "cycle_life",
-      "confidence": 0.55,
-      "method": "filename_probe:stack_mono",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
-      "stem": "221208 ╛τ▒╪part mono cell_▒Φ╕φ╝÷.sch",
+      "stem": "07004563_230822_1-2_Ref_Re.sch",
       "suggested_category": "cycle_life",
-      "confidence": 0.55,
-      "method": "filename_probe:stack_mono",
+      "confidence": 0.5874,
+      "method": "binary_signature",
       "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     },
     {
-      "stem": "250401_R2R_SOC100 for DSC.sch",
-      "suggested_category": "soc_setting",
-      "confidence": 0.55,
-      "method": "filename_probe:soc_only",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-LOOP-END"
+      "stem": "07004563_230822_2-2_SA_Re.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+    },
+    {
+      "stem": "07004563_230822_2-4_SA_Re.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+    },
+    {
+      "stem": "07004563_230822_2-5_SA_Re.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+    },
+    {
+      "stem": "07004563_230831_Ref-3_QC1_Re.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+    },
+    {
+      "stem": "07004563_230831_SA-1_QC1_Re.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+    },
+    {
+      "stem": "07004563_230831_SA-2_QC1_Re.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+    },
+    {
+      "stem": "07004563_230831_SA-3_QC1_Re.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+    },
+    {
+      "stem": "07005283_250528_Dry_1818_635RC_873_1MPa_1_re.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
+    },
+    {
+      "stem": "07005283_250528_Dry_1818_635RC_873_1MPa_2_re.sch",
+      "suggested_category": "cycle_life",
+      "confidence": 0.5874,
+      "method": "binary_signature",
+      "step_signature": "CCCV-T0003-CC_DCHG-T0003-LOOP-END"
     }
   ]
 }

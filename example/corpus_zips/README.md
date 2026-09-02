@@ -4,7 +4,7 @@ Per-cycler `.sch` archives for lab corpus analysis (`planning/LAB_DATA_POLICY.md
 
 | File | Unit | Notes |
 |------|------|-------|
-| `PNE01.zip` … `PNE11.zip`, `PNE22.zip` | PNE## | Filename must be exactly `PNE##.zip` |
+| `PNE01.zip` … `PNE14.zip`, `PNE22.zip` | PNE## | Filename must be exactly `PNE##.zip` |
 
 ## Usage
 

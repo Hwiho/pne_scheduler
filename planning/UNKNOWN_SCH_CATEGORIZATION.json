@@ -1,23 +1,25 @@
 {
   "schema": "pne_scheduler.unknown_sch_categorization/v1",
-  "total_unknown": 8183,
-  "resolved_suggestions": 5635,
-  "resolved_pct": 68.9,
-  "high_confidence": 8,
-  "high_confidence_pct": 0.1,
+  "total_unknown": 8587,
+  "resolved_suggestions": 5884,
+  "resolved_pct": 68.5,
+  "high_confidence": 49,
+  "high_confidence_pct": 0.6,
   "suggested_categories_all": {
-    "unknown": 2548,
-    "formation": 2111,
-    "cycle_life": 1953,
-    "hppc": 579,
-    "rate_test": 362,
-    "charge": 238,
-    "soc_setting": 233,
+    "unknown": 2703,
+    "cycle_life": 2159,
+    "formation": 2135,
+    "hppc": 581,
+    "rate_test": 341,
+    "soc_setting": 278,
+    "charge": 224,
     "storage": 70,
     "rpt": 55,
+    "discharge": 17,
     "qpeed": 16,
-    "discharge": 15,
+    "capacheck": 3,
     "dcir": 2,
+    "ocv": 2,
     "plating": 1
   },
   "per_unit": {
@@ -32,16 +34,15 @@
     },
     "PNE02": {
       "unknown_count": 845,
-      "resolved_suggestions": 617,
-      "high_confidence": 0,
+      "resolved_suggestions": 622,
+      "high_confidence": 6,
       "suggested_categories": {
         "formation": 341,
-        "cycle_life": 231,
-        "unknown": 228,
+        "cycle_life": 237,
+        "unknown": 223,
         "rate_test": 31,
         "soc_setting": 8,
         "discharge": 4,
-        "charge": 1,
         "dcir": 1
       }
     },
@@ -52,9 +53,9 @@
       "suggested_categories": {
         "unknown": 355,
         "cycle_life": 101,
-        "formation": 35,
+        "formation": 33,
         "rate_test": 26,
-        "soc_setting": 12,
+        "soc_setting": 14,
         "storage": 4,
         "rpt": 2,
         "dcir": 1
@@ -66,10 +67,10 @@
       "high_confidence": 0,
       "suggested_categories": {
         "formation": 907,
-        "cycle_life": 841,
+        "cycle_life": 874,
         "unknown": 214,
         "soc_setting": 110,
-        "rate_test": 52,
+        "rate_test": 19,
         "rpt": 7,
         "discharge": 6,
         "storage": 4
@@ -77,11 +78,11 @@
     },
     "PNE05": {
       "unknown_count": 612,
-      "resolved_suggestions": 347,
-      "high_confidence": 0,
+      "resolved_suggestions": 349,
+      "high_confidence": 2,
       "suggested_categories": {
-        "unknown": 265,
-        "cycle_life": 160,
+        "unknown": 263,
+        "cycle_life": 162,
         "formation": 120,
         "charge": 44,
         "rate_test": 12,
@@ -134,17 +135,16 @@
     },
     "PNE09": {
       "unknown_count": 764,
-      "resolved_suggestions": 453,
+      "resolved_suggestions": 452,
       "high_confidence": 0,
       "suggested_categories": {
-        "unknown": 311,
+        "unknown": 312,
         "cycle_life": 233,
         "formation": 78,
         "rate_test": 61,
-        "soc_setting": 26,
+        "soc_setting": 33,
         "rpt": 23,
         "storage": 18,
-        "charge": 8,
         "discharge": 4,
         "qpeed": 2
       }
@@ -179,6 +179,48 @@
         "rate_test": 6
       }
     },
+    "PNE12": {
+      "unknown_count": 48,
+      "resolved_suggestions": 38,
+      "high_confidence": 3,
+      "suggested_categories": {
+        "cycle_life": 31,
+        "unknown": 10,
+        "soc_setting": 3,
+        "formation": 2,
+        "hppc": 1,
+        "rate_test": 1
+      }
+    },
+    "PNE13": {
+      "unknown_count": 233,
+      "resolved_suggestions": 162,
+      "high_confidence": 23,
+      "suggested_categories": {
+        "cycle_life": 129,
+        "unknown": 71,
+        "soc_setting": 23,
+        "formation": 3,
+        "ocv": 2,
+        "discharge": 2,
+        "hppc": 1,
+        "rate_test": 1,
+        "capacheck": 1
+      }
+    },
+    "PNE14": {
+      "unknown_count": 123,
+      "resolved_suggestions": 43,
+      "high_confidence": 7,
+      "suggested_categories": {
+        "unknown": 80,
+        "formation": 21,
+        "rate_test": 11,
+        "soc_setting": 5,
+        "cycle_life": 4,
+        "capacheck": 2
+      }
+    },
     "PNE22": {
       "unknown_count": 523,
       "resolved_suggestions": 411,
@@ -186,19 +228,18 @@
       "suggested_categories": {
         "formation": 233,
         "unknown": 112,
-        "rate_test": 58,
-        "soc_setting": 44,
-        "cycle_life": 38,
+        "rate_test": 57,
+        "soc_setting": 49,
+        "cycle_life": 39,
         "storage": 24,
         "rpt": 7,
-        "charge": 5,
         "plating": 1,
         "hppc": 1
       }
     }
   },
-  "signature_model_entries": 371,
-  "cluster_count": 444,
+  "signature_model_entries": 406,
+  "cluster_count": 537,
   "top_clusters": [
     {
       "cluster_id": "PNE04|T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END|none",
@@ -892,6 +933,26 @@
       ]
     },
     {
+      "cluster_id": "PNE13|T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END|stack_mono",
+      "unit": "PNE13",
+      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END",
+      "filename_probes": [
+        "stack_mono"
+      ],
+      "count": 40,
+      "suggested_category": "cycle_life",
+      "category_votes": {
+        "cycle_life": 40
+      },
+      "examples": [
+        "00214700_250123_70150_10Ah_15stack.sch",
+        "00214700_250408_70150_10Ah_2┬≈_24stack.sch",
+        "00214700_250408_70150_10Ah_2┬≈_24stack_└╠╡┐.sch",
+        "00215540_250324_1.17Ah_L4ms_10stack_Ferrari_cpck_3m21d_2_3.sch",
+        "00215540_250327_1.16Ah_L4ms_10stack_Ferrari_cpck_3m21d_1.sch"
+      ]
+    },
+    {
       "cluster_id": "PNE05|T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END|none",
       "unit": "PNE05",
       "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END",
@@ -908,61 +969,50 @@
         "00219684_240607_Ch14_SU6_RC4.sch",
         "00219684_240607_Ch15_SU6_RC5.sch"
       ]
-    },
-    {
-      "cluster_id": "PNE09|T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END|none",
-      "unit": "PNE09",
-      "step_signature": "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END",
-      "filename_probes": [],
-      "count": 38,
-      "suggested_category": "cycle_life",
-      "category_votes": {
-        "cycle_life": 38
-      },
-      "examples": [
-        "00217474_240913_graphite_3350CBC_1.sch",
-        "00217474_240913_graphite_3350CBC_2.sch",
-        "00217474_240913_graphite_3350CBC_3.sch",
-        "00226621_240522_GS73 vot 3350_60oC test.sch",
-        "00226621_GS100 Ag_L341.sch"
-      ]
     }
   ],
   "rule_promotion_candidates": [
     {
       "category": "cycle_life",
       "token": "sch",
-      "count": 431,
+      "count": 795,
       "suggested_pattern": "(?i)\\bsch\\b",
       "rule_name": "cycle_life_sch_token"
     },
     {
       "category": "rate_test",
       "token": "sch",
-      "count": 334,
+      "count": 309,
       "suggested_pattern": "(?i)\\bsch\\b",
       "rule_name": "rate_test_sch_token"
     },
     {
       "category": "soc_setting",
       "token": "sch",
-      "count": 233,
+      "count": 278,
       "suggested_pattern": "(?i)\\bsch\\b",
       "rule_name": "soc_setting_sch_token"
     },
     {
       "category": "soc_setting",
       "token": "soc100",
-      "count": 157,
+      "count": 178,
       "suggested_pattern": "(?i)\\bsoc100\\b",
       "rule_name": "soc_setting_soc100_token"
     },
     {
       "category": "cycle_life",
       "token": "2stack",
-      "count": 134,
+      "count": 144,
       "suggested_pattern": "(?i)\\b2stack\\b",
       "rule_name": "cycle_life_2stack_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "cyc",
+      "count": 117,
+      "suggested_pattern": "(?i)\\bcyc\\b",
+      "rule_name": "cycle_life_cyc_token"
     },
     {
       "category": "soc_setting",
@@ -973,17 +1023,31 @@
     },
     {
       "category": "cycle_life",
-      "token": "cyc",
-      "count": 80,
-      "suggested_pattern": "(?i)\\bcyc\\b",
-      "rule_name": "cycle_life_cyc_token"
+      "token": "dry",
+      "count": 114,
+      "suggested_pattern": "(?i)\\bdry\\b",
+      "rule_name": "cycle_life_dry_token"
     },
     {
-      "category": "charge",
-      "token": "sch",
-      "count": 70,
-      "suggested_pattern": "(?i)\\bsch\\b",
-      "rule_name": "charge_sch_token"
+      "category": "cycle_life",
+      "token": "10stack",
+      "count": 96,
+      "suggested_pattern": "(?i)\\b10stack\\b",
+      "rule_name": "cycle_life_10stack_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "l4ms",
+      "count": 93,
+      "suggested_pattern": "(?i)\\bl4ms\\b",
+      "rule_name": "cycle_life_l4ms_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "6stack",
+      "count": 74,
+      "suggested_pattern": "(?i)\\b6stack\\b",
+      "rule_name": "cycle_life_6stack_token"
     },
     {
       "category": "storage",
@@ -993,18 +1057,32 @@
       "rule_name": "storage_sch_token"
     },
     {
-      "category": "cycle_life",
-      "token": "6stack",
-      "count": 67,
-      "suggested_pattern": "(?i)\\b6stack\\b",
-      "rule_name": "cycle_life_6stack_token"
+      "category": "charge",
+      "token": "sch",
+      "count": 56,
+      "suggested_pattern": "(?i)\\bsch\\b",
+      "rule_name": "charge_sch_token"
     },
     {
-      "category": "rate_test",
-      "token": "dry",
-      "count": 58,
-      "suggested_pattern": "(?i)\\bdry\\b",
-      "rule_name": "rate_test_dry_token"
+      "category": "cycle_life",
+      "token": "1ah",
+      "count": 55,
+      "suggested_pattern": "(?i)\\b1ah\\b",
+      "rule_name": "cycle_life_1ah_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "set1",
+      "count": 54,
+      "suggested_pattern": "(?i)\\bset1\\b",
+      "rule_name": "cycle_life_set1_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "ferrari",
+      "count": 50,
+      "suggested_pattern": "(?i)\\bferrari\\b",
+      "rule_name": "cycle_life_ferrari_token"
     },
     {
       "category": "cycle_life",
@@ -1012,6 +1090,20 @@
       "count": 49,
       "suggested_pattern": "(?i)\\bplate\\b",
       "rule_name": "cycle_life_plate_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "set2",
+      "count": 47,
+      "suggested_pattern": "(?i)\\bset2\\b",
+      "rule_name": "cycle_life_set2_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "cbc",
+      "count": 47,
+      "suggested_pattern": "(?i)\\bcbc\\b",
+      "rule_name": "cycle_life_cbc_token"
     },
     {
       "category": "rate_test",
@@ -1022,17 +1114,24 @@
     },
     {
       "category": "cycle_life",
-      "token": "set1",
-      "count": 41,
-      "suggested_pattern": "(?i)\\bset1\\b",
-      "rule_name": "cycle_life_set1_token"
-    },
-    {
-      "category": "cycle_life",
       "token": "sj900a",
       "count": 39,
       "suggested_pattern": "(?i)\\bsj900a\\b",
       "rule_name": "cycle_life_sj900a_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "4mpa",
+      "count": 38,
+      "suggested_pattern": "(?i)\\b4mpa\\b",
+      "rule_name": "cycle_life_4mpa_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "45oc",
+      "count": 37,
+      "suggested_pattern": "(?i)\\b45oc\\b",
+      "rule_name": "cycle_life_45oc_token"
     },
     {
       "category": "cycle_life",
@@ -1043,31 +1142,45 @@
     },
     {
       "category": "cycle_life",
-      "token": "45oc",
-      "count": 33,
-      "suggested_pattern": "(?i)\\b45oc\\b",
-      "rule_name": "cycle_life_45oc_token"
+      "token": "gs64",
+      "count": 34,
+      "suggested_pattern": "(?i)\\bgs64\\b",
+      "rule_name": "cycle_life_gs64_token"
     },
     {
       "category": "cycle_life",
-      "token": "set2",
-      "count": 31,
-      "suggested_pattern": "(?i)\\bset2\\b",
-      "rule_name": "cycle_life_set2_token"
+      "token": "multi",
+      "count": 34,
+      "suggested_pattern": "(?i)\\bmulti\\b",
+      "rule_name": "cycle_life_multi_token"
     },
     {
-      "category": "cycle_life",
+      "category": "rate_test",
       "token": "dry",
-      "count": 30,
+      "count": 33,
       "suggested_pattern": "(?i)\\bdry\\b",
-      "rule_name": "cycle_life_dry_token"
+      "rule_name": "rate_test_dry_token"
     },
     {
       "category": "soc_setting",
       "token": "soc0",
-      "count": 30,
+      "count": 33,
       "suggested_pattern": "(?i)\\bsoc0\\b",
       "rule_name": "soc_setting_soc0_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "set02",
+      "count": 32,
+      "suggested_pattern": "(?i)\\bset02\\b",
+      "rule_name": "cycle_life_set02_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "60oc",
+      "count": 30,
+      "suggested_pattern": "(?i)\\b60oc\\b",
+      "rule_name": "rate_test_60oc_token"
     },
     {
       "category": "charge",
@@ -1077,27 +1190,6 @@
       "rule_name": "charge_gs73_token"
     },
     {
-      "category": "cycle_life",
-      "token": "cbc",
-      "count": 28,
-      "suggested_pattern": "(?i)\\bcbc\\b",
-      "rule_name": "cycle_life_cbc_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "60oc",
-      "count": 28,
-      "suggested_pattern": "(?i)\\b60oc\\b",
-      "rule_name": "rate_test_60oc_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "set02",
-      "count": 27,
-      "suggested_pattern": "(?i)\\bset02\\b",
-      "rule_name": "cycle_life_set02_token"
-    },
-    {
       "category": "storage",
       "token": "mono",
       "count": 26,
@@ -1105,18 +1197,11 @@
       "rule_name": "storage_mono_token"
     },
     {
-      "category": "cycle_life",
-      "token": "gs64",
-      "count": 24,
-      "suggested_pattern": "(?i)\\bgs64\\b",
-      "rule_name": "cycle_life_gs64_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "set01",
+      "category": "formation",
+      "token": "sch",
       "count": 23,
-      "suggested_pattern": "(?i)\\bset01\\b",
-      "rule_name": "cycle_life_set01_token"
+      "suggested_pattern": "(?i)\\bsch\\b",
+      "rule_name": "formation_sch_token"
     },
     {
       "category": "storage",
@@ -1126,53 +1211,11 @@
       "rule_name": "storage_ref_token"
     },
     {
-      "category": "cycle_life",
-      "token": "sj1300",
-      "count": 22,
-      "suggested_pattern": "(?i)\\bsj1300\\b",
-      "rule_name": "cycle_life_sj1300_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "frame",
-      "count": 22,
-      "suggested_pattern": "(?i)\\bframe\\b",
-      "rule_name": "cycle_life_frame_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "1ah",
-      "count": 22,
-      "suggested_pattern": "(?i)\\b1ah\\b",
-      "rule_name": "cycle_life_1ah_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "33c",
-      "count": 22,
-      "suggested_pattern": "(?i)\\b33c\\b",
-      "rule_name": "cycle_life_33c_token"
-    },
-    {
-      "category": "formation",
-      "token": "sch",
-      "count": 22,
-      "suggested_pattern": "(?i)\\bsch\\b",
-      "rule_name": "formation_sch_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "set03",
+      "category": "rate_test",
+      "token": "set2",
       "count": 21,
-      "suggested_pattern": "(?i)\\bset03\\b",
-      "rule_name": "cycle_life_set03_token"
-    },
-    {
-      "category": "charge",
-      "token": "wet",
-      "count": 20,
-      "suggested_pattern": "(?i)\\bwet\\b",
-      "rule_name": "charge_wet_token"
+      "suggested_pattern": "(?i)\\bset2\\b",
+      "rule_name": "rate_test_set2_token"
     },
     {
       "category": "rate_test",
@@ -1180,6 +1223,13 @@
       "count": 20,
       "suggested_pattern": "(?i)\\bchg\\b",
       "rule_name": "rate_test_chg_token"
+    },
+    {
+      "category": "charge",
+      "token": "wet",
+      "count": 19,
+      "suggested_pattern": "(?i)\\bwet\\b",
+      "rule_name": "charge_wet_token"
     },
     {
       "category": "charge",
@@ -1196,13 +1246,6 @@
       "rule_name": "rate_test_ref_token"
     },
     {
-      "category": "rate_test",
-      "token": "set2",
-      "count": 19,
-      "suggested_pattern": "(?i)\\bset2\\b",
-      "rule_name": "rate_test_set2_token"
-    },
-    {
       "category": "charge",
       "token": "pas",
       "count": 18,
@@ -1217,6 +1260,13 @@
       "rule_name": "rate_test_crate_token"
     },
     {
+      "category": "soc_setting",
+      "token": "soc100set",
+      "count": 18,
+      "suggested_pattern": "(?i)\\bsoc100set\\b",
+      "rule_name": "soc_setting_soc100set_token"
+    },
+    {
       "category": "rate_test",
       "token": "5mpa",
       "count": 17,
@@ -1229,13 +1279,6 @@
       "count": 16,
       "suggested_pattern": "(?i)\\bmono\\b",
       "rule_name": "rate_test_mono_token"
-    },
-    {
-      "category": "soc_setting",
-      "token": "soc100set",
-      "count": 16,
-      "suggested_pattern": "(?i)\\bsoc100set\\b",
-      "rule_name": "soc_setting_soc100set_token"
     },
     {
       "category": "soc_setting",
@@ -1266,11 +1309,11 @@
       "rule_name": "rate_test_soc_token"
     },
     {
-      "category": "rpt",
-      "token": "sch",
-      "count": 15,
-      "suggested_pattern": "(?i)\\bsch\\b",
-      "rule_name": "rpt_sch_token"
+      "category": "soc_setting",
+      "token": "soc50",
+      "count": 14,
+      "suggested_pattern": "(?i)\\bsoc50\\b",
+      "rule_name": "soc_setting_soc50_token"
     },
     {
       "category": "rate_test",
@@ -1278,6 +1321,13 @@
       "count": 13,
       "suggested_pattern": "(?i)\\bset3\\b",
       "rule_name": "rate_test_set3_token"
+    },
+    {
+      "category": "soc_setting",
+      "token": "60oc",
+      "count": 13,
+      "suggested_pattern": "(?i)\\b60oc\\b",
+      "rule_name": "soc_setting_60oc_token"
     },
     {
       "category": "rate_test",
@@ -1302,10 +1352,10 @@
     },
     {
       "category": "soc_setting",
-      "token": "60oc",
+      "token": "5m4u",
       "count": 12,
-      "suggested_pattern": "(?i)\\b60oc\\b",
-      "rule_name": "soc_setting_60oc_token"
+      "suggested_pattern": "(?i)\\b5m4u\\b",
+      "rule_name": "soc_setting_5m4u_token"
     },
     {
       "category": "soc_setting",
@@ -1313,6 +1363,13 @@
       "count": 12,
       "suggested_pattern": "(?i)\\b80oc\\b",
       "rule_name": "soc_setting_80oc_token"
+    },
+    {
+      "category": "soc_setting",
+      "token": "autoclave",
+      "count": 11,
+      "suggested_pattern": "(?i)\\bautoclave\\b",
+      "rule_name": "soc_setting_autoclave_token"
     },
     {
       "category": "formation",
@@ -1334,25 +1391,11 @@
       "count": 10,
       "suggested_pattern": "(?i)\\bform\\b",
       "rule_name": "rate_test_form_token"
-    },
-    {
-      "category": "soc_setting",
-      "token": "soc50",
-      "count": 10,
-      "suggested_pattern": "(?i)\\bsoc50\\b",
-      "rule_name": "soc_setting_soc50_token"
-    },
-    {
-      "category": "storage",
-      "token": "add",
-      "count": 10,
-      "suggested_pattern": "(?i)\\badd\\b",
-      "rule_name": "storage_add_token"
     }
   ],
   "signature_model": {
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "rate_test": 4363,
+      "rate_test": 4370,
       "rest": 8,
       "cycle_life": 123,
       "capacheck": 16,
@@ -1361,30 +1404,31 @@
       "doe": 1,
       "hppc": 9,
       "formation": 18,
-      "qpeed": 1
+      "qpeed": 1,
+      "discharge": 1
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "cycle_life": 315,
-      "formation": 730,
-      "capacheck": 49,
+      "cycle_life": 356,
+      "formation": 732,
+      "capacheck": 56,
       "qpeed": 8,
-      "rate_test": 180,
-      "discharge": 13,
-      "ocv": 2,
+      "rate_test": 191,
+      "discharge": 14,
+      "ocv": 4,
       "storage": 3,
       "gitt": 10,
       "charge": 4,
       "safety": 2,
       "soc_setting": 5,
       "hppc": 26,
-      "rpt": 3,
+      "rpt": 4,
       "doe": 3,
-      "rest": 3,
+      "rest": 4,
       "eis": 11,
       "qc": 4
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "cycle_life": 469,
+      "cycle_life": 472,
       "doe": 1,
       "capacheck": 2,
       "rate_test": 11,
@@ -1392,10 +1436,10 @@
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "capacheck": 58,
-      "cycle_life": 213,
+      "cycle_life": 216,
       "formation": 26,
-      "rate_test": 108,
-      "soc_setting": 6,
+      "rate_test": 112,
+      "soc_setting": 7,
       "eis": 5,
       "dcir": 1,
       "hppc": 23,
@@ -1408,15 +1452,16 @@
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 125,
-      "cycle_life": 66,
+      "cycle_life": 67,
       "hppc": 25,
       "storage": 11,
       "rpt": 22,
       "qpeed": 40,
-      "formation": 48
+      "formation": 48,
+      "ocv": 1
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "hppc": 293
+      "hppc": 296
     },
     "CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 84,
@@ -1424,17 +1469,21 @@
       "hppc": 1
     },
     "T0003-LOOP-T0007-CCCV-T0003-LOOP-END": {
-      "charge": 63,
+      "charge": 65,
       "discharge": 1,
       "rate_test": 81,
       "rpt": 10,
-      "formation": 4,
+      "formation": 6,
       "hppc": 2,
       "safety": 1,
+      "ocv": 1,
+      "rest": 2,
+      "soc_setting": 2,
       "storage": 5
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
-      "hppc": 156
+      "hppc": 160,
+      "capacheck": 2
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-LOOP-T0007-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "formation": 149
@@ -1443,6 +1492,14 @@
       "cycle_life": 142,
       "formation": 3
     },
+    "CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "cycle_life": 84,
+      "rate_test": 52,
+      "qpeed": 2,
+      "soc_setting": 2,
+      "rest": 2,
+      "charge": 1
+    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 136,
       "dcir": 3
@@ -1450,13 +1507,6 @@
     "T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-T0102-T0003-LOOP-END": {
       "qpeed": 121,
       "rate_test": 2
-    },
-    "CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "cycle_life": 65,
-      "rate_test": 51,
-      "qpeed": 2,
-      "soc_setting": 2,
-      "rest": 2
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "cycle_life": 8,
@@ -1482,10 +1532,10 @@
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-END": {
       "capacheck": 14,
-      "ocv": 3,
+      "ocv": 4,
       "charge": 25,
       "formation": 16,
-      "rate_test": 14,
+      "rate_test": 15,
       "cycle_life": 2,
       "plating": 5,
       "storage": 5,
@@ -1502,27 +1552,28 @@
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 82
     },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "qc": 2,
+      "rate_test": 18,
+      "cycle_life": 44,
+      "capacheck": 8,
+      "formation": 4,
+      "charge": 2,
+      "safety": 1,
+      "hppc": 2
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "rate_test": 63,
+      "formation": 14,
+      "hppc": 1,
+      "discharge": 1
+    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 75,
       "rate_test": 4
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 78
-    },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
-      "rate_test": 60,
-      "formation": 14,
-      "hppc": 1,
-      "discharge": 1
-    },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "qc": 2,
-      "rate_test": 16,
-      "cycle_life": 34,
-      "capacheck": 8,
-      "formation": 4,
-      "charge": 2,
-      "safety": 1
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-END": {
       "dcir": 16,
@@ -1550,6 +1601,19 @@
       "hppc": 45,
       "formation": 6
     },
+    "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "discharge": 20,
+      "rate_test": 21,
+      "cycle_life": 1,
+      "formation": 6,
+      "capacheck": 2,
+      "rpt": 2,
+      "storage": 1,
+      "soc_setting": 1
+    },
+    "T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "formation": 52
+    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 52
     },
@@ -1557,21 +1621,18 @@
       "rate_test": 47,
       "eis": 1
     },
-    "T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "formation": 46
+    "T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
+      "rate_test": 15,
+      "hppc": 2,
+      "cycle_life": 14,
+      "formation": 4,
+      "capacheck": 2,
+      "ocv": 9,
+      "rest": 1
     },
     "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-LOOP-END": {
       "storage": 33,
       "rpt": 12
-    },
-    "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
-      "discharge": 16,
-      "rate_test": 17,
-      "cycle_life": 1,
-      "formation": 6,
-      "rpt": 2,
-      "storage": 1,
-      "soc_setting": 1
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "cycle_life": 15,
@@ -1608,6 +1669,11 @@
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-END": {
       "dcir": 39
     },
+    "T0003-CC_DCHG-T0003-LOOP-END": {
+      "discharge": 36,
+      "qc": 1,
+      "rate_test": 1
+    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 33,
       "rate_test": 4
@@ -1625,6 +1691,11 @@
       "hppc": 19,
       "formation": 16
     },
+    "CC_DCHG-LOOP-END": {
+      "qpeed": 3,
+      "discharge": 26,
+      "rate_test": 5
+    },
     "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
       "rpt": 23,
       "rate_test": 11
@@ -1638,6 +1709,17 @@
       "rpt": 12,
       "cycle_life": 12
     },
+    "T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
+      "cycle_life": 8,
+      "rate_test": 8,
+      "formation": 8,
+      "capacheck": 6,
+      "ocv": 2
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
+      "rate_test": 30,
+      "ocv": 2
+    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 29,
       "cycle_life": 3
@@ -1645,6 +1727,10 @@
     "CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "cycle_life": 30,
       "rate_test": 1
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "cycle_life": 28,
+      "rpt": 3
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
       "hppc": 31
@@ -1672,44 +1758,28 @@
       "charge": 27,
       "storage": 2
     },
-    "T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
-      "rate_test": 14,
-      "hppc": 2,
-      "cycle_life": 10,
-      "formation": 1,
-      "capacheck": 2
-    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 13,
       "storage": 3,
       "rate_test": 12,
       "cycle_life": 1
     },
-    "T0003-CC_DCHG-T0003-LOOP-END": {
-      "discharge": 27,
-      "qc": 1,
-      "rate_test": 1
-    },
-    "CC_DCHG-LOOP-END": {
-      "qpeed": 3,
-      "discharge": 25
-    },
-    "T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
-      "cycle_life": 7,
-      "rate_test": 8,
-      "formation": 7,
-      "capacheck": 6
-    },
     "T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 27
     },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "cycle_life": 23,
-      "rpt": 3
+    "T0003-LOOP-END": {
+      "rest": 21,
+      "storage": 1,
+      "ocv": 5
     },
     "T0003-T0003-LOOP-END": {
       "ocv": 23,
       "storage": 3
+    },
+    "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "cycle_life": 11,
+      "rate_test": 13,
+      "hppc": 2
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 11,
@@ -1737,14 +1807,14 @@
       "rate_test": 20,
       "rest": 4
     },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-END": {
+      "formation": 8,
+      "rpt": 12,
+      "rate_test": 4
+    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
       "hppc": 16,
       "rate_test": 8
-    },
-    "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "cycle_life": 10,
-      "rate_test": 12,
-      "hppc": 2
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 2,
@@ -1770,6 +1840,11 @@
       "rate_test": 4,
       "storage": 2
     },
+    "T0003-LOOP-T0007-CC_DCHG-LOOP-END": {
+      "storage": 17,
+      "rate_test": 3,
+      "discharge": 2
+    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
       "hppc": 22
     },
@@ -1777,6 +1852,10 @@
       "rpt": 2,
       "hppc": 9,
       "cycle_life": 10
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "rpt": 20,
+      "rate_test": 1
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 14,
@@ -1787,6 +1866,13 @@
       "ocv": 6,
       "rate_test": 4,
       "formation": 6
+    },
+    "T0003-LOOP-T0007-CC_CHG-T0003-LOOP-END": {
+      "charge": 9,
+      "soc_setting": 1,
+      "rate_test": 6,
+      "rest": 2,
+      "formation": 1
     },
     "T0003-CCCV-T0003-CC_DCHG-LOOP-END": {
       "cycle_life": 16,
@@ -1807,16 +1893,14 @@
     "T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-END": {
       "qpeed": 18
     },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-END": {
-      "formation": 2,
-      "rpt": 12,
-      "rate_test": 4
-    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "storage": 10,
       "capacheck": 2,
       "rpt": 3,
       "cycle_life": 3
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "hppc": 18
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 18
@@ -1828,9 +1912,9 @@
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 17
     },
-    "T0003-LOOP-END": {
-      "rest": 16,
-      "storage": 1
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "capacheck": 15,
+      "charge": 2
     },
     "T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-T0003-CC_DCHG-LOOP-END": {
       "cycle_life": 5,
@@ -1845,16 +1929,18 @@
       "cycle_life": 16,
       "rpt": 1
     },
-    "T0003-LOOP-T0007-CC_CHG-T0003-LOOP-END": {
-      "charge": 9,
-      "soc_setting": 1,
-      "rate_test": 5,
-      "formation": 1
+    "T0003-LOOP-T0007-CCCV-T0003-T0003-CCCV-T0003-LOOP-END": {
+      "ocv": 3,
+      "formation": 2,
+      "rate_test": 12
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "cycle_life": 10,
       "soc_setting": 1,
       "rpt": 5
+    },
+    "T0003-LOOP-T0007-T0003-LOOP-END": {
+      "ocv": 16
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-END": {
       "cycle_life": 6,
@@ -1877,9 +1963,6 @@
     "T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "qpeed": 15
     },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "capacheck": 15
-    },
     "T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-LOOP-T0007-T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-LOOP-T0007-T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-LOOP-T0007-T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-LOOP-T0007-T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-LOOP-T0007-T0003-CC_CHG-T0003-CC_DCHG-LOOP-END": {
       "cycle_life": 1,
       "rate_test": 14
@@ -1887,8 +1970,15 @@
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-END": {
       "cycle_life": 14
     },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "hppc": 14
+    },
     "T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "qpeed": 14
+    },
+    "T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
+      "rpt": 4,
+      "rate_test": 10
     },
     "T0003-LOOP-T0007-CC_CHG-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 14
@@ -1914,10 +2004,6 @@
     },
     "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-END": {
       "storage": 13
-    },
-    "T0003-LOOP-T0007-CC_DCHG-LOOP-END": {
-      "storage": 12,
-      "rate_test": 1
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-END": {
       "ocv": 13
@@ -2001,6 +2087,10 @@
     "T0003-LOOP-T0007-CC_CHG-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 11
     },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "rpt": 9,
+      "rate_test": 2
+    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
       "cycle_life": 1,
       "rpt": 9
@@ -2026,6 +2116,10 @@
     "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "cycle_life": 10
     },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "rpt": 8,
+      "formation": 2
+    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CCCV-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "cycle_life": 10
     },
@@ -2037,6 +2131,9 @@
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
       "formation": 10
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "hppc": 10
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "cycle_life": 8,
@@ -2052,11 +2149,12 @@
     "CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rest": 9
     },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "hppc": 1,
+      "cycle_life": 8
+    },
     "T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-END": {
       "rpt": 9
-    },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
-      "rate_test": 9
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-LOOP-END": {
       "rate_test": 9
@@ -2090,6 +2188,13 @@
       "qpeed": 4,
       "rate_test": 1,
       "qc": 4
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "rpt": 8,
+      "rate_test": 1
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "hppc": 9
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-END": {
       "capacheck": 7,
@@ -2144,9 +2249,6 @@
     "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-END": {
       "soc_setting": 7
     },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
-      "hppc": 7
-    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
       "rpt": 7
     },
@@ -2159,9 +2261,6 @@
     "CCCV-T0003-LOOP-END": {
       "cycle_life": 4,
       "charge": 3
-    },
-    "T0003-LOOP-T0007-T0003-LOOP-END": {
-      "ocv": 7
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
       "formation": 4,
@@ -2185,8 +2284,9 @@
     "T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 7
     },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
-      "hppc": 7
+    "CCCV-LOOP-END": {
+      "rate_test": 6,
+      "ocv": 1
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-T0102-T0003-LOOP-END": {
       "ocv": 3,
@@ -2208,9 +2308,6 @@
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-END": {
       "formation": 6
-    },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "rpt": 6
     },
     "T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "ocv": 5,
@@ -2260,8 +2357,31 @@
     "T0003-LOOP-T0007-CCCV-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-END": {
       "ocv": 6
     },
+    "T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "cycle_life": 4,
+      "rate_test": 2
+    },
+    "T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
+      "storage": 2,
+      "rpt": 4
+    },
     "CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "cycle_life": 6
+    },
+    "T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "rate_test": 1,
+      "formation": 3,
+      "rpt": 2
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "rpt": 6
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "ocv": 6
+    },
+    "T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "rate_test": 1,
+      "cycle_life": 5
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_CHG-T0003-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-T0003-LOOP-END": {
       "gitt": 6
@@ -2278,10 +2398,6 @@
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "charge": 5
-    },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "hppc": 1,
-      "cycle_life": 4
     },
     "T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-END": {
       "ocv": 3,
@@ -2315,9 +2431,9 @@
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-END": {
       "rate_test": 5
     },
-    "T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
-      "cycle_life": 4,
-      "rate_test": 1
+    "T0003-LOOP-T0007-T0003-CCCV-T0003-CC_DCHG-LOOP-END": {
+      "cycle_life": 3,
+      "rate_test": 2
     },
     "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
       "storage": 4,
@@ -2331,6 +2447,15 @@
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "formation": 5
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "rpt": 5
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "hppc": 5
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "rpt": 5
     },
     "T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-END": {
       "rpt": 5
@@ -2360,9 +2485,18 @@
     "CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 4
     },
+    "T0003-CCCV-T0003-LOOP-END": {
+      "formation": 2,
+      "charge": 1,
+      "rate_test": 1
+    },
     "T0003-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "capacheck": 3,
       "cycle_life": 1
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-LOOP-END": {
+      "formation": 3,
+      "hppc": 1
     },
     "CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 1,
@@ -2382,9 +2516,6 @@
     "T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-LOOP-END": {
       "discharge": 4
     },
-    "T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
-      "rpt": 4
-    },
     "T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rpt": 2,
       "ocv": 1,
@@ -2393,6 +2524,14 @@
     "T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rpt": 2,
       "rate_test": 2
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "capacheck": 2,
+      "formation": 2
+    },
+    "T0003-CC_DCHG-LOOP-END": {
+      "capacheck": 3,
+      "formation": 1
     },
     "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-T0003-CCCV-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-LOOP-END": {
       "rpt": 1,
@@ -2419,17 +2558,10 @@
       "formation": 3,
       "rate_test": 1
     },
-    "CCCV-LOOP-END": {
-      "rate_test": 4
-    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
       "rpt": 1,
       "rate_test": 1,
       "ocv": 2
-    },
-    "T0003-LOOP-T0007-T0003-CCCV-T0003-CC_DCHG-LOOP-END": {
-      "cycle_life": 3,
-      "rate_test": 1
     },
     "T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 4
@@ -2450,6 +2582,23 @@
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "formation": 2,
       "rate_test": 2
+    },
+    "CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
+      "cycle_life": 2,
+      "rpt": 2
+    },
+    "T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
+      "formation": 3,
+      "rpt": 1
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_CHG-CC_CHG-CCCV-T0003-LOOP-T0007-T0009-T0003-LOOP-T0007-T0009-T0009-T0009-T0009-T0009-T0009-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-T0009-T0003-LOOP-T0007-T0009-T0009-T0009-T0009-T0009-T0009-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-END": {
+      "rpt": 4
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_CHG-CC_CHG-CCCV-T0003-LOOP-T0007-T0009-T0009-T0003-LOOP-T0007-T0009-T0009-T0009-T0009-T0009-T0009-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-T0009-T0009-T0003-LOOP-T0007-T0009-T0009-T0009-T0009-T0009-T0009-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-END": {
+      "rpt": 4
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "hppc": 4
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 4
@@ -2497,13 +2646,6 @@
       "qpeed": 1,
       "rate_test": 1
     },
-    "T0003-CCCV-T0003-LOOP-END": {
-      "formation": 2,
-      "charge": 1
-    },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-LOOP-END": {
-      "formation": 3
-    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 3
     },
@@ -2535,9 +2677,6 @@
     "T0003-CCCV-LOOP-END": {
       "capacheck": 3
     },
-    "T0003-CC_DCHG-LOOP-END": {
-      "capacheck": 3
-    },
     "T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-T0003-CC_DCHG-T0003-CC_CHG-T0003-CC_CHG-T0003-CC_DCHG-LOOP-T0007-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
       "cycle_life": 2,
       "formation": 1
@@ -2560,10 +2699,6 @@
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-END": {
       "hppc": 3
     },
-    "T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-END": {
-      "storage": 1,
-      "rpt": 2
-    },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "hppc": 3
     },
@@ -2581,6 +2716,14 @@
     "T0003-LOOP-T0007-CC_CHG-T0003-LOOP-T0007-T0102-T0003-CC_CHG-T0003-LOOP-END": {
       "plating": 2,
       "rate_test": 1
+    },
+    "T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "capacheck": 1,
+      "storage": 1,
+      "cycle_life": 1
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "hppc": 3
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "rate_test": 2,
@@ -2670,9 +2813,6 @@
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
       "rpt": 2
-    },
-    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
-      "capacheck": 2
     },
     "T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-T0003-CCCV-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-LOOP-END": {
       "storage": 1,
@@ -2769,6 +2909,55 @@
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
       "charge": 1,
       "hppc": 1
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "rpt": 1,
+      "rate_test": 1
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "hppc": 2
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-END": {
+      "rate_test": 2
+    },
+    "T0003-CC_DCHG-T0003-CC_CHG-T0003-LOOP-END": {
+      "rate_test": 1,
+      "discharge": 1
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-END": {
+      "hppc": 2
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-T0009-T0003-LOOP-T0007-T0009-T0009-T0009-T0009-T0009-T0009-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-T0009-T0003-LOOP-T0007-T0009-T0009-T0009-T0009-T0009-T0009-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-END": {
+      "rpt": 2
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-T0009-T0009-T0003-LOOP-T0007-T0009-T0009-T0009-T0009-T0009-T0009-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-T0009-T0009-T0003-LOOP-T0007-T0009-T0009-T0009-T0009-T0009-T0009-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-END": {
+      "rpt": 2
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-T0003-LOOP-T0007-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-T0003-LOOP-T0007-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "hppc": 2
+    },
+    "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "ocv": 2
+    },
+    "T0003-LOOP-T0007-CC_DCHG-T0003-T0003-T0003-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_DCHG-T0003-LOOP-END": {
+      "formation": 2
+    },
+    "T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-LOOP-END": {
+      "formation": 2
+    },
+    "CC_DCHG-T0003-CC_CHG-T0003-LOOP-END": {
+      "rest": 1,
+      "formation": 1
+    },
+    "CC_CHG-T0003-LOOP-END": {
+      "ocv": 2
+    },
+    "T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-LOOP-END": {
+      "formation": 2
+    },
+    "T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-CC_DCHG-T0003-CC_DCHG-T0003-LOOP-END": {
+      "rpt": 1,
+      "capacheck": 1
     },
     "T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CCCV-T0003-CC_DCHG-T0003-LOOP-T0007-CC_CHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-T0007-CC_DCHG-T0003-CC_DCHG-T0003-CCCV-T0003-LOOP-END": {
       "qpeed": 2

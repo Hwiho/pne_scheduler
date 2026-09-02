@@ -164,6 +164,49 @@
       "writer_layout_key": null,
       "notes": "Corpus 2026-09-02: 1828 sch, 49.3% unknown; hppc/qpeed/formation heavy; 2×696B files"
     },
+    "PNE12": {
+      "corpus_zip": "PNE12.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 20000,
+      "rating": "20A",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Corpus 2026-09-02: 222 sch, 21.6% unknown; cycle_life/rpt/hppc; 612B only; max corpus mA 20000 (at 20A tier)"
+    },
+    "PNE13": {
+      "corpus_zip": "PNE13.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 20000,
+      "rating": "20A",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Corpus 2026-09-02: 414 sch, 56.3% unknown; hppc/formation/ocv; 612B only; max corpus mA 12500"
+    },
+    "PNE14": {
+      "corpus_zip": "PNE14.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 20000,
+      "rating": "20A",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false },
+        { "file_version": "0x00010004", "payload_offset": 1844, "step_size": 696, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Corpus 2026-09-02: 277 sch, 44.4% unknown; rate_test/cycle_life; 2×696B files; max corpus mA 86250 (exceeds 20A tier — cell Q×C-rate)"
+    },
     "PNE16": {
       "corpus_zip": null,
       "corpus_zip_allowed_for_analysis": false,
