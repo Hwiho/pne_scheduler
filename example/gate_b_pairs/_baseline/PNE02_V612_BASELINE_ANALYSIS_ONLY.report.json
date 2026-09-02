@@ -1,0 +1,129 @@
+{
+  "schema": "pne_scheduler.sch_patch_report/v1",
+  "status": "analysis_only",
+  "template": {
+    "path": "example/fixtures/capacheck_zip/9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
+    "sha256": "5321449813b21162cee9faaa80782646ba2dabf50eccb465f948f6451461683e",
+    "size": 10940,
+    "version": "0x00010003",
+    "payload_offset": 1760,
+    "step_size": 612,
+    "step_count": 15
+  },
+  "output": {
+    "path": "example/gate_b_pairs/_baseline/PNE02_V612_BASELINE_ANALYSIS_ONLY.sch",
+    "sha256": "8feb6d12184cb76978afc85bfc1c496e3fec244668602b0c2786cccbf8f6e784",
+    "size": 10940
+  },
+  "applied": [
+    {
+      "step_no": 1,
+      "field": "fIref",
+      "value": 60.0,
+      "offset_in_step": 20,
+      "absolute_offset": 1780,
+      "dtype": "float32",
+      "confidence": "corpus_inferred",
+      "writer_ready": false,
+      "before_hex": "00c02846",
+      "after_hex": "00007042"
+    },
+    {
+      "step_no": 4,
+      "field": "fVref",
+      "value": 10.0,
+      "offset_in_step": 16,
+      "absolute_offset": 3612,
+      "dtype": "float32",
+      "confidence": "corpus_inferred",
+      "writer_ready": false,
+      "before_hex": "c3f5f440",
+      "after_hex": "00002041"
+    },
+    {
+      "step_no": 4,
+      "field": "fEndI",
+      "value": 2.0,
+      "offset_in_step": 32,
+      "absolute_offset": 3628,
+      "dtype": "float32",
+      "confidence": "corpus_inferred",
+      "writer_ready": false,
+      "before_hex": "f4fd7440",
+      "after_hex": "00000040"
+    },
+    {
+      "step_no": 4,
+      "field": "record_time_s",
+      "value": 1.0,
+      "offset_in_step": 340,
+      "absolute_offset": 3936,
+      "dtype": "float32",
+      "confidence": "corpus_inferred",
+      "writer_ready": false,
+      "before_hex": "00007042",
+      "after_hex": "0000803f"
+    },
+    {
+      "step_no": 6,
+      "field": "fVref",
+      "value": 10.0,
+      "offset_in_step": 16,
+      "absolute_offset": 4836,
+      "dtype": "float32",
+      "confidence": "corpus_inferred",
+      "writer_ready": false,
+      "before_hex": "c3f5f440",
+      "after_hex": "00002041"
+    },
+    {
+      "step_no": 6,
+      "field": "fEndV",
+      "value": 3000.0,
+      "offset_in_step": 28,
+      "absolute_offset": 4848,
+      "dtype": "float32",
+      "confidence": "corpus_inferred",
+      "writer_ready": false,
+      "before_hex": "00401c45",
+      "after_hex": "00803b45"
+    },
+    {
+      "step_no": 6,
+      "field": "record_time_s",
+      "value": 1.0,
+      "offset_in_step": 340,
+      "absolute_offset": 5160,
+      "dtype": "float32",
+      "confidence": "corpus_inferred",
+      "writer_ready": false,
+      "before_hex": "00007042",
+      "after_hex": "0000803f"
+    },
+    {
+      "step_no": 14,
+      "field": "loop_goto_ensol",
+      "value": 2,
+      "offset_in_step": 564,
+      "absolute_offset": 10280,
+      "dtype": "uint32",
+      "confidence": "corpus_inferred",
+      "writer_ready": false,
+      "before_hex": "01000000",
+      "after_hex": "02000000"
+    }
+  ],
+  "changed_byte_count": 21,
+  "header_preserved": true,
+  "file_length_preserved": true,
+  "warnings": [
+    "Step 1 field fIref is not writer-ready.",
+    "Step 4 field fVref is not writer-ready.",
+    "Step 4 field fEndI is not writer-ready.",
+    "Step 4 field record_time_s is not writer-ready.",
+    "Step 6 field fVref is not writer-ready.",
+    "Step 6 field fEndV is not writer-ready.",
+    "Step 6 field record_time_s is not writer-ready.",
+    "Step 14 field loop_goto_ensol is not writer-ready."
+  ]
+}

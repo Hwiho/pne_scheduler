@@ -37,3 +37,7 @@ For each pair:
    ```
 
 The fillable template outside this directory is never counted as evidence.
+
+For PNE02, `_baseline/PNE02_V612_BASELINE_ANALYSIS_ONLY.sch` is available as an
+offline seed. Follow `_baseline/README.md` to convert it into a CTSPro-saved,
+close/reopen-verified baseline before collecting any pair.
