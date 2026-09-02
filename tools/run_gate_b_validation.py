@@ -6,6 +6,7 @@ import argparse
 import json
 import subprocess
 import sys
+from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -31,6 +32,18 @@ from pne_scheduler.validate.intake import (  # noqa: E402
 
 REPORT_JSON = ROOT / "planning" / "GATE_B_VALIDATION_REPORT.json"
 CONTROLLED_PAIR_DIR = ROOT / "example" / "gate_b_pairs"
+REQUIRED_CONTROLLED_EVIDENCE = {
+    "PNE02": {
+        "fIref",
+        "fVref",
+        "fEndV",
+        "fEndI",
+        "loop_count",
+        "loop_goto_ensol",
+        "record_time_s",
+    },
+    "PNE16": {"fIref", "fVref"},
+}
 GATE_B_TESTS = [
     "tests/test_gate_b_tooling.py",
     "tests/test_golden_semantic.py",
@@ -57,14 +70,10 @@ def _run_pytest() -> dict:
 
 
 def _fixture_parser_checks() -> dict:
-    fixtures = [
-        ROOT / "example" / "fixtures" / "hppc" / "HPPC_Full range.sch",
-        ROOT
-        / "example"
-        / "fixtures"
-        / "capacheck_zip"
-        / "9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
-    ]
+    fixture_root = ROOT / "example" / "fixtures"
+    catalog_path = fixture_root / "catalog.json"
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    fixtures = [fixture_root / row["path"] for row in catalog["fixtures"]]
     existing = [p for p in fixtures if p.is_file()]
     results = []
     for path in existing:
@@ -80,6 +89,7 @@ def _fixture_parser_checks() -> dict:
     return {
         "fixtures": results,
         "all_layout_match": all(r["layout_match"] for r in results),
+        "all_step_count_match": all(r["step_count_match"] for r in results),
         "assb_summary": report["summary"],
     }
 
@@ -129,6 +139,7 @@ def _controlled_pair_evidence() -> dict:
             and bool(equipment.get("ctspro_version"))
             and bool(equipment.get("channel_profile"))
             and bool(screenshots)
+            and bool(payload.get("expected_field"))
         )
         rows.append(
             {
@@ -139,6 +150,7 @@ def _controlled_pair_evidence() -> dict:
                 "evidence_complete": evidence_complete,
                 "equipment": equipment.get("label"),
                 "ui_field": payload.get("ui_field"),
+                "expected_field": payload.get("expected_field"),
                 "errors": errors,
                 "warnings": warnings,
             }
@@ -146,12 +158,25 @@ def _controlled_pair_evidence() -> dict:
     valid = [row for row in rows if row["valid"]]
     reopened = [row for row in valid if row["reopen_verified"]]
     complete = [row for row in valid if row["evidence_complete"]]
+    covered = defaultdict(set)
+    for row in complete:
+        covered[row["equipment"]].add(row["expected_field"])
+    missing_required = {
+        equipment: sorted(fields - covered[equipment])
+        for equipment, fields in REQUIRED_CONTROLLED_EVIDENCE.items()
+        if fields - covered[equipment]
+    }
     return {
         "directory": str(CONTROLLED_PAIR_DIR.relative_to(ROOT)),
         "intake_count": len(rows),
         "valid_intake_count": len(valid),
         "reopen_verified_count": len(reopened),
         "complete_evidence_count": len(complete),
+        "required_fields": {
+            equipment: sorted(fields)
+            for equipment, fields in REQUIRED_CONTROLLED_EVIDENCE.items()
+        },
+        "missing_required_fields": missing_required,
         "intakes": rows,
     }
 
@@ -161,6 +186,19 @@ def build_gate_b_report() -> dict:
     intake_result = validate_intake_file(intake_template) if intake_template.is_file() else None
     step_layout = build_step_layout_diff_report()
     parity = offset_parity_summary()
+    corpus_evidence_path = ROOT / "planning" / "GATE_B_CORPUS_EVIDENCE.json"
+    corpus_evidence = json.loads(corpus_evidence_path.read_text(encoding="utf-8"))
+    divergence_resolution = corpus_evidence.get("assb_divergence_resolution", {})
+    corpus_resolved_divergences = [
+        name
+        for name, row in divergence_resolution.items()
+        if row.get("status") == "corpus_resolved_to_ensol_semantics"
+    ]
+    externally_unresolved_divergences = [
+        name
+        for name, row in divergence_resolution.items()
+        if row.get("status") == "externally_unresolved"
+    ]
     pytest_result = _run_pytest()
     parser_checks = _fixture_parser_checks()
     field_registry_errors = validate_step_field_registry()
@@ -175,7 +213,11 @@ def build_gate_b_report() -> dict:
         and bool(get_step_fields(0x00010003))
         and bool(get_step_fields(0x00010004)),
         "B2_assb_offset_parity": bool(parity.get("shared_pairs")),
-        "B2_parser_layout_match": parser_checks["all_layout_match"],
+        "B2_parser_layout_match": (
+            parser_checks["all_layout_match"]
+            and parser_checks["all_step_count_match"]
+            and parser_checks["assb_summary"]["fixtures_with_field_mismatches"] == 0
+        ),
         "B4_semantic_golden_tests": pytest_result["passed"],
         "B5_intake_template_valid": intake_result.valid if intake_result else False,
         "B0_explicit_writer_q_nom_contract": (
@@ -187,6 +229,7 @@ def build_gate_b_report() -> dict:
         controlled_pairs["complete_evidence_count"] > 0
         and controlled_pairs["complete_evidence_count"]
         == controlled_pairs["intake_count"]
+        and not controlled_pairs["missing_required_fields"]
     )
     gate_b_passed = repository_ready and controlled_pair_ready
     status = (
@@ -209,6 +252,8 @@ def build_gate_b_report() -> dict:
         "offset_parity": {
             "shared_pairs": len(parity.get("shared_pairs", [])),
             "documented_divergences": len(parity.get("documented_divergences", [])),
+            "corpus_resolved_divergences": corpus_resolved_divergences,
+            "externally_unresolved_divergences": externally_unresolved_divergences,
         },
         "step_layout": {
             "extension_bytes": step_layout.get("extension_bytes"),

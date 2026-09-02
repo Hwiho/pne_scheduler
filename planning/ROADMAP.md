@@ -457,7 +457,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 | | |
 |---|---|
-| **Status** | 🔄 **In progress** ← **current focus** |
+| **Status** | 🟡 **Repository ready for controlled pairs; external evidence pending** ← **current focus** |
 | **Depends on** | Gate A |
 | **Exit criteria** | Raw-unit contract resolved; parser/schema/compiler agree; semantic goldens for representative fixtures; intake metadata gates evidence promotion |
 | **Next gate** | Gate C (do not start C1+ until B0 and B5 are done) |

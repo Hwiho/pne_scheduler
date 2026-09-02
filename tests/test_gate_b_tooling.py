@@ -6,7 +6,10 @@ from pathlib import Path
 from pne_scheduler.engine.c_rate import WRITER_Q_NOM_SOURCE
 from pne_scheduler.schema.fields import FieldConfidence, get_step_field
 from pne_scheduler.tools.compare_step_layouts import build_step_layout_diff_report
-from pne_scheduler.tools.run_gate_b_validation import _controlled_pair_evidence
+from pne_scheduler.tools.run_gate_b_validation import (
+    _controlled_pair_evidence,
+    _fixture_parser_checks,
+)
 from pne_scheduler.validate.assb_parser_diff import (
     build_assb_parser_diff_report,
     compare_fixture_parsers,
@@ -55,6 +58,13 @@ def test_assb_parser_diff_report_on_representative_fixtures() -> None:
 
 def test_writer_q_nom_contract_is_explicit_project_input() -> None:
     assert WRITER_Q_NOM_SOURCE == "cell_profile.nominal_capacity_mAh"
+    policy = json.loads(
+        (ROOT / "planning" / "Q_NOM_POLICY.json").read_text(encoding="utf-8")
+    )
+    assert policy["writer"]["source"] == WRITER_Q_NOM_SOURCE
+    assert policy["writer"]["explicit_value_required"] is True
+    assert policy["writer"]["allow_filename_inference"] is False
+    assert policy["writer"]["allow_stack_geometry_inference"] is False
 
 
 def test_corpus_evidence_matches_canonical_v612_registry() -> None:
@@ -81,6 +91,13 @@ def test_corpus_evidence_matches_canonical_v612_registry() -> None:
         assert field.confidence == FieldConfidence.CORPUS_INFERRED
         assert field.writer_ready is False
 
+    resolutions = evidence["assb_divergence_resolution"]
+    assert resolutions["fSocRate"]["canonical_field"] == "dod_percent@384"
+    assert resolutions["bUseActualCapa"]["canonical_field"] == "cap_mode@496"
+    assert resolutions["bUseDataStepNo"]["canonical_field"] == "cap_ref_step@497"
+    assert resolutions["nGotoStepID"]["status"] == "externally_unresolved"
+    assert resolutions["fMaxCapacity"]["status"] == "externally_unresolved"
+
 
 def test_controlled_pair_inventory_excludes_fillable_template() -> None:
     inventory = _controlled_pair_evidence()
@@ -88,3 +105,12 @@ def test_controlled_pair_inventory_excludes_fillable_template() -> None:
     assert inventory["valid_intake_count"] <= inventory["intake_count"]
     assert inventory["reopen_verified_count"] <= inventory["valid_intake_count"]
     assert inventory["complete_evidence_count"] <= inventory["valid_intake_count"]
+    assert set(inventory["missing_required_fields"]) == {"PNE02", "PNE16"}
+
+
+def test_gate_b_parser_cross_check_covers_locked_fixture_catalog() -> None:
+    checks = _fixture_parser_checks()
+    assert len(checks["fixtures"]) == 102
+    assert checks["all_layout_match"]
+    assert checks["all_step_count_match"]
+    assert checks["assb_summary"]["fixtures_with_field_mismatches"] == 0
