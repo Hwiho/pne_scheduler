@@ -11,8 +11,8 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from .training_labels import load_verified_labels
-from .schedule_filename import ScheduleCategory, classify_schedule_filename
+from .schedule_classifier import classify_schedule
+from .schedule_filename import ScheduleCategory
 from .sch_binary_profile import binary_profile
 
 TRAINING_ROW_SCHEMA = "pne_scheduler.unknown_sch_training_row/v1"
@@ -75,6 +75,7 @@ class UnknownSchRecord:
     suggested_category: str
     confidence: float
     method: str
+    matched_rule: str
     signature_votes: tuple[SignatureVote, ...]
 
 
@@ -188,12 +189,16 @@ def scan_zip_corpus(
                 if not name.lower().endswith(".sch"):
                     continue
                 stem = PurePosixPath(name).name
-                match = classify_schedule_filename(stem)
                 try:
-                    profile = binary_profile(zf.read(name))
+                    data = zf.read(name)
+                    match = classify_schedule(stem, data)
+                    profile = binary_profile(data)
                 except Exception:
+                    match = None
                     profile = None
                 signature = profile["step_signature"] if profile else None
+                if match is None:
+                    continue
                 labeled_signatures.append((match.category.value, signature))
                 if match.category != ScheduleCategory.UNKNOWN:
                     continue
@@ -207,6 +212,7 @@ def scan_zip_corpus(
                         "signature": signature,
                         "probes": probe_filename(stem),
                         "tokens": tokenize_filename(stem),
+                        "matched_rule": match.matched_rule,
                     }
                 )
 
@@ -238,11 +244,114 @@ def scan_zip_corpus(
                 suggested_category=category,
                 confidence=confidence,
                 method=method,
+                matched_rule=stub.get("matched_rule", "none"),
                 signature_votes=votes,
             )
         )
 
     return records, signature_model
+
+
+def build_unit_review_priority(
+    unit: str,
+    records: list[UnknownSchRecord],
+    *,
+    top_clusters: int = 40,
+    top_tokens: int = 30,
+) -> dict[str, Any]:
+    """Rank unknown clusters and tokens for human review (e.g. PNE04)."""
+    unit_recs = [r for r in records if r.unit == unit]
+    clusters = [c for c in build_clusters(unit_recs) if c["unit"] == unit]
+
+    def priority_score(cluster: dict[str, Any]) -> float:
+        members = [
+            r
+            for r in unit_recs
+            if (r.step_signature or "parse_fail") == (cluster.get("step_signature") or "parse_fail")
+        ]
+        if not members:
+            return float(cluster["count"])
+        avg_conf = sum(m.confidence for m in members) / len(members)
+        unresolved = sum(1 for m in members if m.suggested_category == ScheduleCategory.UNKNOWN.value)
+        return cluster["count"] * (0.5 + avg_conf) + unresolved * 0.25
+
+    ranked_clusters = sorted(clusters, key=priority_score, reverse=True)[:top_clusters]
+    for cluster in ranked_clusters:
+        cluster["priority_score"] = round(priority_score(cluster), 2)
+
+    token_ctr: Counter[str] = Counter()
+    for rec in unit_recs:
+        if rec.suggested_category != ScheduleCategory.UNKNOWN.value:
+            continue
+        for tok in rec.filename_tokens:
+            if len(tok) >= 3 and tok not in ("sch", "set", "copy"):
+                token_ctr[tok] += 1
+
+    high_value = [
+        r
+        for r in unit_recs
+        if r.confidence >= 0.55 and r.suggested_category != ScheduleCategory.UNKNOWN.value
+    ]
+    high_value.sort(key=lambda r: (-r.confidence, r.stem))
+
+    return {
+        "schema": "pne_scheduler.unit_unknown_review/v1",
+        "unit": unit,
+        "unknown_count": len(unit_recs),
+        "still_unresolved": sum(
+            1 for r in unit_recs if r.suggested_category == ScheduleCategory.UNKNOWN.value
+        ),
+        "review_clusters": ranked_clusters,
+        "unresolved_tokens": [
+            {"token": tok, "count": cnt} for tok, cnt in token_ctr.most_common(top_tokens)
+        ],
+        "promote_candidates": [
+            {
+                "stem": r.stem,
+                "suggested_category": r.suggested_category,
+                "confidence": r.confidence,
+                "method": r.method,
+                "step_signature": r.step_signature,
+            }
+            for r in high_value[:60]
+        ],
+    }
+
+
+def render_unit_review_markdown(review: dict[str, Any]) -> str:
+    unit = review["unit"]
+    lines = [
+        f"# {unit} unknown SCH review priority",
+        "",
+        f"- Unknown after full classifier: **{review['unknown_count']}**",
+        f"- Still unresolved (no suggestion): **{review['still_unresolved']}**",
+        "",
+        "## Top clusters (review first)",
+        "",
+        "| Priority | Count | Suggested | Signature (truncated) | Examples |",
+        "|---------:|------:|-----------|----------------------|----------|",
+    ]
+    for cluster in review.get("review_clusters", [])[:25]:
+        sig = cluster.get("step_signature") or "parse_fail"
+        if len(sig) > 48:
+            sig = sig[:45] + "..."
+        examples = "; ".join(cluster.get("examples", [])[:2])
+        if len(examples) > 60:
+            examples = examples[:57] + "..."
+        lines.append(
+            f"| {cluster.get('priority_score', '')} | {cluster['count']} | "
+            f"{cluster.get('suggested_category', '')} | `{sig}` | {examples} |"
+        )
+    lines.extend(["", "## Unresolved filename tokens", ""])
+    for item in review.get("unresolved_tokens", [])[:20]:
+        lines.append(f"- `{item['token']}`: {item['count']}")
+    lines.extend(["", "## High-value promote candidates (confidence ≥0.55)", ""])
+    for item in review.get("promote_candidates", [])[:15]:
+        lines.append(
+            f"- `{item['stem']}` → **{item['suggested_category']}** "
+            f"({item['confidence']}, {item['method']})"
+        )
+    return "\n".join(lines) + "\n"
 
 
 def _cluster_key(rec: UnknownSchRecord) -> str:
@@ -445,6 +554,7 @@ def apply_verified_labels(
                 suggested_category=verified[rec.stem],
                 confidence=1.0,
                 method="verified_label",
+                matched_rule="verified_label",
                 signature_votes=rec.signature_votes,
             )
         )

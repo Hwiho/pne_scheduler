@@ -81,7 +81,34 @@ def test_verified_labels_roundtrip(tmp_path: Path) -> None:
     assert payload["schema"] == VERIFIED_LABELS_SCHEMA
 
 
-def test_classify_with_verified_labels_overrides_rules() -> None:
+def test_build_unit_review_priority_shape() -> None:
+    from pne_scheduler.classify.unknown_categorize import (
+        UnknownSchRecord,
+        build_unit_review_priority,
+    )
+
+    rec = UnknownSchRecord(
+        unit="PNE04",
+        zip_path="z",
+        archive_path="a/x.sch",
+        stem="x.sch",
+        step_signature="CCCV-END",
+        step_count=2,
+        loop_steps=0,
+        current_mA_max=10.0,
+        filename_probes=(),
+        filename_tokens=("dry", "1818"),
+        suggested_category="formation",
+        confidence=0.8,
+        method="binary_signature",
+        matched_rule="none",
+        signature_votes=(),
+    )
+    review = build_unit_review_priority("PNE04", [rec])
+    assert review["unit"] == "PNE04"
+    assert review["unknown_count"] == 1
+    assert review["review_clusters"]
+
     match = classify_with_verified_labels(
         "totally_opaque_name.sch",
         {"totally_opaque_name.sch": "hppc"},

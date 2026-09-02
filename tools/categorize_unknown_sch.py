@@ -10,12 +10,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 
+from pne_scheduler.classify.training_labels import load_verified_labels  # noqa: E402
 from pne_scheduler.classify.unknown_categorize import (  # noqa: E402
     apply_verified_labels,
     build_report,
+    build_unit_review_priority,
     export_training_csv,
     export_training_jsonl,
-    load_verified_labels,
+    render_unit_review_markdown,
     scan_zip_corpus,
     signature_model_to_json,
 )
@@ -52,6 +54,12 @@ def main() -> None:
         default=VERIFIED_PATH,
         help="Optional verified label JSON to overlay on exports",
     )
+    parser.add_argument(
+        "--review-unit",
+        type=str,
+        default="PNE04",
+        help="Write unit review priority JSON/MD (default: PNE04; empty to skip)",
+    )
     args = parser.parse_args()
 
     zip_map = default_corpus_zip_map(args.units or None)
@@ -61,8 +69,23 @@ def main() -> None:
         records = apply_verified_labels(records, verified)
 
     report = build_report(zip_map, records=records, signature_model=signature_model)
+    report["classifier"] = "classify_schedule (filename + verified + signature)"
     if verified:
         report["verified_labels_applied"] = len(verified)
+
+    if args.review_unit:
+        review = build_unit_review_priority(args.review_unit.upper(), records)
+        review_json = ROOT / "planning" / f"{args.review_unit.upper()}_UNKNOWN_REVIEW.json"
+        review_md = ROOT / "planning" / f"{args.review_unit.upper()}_UNKNOWN_REVIEW.md"
+        review_json.write_text(json.dumps(review, ensure_ascii=False, indent=2), encoding="utf-8")
+        review_md.write_text(render_unit_review_markdown(review), encoding="utf-8")
+        report["unit_review"] = {
+            "unit": review["unit"],
+            "path_json": str(review_json.relative_to(ROOT)),
+            "path_md": str(review_md.relative_to(ROOT)),
+        }
+        print(f"Wrote {review_json}")
+        print(f"Wrote {review_md}")
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")

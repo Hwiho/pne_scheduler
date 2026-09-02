@@ -2,368 +2,95 @@
   "schema": "pne_scheduler.rule_promotion_candidates/v1",
   "candidates": [
     {
-      "category": "rate_test",
-      "token": "sch",
-      "count": 4438,
-      "suggested_pattern": "(?i)\\bsch\\b",
-      "rule_name": "rate_test_sch_token"
-    },
-    {
-      "category": "formation",
-      "token": "sch",
-      "count": 2437,
-      "suggested_pattern": "(?i)\\bsch\\b",
-      "rule_name": "formation_sch_token"
-    },
-    {
-      "category": "formation",
-      "token": "dry",
-      "count": 1164,
-      "suggested_pattern": "(?i)\\bdry\\b",
-      "rule_name": "formation_dry_token"
-    },
-    {
       "category": "cycle_life",
       "token": "sch",
-      "count": 981,
+      "count": 431,
       "suggested_pattern": "(?i)\\bsch\\b",
       "rule_name": "cycle_life_sch_token"
     },
     {
       "category": "rate_test",
-      "token": "agc",
-      "count": 656,
-      "suggested_pattern": "(?i)\\bagc\\b",
-      "rule_name": "rate_test_agc_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "ref",
-      "count": 649,
-      "suggested_pattern": "(?i)\\bref\\b",
-      "rule_name": "rate_test_ref_token"
-    },
-    {
-      "category": "hppc",
       "token": "sch",
-      "count": 381,
+      "count": 334,
       "suggested_pattern": "(?i)\\bsch\\b",
-      "rule_name": "hppc_sch_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "dry",
-      "count": 291,
-      "suggested_pattern": "(?i)\\bdry\\b",
-      "rule_name": "rate_test_dry_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "f0010",
-      "count": 272,
-      "suggested_pattern": "(?i)\\bf0010\\b",
-      "rule_name": "rate_test_f0010_token"
+      "rule_name": "rate_test_sch_token"
     },
     {
       "category": "soc_setting",
       "token": "sch",
-      "count": 228,
+      "count": 233,
       "suggested_pattern": "(?i)\\bsch\\b",
       "rule_name": "soc_setting_sch_token"
     },
     {
-      "category": "rate_test",
-      "token": "set1",
-      "count": 193,
-      "suggested_pattern": "(?i)\\bset1\\b",
-      "rule_name": "rate_test_set1_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "set2",
-      "count": 190,
-      "suggested_pattern": "(?i)\\bset2\\b",
-      "rule_name": "rate_test_set2_token"
-    },
-    {
-      "category": "qpeed",
-      "token": "sch",
-      "count": 179,
-      "suggested_pattern": "(?i)\\bsch\\b",
-      "rule_name": "qpeed_sch_token"
-    },
-    {
-      "category": "formation",
-      "token": "ref",
-      "count": 172,
-      "suggested_pattern": "(?i)\\bref\\b",
-      "rule_name": "formation_ref_token"
-    },
-    {
       "category": "soc_setting",
       "token": "soc100",
-      "count": 155,
+      "count": 157,
       "suggested_pattern": "(?i)\\bsoc100\\b",
       "rule_name": "soc_setting_soc100_token"
     },
     {
       "category": "cycle_life",
-      "token": "cyc",
-      "count": 149,
-      "suggested_pattern": "(?i)\\bcyc\\b",
-      "rule_name": "cycle_life_cyc_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "set3",
-      "count": 146,
-      "suggested_pattern": "(?i)\\bset3\\b",
-      "rule_name": "rate_test_set3_token"
-    },
-    {
-      "category": "cycle_life",
       "token": "2stack",
-      "count": 123,
+      "count": 134,
       "suggested_pattern": "(?i)\\b2stack\\b",
       "rule_name": "cycle_life_2stack_token"
     },
     {
-      "category": "rate_test",
-      "token": "mono",
-      "count": 117,
-      "suggested_pattern": "(?i)\\bmono\\b",
-      "rule_name": "rate_test_mono_token"
-    },
-    {
       "category": "soc_setting",
       "token": "dry",
-      "count": 114,
+      "count": 116,
       "suggested_pattern": "(?i)\\bdry\\b",
       "rule_name": "soc_setting_dry_token"
     },
     {
-      "category": "rate_test",
-      "token": "5mpa",
-      "count": 111,
-      "suggested_pattern": "(?i)\\b5mpa\\b",
-      "rule_name": "rate_test_5mpa_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "4mah",
-      "count": 110,
-      "suggested_pattern": "(?i)\\b4mah\\b",
-      "rule_name": "rate_test_4mah_token"
+      "category": "cycle_life",
+      "token": "cyc",
+      "count": 80,
+      "suggested_pattern": "(?i)\\bcyc\\b",
+      "rule_name": "cycle_life_cyc_token"
     },
     {
       "category": "charge",
       "token": "sch",
-      "count": 108,
+      "count": 70,
       "suggested_pattern": "(?i)\\bsch\\b",
       "rule_name": "charge_sch_token"
     },
     {
-      "category": "rate_test",
-      "token": "ld6",
-      "count": 106,
-      "suggested_pattern": "(?i)\\bld6\\b",
-      "rule_name": "rate_test_ld6_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "lwr",
-      "count": 105,
-      "suggested_pattern": "(?i)\\blwr\\b",
-      "rule_name": "rate_test_lwr_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "1c0",
-      "count": 103,
-      "suggested_pattern": "(?i)\\b1c0\\b",
-      "rule_name": "rate_test_1c0_token"
-    },
-    {
       "category": "storage",
       "token": "sch",
-      "count": 103,
+      "count": 70,
       "suggested_pattern": "(?i)\\bsch\\b",
       "rule_name": "storage_sch_token"
     },
     {
       "category": "cycle_life",
-      "token": "gs73",
-      "count": 101,
-      "suggested_pattern": "(?i)\\bgs73\\b",
-      "rule_name": "cycle_life_gs73_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "set4",
-      "count": 101,
-      "suggested_pattern": "(?i)\\bset4\\b",
-      "rule_name": "rate_test_set4_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "s33",
-      "count": 97,
-      "suggested_pattern": "(?i)\\bs33\\b",
-      "rule_name": "rate_test_s33_token"
-    },
-    {
-      "category": "formation",
-      "token": "cnf14",
-      "count": 94,
-      "suggested_pattern": "(?i)\\bcnf14\\b",
-      "rule_name": "formation_cnf14_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "s40",
-      "count": 92,
-      "suggested_pattern": "(?i)\\bs40\\b",
-      "rule_name": "rate_test_s40_token"
-    },
-    {
-      "category": "qpeed",
-      "token": "sj1300",
-      "count": 90,
-      "suggested_pattern": "(?i)\\bsj1300\\b",
-      "rule_name": "qpeed_sj1300_token"
-    },
-    {
-      "category": "hppc",
-      "token": "dry",
-      "count": 87,
-      "suggested_pattern": "(?i)\\bdry\\b",
-      "rule_name": "hppc_dry_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "kdh",
-      "count": 87,
-      "suggested_pattern": "(?i)\\bkdh\\b",
-      "rule_name": "rate_test_kdh_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "wet",
-      "count": 85,
-      "suggested_pattern": "(?i)\\bwet\\b",
-      "rule_name": "rate_test_wet_token"
-    },
-    {
-      "category": "qpeed",
-      "token": "gs73",
-      "count": 84,
-      "suggested_pattern": "(?i)\\bgs73\\b",
-      "rule_name": "qpeed_gs73_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "ref",
-      "count": 83,
-      "suggested_pattern": "(?i)\\bref\\b",
-      "rule_name": "cycle_life_ref_token"
-    },
-    {
-      "category": "rate_test",
-      "token": "ssg",
-      "count": 79,
-      "suggested_pattern": "(?i)\\bssg\\b",
-      "rule_name": "rate_test_ssg_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "dry",
-      "count": 75,
-      "suggested_pattern": "(?i)\\bdry\\b",
-      "rule_name": "cycle_life_dry_token"
-    },
-    {
-      "category": "formation",
-      "token": "cyc",
-      "count": 74,
-      "suggested_pattern": "(?i)\\bcyc\\b",
-      "rule_name": "formation_cyc_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "set01",
-      "count": 64,
-      "suggested_pattern": "(?i)\\bset01\\b",
-      "rule_name": "cycle_life_set01_token"
-    },
-    {
-      "category": "discharge",
-      "token": "sch",
-      "count": 61,
-      "suggested_pattern": "(?i)\\bsch\\b",
-      "rule_name": "discharge_sch_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "set02",
-      "count": 60,
-      "suggested_pattern": "(?i)\\bset02\\b",
-      "rule_name": "cycle_life_set02_token"
-    },
-    {
-      "category": "formation",
-      "token": "gs73",
-      "count": 56,
-      "suggested_pattern": "(?i)\\bgs73\\b",
-      "rule_name": "formation_gs73_token"
-    },
-    {
-      "category": "cycle_life",
       "token": "6stack",
-      "count": 55,
+      "count": 67,
       "suggested_pattern": "(?i)\\b6stack\\b",
       "rule_name": "cycle_life_6stack_token"
     },
     {
-      "category": "formation",
-      "token": "1mpa",
-      "count": 55,
-      "suggested_pattern": "(?i)\\b1mpa\\b",
-      "rule_name": "formation_1mpa_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "cnf14",
-      "count": 53,
-      "suggested_pattern": "(?i)\\bcnf14\\b",
-      "rule_name": "cycle_life_cnf14_token"
+      "category": "rate_test",
+      "token": "dry",
+      "count": 58,
+      "suggested_pattern": "(?i)\\bdry\\b",
+      "rule_name": "rate_test_dry_token"
     },
     {
       "category": "cycle_life",
       "token": "plate",
-      "count": 51,
+      "count": 49,
       "suggested_pattern": "(?i)\\bplate\\b",
       "rule_name": "cycle_life_plate_token"
     },
     {
-      "category": "cycle_life",
-      "token": "rtr",
-      "count": 47,
-      "suggested_pattern": "(?i)\\brtr\\b",
-      "rule_name": "cycle_life_rtr_token"
-    },
-    {
-      "category": "formation",
-      "token": "wip",
-      "count": 45,
-      "suggested_pattern": "(?i)\\bwip\\b",
-      "rule_name": "formation_wip_token"
-    },
-    {
-      "category": "formation",
-      "token": "2mpa",
+      "category": "rate_test",
+      "token": "33c",
       "count": 43,
-      "suggested_pattern": "(?i)\\b2mpa\\b",
-      "rule_name": "formation_2mpa_token"
+      "suggested_pattern": "(?i)\\b33c\\b",
+      "rule_name": "rate_test_33c_token"
     },
     {
       "category": "cycle_life",
@@ -371,27 +98,6 @@
       "count": 41,
       "suggested_pattern": "(?i)\\bset1\\b",
       "rule_name": "cycle_life_set1_token"
-    },
-    {
-      "category": "dcir",
-      "token": "sch",
-      "count": 41,
-      "suggested_pattern": "(?i)\\bsch\\b",
-      "rule_name": "dcir_sch_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "set03",
-      "count": 40,
-      "suggested_pattern": "(?i)\\bset03\\b",
-      "rule_name": "cycle_life_set03_token"
-    },
-    {
-      "category": "cycle_life",
-      "token": "3rd",
-      "count": 40,
-      "suggested_pattern": "(?i)\\b3rd\\b",
-      "rule_name": "cycle_life_3rd_token"
     },
     {
       "category": "cycle_life",
@@ -402,24 +108,318 @@
     },
     {
       "category": "cycle_life",
-      "token": "set04",
-      "count": 39,
-      "suggested_pattern": "(?i)\\bset04\\b",
-      "rule_name": "cycle_life_set04_token"
+      "token": "gs73",
+      "count": 36,
+      "suggested_pattern": "(?i)\\bgs73\\b",
+      "rule_name": "cycle_life_gs73_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "45oc",
+      "count": 33,
+      "suggested_pattern": "(?i)\\b45oc\\b",
+      "rule_name": "cycle_life_45oc_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "set2",
+      "count": 31,
+      "suggested_pattern": "(?i)\\bset2\\b",
+      "rule_name": "cycle_life_set2_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "dry",
+      "count": 30,
+      "suggested_pattern": "(?i)\\bdry\\b",
+      "rule_name": "cycle_life_dry_token"
+    },
+    {
+      "category": "soc_setting",
+      "token": "soc0",
+      "count": 30,
+      "suggested_pattern": "(?i)\\bsoc0\\b",
+      "rule_name": "soc_setting_soc0_token"
+    },
+    {
+      "category": "charge",
+      "token": "gs73",
+      "count": 29,
+      "suggested_pattern": "(?i)\\bgs73\\b",
+      "rule_name": "charge_gs73_token"
     },
     {
       "category": "cycle_life",
       "token": "cbc",
-      "count": 39,
+      "count": 28,
       "suggested_pattern": "(?i)\\bcbc\\b",
       "rule_name": "cycle_life_cbc_token"
     },
     {
+      "category": "rate_test",
+      "token": "60oc",
+      "count": 28,
+      "suggested_pattern": "(?i)\\b60oc\\b",
+      "rule_name": "rate_test_60oc_token"
+    },
+    {
       "category": "cycle_life",
-      "token": "np11",
-      "count": 39,
-      "suggested_pattern": "(?i)\\bnp11\\b",
-      "rule_name": "cycle_life_np11_token"
+      "token": "set02",
+      "count": 27,
+      "suggested_pattern": "(?i)\\bset02\\b",
+      "rule_name": "cycle_life_set02_token"
+    },
+    {
+      "category": "storage",
+      "token": "mono",
+      "count": 26,
+      "suggested_pattern": "(?i)\\bmono\\b",
+      "rule_name": "storage_mono_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "gs64",
+      "count": 24,
+      "suggested_pattern": "(?i)\\bgs64\\b",
+      "rule_name": "cycle_life_gs64_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "set01",
+      "count": 23,
+      "suggested_pattern": "(?i)\\bset01\\b",
+      "rule_name": "cycle_life_set01_token"
+    },
+    {
+      "category": "storage",
+      "token": "ref",
+      "count": 23,
+      "suggested_pattern": "(?i)\\bref\\b",
+      "rule_name": "storage_ref_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "sj1300",
+      "count": 22,
+      "suggested_pattern": "(?i)\\bsj1300\\b",
+      "rule_name": "cycle_life_sj1300_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "frame",
+      "count": 22,
+      "suggested_pattern": "(?i)\\bframe\\b",
+      "rule_name": "cycle_life_frame_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "1ah",
+      "count": 22,
+      "suggested_pattern": "(?i)\\b1ah\\b",
+      "rule_name": "cycle_life_1ah_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "33c",
+      "count": 22,
+      "suggested_pattern": "(?i)\\b33c\\b",
+      "rule_name": "cycle_life_33c_token"
+    },
+    {
+      "category": "formation",
+      "token": "sch",
+      "count": 22,
+      "suggested_pattern": "(?i)\\bsch\\b",
+      "rule_name": "formation_sch_token"
+    },
+    {
+      "category": "cycle_life",
+      "token": "set03",
+      "count": 21,
+      "suggested_pattern": "(?i)\\bset03\\b",
+      "rule_name": "cycle_life_set03_token"
+    },
+    {
+      "category": "charge",
+      "token": "wet",
+      "count": 20,
+      "suggested_pattern": "(?i)\\bwet\\b",
+      "rule_name": "charge_wet_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "chg",
+      "count": 20,
+      "suggested_pattern": "(?i)\\bchg\\b",
+      "rule_name": "rate_test_chg_token"
+    },
+    {
+      "category": "charge",
+      "token": "jji",
+      "count": 19,
+      "suggested_pattern": "(?i)\\bjji\\b",
+      "rule_name": "charge_jji_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "ref",
+      "count": 19,
+      "suggested_pattern": "(?i)\\bref\\b",
+      "rule_name": "rate_test_ref_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "set2",
+      "count": 19,
+      "suggested_pattern": "(?i)\\bset2\\b",
+      "rule_name": "rate_test_set2_token"
+    },
+    {
+      "category": "charge",
+      "token": "pas",
+      "count": 18,
+      "suggested_pattern": "(?i)\\bpas\\b",
+      "rule_name": "charge_pas_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "crate",
+      "count": 18,
+      "suggested_pattern": "(?i)\\bcrate\\b",
+      "rule_name": "rate_test_crate_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "5mpa",
+      "count": 17,
+      "suggested_pattern": "(?i)\\b5mpa\\b",
+      "rule_name": "rate_test_5mpa_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "mono",
+      "count": 16,
+      "suggested_pattern": "(?i)\\bmono\\b",
+      "rule_name": "rate_test_mono_token"
+    },
+    {
+      "category": "soc_setting",
+      "token": "soc100set",
+      "count": 16,
+      "suggested_pattern": "(?i)\\bsoc100set\\b",
+      "rule_name": "soc_setting_soc100set_token"
+    },
+    {
+      "category": "soc_setting",
+      "token": "soc",
+      "count": 16,
+      "suggested_pattern": "(?i)\\bsoc\\b",
+      "rule_name": "soc_setting_soc_token"
+    },
+    {
+      "category": "storage",
+      "token": "cbc",
+      "count": 16,
+      "suggested_pattern": "(?i)\\bcbc\\b",
+      "rule_name": "storage_cbc_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "set1",
+      "count": 15,
+      "suggested_pattern": "(?i)\\bset1\\b",
+      "rule_name": "rate_test_set1_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "soc",
+      "count": 15,
+      "suggested_pattern": "(?i)\\bsoc\\b",
+      "rule_name": "rate_test_soc_token"
+    },
+    {
+      "category": "rpt",
+      "token": "sch",
+      "count": 15,
+      "suggested_pattern": "(?i)\\bsch\\b",
+      "rule_name": "rpt_sch_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "set3",
+      "count": 13,
+      "suggested_pattern": "(?i)\\bset3\\b",
+      "rule_name": "rate_test_set3_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "01c",
+      "count": 12,
+      "suggested_pattern": "(?i)\\b01c\\b",
+      "rule_name": "rate_test_01c_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "25oc",
+      "count": 12,
+      "suggested_pattern": "(?i)\\b25oc\\b",
+      "rule_name": "rate_test_25oc_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "cyc",
+      "count": 12,
+      "suggested_pattern": "(?i)\\bcyc\\b",
+      "rule_name": "rate_test_cyc_token"
+    },
+    {
+      "category": "soc_setting",
+      "token": "60oc",
+      "count": 12,
+      "suggested_pattern": "(?i)\\b60oc\\b",
+      "rule_name": "soc_setting_60oc_token"
+    },
+    {
+      "category": "soc_setting",
+      "token": "80oc",
+      "count": 12,
+      "suggested_pattern": "(?i)\\b80oc\\b",
+      "rule_name": "soc_setting_80oc_token"
+    },
+    {
+      "category": "formation",
+      "token": "ref",
+      "count": 10,
+      "suggested_pattern": "(?i)\\bref\\b",
+      "rule_name": "formation_ref_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "05c",
+      "count": 10,
+      "suggested_pattern": "(?i)\\b05c\\b",
+      "rule_name": "rate_test_05c_token"
+    },
+    {
+      "category": "rate_test",
+      "token": "form",
+      "count": 10,
+      "suggested_pattern": "(?i)\\bform\\b",
+      "rule_name": "rate_test_form_token"
+    },
+    {
+      "category": "soc_setting",
+      "token": "soc50",
+      "count": 10,
+      "suggested_pattern": "(?i)\\bsoc50\\b",
+      "rule_name": "soc_setting_soc50_token"
+    },
+    {
+      "category": "storage",
+      "token": "add",
+      "count": 10,
+      "suggested_pattern": "(?i)\\badd\\b",
+      "rule_name": "storage_add_token"
     }
   ]
 }

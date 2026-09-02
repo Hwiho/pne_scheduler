@@ -1,0 +1,76 @@
+{
+  "schema": "pne_scheduler.gate_b_validation_report/v1",
+  "generated_at": "2026-09-02T04:01:16.552564+00:00",
+  "checks": {
+    "B3_fixture_catalog": true,
+    "B1_step_layout_612_696": true,
+    "B2_assb_offset_parity": true,
+    "B2_parser_layout_match": true,
+    "B4_semantic_golden_tests": true,
+    "B5_intake_template_valid": true
+  },
+  "all_passed": true,
+  "pytest": {
+    "passed": true,
+    "exit_code": 0,
+    "stdout_tail": [
+      ".............................................................            [100%]",
+      "61 passed in 2.34s"
+    ],
+    "stderr_tail": []
+  },
+  "offset_parity": {
+    "shared_pairs": 3,
+    "documented_divergences": 5
+  },
+  "step_layout": {
+    "extension_bytes": 84,
+    "sampled": {
+      "612": 200,
+      "696": 200
+    }
+  },
+  "parser_fixture_checks": {
+    "fixtures": [
+      {
+        "path": "example\\fixtures\\hppc\\HPPC_Full range.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example\\fixtures\\capacheck_zip\\9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
+        "layout_match": true,
+        "step_count_match": true
+      }
+    ],
+    "all_layout_match": true,
+    "assb_summary": {
+      "fixture_count": 2,
+      "layout_match_count": 2,
+      "step_count_match_count": 2,
+      "fixtures_with_field_mismatches": 0
+    }
+  },
+  "intake_template": {
+    "path": "example\\validation-intake.template.json",
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "equipment.ctspro_version missing; add CYCC/CTSMonPro build",
+      "ctspro_reopen_verified is false; field cannot be marked writer-ready yet"
+    ]
+  },
+  "gate_b_tasks": {
+    "B0_raw_unit_contract": true,
+    "B1_field_tables": true,
+    "B2_parser_alignment": true,
+    "B3_read_regression": true,
+    "B4_semantic_goldens": true,
+    "B5_intake_validation": true
+  },
+  "next_actions": [
+    "Collect controlled before/after pairs per docs/GATE_B.md (B5 evidence)",
+    "Promote writer-ready fields only after CTSPro reopen check",
+    "Resolve ASSB documented divergences in schema/ensol_v612.py"
+  ]
+}

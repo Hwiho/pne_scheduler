@@ -46,9 +46,9 @@ Auto-generated report for Gate B. ASSB vendored constants live in `vendor/assb_s
 
 ## Fixture comparison summary
 
-- Fixtures checked: **9**
-- Layout matches: **9**
-- Step-count matches: **9**
+- Fixtures checked: **11**
+- Layout matches: **11**
+- Step-count matches: **11**
 - Fixtures with ASSB/native field mismatches: **0**
 
 ## Per-fixture notes
@@ -59,6 +59,8 @@ Auto-generated report for Gate B. ASSB vendored constants live in `vendor/assb_s
 - `fixtures\capacheck_zip\3.BM_C1%_FM.sch`: layout=True, steps=True, field_mismatches=0
 - `fixtures\capacheck_zip\9)Bimodal_SJ1300_6040_NCN_capacheck.sch`: layout=True, steps=True, field_mismatches=0
 - `fixtures\hppc\HPPC_Full range.sch`: layout=True, steps=True, field_mismatches=0
-- `fixtures\sch_lab_zip\00207966_250611_capa.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures\sch_lab_zip\0.5C cycle.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures\sch_lab_zip\00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures\sch_lab_zip\00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch`: layout=True, steps=True, field_mismatches=0
 - `fixtures\sch_lab_zip\07100766_260522_Set1_SJ900_wet_QC_1_charge.sch`: layout=True, steps=True, field_mismatches=0
 - `fixtures\hppc\HPPC_Full range.sch`: layout=True, steps=True, field_mismatches=0

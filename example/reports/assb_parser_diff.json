@@ -142,11 +142,29 @@
       "field_value_mismatches": []
     },
     {
-      "path": "fixtures\\sch_lab_zip\\00207966_250611_capa.sch",
+      "path": "fixtures\\sch_lab_zip\\0.5C cycle.sch",
       "layout_match": true,
       "step_count_match": true,
-      "assb_step_count": 3,
-      "native_step_count": 3,
+      "assb_step_count": 31,
+      "native_step_count": 31,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    },
+    {
+      "path": "fixtures\\sch_lab_zip\\00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 19,
+      "native_step_count": 19,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    },
+    {
+      "path": "fixtures\\sch_lab_zip\\00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 5,
+      "native_step_count": 5,
       "field_value_mismatch_count": 0,
       "field_value_mismatches": []
     },
@@ -170,9 +188,9 @@
     }
   ],
   "summary": {
-    "fixture_count": 9,
-    "layout_match_count": 9,
-    "step_count_match_count": 9,
+    "fixture_count": 11,
+    "layout_match_count": 11,
+    "step_count_match_count": 11,
     "fixtures_with_field_mismatches": 0
   }
 }
