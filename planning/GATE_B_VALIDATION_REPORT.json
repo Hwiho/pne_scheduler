@@ -1,21 +1,29 @@
 {
-  "schema": "pne_scheduler.gate_b_validation_report/v1",
-  "generated_at": "2026-09-02T04:33:24.313621+00:00",
-  "checks": {
+  "schema": "pne_scheduler.gate_b_validation_report/v2",
+  "generated_at": "2026-09-02T05:17:59.016482+00:00",
+  "status": "ready_for_controlled_pairs",
+  "tooling_checks": {
+    "pytest_subset": true,
     "B3_fixture_catalog": true,
     "B1_step_layout_612_696": true,
+    "B1_canonical_field_registry": true,
     "B2_assb_offset_parity": true,
     "B2_parser_layout_match": true,
     "B4_semantic_golden_tests": true,
-    "B5_intake_template_valid": true
+    "B5_intake_template_valid": true,
+    "B0_explicit_writer_q_nom_contract": true
   },
-  "all_passed": true,
+  "tooling_passed": true,
+  "repository_ready_for_controlled_pairs": true,
+  "gate_b_passed": false,
+  "all_passed": false,
   "pytest": {
     "passed": true,
     "exit_code": 0,
     "stdout_tail": [
-      ".............................................................            [100%]",
-      "61 passed in 2.94s"
+      "........................................................................ [ 98%]",
+      ".                                                                        [100%]",
+      "73 passed in 0.37s"
     ],
     "stderr_tail": []
   },
@@ -33,12 +41,12 @@
   "parser_fixture_checks": {
     "fixtures": [
       {
-        "path": "example\\fixtures\\hppc\\HPPC_Full range.sch",
+        "path": "example/fixtures/hppc/HPPC_Full range.sch",
         "layout_match": true,
         "step_count_match": true
       },
       {
-        "path": "example\\fixtures\\capacheck_zip\\9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
+        "path": "example/fixtures/capacheck_zip/9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
         "layout_match": true,
         "step_count_match": true
       }
@@ -52,7 +60,7 @@
     }
   },
   "intake_template": {
-    "path": "example\\validation-intake.template.json",
+    "path": "example/validation-intake.template.json",
     "valid": true,
     "errors": [],
     "warnings": [
@@ -60,17 +68,58 @@
       "ctspro_reopen_verified is false; field cannot be marked writer-ready yet"
     ]
   },
-  "gate_b_tasks": {
-    "B0_raw_unit_contract": true,
-    "B1_field_tables": true,
-    "B2_parser_alignment": true,
-    "B3_read_regression": true,
-    "B4_semantic_goldens": true,
-    "B5_intake_validation": true
+  "canonical_field_registry": {
+    "valid": true,
+    "errors": [],
+    "writer_ready_field_count": 0
   },
+  "q_nom_contract": {
+    "writer_source": "cell_profile.nominal_capacity_mAh",
+    "inferred_geometry_allowed_for_writer": false,
+    "viewer_may_display_inferred_q_nom": true
+  },
+  "controlled_pair_evidence": {
+    "directory": "example/gate_b_pairs",
+    "intake_count": 0,
+    "valid_intake_count": 0,
+    "reopen_verified_count": 0,
+    "complete_evidence_count": 0,
+    "intakes": []
+  },
+  "gate_b_tasks": {
+    "B0_raw_unit_contract": {
+      "repository_ready": true,
+      "external_evidence_complete": false
+    },
+    "B1_field_tables": {
+      "repository_ready": true,
+      "external_evidence_complete": false
+    },
+    "B2_parser_alignment": {
+      "repository_ready": true,
+      "external_evidence_complete": false
+    },
+    "B3_read_regression": {
+      "repository_ready": true,
+      "external_evidence_complete": true
+    },
+    "B4_semantic_goldens": {
+      "repository_ready": true,
+      "external_evidence_complete": false
+    },
+    "B5_intake_validation": {
+      "repository_ready": true,
+      "external_evidence_complete": false
+    }
+  },
+  "remaining_external_requirements": [
+    "Add real CTSPro-created before/after intake files under example/gate_b_pairs/",
+    "Record CTSPro build and channel profile in each intake",
+    "Set ctspro_reopen_verified=true only after reopening the exact output hash",
+    "Promote individual fields to writer-ready only from clean pair evidence"
+  ],
   "next_actions": [
-    "Collect controlled before/after pairs per docs/GATE_B.md (B5 evidence)",
-    "Promote writer-ready fields only after CTSPro reopen check",
-    "Resolve ASSB documented divergences in schema/ensol_v612.py"
+    "Collect controlled before/after pairs per docs/GATE_B.md",
+    "Run with --require-gate-exit after controlled-pair evidence is added"
   ]
 }
