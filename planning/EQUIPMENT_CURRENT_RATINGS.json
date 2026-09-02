@@ -5,7 +5,7 @@
   "notes": [
     "Recommended maximum current (권장 최대전류), not minimum resolution.",
     "SCH files may store higher mA values (cell Q_nom × C-rate); validate against this tier in writer/linter.",
-    "PNE04–PNE09 confirmed 500mA tier by user (2026-09-02)."
+    "PNE04–PNE11 confirmed 500mA tier by user (2026-09-02)."
   ],
   "tiers": [
     {
@@ -16,7 +16,7 @@
     {
       "rating": "500mA",
       "rating_mA": 500,
-      "units": ["PNE01", "PNE02", "PNE04", "PNE05", "PNE06", "PNE07", "PNE08", "PNE09", "PNE11"]
+      "units": ["PNE01", "PNE02", "PNE04", "PNE05", "PNE06", "PNE07", "PNE08", "PNE09", "PNE10", "PNE11"]
     },
     {
       "rating": "6A",
@@ -56,6 +56,7 @@
     "PNE07": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
     "PNE08": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
     "PNE09": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
+    "PNE10": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
     "PNE11": { "rating": "500mA", "rating_mA": 500, "tier": "500mA" },
     "PNE12": { "rating": "20A", "rating_mA": 20000, "tier": "20A" },
     "PNE14": { "rating": "20A", "rating_mA": 20000, "tier": "20A" },

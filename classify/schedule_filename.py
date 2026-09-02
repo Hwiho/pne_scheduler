@@ -29,6 +29,7 @@ class ScheduleCategory(StrEnum):
     DISCHARGE = "discharge"
     REST = "rest"
     DOE = "doe"
+    PLATING = "plating"
     UNKNOWN = "unknown"
 
 
@@ -70,6 +71,7 @@ CATEGORY_TO_MODULE: dict[ScheduleCategory, str] = {
     ScheduleCategory.DISCHARGE: "discharge",
     ScheduleCategory.REST: "rest",
     ScheduleCategory.DOE: "doe",
+    ScheduleCategory.PLATING: "charge",
 }
 
 _QPEED_PATTERN = re.compile(r"qpeed", re.IGNORECASE)
@@ -109,8 +111,8 @@ _DOE_PATTERN = re.compile(
 )
 _DRY_WET_PATTERN = re.compile(r"\bdry\b|\bwet\b", re.IGNORECASE)
 _CYCLE_PATTERN = re.compile(
-    r"cycle|2cycle|\d+cycle|\bcyc\b|0\.5\s*c\s*cycle|\d+\s*℃\s*cycle|"
-    r"swell|breathing|\bcont(?:\.sch|$|\s)",
+    r"cycle|2cycle|\d+cycle|\d+cyc\b|\bcyc\b|0\.5\s*c\s*cycle|\d+\s*℃\s*cycle|"
+    r"swell|breathing|\bcont(?:\.sch|$|\s)|LT\d+C",
     re.IGNORECASE,
 )
 _CURRENT_DENSITY_PATTERN = re.compile(r"mA\s*/\s*cm|mAcm2|ma/cm", re.IGNORECASE)
@@ -121,6 +123,7 @@ _FORMATION_PATTERN = re.compile(
     r"|(?:^|[_\s-])formation(?:$|[_\s.+\-()])"
     r"|포메이션"
     r"|c1\s*%"
+    r"|\bcip\b"
     r"|(?:^|[_\s-])form(?!_rpt|_rate|_cycle|\+)(?:\.sch|\.{2}sch|_|$|\s)"
     r")",
     re.IGNORECASE,
@@ -169,8 +172,26 @@ _RULES: tuple[tuple[str, re.Pattern[str], ScheduleCategory], ...] = (
         ScheduleCategory.SOC_SETTING,
     ),
     (
+        "xrd_setup_keyword",
+        re.compile(r"(?:^|[_\s-])xrd(?:[_\s-]|\.sch|$)", re.IGNORECASE),
+        ScheduleCategory.SOC_SETTING,
+    ),
+    (
+        "cyc_abbrev_keyword",
+        re.compile(r"\d+cyc\b", re.IGNORECASE),
+        ScheduleCategory.CYCLE_LIFE,
+    ),
+    (
         "rate_test_keyword",
         _RATE_TEST_PATTERN,
+        ScheduleCategory.RATE_TEST,
+    ),
+    (
+        "standalone_c_rate_keyword",
+        re.compile(
+            r"^[\d.]+'?\s*C(?:\.sch|\s|_|$)(?!.*(?:discharge|dchg|\bDCH\b))",
+            re.IGNORECASE,
+        ),
         ScheduleCategory.RATE_TEST,
     ),
     (
@@ -209,9 +230,19 @@ _RULES: tuple[tuple[str, re.Pattern[str], ScheduleCategory], ...] = (
         ScheduleCategory.DCIR,
     ),
     (
+        "xrm_discharge_keyword",
+        re.compile(r"\bxrm\b", re.IGNORECASE),
+        ScheduleCategory.DISCHARGE,
+    ),
+    (
         "discharge_keyword",
         _DISCHARGE_PATTERN,
         ScheduleCategory.DISCHARGE,
+    ),
+    (
+        "plating_keyword",
+        re.compile(r"plating|electrodep", re.IGNORECASE),
+        ScheduleCategory.PLATING,
     ),
     (
         "current_density_keyword",

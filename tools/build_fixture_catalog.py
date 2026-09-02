@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from pathlib import Path
 
-from pne_scheduler.classify import classify_schedule_filename
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT.parent))
+
+from pne_scheduler.classify import classify_schedule
 from pne_scheduler.io.sch_binary import read_sch_binary
 
-ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_ROOT = ROOT / "example" / "fixtures"
 OUTPUT_PATH = FIXTURE_ROOT / "catalog.json"
 
@@ -87,12 +90,13 @@ def build_catalog() -> dict:
     for path in sorted(FIXTURE_ROOT.rglob("*.sch")):
         document = read_sch_binary(path)
         relative_path = path.relative_to(FIXTURE_ROOT).as_posix()
+        data = path.read_bytes()
         fixtures.append(
             {
                 "path": relative_path,
                 "sha256": _sha256(path),
                 "size": path.stat().st_size,
-                "category": classify_schedule_filename(path.name).category.value,
+                "category": classify_schedule(path.name, data).category.value,
                 "layout": {
                     "version": f"0x{document.sch_version:08x}",
                     "payload_offset": document.payload_offset,

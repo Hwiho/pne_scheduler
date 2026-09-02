@@ -14,22 +14,24 @@ python tools/compare_pne_units.py
 
 Source zips: `example/corpus_zips/PNE##.zip` (or `c:\PNE##.zip` on lab PC).
 
-- Units: 10
-- Total `.sch`: 18708
-- Unknown (no protocol keyword): 12060 (64.5%)
+- Units: 12
+- Total `.sch`: 22368
+- Unknown (no protocol keyword): 8183 (36.6%)
 
 | Unit | Files | Classified | Unknown | LOOP files | Step sizes | Rating hint |
 |------|------:|-----------:|--------:|-----------:|------------|-------------|
 | PNE01 | 36 | 91.7% | 8.3% | 36 | 612×36 | 500mA |
-| PNE02 | 3449 | 42.7% | 57.3% | 3448 | 612×3446, 696×2 | 500mA |
-| PNE03 | 1541 | 55.0% | 45.0% | 1541 | 612×1533, 696×8 | 6A |
-| PNE04 | 3273 | 19.2% | 80.8% | 3273 | 612×3273 | 500mA |
-| PNE05 | 1874 | 35.8% | 64.2% | 1874 | 612×1874 | 500mA |
-| PNE06 | 1074 | 14.0% | 86.0% | 1074 | 612×1074 | 500mA |
-| PNE07 | 1459 | 13.9% | 86.1% | 1459 | 612×1459 | 500mA |
-| PNE08 | 2221 | 39.2% | 60.8% | 2221 | 612×2221 | 500mA |
-| PNE09 | 2121 | 49.5% | 50.5% | 2121 | 612×2120, 696×1 | 500mA |
-| PNE22 | 1660 | 43.7% | 56.3% | 1660 | 612×1660 | 100mA |
+| PNE02 | 3449 | 75.5% | 24.5% | 3448 | 612×3446, 696×2 | 500mA |
+| PNE03 | 1541 | 65.2% | 34.8% | 1541 | 612×1533, 696×8 | 6A |
+| PNE04 | 3273 | 34.6% | 65.4% | 3273 | 612×3273 | 500mA |
+| PNE05 | 1874 | 67.3% | 32.7% | 1874 | 612×1874 | 500mA |
+| PNE06 | 1074 | 61.0% | 39.0% | 1074 | 612×1074 | 500mA |
+| PNE07 | 1459 | 73.3% | 26.7% | 1459 | 612×1459 | 500mA |
+| PNE08 | 2221 | 58.8% | 41.2% | 2221 | 612×2221 | 500mA |
+| PNE09 | 2121 | 64.0% | 36.0% | 2121 | 612×2120, 696×1 | 500mA |
+| PNE10 | 1832 | 75.3% | 24.7% | 1832 | 612×1832 | 500mA |
+| PNE11 | 1828 | 68.2% | 31.8% | 1827 | 612×1825, 696×2 | 500mA |
+| PNE22 | 1660 | 68.5% | 31.5% | 1660 | 612×1660 | 100mA |
 
 ### Per-unit detail
 
@@ -52,18 +54,18 @@ Source zips: `example/corpus_zips/PNE##.zip` (or `c:\PNE##.zip` on lab PC).
 - LOOP goto aggregate: +564 only=20202, +48 only=3, both=300, neither=23
 - Official rating: **500mA** | max in corpus: 37763.375 mA (corpus max exceeds official)
 
-- `unknown`: 1978
-- `rate_test`: 518
-- `cycle_life`: 231
-- `formation`: 179
-- `charge`: 126
+- `rate_test`: 1546
+- `unknown`: 845
+- `cycle_life`: 258
+- `formation`: 182
+- `charge`: 145
 - `capacheck`: 114
-- `hppc`: 82
-- `qpeed`: 81
-- `rpt`: 56
+- `qpeed`: 90
+- `hppc`: 84
+- `rpt`: 54
+- `dcir`: 25
+- `soc_setting`: 22
 - `gitt`: 17
-- `rest`: 14
-- `discharge`: 12
 
 - Versions: `{'0x00010003': 3344, '0x00010002': 102, '0x00010004': 2}`
 - Step sizes: `{612: 3446, 696: 2}`
@@ -74,18 +76,18 @@ Source zips: `example/corpus_zips/PNE##.zip` (or `c:\PNE##.zip` on lab PC).
 - LOOP goto aggregate: +564 only=7890, +48 only=1, both=331, neither=57
 - Official rating: **6A** | max in corpus: 6000.0 mA
 
-- `unknown`: 694
-- `formation`: 208
-- `cycle_life`: 195
-- `rate_test`: 126
-- `rpt`: 99
-- `hppc`: 91
+- `unknown`: 536
+- `cycle_life`: 232
+- `rate_test`: 213
+- `formation`: 209
+- `hppc`: 114
+- `rpt`: 102
 - `capacheck`: 51
-- `discharge`: 20
+- `discharge`: 25
 - `eis`: 13
-- `ocv`: 12
+- `ocv`: 9
 - `dcir`: 8
-- `soc_setting`: 6
+- `rest`: 6
 
 - Versions: `{'0x00010003': 1484, '0x00010002': 49, '0x00010004': 8}`
 - Step sizes: `{612: 1533, 696: 8}`
@@ -96,18 +98,18 @@ Source zips: `example/corpus_zips/PNE##.zip` (or `c:\PNE##.zip` on lab PC).
 - LOOP goto aggregate: +564 only=17478, +48 only=0, both=796, neither=0
 - Official rating: **500mA** | max in corpus: 8153.0 mA (corpus max exceeds official)
 
-- `unknown`: 2645
-- `hppc`: 224
-- `rate_test`: 165
-- `cycle_life`: 111
+- `unknown`: 2141
+- `rate_test`: 496
+- `hppc`: 351
+- `cycle_life`: 143
 - `formation`: 64
-- `discharge`: 22
-- `charge`: 13
+- `discharge`: 30
+- `charge`: 16
 - `dcir`: 11
 - `storage`: 7
-- `rpt`: 5
-- `ocv`: 3
-- `qc`: 2
+- `ocv`: 5
+- `qc`: 4
+- `rpt`: 4
 
 - Versions: `{'0x00010003': 3245, '0x00010002': 28}`
 - Step sizes: `{612: 3273}`
@@ -118,14 +120,14 @@ Source zips: `example/corpus_zips/PNE##.zip` (or `c:\PNE##.zip` on lab PC).
 - LOOP goto aggregate: +564 only=13021, +48 only=0, both=748, neither=0
 - Official rating: **500mA** | max in corpus: 499.0 mA
 
-- `unknown`: 1203
-- `hppc`: 199
-- `cycle_life`: 166
+- `unknown`: 612
+- `rate_test`: 572
+- `hppc`: 233
+- `cycle_life`: 197
 - `formation`: 145
-- `rate_test`: 66
-- `storage`: 53
+- `storage`: 70
 - `rpt`: 25
-- `charge`: 7
+- `charge`: 10
 - `capacheck`: 4
 - `doe`: 3
 - `rest`: 1
@@ -140,13 +142,13 @@ Source zips: `example/corpus_zips/PNE##.zip` (or `c:\PNE##.zip` on lab PC).
 - LOOP goto aggregate: +564 only=8820, +48 only=0, both=316, neither=0
 - Official rating: **500mA** | max in corpus: 374.88 mA
 
-- `unknown`: 924
-- `cycle_life`: 98
-- `rate_test`: 23
-- `storage`: 12
-- `formation`: 10
-- `hppc`: 4
+- `unknown`: 419
+- `rate_test`: 354
+- `cycle_life`: 266
+- `hppc`: 18
+- `storage`: 13
 - `charge`: 3
+- `formation`: 1
 
 - Versions: `{'0x00010003': 1074}`
 - Step sizes: `{612: 1074}`
@@ -157,12 +159,12 @@ Source zips: `example/corpus_zips/PNE##.zip` (or `c:\PNE##.zip` on lab PC).
 - LOOP goto aggregate: +564 only=12358, +48 only=0, both=297, neither=0
 - Official rating: **500mA** | max in corpus: 499.0 mA
 
-- `unknown`: 1256
+- `rate_test`: 808
+- `unknown`: 390
+- `hppc`: 112
 - `qpeed`: 69
-- `hppc`: 51
-- `rate_test`: 39
-- `cycle_life`: 23
-- `formation`: 16
+- `formation`: 43
+- `cycle_life`: 32
 - `rpt`: 3
 - `charge`: 2
 
@@ -175,18 +177,18 @@ Source zips: `example/corpus_zips/PNE##.zip` (or `c:\PNE##.zip` on lab PC).
 - LOOP goto aggregate: +564 only=11721, +48 only=0, both=345, neither=0
 - Official rating: **500mA** | max in corpus: 174076.0 mA (corpus max exceeds official)
 
-- `unknown`: 1350
-- `formation`: 245
-- `rate_test`: 186
-- `rpt`: 173
-- `cycle_life`: 80
-- `hppc`: 78
+- `unknown`: 916
+- `rate_test`: 369
+- `cycle_life`: 293
+- `formation`: 281
+- `rpt`: 158
+- `hppc`: 87
 - `qpeed`: 44
 - `charge`: 20
 - `ocv`: 17
+- `discharge`: 16
 - `capacheck`: 8
-- `discharge`: 6
-- `gitt`: 5
+- `storage`: 5
 
 - Versions: `{'0x00010003': 2173, '0x00010002': 48}`
 - Step sizes: `{612: 2221}`
@@ -197,39 +199,83 @@ Source zips: `example/corpus_zips/PNE##.zip` (or `c:\PNE##.zip` on lab PC).
 - LOOP goto aggregate: +564 only=13137, +48 only=0, both=276, neither=3
 - Official rating: **500mA** | max in corpus: 174227.0 mA (corpus max exceeds official)
 
-- `unknown`: 1072
-- `rate_test`: 404
-- `hppc`: 148
-- `formation`: 106
-- `qpeed`: 93
-- `cycle_life`: 75
-- `storage`: 60
+- `unknown`: 764
+- `rate_test`: 555
+- `hppc`: 182
+- `cycle_life`: 127
+- `formation`: 116
+- `qpeed`: 116
+- `storage`: 74
 - `rpt`: 51
-- `charge`: 47
-- `ocv`: 19
+- `charge`: 41
+- `ocv`: 22
+- `dcir`: 17
 - `eis`: 17
-- `discharge`: 12
 
 - Versions: `{'0x00010003': 2060, '0x00010002': 60, '0x00010004': 1}`
 - Step sizes: `{612: 2120, 696: 1}`
 - Top layouts: `[('0x00010003/612B/15st', 434), ('0x00010003/612B/9st', 204), ('0x00010003/612B/63st', 188), ('0x00010003/612B/39st', 163), ('0x00010003/612B/7st', 116)]`
+
+#### PNE10 (1832 files)
+
+- LOOP goto aggregate: +564 only=15347, +48 only=0, both=470, neither=0
+- Official rating: **500mA** | max in corpus: 496.0 mA
+
+- `rate_test`: 554
+- `unknown`: 452
+- `cycle_life`: 250
+- `hppc`: 202
+- `qpeed`: 153
+- `formation`: 127
+- `charge`: 35
+- `rest`: 13
+- `discharge`: 11
+- `dcir`: 8
+- `capacheck`: 8
+- `storage`: 5
+
+- Versions: `{'0x00010003': 1769, '0x00010002': 63}`
+- Step sizes: `{612: 1832}`
+- Top layouts: `[('0x00010003/612B/39st', 407), ('0x00010003/612B/68st', 227), ('0x00010003/612B/45st', 146), ('0x00010003/612B/15st', 107), ('0x00010003/612B/33st', 82)]`
+
+#### PNE11 (1828 files)
+
+- LOOP goto aggregate: +564 only=17967, +48 only=2, both=400, neither=10
+- Official rating: **500mA** | max in corpus: 393.216 mA
+
+- `unknown`: 582
+- `hppc`: 430
+- `qpeed`: 332
+- `formation`: 188
+- `cycle_life`: 155
+- `rate_test`: 109
+- `discharge`: 8
+- `qc`: 8
+- `rpt`: 4
+- `charge`: 4
+- `soc_setting`: 2
+- `capacheck`: 2
+
+- Versions: `{'0x00010003': 1731, '0x00010002': 94, '0x00010004': 2}`
+- Step sizes: `{612: 1825, 696: 2}`
+- Top layouts: `[('0x00010003/612B/101st', 262), ('0x00010003/612B/69st', 176), ('0x00010003/612B/82st', 120), ('0x00010003/612B/65st', 111), ('0x00010003/612B/45st', 88)]`
 
 #### PNE22 (1660 files)
 
 - LOOP goto aggregate: +564 only=7712, +48 only=0, both=79, neither=0
 - Official rating: **100mA** | max in corpus: 82300.0 mA (corpus max exceeds official)
 
-- `unknown`: 935
-- `rate_test`: 225
+- `rate_test`: 598
+- `unknown`: 523
 - `formation`: 127
-- `rpt`: 114
-- `hppc`: 76
-- `cycle_life`: 66
+- `rpt`: 106
+- `cycle_life`: 96
+- `hppc`: 82
 - `storage`: 26
 - `capacheck`: 23
+- `ocv`: 22
 - `qpeed`: 20
-- `ocv`: 16
-- `discharge`: 10
+- `discharge`: 11
 - `gitt`: 8
 
 - Versions: `{'0x00010003': 1588, '0x00010002': 72}`
@@ -246,15 +292,17 @@ Diff from lab zip corpora (`PNE01` … `PNE09`, `PNE22`).
 | Unit | Files | Unknown | Protocols | Median I (mA) | Max I (mA) | 696B | LOOP both% | Top layout |
 |------|------:|--------:|----------:|--------------:|-----------:|-----:|-----------:|------------|
 | PNE01 | 36 | 8.3% | 3 | 28.182 | 128.85 | 0 | 7.7% | `0x00010002/612B/15st` |
-| PNE02 | 3449 | 57.3% | 19 | 6.632 | 37763.375 | 2 | 1.5% | `0x00010003/612B/39st` |
-| PNE03 | 1541 | 45.0% | 16 | 64.0 | 6000.0 | 8 | 4.0% | `0x00010003/612B/15st` |
-| PNE04 | 3273 | 80.8% | 12 | 2.0 | 8153.0 | 0 | 4.4% | `0x00010003/612B/9st` |
-| PNE05 | 1874 | 64.2% | 12 | 5.723 | 499.0 | 0 | 5.4% | `0x00010003/612B/39st` |
+| PNE02 | 3449 | 56.7% | 19 | 6.632 | 37763.375 | 2 | 1.5% | `0x00010003/612B/39st` |
+| PNE03 | 1541 | 44.2% | 16 | 64.0 | 6000.0 | 8 | 4.0% | `0x00010003/612B/15st` |
+| PNE04 | 3273 | 80.3% | 12 | 2.0 | 8153.0 | 0 | 4.4% | `0x00010003/612B/9st` |
+| PNE05 | 1874 | 63.9% | 12 | 5.723 | 499.0 | 0 | 5.4% | `0x00010003/612B/39st` |
 | PNE06 | 1074 | 86.0% | 6 | 7.45 | 374.88 | 0 | 3.5% | `0x00010003/612B/39st` |
 | PNE07 | 1459 | 86.1% | 7 | 8.05 | 499.0 | 0 | 2.3% | `0x00010003/612B/39st` |
-| PNE08 | 2221 | 60.8% | 14 | 9.12 | 174076.0 | 0 | 2.9% | `0x00010003/612B/9st` |
-| PNE09 | 2121 | 50.5% | 16 | 16.3 | 174227.0 | 1 | 2.1% | `0x00010003/612B/15st` |
-| PNE22 | 1660 | 56.3% | 15 | 6.306 | 82300.0 | 0 | 1.0% | `0x00010003/612B/9st` |
+| PNE08 | 2221 | 59.3% | 14 | 9.12 | 174076.0 | 0 | 2.9% | `0x00010003/612B/9st` |
+| PNE09 | 2121 | 49.4% | 17 | 16.3 | 174227.0 | 1 | 2.1% | `0x00010003/612B/15st` |
+| PNE10 | 1832 | 54.7% | 15 | 8.0 | 496.0 | 0 | 3.0% | `0x00010003/612B/39st` |
+| PNE11 | 1828 | 49.1% | 13 | 7.814 | 393.216 | 2 | 2.2% | `0x00010003/612B/101st` |
+| PNE22 | 1660 | 55.8% | 14 | 6.306 | 82300.0 | 0 | 1.0% | `0x00010003/612B/9st` |
 
 ### What is the same (all units)
 
@@ -272,7 +320,7 @@ Diff from lab zip corpora (`PNE01` … `PNE09`, `PNE22`).
 
 - 696B step records: none
 - safety header populated: maxI=200 mA (11 files)
-- high typical current (median 28.182 mA vs corpus 7.8)
+- high typical current (median 28.182 mA vs corpus 7.9)
 
 **Top categories**
 - `capacheck`: 20 (55.6%)
@@ -300,11 +348,11 @@ Diff from lab zip corpora (`PNE01` … `PNE09`, `PNE22`).
 - safety header @0x3D8: mostly empty
 
 **Top categories**
-- `unknown`: 1978
-- `rate_test`: 518 (15.0%)
-- `cycle_life`: 231 (6.7%)
-- `formation`: 179 (5.2%)
-- `charge`: 126 (3.7%)
+- `unknown`: 1957
+- `rate_test`: 516 (15.0%)
+- `cycle_life`: 246 (7.1%)
+- `formation`: 181 (5.2%)
+- `charge`: 124 (3.6%)
 - `capacheck`: 114 (3.3%)
 - `hppc`: 82 (2.4%)
 - `qpeed`: 81 (2.3%)
@@ -328,14 +376,14 @@ Diff from lab zip corpora (`PNE01` … `PNE09`, `PNE22`).
 - 696B step records: 8 files
 - 0x10004 (696 formation): 8 files
 - safety header populated: maxI=6000 mA (1 files)
-- high typical current (median 64.0 mA vs corpus 7.8)
+- high typical current (median 64.0 mA vs corpus 7.9)
 
 **Top categories**
-- `unknown`: 694
-- `formation`: 208 (13.5%)
-- `cycle_life`: 195 (12.7%)
-- `rate_test`: 126 (8.2%)
-- `rpt`: 99 (6.4%)
+- `unknown`: 681
+- `cycle_life`: 219 (14.2%)
+- `formation`: 200 (13.0%)
+- `rate_test`: 128 (8.3%)
+- `rpt`: 97 (6.3%)
 - `hppc`: 91 (5.9%)
 - `capacheck`: 51 (3.3%)
 - `discharge`: 20 (1.3%)
@@ -358,16 +406,16 @@ Diff from lab zip corpora (`PNE01` … `PNE09`, `PNE22`).
 
 - 696B step records: none
 - safety header @0x3D8: mostly empty
-- low typical current (median 2.0 mA vs corpus 7.8)
+- low typical current (median 2.0 mA vs corpus 7.9)
 
 **Top categories**
-- `unknown`: 2645
+- `unknown`: 2629
 - `hppc`: 224 (6.8%)
-- `rate_test`: 165 (5.0%)
-- `cycle_life`: 111 (3.4%)
+- `rate_test`: 169 (5.2%)
+- `cycle_life`: 125 (3.8%)
 - `formation`: 64 (2.0%)
 - `discharge`: 22 (0.7%)
-- `charge`: 13 (0.4%)
+- `charge`: 12 (0.4%)
 - `dcir`: 11 (0.3%)
 
 **Top step counts**
@@ -390,9 +438,9 @@ Diff from lab zip corpora (`PNE01` … `PNE09`, `PNE22`).
 - safety header @0x3D8: mostly empty
 
 **Top categories**
-- `unknown`: 1203
+- `unknown`: 1198
 - `hppc`: 199 (10.6%)
-- `cycle_life`: 166 (8.9%)
+- `cycle_life`: 171 (9.1%)
 - `formation`: 145 (7.7%)
 - `rate_test`: 66 (3.5%)
 - `storage`: 53 (2.8%)
@@ -420,12 +468,12 @@ Diff from lab zip corpora (`PNE01` … `PNE09`, `PNE22`).
 
 **Top categories**
 - `unknown`: 924
-- `cycle_life`: 98 (9.1%)
+- `cycle_life`: 107 (10.0%)
 - `rate_test`: 23 (2.1%)
 - `storage`: 12 (1.1%)
-- `formation`: 10 (0.9%)
 - `hppc`: 4 (0.4%)
 - `charge`: 3 (0.3%)
+- `formation`: 1 (0.1%)
 
 **Top step counts**
 - 39 steps: 346 files
@@ -476,11 +524,11 @@ Diff from lab zip corpora (`PNE01` … `PNE09`, `PNE22`).
 - safety header populated: maxI=600 mA (2 files)
 
 **Top categories**
-- `unknown`: 1350
-- `formation`: 245 (11.0%)
-- `rate_test`: 186 (8.4%)
-- `rpt`: 173 (7.8%)
-- `cycle_life`: 80 (3.6%)
+- `unknown`: 1316
+- `formation`: 237 (10.7%)
+- `rate_test`: 192 (8.6%)
+- `rpt`: 158 (7.1%)
+- `cycle_life`: 133 (6.0%)
 - `hppc`: 78 (3.5%)
 - `qpeed`: 44 (2.0%)
 - `charge`: 20 (0.9%)
@@ -506,12 +554,12 @@ Diff from lab zip corpora (`PNE01` … `PNE09`, `PNE22`).
 - safety header populated: maxI=600 mA (6 files)
 
 **Top categories**
-- `unknown`: 1072
-- `rate_test`: 404 (19.0%)
+- `unknown`: 1047
+- `rate_test`: 411 (19.4%)
 - `hppc`: 148 (7.0%)
-- `formation`: 106 (5.0%)
+- `formation`: 107 (5.0%)
+- `cycle_life`: 93 (4.4%)
 - `qpeed`: 93 (4.4%)
-- `cycle_life`: 75 (3.5%)
 - `storage`: 60 (2.8%)
 - `rpt`: 51 (2.4%)
 
@@ -529,18 +577,77 @@ Diff from lab zip corpora (`PNE01` … `PNE09`, `PNE22`).
 - 6.64 mA: 252 steps
 - 41.25 mA: 245 steps
 
+#### PNE10
+
+- 696B step records: none
+- safety header @0x3D8: mostly empty
+
+**Top categories**
+- `unknown`: 1003
+- `rate_test`: 259 (14.1%)
+- `hppc`: 174 (9.5%)
+- `qpeed`: 129 (7.0%)
+- `cycle_life`: 127 (6.9%)
+- `formation`: 65 (3.5%)
+- `charge`: 27 (1.5%)
+- `discharge`: 11 (0.6%)
+
+**Top step counts**
+- 39 steps: 410 files
+- 68 steps: 227 files
+- 45 steps: 147 files
+- 15 steps: 112 files
+- 33 steps: 88 files
+
+**Current modes (mA)**
+- 6.8 mA: 1356 steps
+- 6.7 mA: 540 steps
+- 68.0 mA: 452 steps
+- 7.9 mA: 428 steps
+- 26.4 mA: 290 steps
+
+#### PNE11
+
+- 696B step records: 2 files
+- 0x10004 (696 formation): 2 files
+- safety header @0x3D8: mostly empty
+
+**Top categories**
+- `unknown`: 898
+- `hppc`: 387 (21.2%)
+- `qpeed`: 209 (11.4%)
+- `formation`: 159 (8.7%)
+- `cycle_life`: 116 (6.3%)
+- `rate_test`: 31 (1.7%)
+- `qc`: 8 (0.4%)
+- `discharge`: 4 (0.2%)
+
+**Top step counts**
+- 101 steps: 268 files
+- 69 steps: 191 files
+- 82 steps: 126 files
+- 65 steps: 125 files
+- 45 steps: 88 files
+
+**Current modes (mA)**
+- 13.304 mA: 192 steps
+- 7.665 mA: 169 steps
+- 7.019 mA: 154 steps
+- 7.678 mA: 154 steps
+- 6.675 mA: 147 steps
+
 #### PNE22
 
 - 696B step records: none
 - safety header populated: maxI=600 mA (1 files)
 
 **Top categories**
-- `unknown`: 935
-- `rate_test`: 225 (13.6%)
+- `unknown`: 926
+- `rate_test`: 215 (13.0%)
 - `formation`: 127 (7.7%)
-- `rpt`: 114 (6.9%)
+- `rpt`: 104 (6.3%)
+- `cycle_life`: 93 (5.6%)
 - `hppc`: 76 (4.6%)
-- `cycle_life`: 66 (4.0%)
 - `storage`: 26 (1.6%)
 - `capacheck`: 23 (1.4%)
 
@@ -563,26 +670,26 @@ Diff from lab zip corpora (`PNE01` … `PNE09`, `PNE22`).
 
 | Unit | Category | Unit% | Corpus% | Δ pp |
 |------|----------|------:|--------:|-----:|
-| PNE01 | `capacheck` | 55.6% | 1.2% | +54.4 |
-| PNE01 | `doe` | 22.2% | 0.1% | +22.2 |
-| PNE01 | `rpt` | 13.9% | 2.8% | +11.0 |
-| PNE09 | `rate_test` | 19.0% | 9.4% | +9.7 |
-| PNE03 | `formation` | 13.5% | 5.9% | +7.6 |
-| PNE06 | `rate_test` | 2.1% | 9.4% | -7.2 |
-| PNE03 | `cycle_life` | 12.7% | 5.6% | +7.1 |
-| PNE07 | `rate_test` | 2.7% | 9.4% | -6.7 |
-| PNE05 | `rate_test` | 3.5% | 9.4% | -5.9 |
-| PNE02 | `rate_test` | 15.0% | 9.4% | +5.6 |
-| PNE05 | `hppc` | 10.6% | 5.1% | +5.5 |
-| PNE08 | `formation` | 11.0% | 5.9% | +5.1 |
-| PNE06 | `formation` | 0.9% | 5.9% | -5.0 |
-| PNE08 | `rpt` | 7.8% | 2.8% | +4.9 |
-| PNE07 | `formation` | 1.1% | 5.9% | -4.8 |
-| PNE06 | `hppc` | 0.4% | 5.1% | -4.7 |
-| PNE04 | `rate_test` | 5.0% | 9.4% | -4.3 |
-| PNE22 | `rate_test` | 13.6% | 9.4% | +4.2 |
-| PNE07 | `cycle_life` | 1.6% | 5.6% | -4.0 |
-| PNE22 | `rpt` | 6.9% | 2.8% | +4.0 |
+| PNE01 | `capacheck` | 55.6% | 1.0% | +54.5 |
+| PNE01 | `doe` | 22.2% | 0.0% | +22.2 |
+| PNE11 | `hppc` | 21.2% | 6.8% | +14.4 |
+| PNE01 | `rpt` | 13.9% | 2.3% | +11.6 |
+| PNE09 | `rate_test` | 19.4% | 9.2% | +10.2 |
+| PNE11 | `qpeed` | 11.4% | 2.9% | +8.5 |
+| PNE03 | `cycle_life` | 14.2% | 6.5% | +7.7 |
+| PNE11 | `rate_test` | 1.7% | 9.2% | -7.5 |
+| PNE03 | `formation` | 13.0% | 5.8% | +7.1 |
+| PNE06 | `rate_test` | 2.1% | 9.2% | -7.0 |
+| PNE07 | `rate_test` | 2.7% | 9.2% | -6.5 |
+| PNE06 | `hppc` | 0.4% | 6.8% | -6.4 |
+| PNE02 | `rate_test` | 15.0% | 9.2% | +5.8 |
+| PNE05 | `rate_test` | 3.5% | 9.2% | -5.7 |
+| PNE06 | `formation` | 0.1% | 5.8% | -5.7 |
+| PNE10 | `rate_test` | 14.1% | 9.2% | +5.0 |
+| PNE07 | `cycle_life` | 1.6% | 6.5% | -4.9 |
+| PNE08 | `formation` | 10.7% | 5.8% | +4.8 |
+| PNE08 | `rpt` | 7.1% | 2.3% | +4.8 |
+| PNE07 | `formation` | 1.1% | 5.8% | -4.7 |
 
 ### Interpretation notes
 

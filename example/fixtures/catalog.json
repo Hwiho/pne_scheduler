@@ -291,7 +291,7 @@
       "path": "sch_lab_zip/0.5C cycle.sch",
       "sha256": "2539628ddb31cc0340eb423ecd51cf446d2523d8bff7312bc52f03eb7026634d",
       "size": 23420,
-      "category": "cycle_life",
+      "category": "rate_test",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -329,7 +329,7 @@
       "path": "sch_lab_zip/00207966_250611_capa.sch",
       "sha256": "7fd2d68f9aaadb87c19dbaf145211f03a5d3fe8bbebb0cecceb3c2ca03fe6704",
       "size": 3932,
-      "category": "unknown",
+      "category": "rate_test",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -348,7 +348,7 @@
       "path": "sch_lab_zip/00207966_250611_capa2.sch",
       "sha256": "2ef4379dfc71f067e01d58b89b0812ef6bbacf14d2b71613e2362d8ed447c4ae",
       "size": 3932,
-      "category": "unknown",
+      "category": "rate_test",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -424,7 +424,7 @@
       "path": "sch_lab_zip/00207966_250723_FD_╜║╟┴╕╡┴÷▒╫.sch",
       "sha256": "d175c73f8fe33fc4c0fa4e9f630d210de82734c03cf3d5d921e8ccbcd40b2d74",
       "size": 19244,
-      "category": "unknown",
+      "category": "cycle_life",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -443,7 +443,7 @@
       "path": "sch_lab_zip/00207966_250723_FD_░φ┴ñ┴÷▒╫.sch",
       "sha256": "9229806740bf228507deedff92b5a3434802c5f039701442eeb1766fc6a66493",
       "size": 19244,
-      "category": "unknown",
+      "category": "cycle_life",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -462,7 +462,7 @@
       "path": "sch_lab_zip/00207966_250827_Gr_2Mpa_288kgf╜║╟┴╕╡┴÷▒╫.sch",
       "sha256": "7d0810403bf2c5e2a24916fb6129496bed5b0be8fb8e011fa911636a676a04ac",
       "size": 19244,
-      "category": "unknown",
+      "category": "cycle_life",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -481,7 +481,7 @@
       "path": "sch_lab_zip/00207966_250827_Gr_2Mpa_90kgf╜║╟┴╕╡┴÷▒╫.sch",
       "sha256": "33f9339a9768278bd3ce07bf78b931c56497c46333ffe2e264ef4891eb514879",
       "size": 19244,
-      "category": "unknown",
+      "category": "cycle_life",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -1089,7 +1089,7 @@
       "path": "sch_lab_zip/00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch",
       "sha256": "418620818fb3d1e5ffb38e0cbb21d95210c7a9214f560b4c1d734a3e28e5fd69",
       "size": 5324,
-      "category": "unknown",
+      "category": "discharge",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -1108,7 +1108,7 @@
       "path": "sch_lab_zip/00207966_260819_514bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
       "sha256": "51b3584697c9b9bfe00db6fe5a981c7aaf5fc75cd6fadc83a626f597834d395a",
       "size": 5324,
-      "category": "unknown",
+      "category": "discharge",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -1127,7 +1127,7 @@
       "path": "sch_lab_zip/00207966_260820_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
       "sha256": "2b4d8c6bfe9b2228b8e00b2b65f5cd5ec2b7bc877b32894e674c3af1afe7f593",
       "size": 5324,
-      "category": "unknown",
+      "category": "discharge",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -1146,7 +1146,7 @@
       "path": "sch_lab_zip/00207966_260820_░φ┐┬╚░╝║╚¡ ░φ┐┬└·└σ set1_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
       "sha256": "6f984fd68e44fb30be39ba2a6339a832cf3df88f96bb8c44402b798411e091d7",
       "size": 5324,
-      "category": "unknown",
+      "category": "discharge",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -1450,7 +1450,7 @@
       "path": "sch_lab_zip/F-D.sch",
       "sha256": "7d0810403bf2c5e2a24916fb6129496bed5b0be8fb8e011fa911636a676a04ac",
       "size": 19244,
-      "category": "unknown",
+      "category": "cycle_life",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -1868,7 +1868,7 @@
       "path": "sch_lab_zip/└ⁿ╖∙└╬░í.sch",
       "sha256": "2ef4379dfc71f067e01d58b89b0812ef6bbacf14d2b71613e2362d8ed447c4ae",
       "size": 3932,
-      "category": "unknown",
+      "category": "rate_test",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
@@ -1944,7 +1944,7 @@
       "path": "sch_lab_zip/╣µ└ⁿ.sch",
       "sha256": "2b4d8c6bfe9b2228b8e00b2b65f5cd5ec2b7bc877b32894e674c3af1afe7f593",
       "size": 5324,
-      "category": "unknown",
+      "category": "discharge",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,

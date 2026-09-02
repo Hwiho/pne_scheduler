@@ -135,6 +135,35 @@
       "writer_layout_key": null,
       "notes": "Corpus 2026-09-02: 2121 sch, 50.5% unknown; rate_test/hppc heavy; 1×696B file"
     },
+    "PNE10": {
+      "corpus_zip": "PNE10.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 500,
+      "rating": "500mA",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Corpus 2026-09-02: 1832 sch, 55.5% unknown; rate_test/hppc/qpeed; 612B only; max corpus mA 496 (within 500mA tier)"
+    },
+    "PNE11": {
+      "corpus_zip": "PNE11.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 500,
+      "rating": "500mA",
+      "ctspro_build": null,
+      "ctspro_build_source": null,
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false },
+        { "file_version": "0x00010004", "payload_offset": 1844, "step_size": 696, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Corpus 2026-09-02: 1828 sch, 49.3% unknown; hppc/qpeed/formation heavy; 2×696B files"
+    },
     "PNE16": {
       "corpus_zip": null,
       "corpus_zip_allowed_for_analysis": false,

@@ -73,6 +73,51 @@ def test_classify_capacheck_fixtures(
     assert match.qpeed_variant == qpeed_variant
 
 
+@pytest.mark.parametrize(
+    ("filename", "expected"),
+    [
+        ("0.15C.sch", ScheduleCategory.RATE_TEST),
+        ("0.33C 1000cyc.sch", ScheduleCategory.CYCLE_LIFE),
+        ("00228713_250617 Set1_2C CC plating_AgC.sch", ScheduleCategory.PLATING),
+        ("220331 Set05 CB78 CIP.sch", ScheduleCategory.FORMATION),
+        ("07100395_260330_XRD SOC0.sch", ScheduleCategory.SOC_SETTING),
+        ("00219150_230824_STACK_set24_AA after XRM.sch", ScheduleCategory.DISCHARGE),
+        ("profile_LT25C_cycle.sch", ScheduleCategory.CYCLE_LIFE),
+    ],
+)
+def test_new_filename_rules(filename: str, expected: ScheduleCategory) -> None:
+    assert classify_schedule_filename(filename).category == expected
+
+
+def test_classify_schedule_uses_signature_labels(tmp_path: Path) -> None:
+    from pne_scheduler.classify.signature_labels import save_signature_labels
+    from pne_scheduler.classify.schedule_classifier import classify_schedule
+
+    sig_path = tmp_path / "sig.json"
+    save_signature_labels({"CC_CHG-END": "rate_test"}, sig_path)
+    fake_sch = bytes(3000)  # too small - need real sch bytes
+
+    # Use minimal valid-ish bytes from a fixture instead
+    fixture = Path(__file__).resolve().parents[1] / "example" / "fixtures" / "capacheck_zip"
+    sch_files = list(fixture.glob("*.sch"))
+    if not sch_files:
+        pytest.skip("no fixture sch")
+    data = sch_files[0].read_bytes()
+    from pne_scheduler.classify.sch_binary_profile import step_signature_from_data
+
+    sig = step_signature_from_data(data)
+    assert sig
+    save_signature_labels({sig: "hppc"}, sig_path)
+    match = classify_schedule(
+        "opaque_project_code.sch",
+        data,
+        verified_labels={},
+        signature_labels=sig_path,
+    )
+    assert match.category == ScheduleCategory.HPPC
+    assert match.matched_rule == "signature_label"
+
+
 def test_qpeed_soc_setting_is_sub_experiment_of_qpeed() -> None:
     name = "07100766_260713_Set9_QPEED_SOC_setting_BM.sch"
     match = classify_schedule_filename(name)

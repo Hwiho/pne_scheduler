@@ -12,7 +12,7 @@ from pathlib import Path, PurePosixPath
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 
-from pne_scheduler.classify import ScheduleCategory, classify_schedule_filename
+from pne_scheduler.classify import ScheduleCategory, classify_schedule
 from pne_scheduler.io.layout import detect_sch_layout
 from pne_scheduler.schema.corpus_paths import default_corpus_zip_map
 from pne_scheduler.schema.equipment import rating_hint_for_unit
@@ -134,11 +134,11 @@ def scan_unit(unit: str, zip_path: Path, sample_per_category: int = 2) -> dict:
     with zipfile.ZipFile(zip_path) as zf:
         sch_names = sorted(n for n in zf.namelist() if n.lower().endswith(".sch"))
         for name in sch_names:
-            match = classify_schedule_filename(name)
-            cat = match.category.value
-            categories[cat] += 1
             try:
                 data = zf.read(name)
+                match = classify_schedule(name, data)
+                cat = match.category.value
+                categories[cat] += 1
                 info = analyze_binary(data)
                 if info is None:
                     parse_errors += 1
