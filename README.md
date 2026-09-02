@@ -4,7 +4,7 @@ Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` sch
 The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
 QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-100%20passed-brightgreen)](#tests)
+[![Tests](https://img.shields.io/badge/tests-113%20passed-brightgreen)](#tests)
 
 > [!WARNING]
 > The from-scratch SCH writer still uses a placeholder header. Its output is not validated
@@ -38,6 +38,7 @@ python run_pne_scheduler_resume.py
 python run_pne_scheduler.py info example/example.schproj
 python run_pne_scheduler.py view path\to\file.sch
 python -m pne_scheduler compare before.sch after.sch -o comparison.json
+python -m pne_scheduler explain path\to\file.sch
 python -m pne_scheduler flow example/example.schproj
 
 # Offline writer development only; never execute this output on equipment
@@ -49,6 +50,7 @@ python run_pne_scheduler.py build example/example.schproj -o output.sch --allow-
 | Command | Description |
 |------|------|
 | `view [file.sch]` | Show the step table and inferred FP/L/C-rate/protocol |
+| `explain file.sch` | Narrate what the schedule does (SOC hints, voltage setpoints, repeating blocks) |
 | `edit [file.schproj]` | Open the project bulk editor |
 | `flow [file.schproj]` | Arrange, connect, validate, and preview experiment modules |
 | `info file.schproj` | Show a project summary |
@@ -67,7 +69,35 @@ python -m pne_scheduler view path\to\file.sch
 ```
 
 The viewer displays the step table together with inferred **L-level**, **footprint
-(FP)**, **mono/multi**, **C-rate**, and **protocol**.
+(FP)**, **mono/multi**, **C-rate**, **protocol**, and a narrative of **what the
+schedule does**.
+
+## Schedule explanation
+
+```powershell
+python -m pne_scheduler explain example\fixtures\hppc\HPPC_Full range.sch
+python -m pne_scheduler explain example\fixtures\capacheck_zip\07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch --json
+```
+
+The explainer is a **read/analyze** helper. It does not make a schedule writer-ready.
+SOC percentages are **not stored** in the current corpus (`fEndC` and `fSocRate` are
+unused), so the tool reports:
+
+| Source | What you get | Example |
+|--------|----------------|---------|
+| Filename | `SOC50`, `SOC30` | `RPT_SOC50 End…sch` → SOC 50% (filename only) |
+| Voltage setpoints | Mid-window `fEndV` as an SOC stand-in | QPEED full charges to **3.318 V ×13**, then high-C to 4.2 V |
+| Voltage limits | Typical 2.5 V / 4.2 V empty/full | HPPC full-range fixture |
+| Module defaults | Generator templates only | HPPC 90/50/10 and RPT 80/50/20 are **not** read from these binaries |
+
+Checked-in fixtures:
+
+- **HPPC_Full range.sch** — full 2.5–4.2 V cycling plus 30 mA residual steps, **not** an SOC 90/50/10 pulse staircase.
+- **QPEED-2.sch** — 1C condition, charge to 3.318 V (SOC stand-in, percent unknown), then ~1.5C to 4.2 V, repeated.
+- **QPEED_SOC_setting…sch** — short conditioning block; filename is a sub-protocol name, not a percent.
+- **RPT_SOC50…sch** — filename SOC 50%; binary has no 80/50/20 capacity ladder.
+
+Every explanation is labeled inferred and repeats the equipment-safety caveat.
 
 ### Inference pipeline
 

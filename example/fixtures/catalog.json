@@ -177,7 +177,7 @@
       "path": "hppc/HPPC_Full range.sch",
       "sha256": "5b180886cd2747ba29a4cf88f5d1dd2fc55fda8da4628883fe0f2c95ded67633",
       "size": 39576,
-      "category": "unknown",
+      "category": "hppc",
       "layout": {
         "version": "0x00010002",
         "payload_offset": 1632,
