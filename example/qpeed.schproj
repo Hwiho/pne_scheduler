@@ -1,0 +1,28 @@
+{
+  "schema": "pne_scheduler.schproj/v1",
+  "name": "QPEED full 3.318 V example",
+  "sch_version": 65539,
+  "cell_profile": {
+    "nominal_capacity_mAh": 80.0,
+    "v_max": 4.2,
+    "v_min": 2.5,
+    "max_current_mA": 800.0
+  },
+  "modules": [
+    {
+      "id": "qpeed_1",
+      "module_type": "qpeed",
+      "params": {
+        "preset": "qpeed.full_3318",
+        "variant": "full",
+        "soc_voltage_v": 3.318,
+        "condition_c_rate": 1.0,
+        "pulse_c_rate": 1.5,
+        "rest_s": 1800.0,
+        "short_rest_s": 1.0,
+        "repeat_count": 12
+      }
+    }
+  ],
+  "connections": []
+}

@@ -5,24 +5,26 @@ from __future__ import annotations
 from pathlib import Path
 
 from ..ir.project import ScheduleProject
-from ..io.reader import read_sch
+from ..io.sch_parser import parse_schedule_file
 from ..io.writer import write_sch
 
 
 def validate_written_project(project: ScheduleProject, output_path: Path) -> list[str]:
-    """Write project to disk and attempt to re-parse with available SCH reader."""
+    """Write project to disk and require the in-repo viewer parser to reload it."""
     warnings: list[str] = []
     write_sch(project, output_path)
     try:
-        parsed = read_sch(output_path)
-    except (ImportError, ValueError) as exc:
-        warnings.append(f"Re-parse skipped or failed: {exc}")
+        parsed = parse_schedule_file(output_path)
+    except ValueError as exc:
+        warnings.append(f"Re-parse failed: {exc}")
         return warnings
 
-    if parsed.step_count != len(project.expand_steps()) + (
-        0 if project.expand_steps() and project.expand_steps()[-1].step_type == "end" else 1
-    ):
+    intents = list(project.expand_steps())
+    expected_count = len(intents)
+    if not intents or intents[-1].step_type != "end":
+        expected_count += 1
+    if parsed.step_count != expected_count:
         warnings.append(
-            f"Step count mismatch: parsed={parsed.step_count}, expected from IR differs"
+            f"Step count mismatch: parsed={parsed.step_count}, expected={expected_count}"
         )
     return warnings

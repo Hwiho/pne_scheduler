@@ -4,7 +4,7 @@ Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` sch
 The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
 QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-100%20passed-brightgreen)](#tests)
+[![Tests](https://img.shields.io/badge/tests-131%20passed-brightgreen)](#tests)
 
 > [!WARNING]
 > The from-scratch SCH writer still uses a placeholder header. Its output is not validated
@@ -38,6 +38,7 @@ python run_pne_scheduler_resume.py
 python run_pne_scheduler.py info example/example.schproj
 python run_pne_scheduler.py view path\to\file.sch
 python -m pne_scheduler compare before.sch after.sch -o comparison.json
+python -m pne_scheduler explain path\to\file.sch
 python -m pne_scheduler flow example/example.schproj
 
 # Offline writer development only; never execute this output on equipment
@@ -49,11 +50,13 @@ python run_pne_scheduler.py build example/example.schproj -o output.sch --allow-
 | Command | Description |
 |------|------|
 | `view [file.sch]` | Show the step table and inferred FP/L/C-rate/protocol |
+| `explain file.sch` | Narrate what the schedule does (SOC hints, voltage setpoints, repeating blocks) |
 | `edit [file.schproj]` | Open the project bulk editor |
 | `flow [file.schproj]` | Arrange, connect, validate, and preview experiment modules |
 | `info file.schproj` | Show a project summary |
 | `compare before.sch after.sch` | Generate a controlled binary-difference report |
 | `patch-sch template.sch plan.json -o out.sch` | Write a byte-preserving, analysis-only template clone |
+| `overview file.schproj` | Summarize composed module recipes (what the pattern does) |
 | `build ... --allow-experimental-output` | Produce offline-only experimental writer output |
 | `bulk-edit ...` | Edit compatible module parameters in bulk |
 | `resume sch data.csv -o resumed.sch` | Build a template-preserving resume schedule |
@@ -67,7 +70,35 @@ python -m pne_scheduler view path\to\file.sch
 ```
 
 The viewer displays the step table together with inferred **L-level**, **footprint
-(FP)**, **mono/multi**, **C-rate**, and **protocol**.
+(FP)**, **mono/multi**, **C-rate**, **protocol**, and a narrative of **what the
+schedule does**.
+
+## Schedule explanation
+
+```powershell
+python -m pne_scheduler explain example\fixtures\hppc\HPPC_Full range.sch
+python -m pne_scheduler explain example\fixtures\capacheck_zip\07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch --json
+```
+
+The explainer is a **read/analyze** helper. It does not make a schedule writer-ready.
+SOC percentages are **not stored** in the current corpus (`fEndC` and `fSocRate` are
+unused), so the tool reports:
+
+| Source | What you get | Example |
+|--------|----------------|---------|
+| Filename | `SOC50`, `SOC30` | `RPT_SOC50 End…sch` → SOC 50% (filename only) |
+| Voltage setpoints | Mid-window `fEndV` as an SOC stand-in | QPEED full charges to **3.318 V ×13**, then high-C to 4.2 V |
+| Voltage limits | Typical 2.5 V / 4.2 V empty/full | HPPC full-range fixture |
+| Module defaults | Generator templates only | HPPC 90/50/10 and RPT 80/50/20 are **not** read from these binaries |
+
+Checked-in fixtures:
+
+- **HPPC_Full range.sch** — full 2.5–4.2 V cycling plus 30 mA residual steps, **not** an SOC 90/50/10 pulse staircase.
+- **QPEED-2.sch** — 1C condition, charge to 3.318 V (SOC stand-in, percent unknown), then ~1.5C to 4.2 V, repeated.
+- **QPEED_SOC_setting…sch** — short conditioning block; filename is a sub-protocol name, not a percent.
+- **RPT_SOC50…sch** — filename SOC 50%; binary has no 80/50/20 capacity ladder.
+
+Every explanation is labeled inferred and repeats the equipment-safety caveat.
 
 ### Inference pipeline
 
@@ -123,15 +154,25 @@ and the command always prints an equipment warning.
 
 ## Module flow editor
 
+The flow editor shows **charge / discharge / rest units inside each module**.
+QPEED, HPPC, formation, cycle life, and sequence modules ship with named
+**presets**; pick one, then edit the units directly (or rebuild from the preset
+and knobs). After the pattern is assembled, the **Overview** tab (and
+`python -m pne_scheduler overview file.schproj`) summarizes what you composed.
+**Export .sch…** writes an experimental file and reloads it in the in-repo
+viewer parser; it is still not equipment-ready.
+
+Default QPEED preset `qpeed.full_3318` matches the checked-in QPEED-2 topology:
+1C condition to **3.318 V**, then 1.5C to 4.2 V, repeated. `qpeed.soc_fraction`
+and `hppc.soc_90_50_10` are generator templates, not fixture matches.
+
 ```powershell
 python run_pne_scheduler_flow.py
 # or
+python -m pne_scheduler flow example/qpeed.schproj
+python -m pne_scheduler overview example/qpeed.schproj
 python -m pne_scheduler flow example/example.schproj
 ```
-
-The first GUI version supports adding/removing modules, explicit connections, automatic
-linear chaining, JSON property editing, Cell Profile editing, graph validation, `.schproj`
-load/save, and expanded step preview. It intentionally does not send files to equipment.
 
 ## Resume interrupted experiment
 
@@ -172,7 +213,7 @@ pne_scheduler/
 ├── schema/          # SCH binary fields and enums
 ├── ir/              # Schedule IR (.schproj)
 ├── engine/          # C-rate engine and compiler
-├── modules/         # Formation, cycle life, RPT, DC-IR, QPEED, and others
+├── modules/         # Formation, cycle life, RPT, DC-IR, QPEED, recipes, presets
 ├── protocol/        # Lab protocol defaults and inference
 ├── stack/           # FP, L-level, xMyU, and capacity inference
 ├── classify/        # Filename classification
@@ -188,6 +229,8 @@ pne_scheduler/
 
 ## Example data
 
+- `example/example.schproj` — formation + cycle-life project
+- `example/qpeed.schproj` — QPEED full 3.318 V preset (editable recipe)
 - `example/fixtures/capacheck_zip/` — 8 capacheck/QPEED/RPT fixtures
 - `example/fixtures/sch_lab_zip/` — 93 lab SCH fixtures
 - `example/fixtures/hppc/` — 1 HPPC fixture

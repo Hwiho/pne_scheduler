@@ -1,3 +1,5 @@
+"""Generic editable sequence of charge / discharge / rest units."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -5,45 +7,39 @@ from typing import Any
 
 from ..ir.cell_profile import CellProfile
 from ..ir.step_intent import StepIntent
-from ..protocol.defaults import FORMATION_C_RATE
 from .base import register_module
 from .composable import expand_materialized, materialize_recipe, rebuild_from_preset
 from .recipe import ModuleRecipe
 
-_KNOBS = ("charge_c_rate", "discharge_c_rate", "rest_s", "cycle_count")
+_KNOBS = ("repeat_count",)
 
 
-@register_module("formation")
+@register_module("sequence")
 @dataclass
-class FormationModule:
-    preset: str = "formation.default"
-    charge_c_rate: float = FORMATION_C_RATE
-    discharge_c_rate: float = FORMATION_C_RATE
-    rest_s: float = 600.0
-    cycle_count: int = 3
+class SequenceModule:
+    preset: str = "sequence.blank"
+    repeat_count: int = 1
     setup: list[dict[str, Any]] = field(default_factory=list)
     repeat: list[dict[str, Any]] = field(default_factory=list)
     after: list[dict[str, Any]] = field(default_factory=list)
 
     @classmethod
-    def from_params(cls, params: dict) -> FormationModule:
+    def from_params(cls, params: dict) -> SequenceModule:
         known = {k: v for k, v in params.items() if k in cls.__dataclass_fields__}
         instance = cls(**known)
-        materialize_recipe(instance, module_type="formation", knob_keys=_KNOBS)
+        materialize_recipe(instance, module_type="sequence", knob_keys=_KNOBS)
         return instance
 
     def validate(self, cell: CellProfile) -> list[str]:
-        if self.cycle_count < 1:
-            return ["cycle_count must be >= 1"]
         return []
 
     def recipe(self) -> ModuleRecipe:
-        return materialize_recipe(self, module_type="formation", knob_keys=_KNOBS)
+        return materialize_recipe(self, module_type="sequence", knob_keys=_KNOBS)
 
     def apply_preset(self, preset_key: str | None = None) -> ModuleRecipe:
         return rebuild_from_preset(
             self,
-            preset_key or self.preset or "formation.default",
+            preset_key or self.preset or "sequence.blank",
             knob_keys=_KNOBS,
         )
 
@@ -51,6 +47,6 @@ class FormationModule:
         return expand_materialized(
             self,
             cell,
-            module_type="formation",
+            module_type="sequence",
             knob_keys=_KNOBS,
         )

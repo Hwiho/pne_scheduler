@@ -20,8 +20,10 @@ pip install -e ".[dev]"
 | Command | Description |
 |------|------|
 | `python -m pne_scheduler view [file.sch]` | Open the schedule viewer |
+| `python -m pne_scheduler explain file.sch` | Narrate protocol, SOC hints, and repeating blocks |
 | `python -m pne_scheduler edit [file.schproj]` | Open the project bulk editor |
 | `python -m pne_scheduler flow [file.schproj]` | Open the module connection editor |
+| `python -m pne_scheduler overview file.schproj` | Summarize composed module recipes |
 | `python -m pne_scheduler info file.schproj` | Show a project summary |
 | `python -m pne_scheduler compare before.sch after.sch` | Compare a controlled SCH pair |
 | `python -m pne_scheduler patch-sch template.sch plan.json -o out.sch` | Apply an evidence-gated, template-preserving patch |
@@ -55,9 +57,34 @@ Neither acknowledgement makes a file safe to execute.
 ## Module flow editor
 
 The flow editor provides a module palette, a visual canvas, linear connection validation,
-module and Cell Profile JSON editors, `.schproj` load/save, and a step-intent preview.
-Multiple inputs, multiple outputs, self-connections, and cycles are rejected because the
+module recipes (charge / discharge / rest units inside QPEED, HPPC, formation, cycle life,
+and sequence modules), named presets, Cell Profile JSON, `.schproj` load/save, a
+step-intent preview, and an **Overview** of the composed pattern. **Export .sch…**
+reloads the file in the in-repo viewer parser; it is not equipment-ready. Multiple
+inputs, multiple outputs, self-connections, and cycles are rejected because the
 current execution model is a linear schedule.
+
+QPEED conditions vary; start from a preset (`qpeed.full_3318` matches QPEED-2:
+condition to 3.318 V, then 1.5C to 4.2 V) and change the units. `qpeed.soc_fraction`
+and `hppc.soc_90_50_10` are generator templates, not fixture matches. Recipes are
+analysis-only; they do not make SCH writer-ready.
+
+## Schedule explanation
+
+```powershell
+python -m pne_scheduler explain path\to\file.sch
+python -m pne_scheduler explain path\to\file.sch --json
+```
+
+The viewer summary includes the same narrative. Claims are labeled by evidence:
+
+- **filename** — `SOC50` / `SOC30` tokens, or HPPC / QPEED / RPT keywords
+- **step topology** — 2.5 V / 4.2 V limits, residual ~30 mA steps, LOOP counts
+- **voltage setpoint** — mid-window `fEndV` such as 3.318 V used as an SOC stand-in
+
+`fEndC` is unused in the current corpus, so the tool will not invent HPPC 90/50/10 or
+RPT 80/50/20 from a binary that does not store those fractions. REST time is read from
+`fIref` when `fEndTime` is 0. Output is analysis-only.
 
 ## Cell interpretation pipeline
 
@@ -86,6 +113,8 @@ See [PROTOCOL.md](PROTOCOL.md) and [RESUME.md](RESUME.md).
 
 ## Example data
 
+- `example/example.schproj` — formation + cycle-life project
+- `example/qpeed.schproj` — QPEED recipe preset
 - `example/fixtures/capacheck_zip/` — 8 capacheck/QPEED/RPT fixtures
 - `example/fixtures/sch_lab_zip/` — 93 lab SCH fixtures
 - `example/fixtures/hppc/` — 1 HPPC fixture

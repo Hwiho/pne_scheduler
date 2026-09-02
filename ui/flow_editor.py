@@ -9,14 +9,23 @@ from tkinter import filedialog, messagebox, simpledialog, ttk
 
 from ..ir.cell_profile import CellProfile
 from ..ir.project import ScheduleProject
+from ..modules.composable import has_editable_recipe
+from ..modules.presets import PRESETS_BY_KEY
+from ..modules.recipe import RecipeUnit, charge, discharge, rest as rest_unit
 from .flow_model import FlowProjectModel
+
+_RECIPE_SECTIONS = ("setup", "repeat", "after")
+_CARD_WIDTH = 300
+_CARD_GAP_X = 330
+_CARD_GAP_Y = 36
 
 
 class FlowEditorApp:
     def __init__(self, root: tk.Tk, initial_path: Path | None = None) -> None:
         self.root = root
         self.root.title("PNE Scheduler — Module Flow Editor")
-        self.root.geometry("1280x820")
+        self.root.geometry("1320x820")
+        self.root.minsize(1100, 720)
         self.project_path: Path | None = None
         self.model = FlowProjectModel(self._new_project())
         self.selected_id: str | None = None
@@ -42,7 +51,7 @@ class FlowEditorApp:
 
     def _build_ui(self) -> None:
         toolbar = ttk.Frame(self.root, padding=6)
-        toolbar.pack(fill=tk.X)
+        toolbar.pack(side=tk.TOP, fill=tk.X)
         for label, command in (
             ("New", self._new),
             ("Open…", self._open),
@@ -50,6 +59,8 @@ class FlowEditorApp:
             ("Save As…", self._save_as),
             ("Validate", self._validate),
             ("Preview Steps", self._preview),
+            ("Overview", self._show_overview),
+            ("Export .sch…", self._export_sch),
         ):
             ttk.Button(toolbar, text=label, command=command).pack(
                 side=tk.LEFT,
@@ -61,33 +72,44 @@ class FlowEditorApp:
             foreground="#9a5b00",
         ).pack(side=tk.RIGHT)
 
-        body = ttk.Panedwindow(self.root, orient=tk.HORIZONTAL)
-        body.pack(fill=tk.BOTH, expand=True, padx=8, pady=(0, 8))
-
-        controls = ttk.Frame(body, padding=6)
-        center = ttk.Frame(body, padding=6)
-        properties = ttk.Frame(body, padding=6)
-        body.add(controls, weight=1)
-        body.add(center, weight=4)
-        body.add(properties, weight=2)
-
-        self._build_controls(controls)
-        self._build_canvas(center)
-        self._build_properties(properties)
+        self.status_var = tk.StringVar(value="Ready")
+        ttk.Label(self.root, textvariable=self.status_var, padding=5).pack(
+            side=tk.BOTTOM,
+            fill=tk.X,
+        )
 
         output = ttk.Notebook(self.root)
-        output.pack(fill=tk.BOTH, expand=False, padx=8, pady=(0, 6))
+        output.pack(side=tk.BOTTOM, fill=tk.X, padx=8, pady=(0, 6))
+        self.output_notebook = output
+        overview_frame = ttk.Frame(output)
         preview_frame = ttk.Frame(output)
         validation_frame = ttk.Frame(output)
+        output.add(overview_frame, text="Overview")
         output.add(preview_frame, text="Step preview")
         output.add(validation_frame, text="Validation")
+
+        self.overview_text = tk.Text(
+            overview_frame,
+            height=10,
+            wrap=tk.WORD,
+            font=("TkFixedFont", 10),
+            state=tk.DISABLED,
+        )
+        overview_scroll = ttk.Scrollbar(
+            overview_frame,
+            orient=tk.VERTICAL,
+            command=self.overview_text.yview,
+        )
+        self.overview_text.configure(yscrollcommand=overview_scroll.set)
+        self.overview_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        overview_scroll.pack(side=tk.RIGHT, fill=tk.Y)
 
         columns = ("no", "type", "mode", "label", "c_rate", "voltage", "end")
         self.preview_tree = ttk.Treeview(
             preview_frame,
             columns=columns,
             show="headings",
-            height=8,
+            height=7,
         )
         widths = (45, 85, 65, 260, 75, 75, 120)
         for column, width in zip(columns, widths):
@@ -104,14 +126,25 @@ class FlowEditorApp:
 
         self.validation_text = tk.Text(
             validation_frame,
-            height=8,
+            height=7,
             wrap=tk.WORD,
             state=tk.DISABLED,
         )
         self.validation_text.pack(fill=tk.BOTH, expand=True)
 
-        self.status_var = tk.StringVar(value="Ready")
-        ttk.Label(self.root, textvariable=self.status_var, padding=5).pack(fill=tk.X)
+        body = ttk.Panedwindow(self.root, orient=tk.HORIZONTAL)
+        body.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=8, pady=(0, 8))
+
+        controls = ttk.Frame(body, padding=6)
+        center = ttk.Frame(body, padding=6)
+        properties = ttk.Frame(body, padding=6)
+        body.add(controls, weight=1)
+        body.add(center, weight=4)
+        body.add(properties, weight=2)
+
+        self._build_controls(controls)
+        self._build_canvas(center)
+        self._build_properties(properties)
 
     def _build_controls(self, parent: ttk.Frame) -> None:
         ttk.Label(parent, text="Module palette").pack(anchor=tk.W)
@@ -204,12 +237,116 @@ class FlowEditorApp:
 
         self.selected_label = ttk.Label(module_tab, text="No module selected")
         self.selected_label.pack(anchor=tk.W)
-        ttk.Label(module_tab, text="Parameters (JSON)").pack(anchor=tk.W, pady=(8, 0))
-        self.params_text = tk.Text(module_tab, width=35, height=24, font=("TkFixedFont", 10))
-        self.params_text.pack(fill=tk.BOTH, expand=True, pady=(4, 6))
-        ttk.Button(module_tab, text="Apply parameters", command=self._apply_params).pack(
-            fill=tk.X
+
+        self.preset_frame = ttk.LabelFrame(module_tab, text="Preset", padding=6)
+        self.preset_var = tk.StringVar()
+        self.preset_combo = ttk.Combobox(
+            self.preset_frame,
+            textvariable=self.preset_var,
+            state="readonly",
+            width=36,
         )
+        self.preset_combo.pack(fill=tk.X)
+        ttk.Button(
+            self.preset_frame,
+            text="Rebuild from preset / knobs",
+            command=self._rebuild_preset,
+        ).pack(fill=tk.X, pady=(6, 0))
+        self.preset_detail_var = tk.StringVar()
+        ttk.Label(
+            self.preset_frame,
+            textvariable=self.preset_detail_var,
+            wraplength=320,
+            justify=tk.LEFT,
+        ).pack(anchor=tk.W, pady=(6, 0))
+
+        self.recipe_frame = ttk.LabelFrame(
+            module_tab,
+            text="Inside this module",
+            padding=6,
+        )
+        self.recipe_notebook = ttk.Notebook(self.recipe_frame)
+        self.recipe_notebook.pack(fill=tk.BOTH, expand=True)
+        self._recipe_trees: dict[str, ttk.Treeview] = {}
+        titles = {"setup": "Setup once", "repeat": "Repeat", "after": "After"}
+        for section in _RECIPE_SECTIONS:
+            frame = ttk.Frame(self.recipe_notebook)
+            tree = ttk.Treeview(
+                frame,
+                columns=("summary",),
+                show="headings",
+                height=6,
+                selectmode="browse",
+            )
+            tree.heading("summary", text="Charge / discharge / rest")
+            tree.column("summary", width=280, stretch=True)
+            scroll = ttk.Scrollbar(frame, orient=tk.VERTICAL, command=tree.yview)
+            tree.configure(yscrollcommand=scroll.set)
+            tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+            scroll.pack(side=tk.RIGHT, fill=tk.Y)
+            tree.bind("<Double-1>", lambda _event: self._edit_selected_unit())
+            self._recipe_trees[section] = tree
+            self.recipe_notebook.add(frame, text=titles[section])
+
+        count_row = ttk.Frame(self.recipe_frame)
+        count_row.pack(fill=tk.X, pady=(6, 0))
+        ttk.Label(count_row, text="Repeat ×").pack(side=tk.LEFT)
+        self.repeat_count_var = tk.StringVar(value="1")
+        ttk.Entry(count_row, textvariable=self.repeat_count_var, width=6).pack(
+            side=tk.LEFT,
+            padx=4,
+        )
+        ttk.Button(
+            count_row,
+            text="Apply count",
+            command=self._apply_repeat_count,
+        ).pack(side=tk.LEFT)
+
+        add_row = ttk.Frame(self.recipe_frame)
+        add_row.pack(fill=tk.X, pady=(6, 0))
+        ttk.Button(add_row, text="+ Charge", command=lambda: self._add_unit("charge")).pack(
+            side=tk.LEFT,
+            padx=(0, 4),
+        )
+        ttk.Button(
+            add_row,
+            text="+ Discharge",
+            command=lambda: self._add_unit("discharge"),
+        ).pack(side=tk.LEFT, padx=(0, 4))
+        ttk.Button(add_row, text="+ Rest", command=lambda: self._add_unit("rest")).pack(
+            side=tk.LEFT
+        )
+
+        edit_row = ttk.Frame(self.recipe_frame)
+        edit_row.pack(fill=tk.X, pady=(4, 0))
+        ttk.Button(edit_row, text="Edit", command=self._edit_selected_unit).pack(
+            side=tk.LEFT,
+            padx=(0, 4),
+        )
+        ttk.Button(edit_row, text="Up", command=lambda: self._move_unit(-1)).pack(
+            side=tk.LEFT,
+            padx=(0, 4),
+        )
+        ttk.Button(edit_row, text="Down", command=lambda: self._move_unit(1)).pack(
+            side=tk.LEFT,
+            padx=(0, 4),
+        )
+        ttk.Button(edit_row, text="Delete", command=self._delete_unit).pack(side=tk.LEFT)
+
+        self.json_frame = ttk.LabelFrame(module_tab, text="Advanced JSON", padding=6)
+        self.json_frame.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
+        self.params_text = tk.Text(
+            self.json_frame,
+            width=35,
+            height=7,
+            font=("TkFixedFont", 10),
+        )
+        self.params_text.pack(fill=tk.BOTH, expand=True, pady=(0, 6))
+        ttk.Button(
+            self.json_frame,
+            text="Apply JSON",
+            command=self._apply_params,
+        ).pack(fill=tk.X)
 
         ttk.Label(cell_tab, text="Cell profile (JSON)").pack(anchor=tk.W)
         self.cell_text = tk.Text(cell_tab, width=35, height=24, font=("TkFixedFont", 10))
@@ -431,6 +568,60 @@ class FlowEditorApp:
             or "Preview expanded without graph warnings."
         )
         self.status_var.set(f"Previewed {len(steps)} step intents")
+        self._render_overview()
+
+    def _show_overview(self) -> None:
+        self._render_overview()
+        self.output_notebook.select(0)
+
+    def _render_overview(self) -> None:
+        from ..protocol.overview import compose_overview, format_overview
+
+        try:
+            text = format_overview(compose_overview(self.model.project))
+        except (TypeError, ValueError) as exc:
+            text = f"Overview unavailable: {exc}\n"
+        self.overview_text.configure(state=tk.NORMAL)
+        self.overview_text.delete("1.0", tk.END)
+        self.overview_text.insert(tk.END, text)
+        self.overview_text.configure(state=tk.DISABLED)
+
+    def _export_sch(self) -> None:
+        validation = self.model.validate()
+        if validation.errors:
+            messagebox.showerror("Export blocked", "\n".join(validation.errors))
+            return
+        if not messagebox.askokcancel(
+            "Experimental SCH export",
+            "This writes an analysis-only .sch that the in-repo viewer can reload.\n"
+            "It is not equipment-ready. Do not load it on a PNE cycler.",
+        ):
+            return
+        path = filedialog.asksaveasfilename(
+            title="Export experimental SCH",
+            defaultextension=".sch",
+            filetypes=[("PNE schedule", "*.sch"), ("All files", "*.*")],
+        )
+        if not path:
+            return
+        from ..io.writer import write_sch_reloadable
+
+        try:
+            document = write_sch_reloadable(self.model.project, Path(path))
+        except (OSError, ValueError) as exc:
+            messagebox.showerror("Export or reload failed", str(exc))
+            return
+        self._render_overview()
+        self.status_var.set(
+            f"Exported {Path(path).name}: viewer reload OK ({len(document.steps)} steps)"
+        )
+        messagebox.showinfo(
+            "Export OK",
+            f"Wrote {Path(path).name}\n"
+            f"Viewer reload: {len(document.steps)} steps "
+            f"at payload offset {document.payload_offset}.\n"
+            "Not equipment-ready.",
+        )
 
     def _refresh_all(self) -> None:
         ids = [node.id for node in self.model.project.modules]
@@ -457,17 +648,24 @@ class FlowEditorApp:
             ),
         )
         self._validate()
+        self._render_overview()
 
     def _render_canvas(self) -> None:
         self.canvas.delete("all")
         self._canvas_items.clear()
-        positions: dict[str, tuple[float, float]] = {}
-        for index, node in enumerate(self.model.project.modules):
-            column = index % 4
-            row = index // 4
-            x = 45 + column * 260
-            y = 45 + row * 150
-            positions[node.id] = (x, y)
+        nodes = list(self.model.project.modules)
+        heights = [
+            max(88, 40 + 16 * len(self.model.card_lines(node.id)) + 12)
+            for node in nodes
+        ]
+        positions: dict[str, tuple[float, float, float]] = {}
+        row_y = 36.0
+        for index, node in enumerate(nodes):
+            column = index % 3
+            if column == 0 and index > 0:
+                row_y += max(heights[index - 3 : index]) + _CARD_GAP_Y
+            x = 36 + column * _CARD_GAP_X
+            positions[node.id] = (x, row_y, heights[index])
 
         for edge in self.model.project.connections:
             source = positions.get(edge.source_id)
@@ -475,66 +673,356 @@ class FlowEditorApp:
             if source is None or target is None:
                 continue
             self.canvas.create_line(
-                source[0] + 180,
-                source[1] + 40,
+                source[0] + _CARD_WIDTH,
+                source[1] + source[2] / 2,
                 target[0],
-                target[1] + 40,
+                target[1] + target[2] / 2,
                 fill="#3f6f9f",
                 width=2,
                 arrow=tk.LAST,
             )
 
-        for node in self.model.project.modules:
-            x, y = positions[node.id]
+        for node in nodes:
+            x, y, height = positions[node.id]
             selected = node.id == self.selected_id
             rectangle = self.canvas.create_rectangle(
                 x,
                 y,
-                x + 180,
-                y + 80,
+                x + _CARD_WIDTH,
+                y + height,
                 fill="#d9edff" if selected else "#ffffff",
                 outline="#1677c8" if selected else "#677583",
                 width=3 if selected else 1,
             )
             title = self.canvas.create_text(
                 x + 12,
-                y + 18,
-                text=node.id,
+                y + 16,
+                text=f"{node.id}  ·  {node.module_type}",
                 anchor=tk.W,
                 font=("TkDefaultFont", 10, "bold"),
             )
-            kind = self.canvas.create_text(
-                x + 12,
-                y + 50,
-                text=node.module_type,
-                anchor=tk.W,
-                fill="#425466",
-            )
-            for item in (rectangle, title, kind):
+            items = [rectangle, title]
+            for line_index, line in enumerate(self.model.card_lines(node.id)):
+                items.append(
+                    self.canvas.create_text(
+                        x + 12,
+                        y + 38 + line_index * 16,
+                        text=line,
+                        anchor=tk.W,
+                        fill="#425466",
+                        font=("TkDefaultFont", 9),
+                    )
+                )
+            for item in items:
                 self._canvas_items[item] = node.id
+
+        bottom = 36.0
+        if positions:
+            bottom = max(y + height for _, y, height in positions.values()) + 80
+        self.canvas.configure(scrollregion=(0, 0, 1100, max(bottom, 800)))
 
     def _render_properties(self) -> None:
         self.params_text.delete("1.0", tk.END)
+        self._clear_recipe_trees()
         if self.selected_id is None:
             self.selected_label.configure(text="No module selected")
+            self._show_recipe_editors(False)
             return
         try:
             node = self.model.get_module(self.selected_id)
+            instance = self.model.instantiate(self.selected_id)
         except ValueError:
             self.selected_id = None
             self.selected_label.configure(text="No module selected")
+            self._show_recipe_editors(False)
             return
         self.selected_label.configure(text=f"{node.id} [{node.module_type}]")
         self.params_text.insert(
             tk.END,
             json.dumps(node.params, indent=2, ensure_ascii=False),
         )
+        if has_editable_recipe(instance):
+            self._show_recipe_editors(True)
+            recipe = instance.recipe()
+            specs = self.model.available_presets(self.selected_id)
+            labels = [spec.key for spec in specs]
+            if recipe.preset not in labels:
+                labels = [recipe.preset, *labels]
+            self.preset_combo.configure(values=labels)
+            self.preset_var.set(recipe.preset)
+            spec = PRESETS_BY_KEY.get(recipe.preset)
+            self.preset_detail_var.set(spec.detail if spec else "Edited inside this module.")
+            self.repeat_count_var.set(str(recipe.repeat_count))
+            for section in _RECIPE_SECTIONS:
+                tree = self._recipe_trees[section]
+                for unit in getattr(recipe, section):
+                    tree.insert("", tk.END, values=(unit.summary(),))
+        else:
+            self._show_recipe_editors(False)
 
     def _set_validation(self, text: str) -> None:
         self.validation_text.configure(state=tk.NORMAL)
         self.validation_text.delete("1.0", tk.END)
         self.validation_text.insert(tk.END, text)
         self.validation_text.configure(state=tk.DISABLED)
+
+    def _show_recipe_editors(self, show: bool) -> None:
+        if show:
+            self.preset_frame.pack(
+                fill=tk.X,
+                pady=(8, 0),
+                before=self.json_frame,
+            )
+            self.recipe_frame.pack(
+                fill=tk.BOTH,
+                expand=True,
+                pady=(8, 0),
+                before=self.json_frame,
+            )
+        else:
+            self.preset_frame.pack_forget()
+            self.recipe_frame.pack_forget()
+
+    def _clear_recipe_trees(self) -> None:
+        for tree in self._recipe_trees.values():
+            for item in tree.get_children():
+                tree.delete(item)
+
+    def _selected_section(self) -> str:
+        current = self.recipe_notebook.select()
+        index = self.recipe_notebook.index(current)
+        return _RECIPE_SECTIONS[index]
+
+    def _selected_unit_index(self) -> int | None:
+        tree = self._recipe_trees[self._selected_section()]
+        selected = tree.selection()
+        if not selected:
+            return None
+        return tree.index(selected[0])
+
+    def _require_recipe_module(self):
+        if self.selected_id is None:
+            messagebox.showwarning("No selection", "Select a module first.")
+            return None
+        try:
+            instance = self.model.instantiate(self.selected_id)
+        except ValueError as exc:
+            messagebox.showerror("Module error", str(exc))
+            return None
+        if not has_editable_recipe(instance):
+            messagebox.showwarning(
+                "No recipe",
+                "This module is a single step. Use a sequence/QPEED/HPPC module to edit units.",
+            )
+            return None
+        return instance.recipe()
+
+    def _commit_recipe(self, recipe) -> None:
+        if self.selected_id is None:
+            return
+        try:
+            self.model.set_recipe(self.selected_id, recipe)
+        except ValueError as exc:
+            messagebox.showerror("Recipe update failed", str(exc))
+            return
+        self._refresh_all()
+
+    def _rebuild_preset(self) -> None:
+        if self.selected_id is None:
+            messagebox.showwarning("No selection", "Select a module first.")
+            return
+        key = self.preset_var.get().strip()
+        if not key or key == "custom":
+            messagebox.showwarning("No preset", "Choose a named preset first.")
+            return
+        try:
+            self.model.apply_preset(self.selected_id, key)
+        except ValueError as exc:
+            messagebox.showerror("Preset failed", str(exc))
+            return
+        self._refresh_all()
+
+    def _apply_repeat_count(self) -> None:
+        recipe = self._require_recipe_module()
+        if recipe is None:
+            return
+        try:
+            recipe.repeat_count = int(self.repeat_count_var.get())
+        except ValueError:
+            messagebox.showerror("Invalid count", "Repeat count must be an integer.")
+            return
+        self._commit_recipe(recipe)
+
+    def _add_unit(self, kind: str) -> None:
+        recipe = self._require_recipe_module()
+        if recipe is None:
+            return
+        defaults = {
+            "charge": charge(c_rate=1.0, mode="CCCV", end_voltage_v=4.2),
+            "discharge": discharge(c_rate=1.0, end_voltage_v=2.5),
+            "rest": rest_unit(600.0),
+        }
+        unit = self._unit_dialog(defaults[kind])
+        if unit is None:
+            return
+        section = getattr(recipe, self._selected_section())
+        index = self._selected_unit_index()
+        if index is None:
+            section.append(unit)
+        else:
+            section.insert(index + 1, unit)
+        recipe.preset = "custom"
+        self._commit_recipe(recipe)
+
+    def _edit_selected_unit(self) -> None:
+        recipe = self._require_recipe_module()
+        if recipe is None:
+            return
+        index = self._selected_unit_index()
+        if index is None:
+            messagebox.showwarning("No unit", "Select a charge/discharge/rest row first.")
+            return
+        section = getattr(recipe, self._selected_section())
+        unit = self._unit_dialog(section[index])
+        if unit is None:
+            return
+        section[index] = unit
+        recipe.preset = "custom"
+        self._commit_recipe(recipe)
+
+    def _move_unit(self, delta: int) -> None:
+        recipe = self._require_recipe_module()
+        if recipe is None:
+            return
+        index = self._selected_unit_index()
+        if index is None:
+            return
+        section = getattr(recipe, self._selected_section())
+        new_index = index + delta
+        if new_index < 0 or new_index >= len(section):
+            return
+        section[index], section[new_index] = section[new_index], section[index]
+        recipe.preset = "custom"
+        self._commit_recipe(recipe)
+
+    def _delete_unit(self) -> None:
+        recipe = self._require_recipe_module()
+        if recipe is None:
+            return
+        index = self._selected_unit_index()
+        if index is None:
+            return
+        section = getattr(recipe, self._selected_section())
+        del section[index]
+        recipe.preset = "custom"
+        self._commit_recipe(recipe)
+
+    def _unit_dialog(self, initial: RecipeUnit) -> RecipeUnit | None:
+        win = tk.Toplevel(self.root)
+        win.title("Recipe unit")
+        win.resizable(True, True)
+        try:
+            x = int(self.root.winfo_rootx()) + 90
+            y = int(self.root.winfo_rooty()) + 90
+            win.geometry(f"440x300+{x}+{y}")
+        except tk.TclError:
+            win.geometry("440x300")
+        win.transient(self.root)
+
+        kind_var = tk.StringVar(value=initial.kind)
+        mode_var = tk.StringVar(value=initial.mode or "CC")
+        rate_var = tk.StringVar(value="" if initial.c_rate is None else str(initial.c_rate))
+        voltage_var = tk.StringVar(
+            value="" if initial.end_voltage_v is None else str(initial.end_voltage_v)
+        )
+        time_var = tk.StringVar(
+            value="" if initial.end_time_s is None else str(initial.end_time_s)
+        )
+        label_var = tk.StringVar(value=initial.label)
+        result: dict[str, RecipeUnit | None] = {"unit": None}
+
+        body = tk.Frame(win, padx=14, pady=12, bg="#f4f6f8")
+        body.pack(fill=tk.BOTH, expand=True)
+
+        def add_combo(title: str, variable: tk.StringVar, values: tuple[str, ...]) -> None:
+            row = tk.Frame(body, bg="#f4f6f8")
+            row.pack(fill=tk.X, pady=4)
+            tk.Label(row, text=title, width=16, anchor="w", bg="#f4f6f8").pack(side=tk.LEFT)
+            box = ttk.Combobox(
+                row,
+                textvariable=variable,
+                values=values,
+                state="readonly",
+                width=22,
+            )
+            box.pack(side=tk.LEFT, fill=tk.X, expand=True)
+
+        def add_entry(title: str, variable: tk.StringVar) -> None:
+            row = tk.Frame(body, bg="#f4f6f8")
+            row.pack(fill=tk.X, pady=4)
+            tk.Label(row, text=title, width=16, anchor="w", bg="#f4f6f8").pack(side=tk.LEFT)
+            tk.Entry(row, textvariable=variable, width=24).pack(
+                side=tk.LEFT,
+                fill=tk.X,
+                expand=True,
+            )
+
+        add_combo("Kind", kind_var, ("charge", "discharge", "rest", "end"))
+        add_combo("Mode", mode_var, ("CCCV", "CC", "CV"))
+        add_entry("C-rate", rate_var)
+        add_entry("End voltage (V)", voltage_var)
+        add_entry("End time (s)", time_var)
+        add_entry("Label", label_var)
+
+        def _parse_float(raw: str) -> float | None:
+            text = raw.strip()
+            if not text:
+                return None
+            return float(text)
+
+        def _ok() -> None:
+            try:
+                kind = kind_var.get()
+                payload: dict[str, object] = {
+                    "kind": kind,
+                    "label": label_var.get().strip(),
+                }
+                if kind != "rest" and kind != "end":
+                    payload["mode"] = mode_var.get()
+                    payload["c_rate"] = _parse_float(rate_var.get())
+                    payload["end_voltage_v"] = _parse_float(voltage_var.get())
+                payload["end_time_s"] = _parse_float(time_var.get())
+                result["unit"] = RecipeUnit.from_dict(payload)
+            except (TypeError, ValueError) as exc:
+                messagebox.showerror("Invalid unit", str(exc), parent=win)
+                return
+            win.grab_release()
+            win.destroy()
+
+        def _cancel() -> None:
+            win.grab_release()
+            win.destroy()
+
+        buttons = tk.Frame(body, bg="#f4f6f8")
+        buttons.pack(fill=tk.X, pady=(12, 0))
+        tk.Button(buttons, text="Cancel", width=10, command=_cancel).pack(
+            side=tk.RIGHT,
+            padx=(6, 0),
+        )
+        tk.Button(buttons, text="OK", width=10, command=_ok).pack(side=tk.RIGHT)
+
+        win.protocol("WM_DELETE_WINDOW", _cancel)
+        win.update_idletasks()
+        win.deiconify()
+        win.lift()
+        win.focus_force()
+        try:
+            win.wait_visibility()
+        except tk.TclError:
+            pass
+        win.grab_set()
+        win.wait_window()
+        return result["unit"]
 
 
 def launch_flow_editor(initial_path: str | Path | None = None) -> None:

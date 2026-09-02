@@ -36,7 +36,7 @@ filename-based experiment classification.
 - **capacheck / cycle_life / formation**: `REST → LOOP → CYCLE → CCCV → REST → CC_DCHG → REST → … → END`
 - **rpt**: cycle block + extra reference discharge / SOC checkpoints
 - **qpeed (soc_setting)**: short QPEED conditioning sequence ending in `LOOP → END`
-- **qpeed (full)**: long pulse train (`CC_CHG` / `CC_DCHG` alternation with rests)
+- **qpeed (full)**: 1C empty / CCCV / empty, charge to **3.318 V** (SOC stand-in; percent not stored), then high-C to 4.2 V, repeated
 
 ## Manifest
 

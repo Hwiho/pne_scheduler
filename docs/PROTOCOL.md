@@ -32,6 +32,32 @@
 ### QPEED
 - >2.5C 급충 실험
 - `SOC_setting` 은 QPEED 하위 variant
+- 현재 코퍼스에서 SOC%는 `fEndC`에 저장되지 않음. full 파일은 **3.318 V** 충전을 SOC 대용으로 13회 반복한 뒤 고율로 4.2 V까지 충전
+- 모듈 프리셋: `qpeed.full_3318` (fixture topology), `qpeed.soc_setting` (conditioning only), `qpeed.soc_fraction` (generator template)
+
+### HPPC
+- 모듈 생성 기본값: `hppc.full_range` (2.5–4.2 V + residual approach)
+- `hppc.soc_90_50_10` 은 생성 템플릿이며 체크인 fixture와 다름
+- 체크인 fixture `HPPC_Full range.sch`는 **2.5–4.2 V full range** + 30 mA residual. SOC 계단은 바이너리에 없음
+
+### Module recipes
+
+QPEED / HPPC / formation / cycle_life / sequence modules store an editable
+`setup` + `repeat` × N + `after` list of charge, discharge, and rest units.
+Rebuild from a named preset, then edit units in the flow editor. Output is
+analysis-only step intents, not equipment-ready SCH.
+
+```powershell
+python -m pne_scheduler flow example/qpeed.schproj
+```
+
+### 스케줄 설명 (read-only)
+
+```powershell
+python -m pne_scheduler explain path\to\file.sch
+```
+
+파일명 SOC, 전압 setpoint, rest/LOOP 블록을 서술한다. writer-ready가 아니다.
 
 ## `.schproj` 예시
 

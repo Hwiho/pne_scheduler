@@ -85,11 +85,13 @@ class ScheduleProject:
         """Expand module graph to flat step intents (linear connections only for now)."""
         from ..modules import expand_module
 
-        ordered = _topological_module_order(self.modules, self.connections)
         steps: list[StepIntent] = []
-        for node in ordered:
+        for node in self.ordered_modules():
             steps.extend(expand_module(node, self.cell_profile))
         return steps
+
+    def ordered_modules(self) -> list[ModuleNode]:
+        return _topological_module_order(self.modules, self.connections)
 
 
 def _topological_module_order(

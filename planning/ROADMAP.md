@@ -7,6 +7,7 @@
 | 2026-08-31 | Initial draft: documented the structure based on `sch_file_structure_20250211.xlsx`, ASSB_Analyzer_dev, and the Ensol PNE converter; established the roadmap for a visual modular schedule builder |
 | 2026-08-31 | Created the `pne_scheduler/` package — IR, C-rate, module stubs, CLI, and example `.schproj` |
 | 2026-08-31 | Reassessed repository status — secured the original SCH archive and reprioritized implementation and validation |
+| 2026-08-31 | Added a read-only schedule explainer (filename SOC, voltage setpoints, repeating blocks) |
 
 ---
 
@@ -380,16 +381,16 @@ than offline file generation and they depend on unresolved schemas.
 | Area | Status | Evidence / assessment |
 |------|--------|-----------------------|
 | Original fixtures | **Secured** | 8-file and 93-file SCH ZIPs in `example/archives/`, and 1 HPPC file in `example/fixtures/hppc/` |
-| File reading/viewer | **Partially complete** | Implemented registry-first 612/696-byte layout detection; all 102 fixtures have automated structural golden regression coverage |
+| File reading/viewer | **Partially complete** | Layout detection and structural goldens for 102 fixtures; `explain` narrates protocol/SOC hints without treating inferred SOC as writer-ready |
+| Classification/stack/C-rate inference | **Partially complete** | Unit tests exist and analysis reports have been generated; HPPC is a filename category; QPEED SOC cadence is reported as 3.318 V, not a stored % |
 | Equipment provenance | **Partially classified** | Current fixture-only catalog records user-confirmed, user-attributed, and unknown equipment sources without creating filename rules for future files |
-| Classification/stack/C-rate inference | **Partially complete** | Unit tests exist and analysis reports have been generated |
 | `.schproj` IR/JSON | **Partially complete** | Serialization and linear DAG sorting implemented; no schema validation/version migration |
 | Experiment modules | **prototype** | expand implemented for Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED, etc. |
 | Binary compiler | **spike** | Packs only some fields; does not write core fields such as mode, loop, DCR, and sampling |
 | SCH writer | **Incomplete/guarded** | Uses a 512-byte placeholder header; CLI output now requires explicit experimental acknowledgement and remains offline-only |
 | Round-trip validator | **Incomplete** | The repository can re-read output, but currently compares only step count and has no independent semantic field comparison |
-| GUI | **Partially complete** | Viewer/resume/bulk editor exist; first flow editor supports module connections, graph validation, property editing, save/load, and step preview |
-| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 100 tests |
+| GUI | **Partially complete** | Viewer/resume/bulk editor exist; first flow editor supports module connections, graph validation, property editing, save/load, and step preview; viewer summary includes the schedule explainer |
+| Test execution environment | **Restored** | Editable install and wheel import succeed; the local suite currently has 113 tests |
 
 ### 6.2 Gate A — Restore the Development Baseline (Highest Priority)
 
@@ -405,7 +406,7 @@ under F6; local pass counts alone are not equipment-compatibility evidence.
 **Progress record**
 - A1 complete: verified package/subpackage imports after an editable install and from a wheel installed into a separate target
 - A3 complete: automatically verified that the two ZIPs match the 8-file and 93-file extracted directory listings, for a total of 102 files including HPPC
-- A2 complete locally: confirmed `100 passed` and synchronized the README test badge;
+- A2 complete locally: confirmed `113 passed` and synchronized the README test badge;
   adding a hosted CI workflow remains a separate repository-infrastructure task
 
 ### 6.3 Gate B — Establish the Binary Schema as the Single Source of Truth
@@ -600,13 +601,14 @@ tests to be skipped.
 3. ✅ **Resolve internal offset conflict** — unified parser/schema/compiler locations for `fEndV/fEndI/fEndC`
 4. **Validate intake metadata** — make controlled before/after pairs reject incomplete equipment, CTSPro, and changed-value provenance
 5. ✅ **Full reader regression test** — locked layout, step count, hash, and EOF geometry for all 102 files
-6. **Resolve the raw-unit/capacity contract** — offset `+12`, `+16`, mV/mA scaling, INI range, and one Q_nom source
-7. **Externally confirm field semantics** — prioritize nonzero `fEndC`, sampling, DCR, and goto controlled pairs
-8. **Implement safe patch vertical slice** — approved 612-byte template, allowlisted field, exact preservation report
-9. **Implement writer header** — complete the from-scratch schema/writer vertical slice for `0x00010003/612`
-10. **696-byte lab parity** — extend patching/writing for `0x00010004/696`, which accounts for 89/93 lab fixtures
-11. **End-to-end module validation** — Formation → Cycle Life → RPT/DC-IR order
-12. **Release-gated PNE test** — reopen, exact hash, target profile, and approved equipment procedure
+6. ✅ **Read-only schedule explainer** — `explain` narrates HPPC/QPEED/RPT SOC hints from filename and voltage setpoints; inferred SOC is not writer-ready
+7. **Resolve the raw-unit/capacity contract** — offset `+12`, `+16`, mV/mA scaling, INI range, and one Q_nom source
+8. **Externally confirm field semantics** — prioritize nonzero `fEndC`, sampling, DCR, and goto controlled pairs
+9. **Implement safe patch vertical slice** — approved 612-byte template, allowlisted field, exact preservation report
+10. **Implement writer header** — complete the from-scratch schema/writer vertical slice for `0x00010003/612`
+11. **696-byte lab parity** — extend patching/writing for `0x00010004/696`, which accounts for 89/93 lab fixtures
+12. **End-to-end module validation** — Formation → Cycle Life → RPT/DC-IR order
+13. **Release-gated PNE test** — reopen, exact hash, target profile, and approved equipment procedure
 
 ---
 

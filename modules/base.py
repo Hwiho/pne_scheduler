@@ -40,15 +40,47 @@ def expand_module(node: ModuleNode, cell: CellProfile) -> list[StepIntent]:
     return instance.expand(cell)
 
 
+_PALETTE_ORDER = (
+    "charge",
+    "discharge",
+    "rest",
+    "sequence",
+    "qpeed",
+    "hppc",
+    "formation",
+    "cycle_life",
+    "capacheck",
+    "rpt",
+    "dcir",
+    "insitu_cycle",
+)
+
+
 def list_module_types() -> tuple[str, ...]:
-    return tuple(sorted(_MODULE_REGISTRY.keys()))
+    known = set(_MODULE_REGISTRY)
+    ordered = [name for name in _PALETTE_ORDER if name in known]
+    ordered.extend(sorted(known - set(ordered)))
+    return tuple(ordered)
 
 
 def get_module_class(module_type: str) -> type | None:
     return _MODULE_REGISTRY.get(module_type)
 
 
-from . import capacheck, cycle_life, dcir, formation, hppc, insitu_cycle, qpeed, rest, rpt  # noqa: E402,F401
+from . import (  # noqa: E402,F401
+    capacheck,
+    charge,
+    cycle_life,
+    dcir,
+    discharge,
+    formation,
+    hppc,
+    insitu_cycle,
+    qpeed,
+    rest,
+    rpt,
+    sequence,
+)
 
 __all__ = [
     "ExperimentModule",

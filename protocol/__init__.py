@@ -9,7 +9,16 @@ from .defaults import (
     RPT_DCIR_SOC_FRACTIONS,
     RPT_DISCHARGE_C_RATE,
 )
+from .explain import (
+    EvidenceKind,
+    ScheduleExplanation,
+    explain_schedule,
+    format_explanation,
+    rest_duration_s,
+    voltage_v_from_raw,
+)
 from .infer import InferredProtocol, ProtocolInference, infer_protocol_from_schedule
+from .overview import ProjectOverview, compose_overview, format_overview
 
 __all__ = [
     "CAPACHECK_INITIAL_C_RATE",
@@ -21,7 +30,16 @@ __all__ = [
     "RPT_DCIR_PULSE_C_RATE_DEFAULT",
     "RPT_DCIR_SOC_FRACTIONS",
     "RPT_DISCHARGE_C_RATE",
+    "EvidenceKind",
     "InferredProtocol",
     "ProtocolInference",
+    "ScheduleExplanation",
+    "compose_overview",
+    "explain_schedule",
+    "format_explanation",
+    "format_overview",
+    "ProjectOverview",
     "infer_protocol_from_schedule",
+    "rest_duration_s",
+    "voltage_v_from_raw",
 ]
