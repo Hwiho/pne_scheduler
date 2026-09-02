@@ -13,6 +13,14 @@ from .c_rate import (
     validate_current_within_limits,
 )
 from .compiler import compile_steps
+from .duration import (
+    DurationEstimate,
+    StepDurationEstimate,
+    combine_duration_estimates,
+    estimate_step_duration,
+    estimate_steps_duration,
+    format_duration,
+)
 
 __all__ = [
     "COMMON_C_RATE_PRESETS",
@@ -20,11 +28,17 @@ __all__ = [
     "STANDARD_C_RATE_PRESETS",
     "CratePreset",
     "CrateSnapResult",
+    "DurationEstimate",
+    "StepDurationEstimate",
     "capacity_mAh_from_fraction",
     "c_rate_from_current_mA",
     "compile_steps",
+    "combine_duration_estimates",
     "current_mA_from_c_rate",
     "format_c_rate_label",
+    "format_duration",
+    "estimate_step_duration",
+    "estimate_steps_duration",
     "is_fast_charge_c_rate",
     "snap_c_rate",
     "validate_current_within_limits",

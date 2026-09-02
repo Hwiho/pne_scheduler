@@ -4,7 +4,7 @@ Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` sch
 The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
 QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-100%20passed-brightgreen)](#tests)
+[![Tests](https://img.shields.io/badge/tests-109%20passed-brightgreen)](#tests)
 
 > [!WARNING]
 > The from-scratch SCH writer still uses a placeholder header. Its output is not validated
@@ -129,9 +129,19 @@ python run_pne_scheduler_flow.py
 python -m pne_scheduler flow example/example.schproj
 ```
 
-The first GUI version supports adding/removing modules, explicit connections, automatic
-linear chaining, JSON property editing, Cell Profile editing, graph validation, `.schproj`
-load/save, and expanded step preview. It intentionally does not send files to equipment.
+The flow editor is a left-to-right LabVIEW-style chain: add experiment blocks, attach an
+output port to the next input port, and detach a wire to break the sequence. Cards use a
+distinct pastel style per experiment type, with cycle badges and duration on the block.
+
+Attaching a new neighbor replaces the previous linear wire on that port. Repeating work
+stays inside a cycle block (`cycle_count` / `loop_count`); drawing a loop-back wire is
+rejected so the execution order stays a single sequence.
+
+Duration estimates use configured step time where available. Capacity-controlled charge and
+discharge steps use `capacity fraction ÷ C-rate`; a full step assumes nominal 100% usable
+capacity. Loop counts multiply the estimated loop body. Values marked `~` exclude effects
+that cannot yet be derived reliably, including CCCV taper, early voltage termination, and
+equipment overhead.
 
 ## Resume interrupted experiment
 
