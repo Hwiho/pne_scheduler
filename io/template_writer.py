@@ -13,6 +13,7 @@ from typing import Any
 
 from ..schema.fields import SchFieldDefinition, get_step_fields
 from .sch_binary import read_sch_binary
+from .validation_manifest import VALIDATION_MANIFEST_SCHEMA
 
 SCH_PATCH_SCHEMA = "pne_scheduler.sch_patch/v1"
 _IDENTITY_FIELDS = {"step_no", "step_type_word"}
@@ -45,6 +46,7 @@ class SchPatchPlan:
     patches: tuple[SchFieldPatch, ...]
     schema: str = SCH_PATCH_SCHEMA
     expected_version: int | None = None
+    target_profile: dict[str, Any] | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> SchPatchPlan:
@@ -62,6 +64,7 @@ class SchPatchPlan:
             schema=schema,
             template_sha256=str(data["template_sha256"]).lower(),
             expected_version=expected_version,
+            target_profile=_parse_target_profile(data.get("target_profile")),
             patches=tuple(
                 SchFieldPatch.from_dict(item) for item in data.get("patches", [])
             ),
@@ -76,6 +79,21 @@ class SchPatchPlan:
 class SchPatchResult:
     output_path: Path
     report: dict[str, Any]
+
+
+def _parse_target_profile(value: Any) -> dict[str, Any] | None:
+    if value is None:
+        return None
+    if not isinstance(value, dict):
+        raise ValueError("target_profile must be an object or null")
+    for key, item in value.items():
+        if not isinstance(key, str) or not key:
+            raise ValueError("target_profile keys must be non-empty strings")
+        if item is not None and not isinstance(item, (str, int, float, bool)):
+            raise ValueError(
+                f"target_profile.{key} must be a scalar value or null"
+            )
+    return dict(value)
 
 
 def _sha256(data: bytes) -> str:
@@ -192,6 +210,7 @@ def apply_sch_patch(
                 "absolute_offset": absolute,
                 "dtype": field.dtype,
                 "confidence": field.confidence.value,
+                "evidence": field.evidence,
                 "writer_ready": field.writer_ready,
                 "before_hex": before.hex(),
                 "after_hex": packed.hex(),
@@ -226,11 +245,42 @@ def apply_sch_patch(
         raise ValueError("Patched output failed structural re-read validation")
 
     output_bytes = bytes(body)
+    validation_checks = [
+        {
+            "name": "template_sha256",
+            "passed": source_hash == plan.template_sha256,
+        },
+        {
+            "name": "header_preserved",
+            "passed": output_bytes[: doc.payload_offset] == doc.header,
+        },
+        {
+            "name": "file_length_preserved",
+            "passed": len(output_bytes) == len(source),
+        },
+        {
+            "name": "declared_ranges_only",
+            "passed": changed_offsets.issubset(expected_changed_offsets),
+        },
+        {
+            "name": "structural_reread",
+            "passed": True,
+        },
+    ]
     return SchPatchResult(
         output_path=output,
         report={
-            "schema": "pne_scheduler.sch_patch_report/v1",
+            "schema": VALIDATION_MANIFEST_SCHEMA,
+            "writer": "template_patch",
             "status": "analysis_only",
+            "equipment_executable": False,
+            "target_profile": plan.target_profile
+            or {
+                "status": "unspecified",
+                "equipment": None,
+                "channel_profile": None,
+                "ctspro_version": None,
+            },
             "template": {
                 "path": str(template),
                 "sha256": source_hash,
@@ -245,10 +295,16 @@ def apply_sch_patch(
                 "sha256": _sha256(output_bytes),
                 "size": len(output_bytes),
             },
+            "changed_fields": applied,
             "applied": applied,
             "changed_byte_count": len(changed_offsets),
             "header_preserved": output_bytes[: doc.payload_offset] == doc.header,
             "file_length_preserved": len(output_bytes) == len(source),
+            "validation": {
+                "all_passed": all(check["passed"] for check in validation_checks),
+                "checks": validation_checks,
+                "equipment_smoke_test": "not_run",
+            },
             "warnings": warnings,
         },
     )

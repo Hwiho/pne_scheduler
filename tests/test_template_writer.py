@@ -31,6 +31,11 @@ def _plan(**overrides) -> SchPatchPlan:
     values = {
         "template_sha256": _sha256(TEMPLATE),
         "expected_version": 0x00010003,
+        "target_profile": {
+            "equipment": "PNE02",
+            "channel_profile": "500mA",
+            "ctspro_version": "CYCC-1004-S01-R004-N01",
+        },
         "patches": (SchFieldPatch(step_no=6, field="fEndV", value=3123.0),),
     }
     values.update(overrides)
@@ -69,6 +74,13 @@ def test_template_writer_preserves_every_undeclared_byte(tmp_path: Path) -> None
     assert changed
     assert set(changed).issubset(set(range(1760 + 5 * 612 + 28, 1760 + 5 * 612 + 32)))
     assert result.report["status"] == "analysis_only"
+    assert result.report["schema"] == "pne_scheduler.sch_validation_manifest/v1"
+    assert result.report["equipment_executable"] is False
+    assert result.report["target_profile"]["equipment"] == "PNE02"
+    assert result.report["changed_fields"] == result.report["applied"]
+    assert result.report["changed_fields"][0]["evidence"]
+    assert result.report["validation"]["all_passed"] is True
+    assert result.report["validation"]["equipment_smoke_test"] == "not_run"
     assert result.report["header_preserved"] is True
     assert result.report["file_length_preserved"] is True
     assert result.report["warnings"]
@@ -111,6 +123,11 @@ def test_patch_cli_writes_report_and_warns(tmp_path: Path, capsys) -> None:
                 "schema": "pne_scheduler.sch_patch/v1",
                 "template_sha256": _sha256(TEMPLATE),
                 "expected_version": "0x00010003",
+                "target_profile": {
+                    "equipment": "PNE02",
+                    "channel_profile": "500mA",
+                    "ctspro_version": "CYCC-1004-S01-R004-N01",
+                },
                 "patches": [{"step_no": 6, "field": "fEndV", "value": 3123.0}],
             }
         ),
@@ -131,5 +148,47 @@ def test_patch_cli_writes_report_and_warns(tmp_path: Path, capsys) -> None:
 
     assert result == 0
     assert output.exists()
-    assert output.with_suffix(".sch.report.json").exists()
+    manifest_path = output.with_suffix(".sch.manifest.json")
+    assert manifest_path.exists()
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["template"]["sha256"] == _sha256(TEMPLATE)
+    assert manifest["target_profile"]["equipment"] == "PNE02"
+    assert manifest["changed_fields"][0]["field"] == "fEndV"
+    assert manifest["changed_fields"][0]["evidence"]
+    assert manifest["validation"]["all_passed"] is True
     assert "Do not execute" in capsys.readouterr().out
+
+
+def test_patch_cli_removes_output_when_manifest_cannot_be_written(
+    tmp_path: Path,
+) -> None:
+    output = tmp_path / "patched.sch"
+    plan_path = tmp_path / "plan.json"
+    plan_path.write_text(
+        json.dumps(
+            {
+                "schema": "pne_scheduler.sch_patch/v1",
+                "template_sha256": _sha256(TEMPLATE),
+                "expected_version": "0x00010003",
+                "patches": [{"step_no": 6, "field": "fEndV", "value": 3123.0}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = main(
+        [
+            "patch-sch",
+            str(TEMPLATE),
+            str(plan_path),
+            "-o",
+            str(output),
+            "--manifest",
+            str(tmp_path / "missing" / "manifest.json"),
+            "--allow-analysis-output",
+            "--allow-unverified-fields",
+        ]
+    )
+
+    assert result == 2
+    assert not output.exists()

@@ -2,6 +2,11 @@
   "schema": "pne_scheduler.sch_patch/v1",
   "template_sha256": "replace-with-the-exact-template-sha256",
   "expected_version": "0x00010003",
+  "target_profile": {
+    "equipment": "PNE02",
+    "channel_profile": "500mA",
+    "ctspro_version": "CYCC-1004-S01-R004-N01"
+  },
   "patches": [
     {
       "step_no": 6,
