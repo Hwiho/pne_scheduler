@@ -291,7 +291,7 @@
       "path": "sch_lab_zip/0.5C cycle.sch",
       "sha256": "2539628ddb31cc0340eb423ecd51cf446d2523d8bff7312bc52f03eb7026634d",
       "size": 23420,
-      "category": "rate_test",
+      "category": "rate_capability",
       "layout": {
         "version": "0x00010004",
         "payload_offset": 1844,
