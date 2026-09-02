@@ -192,3 +192,36 @@ def test_patch_cli_removes_output_when_manifest_cannot_be_written(
 
     assert result == 2
     assert not output.exists()
+
+
+def test_patch_cli_does_not_delete_preexisting_output_on_plan_failure(
+    tmp_path: Path,
+) -> None:
+    output = tmp_path / "existing.sch"
+    output.write_bytes(b"keep this file")
+    plan_path = tmp_path / "invalid-plan.json"
+    plan_path.write_text(
+        json.dumps(
+            {
+                "schema": "pne_scheduler.sch_patch/v1",
+                "template_sha256": "0" * 64,
+                "patches": [{"step_no": 6, "field": "fEndV", "value": 3123.0}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = main(
+        [
+            "patch-sch",
+            str(TEMPLATE),
+            str(plan_path),
+            "-o",
+            str(output),
+            "--allow-analysis-output",
+            "--allow-unverified-fields",
+        ]
+    )
+
+    assert result == 2
+    assert output.read_bytes() == b"keep this file"

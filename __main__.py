@@ -133,6 +133,8 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         project = ScheduleProject.load(args.project)
         manifest_path = args.manifest or default_manifest_path(args.output)
+        output_existed = args.output.exists()
+        manifest_existed = manifest_path.exists()
         try:
             write_sch(project, args.output)
             manifest = experimental_build_manifest(
@@ -143,8 +145,10 @@ def main(argv: list[str] | None = None) -> int:
             )
             write_validation_manifest(manifest_path, manifest)
         except (OSError, TypeError, ValueError) as exc:
-            args.output.unlink(missing_ok=True)
-            manifest_path.unlink(missing_ok=True)
+            if not output_existed:
+                args.output.unlink(missing_ok=True)
+            if not manifest_existed:
+                manifest_path.unlink(missing_ok=True)
             print(f"Experimental SCH build failed: {exc}", file=sys.stderr)
             return 2
         print(f"Wrote experimental output to {args.output}")
@@ -250,6 +254,8 @@ def main(argv: list[str] | None = None) -> int:
         )
 
         manifest_path = args.manifest or default_manifest_path(args.output)
+        output_existed = args.output.exists()
+        manifest_existed = manifest_path.exists()
         try:
             plan = SchPatchPlan.load(args.plan)
             result = apply_sch_patch(
@@ -261,8 +267,10 @@ def main(argv: list[str] | None = None) -> int:
             )
             write_validation_manifest(manifest_path, result.report)
         except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
-            args.output.unlink(missing_ok=True)
-            manifest_path.unlink(missing_ok=True)
+            if not output_existed:
+                args.output.unlink(missing_ok=True)
+            if not manifest_existed:
+                manifest_path.unlink(missing_ok=True)
             print(f"SCH patch failed: {exc}", file=sys.stderr)
             return 2
 
