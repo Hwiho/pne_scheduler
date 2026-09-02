@@ -88,7 +88,7 @@
   },
   "fixtures": [
     {
-      "path": "fixtures\\capacheck_zip\\00207966_260803_727도급셀_Set8_45도 Cycle.sch",
+      "path": "fixtures/capacheck_zip/00207966_260803_727도급셀_Set8_45도 Cycle.sch",
       "layout_match": true,
       "step_count_match": true,
       "assb_step_count": 73,
@@ -97,7 +97,7 @@
       "field_value_mismatches": []
     },
     {
-      "path": "fixtures\\capacheck_zip\\07100766_260511_SJ1300_dry_40um_RPT_500cycle.sch",
+      "path": "fixtures/capacheck_zip/07100766_260511_SJ1300_dry_40um_RPT_500cycle.sch",
       "layout_match": true,
       "step_count_match": true,
       "assb_step_count": 41,
@@ -106,7 +106,7 @@
       "field_value_mismatches": []
     },
     {
-      "path": "fixtures\\capacheck_zip\\07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch",
+      "path": "fixtures/capacheck_zip/07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch",
       "layout_match": true,
       "step_count_match": true,
       "assb_step_count": 167,
@@ -115,7 +115,7 @@
       "field_value_mismatches": []
     },
     {
-      "path": "fixtures\\capacheck_zip\\3.BM_C1%_FM.sch",
+      "path": "fixtures/capacheck_zip/3.BM_C1%_FM.sch",
       "layout_match": true,
       "step_count_match": true,
       "assb_step_count": 9,
@@ -124,7 +124,7 @@
       "field_value_mismatches": []
     },
     {
-      "path": "fixtures\\capacheck_zip\\9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
+      "path": "fixtures/capacheck_zip/9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
       "layout_match": true,
       "step_count_match": true,
       "assb_step_count": 15,
@@ -133,7 +133,7 @@
       "field_value_mismatches": []
     },
     {
-      "path": "fixtures\\hppc\\HPPC_Full range.sch",
+      "path": "fixtures/hppc/HPPC_Full range.sch",
       "layout_match": true,
       "step_count_match": true,
       "assb_step_count": 62,
@@ -142,7 +142,7 @@
       "field_value_mismatches": []
     },
     {
-      "path": "fixtures\\sch_lab_zip\\0.5C cycle.sch",
+      "path": "fixtures/sch_lab_zip/0.5C cycle.sch",
       "layout_match": true,
       "step_count_match": true,
       "assb_step_count": 31,
@@ -151,7 +151,16 @@
       "field_value_mismatches": []
     },
     {
-      "path": "fixtures\\sch_lab_zip\\00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ.sch",
+      "path": "fixtures/sch_lab_zip/00207966_250611_capa.sch",
+      "layout_match": true,
+      "step_count_match": true,
+      "assb_step_count": 3,
+      "native_step_count": 3,
+      "field_value_mismatch_count": 0,
+      "field_value_mismatches": []
+    },
+    {
+      "path": "fixtures/sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ.sch",
       "layout_match": true,
       "step_count_match": true,
       "assb_step_count": 19,
@@ -160,7 +169,7 @@
       "field_value_mismatches": []
     },
     {
-      "path": "fixtures\\sch_lab_zip\\00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch",
+      "path": "fixtures/sch_lab_zip/00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch",
       "layout_match": true,
       "step_count_match": true,
       "assb_step_count": 5,
@@ -169,7 +178,7 @@
       "field_value_mismatches": []
     },
     {
-      "path": "fixtures\\sch_lab_zip\\07100766_260522_Set1_SJ900_wet_QC_1_charge.sch",
+      "path": "fixtures/sch_lab_zip/07100766_260522_Set1_SJ900_wet_QC_1_charge.sch",
       "layout_match": true,
       "step_count_match": true,
       "assb_step_count": 24,
@@ -178,7 +187,7 @@
       "field_value_mismatches": []
     },
     {
-      "path": "fixtures\\hppc\\HPPC_Full range.sch",
+      "path": "fixtures/hppc/HPPC_Full range.sch",
       "layout_match": true,
       "step_count_match": true,
       "assb_step_count": 62,
@@ -188,9 +197,9 @@
     }
   ],
   "summary": {
-    "fixture_count": 11,
-    "layout_match_count": 11,
-    "step_count_match_count": 11,
+    "fixture_count": 12,
+    "layout_match_count": 12,
+    "step_count_match_count": 12,
     "fixtures_with_field_mismatches": 0
   }
 }

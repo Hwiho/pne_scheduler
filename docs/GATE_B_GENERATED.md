@@ -46,21 +46,22 @@ Auto-generated report for Gate B. ASSB vendored constants live in `vendor/assb_s
 
 ## Fixture comparison summary
 
-- Fixtures checked: **11**
-- Layout matches: **11**
-- Step-count matches: **11**
+- Fixtures checked: **12**
+- Layout matches: **12**
+- Step-count matches: **12**
 - Fixtures with ASSB/native field mismatches: **0**
 
 ## Per-fixture notes
 
-- `fixtures\capacheck_zip\00207966_260803_727도급셀_Set8_45도 Cycle.sch`: layout=True, steps=True, field_mismatches=0
-- `fixtures\capacheck_zip\07100766_260511_SJ1300_dry_40um_RPT_500cycle.sch`: layout=True, steps=True, field_mismatches=0
-- `fixtures\capacheck_zip\07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch`: layout=True, steps=True, field_mismatches=0
-- `fixtures\capacheck_zip\3.BM_C1%_FM.sch`: layout=True, steps=True, field_mismatches=0
-- `fixtures\capacheck_zip\9)Bimodal_SJ1300_6040_NCN_capacheck.sch`: layout=True, steps=True, field_mismatches=0
-- `fixtures\hppc\HPPC_Full range.sch`: layout=True, steps=True, field_mismatches=0
-- `fixtures\sch_lab_zip\0.5C cycle.sch`: layout=True, steps=True, field_mismatches=0
-- `fixtures\sch_lab_zip\00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ.sch`: layout=True, steps=True, field_mismatches=0
-- `fixtures\sch_lab_zip\00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch`: layout=True, steps=True, field_mismatches=0
-- `fixtures\sch_lab_zip\07100766_260522_Set1_SJ900_wet_QC_1_charge.sch`: layout=True, steps=True, field_mismatches=0
-- `fixtures\hppc\HPPC_Full range.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/capacheck_zip/00207966_260803_727도급셀_Set8_45도 Cycle.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/capacheck_zip/07100766_260511_SJ1300_dry_40um_RPT_500cycle.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/capacheck_zip/07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/capacheck_zip/3.BM_C1%_FM.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/capacheck_zip/9)Bimodal_SJ1300_6040_NCN_capacheck.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/hppc/HPPC_Full range.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/sch_lab_zip/0.5C cycle.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/sch_lab_zip/00207966_250611_capa.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/sch_lab_zip/00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/sch_lab_zip/07100766_260522_Set1_SJ900_wet_QC_1_charge.sch`: layout=True, steps=True, field_mismatches=0
+- `fixtures/hppc/HPPC_Full range.sch`: layout=True, steps=True, field_mismatches=0

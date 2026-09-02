@@ -6,7 +6,7 @@
   "lab_defaults": {
     "primary_pne_unit_3pjt": null,
     "ctspro_build": null,
-    "q_nom_source": null,
+    "q_nom_source": "explicit_cell_profile.nominal_capacity_mAh_for_writer",
     "typical_q_nom_mAh": null,
     "viewer_display": "current_mA + estimated C-rate",
     "writer_contract": "user enters C-rate labels (1C, 2C) and explicit 1C current (mA); writer stores current in SCH"

@@ -9,6 +9,17 @@ Auto-generated annex: [`GATE_B_GENERATED.md`](GATE_B_GENERATED.md).
 
 A **controlled pair** is two `.sch` files from CTSPro where you changed **exactly one** UI setting (e.g. charge current 10 mA → 17 mA) and saved twice. Byte comparison maps UI values to SCH offsets. Save-only probe files are enough — no cell execution required.
 
+`python tools/run_gate_b_validation.py` reports repository preparation separately from
+actual Gate B exit:
+
+- `repository_ready_for_controlled_pairs=true` means all checks that can run without
+  CTSPro evidence are green.
+- `gate_b_passed=true` additionally requires real, valid, reopen-verified intake files
+  under `example/gate_b_pairs/`.
+- `all_passed` is an alias of `gate_b_passed`, not merely a pytest result.
+
+Use `--require-gate-exit` in CI once controlled-pair evidence has been added.
+
 ---
 
 ## Validation data intake
@@ -92,12 +103,24 @@ I (mA) = C-rate × Q_nom (mAh)
 | C/3 | 26.7 mA |
 | 0.5C | 40 mA |
 
-**Two sources today:**
+**Two paths exist, but only one is allowed to drive output:**
 
-1. **Explicit Cell Profile** — `nominal_capacity_mAh` in `.schproj` (writer path)  
-2. **Inferred** — filename + SCH (viewer path)
+1. **Explicit Cell Profile** — `nominal_capacity_mAh` in `.schproj`; this is the
+   authoritative writer source.
+2. **Inferred** — filename + SCH; this is display/analysis-only and must never feed the
+   compiler.
 
-If these disagree, C-rate display vs writer output diverges. Gate B needs a lab decision on authoritative Q_nom (stack formula vs fixed mAh vs CTSPro UI).
+If these disagree, the viewer must show the discrepancy while the writer continues to use
+the explicit Cell Profile value. This fail-safe contract removes inferred Q_nom from the
+writer path without claiming that the inferred display value is lab-authoritative.
+
+## Corpus-only evidence
+
+`planning/GATE_B_CORPUS_EVIDENCE.json` records the reproducible evidence summary from all
+15 checked-in PNE unit archives. It can promote fields only to `corpus_inferred`; it cannot
+make a field writer-ready. In particular, the corpus strongly supports the 612-byte
+`+12/+16/+20/+28/+32/+52/+384` mappings, while the 696-byte corpus remains too small to
+transfer late-field semantics.
 
 ---
 

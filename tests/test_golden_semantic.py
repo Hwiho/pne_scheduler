@@ -13,6 +13,11 @@ from pne_scheduler.schema.ensol_v612 import (
     OFF_CAP_MODE,
     OFF_CURRENT_MA,
     OFF_CV_CUTOFF_MA,
+    OFF_LOOP_COUNT,
+    OFF_LOOP_GOTO_ENSOL,
+    OFF_LOOP_GOTO_LEGACY,
+    OFF_RECORD_DV_MV,
+    OFF_RECORD_TIME_S,
     OFF_STEP_TYPE,
     OFF_TIME_OR_REST_S,
     OFF_VOLT_OR_VLIM_MV,
@@ -85,6 +90,26 @@ def test_golden_semantic_step_values(expectations: dict, fixture_id: str) -> Non
             )
         if "cap_mode_byte_496" in check:
             assert record[OFF_CAP_MODE] == check["cap_mode_byte_496"]
+        if "record_dV_mV" in check:
+            assert _read_f32(record, OFF_RECORD_DV_MV) == pytest.approx(
+                check["record_dV_mV"], rel=1e-4
+            )
+        if "record_time_s" in check:
+            assert _read_f32(record, OFF_RECORD_TIME_S) == pytest.approx(
+                check["record_time_s"], rel=1e-4
+            )
+
+    for check in entry.get("loop_checks", []):
+        record = steps_by_no[check["step_no"]].record
+        assert struct.unpack_from("<I", record, OFF_LOOP_COUNT)[0] == check["loop_count"]
+        assert (
+            struct.unpack_from("<I", record, OFF_LOOP_GOTO_LEGACY)[0]
+            == check["loop_goto_legacy"]
+        )
+        assert (
+            struct.unpack_from("<I", record, OFF_LOOP_GOTO_ENSOL)[0]
+            == check["loop_goto_ensol"]
+        )
 
 
 def test_parser_matches_semantic_current_for_capacheck_b0(expectations: dict) -> None:

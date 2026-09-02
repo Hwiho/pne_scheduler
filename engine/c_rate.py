@@ -6,6 +6,10 @@ from dataclasses import dataclass
 
 from ..ir.cell_profile import CellProfile
 
+# Writer safety contract: C-rate conversion always uses an explicit project value.
+# Filename/stack geometry inference is display-only and must never feed SCH output.
+WRITER_Q_NOM_SOURCE = "cell_profile.nominal_capacity_mAh"
+
 # Lab-standard C-rates (mono / general experiments).
 # Rates above FAST_CHARGE_MIN_C_RATE are mainly QPEED, QC cycle, etc.
 FAST_CHARGE_MIN_C_RATE = 2.5

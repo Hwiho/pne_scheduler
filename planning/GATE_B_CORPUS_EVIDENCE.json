@@ -1,0 +1,139 @@
+{
+  "schema": "pne_scheduler.gate_b_corpus_evidence/v1",
+  "generated_at": "2026-09-02T05:06:00+00:00",
+  "scope": {
+    "archives": "example/corpus_zips/PNE##.zip",
+    "units": 15,
+    "sch_files": 23281,
+    "parsed_files": 23275,
+    "unique_binary_hashes": 15662,
+    "duplicate_instances": 7619,
+    "normalized_near_pairs": 9937
+  },
+  "layouts": {
+    "0x00010003/1760/612": 22661,
+    "0x00010002/1632/612": 599,
+    "0x00010004/1844/696": 15
+  },
+  "method": {
+    "near_pair_key": "same unit, file length, payload, step size, step-type sequence, and filename family after numeric normalization",
+    "near_pair_limit": "1-128 changed bytes",
+    "filename_correlation": "explicit unit-suffixed values compared with parsed fields",
+    "promotion_limit": "corpus_inferred only; never writer_ready"
+  },
+  "v612_fields": {
+    "volt_or_vlim_mV@12": {
+      "near_pair_count": 246,
+      "filename_matches": 171,
+      "filename_values": 252,
+      "confidence": "corpus_inferred"
+    },
+    "current_mA@16": {
+      "near_pair_count": 7737,
+      "capacity_times_c_rate_matches": 274,
+      "capacity_times_c_rate_values": 472,
+      "confidence": "corpus_inferred"
+    },
+    "time_or_rest_s@20": {
+      "near_pair_count": 751,
+      "filename_matches": 104,
+      "filename_values": 676,
+      "confidence": "corpus_inferred"
+    },
+    "voltage_cutoff_mV@28": {
+      "near_pair_count": 89,
+      "filename_matches": 57,
+      "filename_values": 252,
+      "confidence": "corpus_inferred"
+    },
+    "cv_cutoff_mA@32": {
+      "near_pair_count": 7439,
+      "confidence": "corpus_inferred",
+      "caution": "Usually co-varies with current@16; independent controlled evidence is absent."
+    },
+    "end_capacity@36": {
+      "near_pair_count": 43,
+      "confidence": "semantic_unverified",
+      "caution": "No direct filename-value relationship establishes units or meaning."
+    },
+    "loop_count@52": {
+      "near_pair_count": 183,
+      "filename_matches": 347,
+      "filename_values": 660,
+      "confidence": "corpus_inferred"
+    },
+    "loop_reset_flag@88": {
+      "near_pair_count": 388,
+      "confidence": "corpus_inferred"
+    },
+    "record_dV_mV@332": {
+      "near_pair_count": 79,
+      "confidence": "corpus_inferred"
+    },
+    "record_time_s@340": {
+      "near_pair_count": 77,
+      "confidence": "corpus_inferred"
+    },
+    "dod_percent@384": {
+      "near_pair_count": 93,
+      "inverse_soc_matches": 554,
+      "soc_values": 856,
+      "confidence": "corpus_inferred",
+      "relationship": "stored DOD percent commonly equals 100 - filename SOC"
+    },
+    "cap_mode@496": {
+      "near_pair_count": 658,
+      "confidence": "corpus_inferred"
+    },
+    "cap_ref_step@497": {
+      "near_pair_count": 28,
+      "confidence": "corpus_inferred"
+    },
+    "loop_goto_ensol@564": {
+      "near_pair_count": 14,
+      "confidence": "corpus_inferred",
+      "caution": "Target semantics and precedence over legacy offset +48 remain externally unverified."
+    }
+  },
+  "assb_divergence_resolution": {
+    "nGotoStepID": {
+      "assb_offset": 84,
+      "legacy_pne_offset": 92,
+      "status": "externally_unresolved",
+      "reason": "Neither location has enough labelled target-only evidence."
+    },
+    "fSocRate": {
+      "assb_offset": 384,
+      "legacy_pne_offset": 392,
+      "status": "corpus_resolved_to_ensol_semantics",
+      "canonical_field": "dod_percent@384",
+      "evidence": "554/856 filename SOC values match stored 100-SOC at +384."
+    },
+    "fMaxCapacity": {
+      "assb_offset": 412,
+      "legacy_pne_offset": 428,
+      "status": "externally_unresolved",
+      "reason": "No direct filename-value relationship establishes either field."
+    },
+    "bUseActualCapa": {
+      "assb_offset": 496,
+      "legacy_pne_offset": 512,
+      "status": "corpus_resolved_to_ensol_semantics",
+      "canonical_field": "cap_mode@496",
+      "evidence": "Golden capacheck plus 658 normalized pair comparisons."
+    },
+    "bUseDataStepNo": {
+      "assb_offset": 497,
+      "legacy_pne_offset": 513,
+      "status": "corpus_resolved_to_ensol_semantics",
+      "canonical_field": "cap_ref_step@497",
+      "evidence": "Ensol map plus 28 normalized pair comparisons."
+    }
+  },
+  "limitations": [
+    "No mined pair is a strict CTSPro controlled pair with a single UI-originated change and reopen evidence.",
+    "Only 15 PNE corpus schedules use the 696-byte layout; late 612-byte offsets must not be transferred to 696.",
+    "Filename values are hypotheses and can be stale or describe process conditions rather than payload values.",
+    "Equipment identity, channel range, CTSPro build, and writer readiness cannot be inferred from schedule bytes."
+  ]
+}

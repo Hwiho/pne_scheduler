@@ -1,0 +1,21 @@
+{
+  "schema": "pne_scheduler.q_nom_policy/v1",
+  "status": "enforced_fail_safe",
+  "writer": {
+    "source": "cell_profile.nominal_capacity_mAh",
+    "explicit_value_required": true,
+    "allow_filename_inference": false,
+    "allow_stack_geometry_inference": false,
+    "formula": "current_mA = c_rate * cell_profile.nominal_capacity_mAh"
+  },
+  "viewer": {
+    "source": "stack_and_filename_inference",
+    "display_only": true,
+    "may_disagree_with_writer_input": true,
+    "required_behavior_on_disagreement": "show discrepancy; never replace explicit writer value"
+  },
+  "external_confirmation": {
+    "needed_for_writer_contract": false,
+    "needed_to_call_inferred_q_nom_lab_authoritative": true
+  }
+}

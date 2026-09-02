@@ -19,11 +19,18 @@ OFFSET_F_END_I = 32
 OFFSET_F_END_C = 36
 OFFSET_LOOP_GOTO = 48
 OFFSET_LOOP_COUNT = 52
+OFFSET_LOOP_RESET_FLAG = 88
 OFFSET_N_GOTO_STEP_ID = 92
+OFFSET_RECORD_DV_MV = 332
+OFFSET_RECORD_TIME_S = 340
+OFFSET_DOD_PERCENT = 384
 OFFSET_F_SOC_RATE = 392
 OFFSET_F_MAX_CAPACITY = 428
+OFFSET_CAP_MODE = 496
+OFFSET_CAP_REF_STEP = 497
 OFFSET_B_USE_ACTUAL_CAPA = 512
 OFFSET_B_USE_DATA_STEP_NO = 513
+OFFSET_LOOP_GOTO_ENSOL = 564
 
 
 class FieldConfidence(str, Enum):
@@ -171,10 +178,67 @@ V3_612_LEGACY_STEP_FIELDS: tuple[SchFieldDefinition, ...] = (
     ),
 )
 
+V3_612_CORPUS_STEP_FIELDS: tuple[SchFieldDefinition, ...] = (
+    SchFieldDefinition(
+        "loop_reset_flag",
+        OFFSET_LOOP_RESET_FLAG,
+        "uint32",
+        FieldConfidence.CORPUS_INFERRED,
+        "Near-pair corpus evidence: changed in 388 normalized 612-byte pair comparisons.",
+    ),
+    SchFieldDefinition(
+        "record_dV_mV",
+        OFFSET_RECORD_DV_MV,
+        "float32",
+        FieldConfidence.CORPUS_INFERRED,
+        "Ensol map plus 79 normalized 612-byte pair comparisons with changes in this word.",
+    ),
+    SchFieldDefinition(
+        "record_time_s",
+        OFFSET_RECORD_TIME_S,
+        "float32",
+        FieldConfidence.CORPUS_INFERRED,
+        "Ensol map plus 77 normalized 612-byte pair comparisons with changes in this word.",
+    ),
+    SchFieldDefinition(
+        "dod_percent",
+        OFFSET_DOD_PERCENT,
+        "float32",
+        FieldConfidence.CORPUS_INFERRED,
+        "Across filename-labelled schedules, 554/856 SOC values match stored 100-SOC; "
+        "93 normalized pairs change this word.",
+    ),
+    SchFieldDefinition(
+        "cap_mode",
+        OFFSET_CAP_MODE,
+        "uint8",
+        FieldConfidence.CORPUS_INFERRED,
+        "Ensol map, golden capacheck value, and 658 normalized 612-byte pair comparisons.",
+        size=1,
+    ),
+    SchFieldDefinition(
+        "cap_ref_step",
+        OFFSET_CAP_REF_STEP,
+        "uint8",
+        FieldConfidence.CORPUS_INFERRED,
+        "Ensol map and 28 normalized 612-byte pair comparisons.",
+        size=1,
+    ),
+    SchFieldDefinition(
+        "loop_goto_ensol",
+        OFFSET_LOOP_GOTO_ENSOL,
+        "uint32",
+        FieldConfidence.CORPUS_INFERRED,
+        "Ensol writer location; changed in 14 normalized pairs. Controlled target-only "
+        "evidence is still required before writing.",
+    ),
+)
+
 STEP_FIELDS_BY_VERSION: dict[int, tuple[SchFieldDefinition, ...]] = {
     int(SchFileVersion.V0X00010002): COMMON_STEP_FIELDS,
     int(SchFileVersion.V0X00010003): (
         *COMMON_STEP_FIELDS,
+        *V3_612_CORPUS_STEP_FIELDS,
         *V3_612_LEGACY_STEP_FIELDS,
     ),
     int(SchFileVersion.V0X00010004): COMMON_STEP_FIELDS,
