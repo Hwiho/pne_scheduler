@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import json
 from pathlib import Path
 
 import pytest
@@ -80,6 +81,13 @@ def test_splice_resume_schedule(stepend_partial: Path, tmp_path: Path) -> None:
     assert doc.steps[0].step_no == 1
     assert doc.steps[-1].is_end
     assert result.plan.resumed_step_count == doc.step_count
+    assert result.manifest_path == out.with_suffix(".sch.manifest.json")
+    manifest = json.loads(result.manifest_path.read_text(encoding="utf-8"))
+    assert manifest["writer"] == "resume_splice"
+    assert manifest["template"]["sha256"]
+    assert manifest["changed_fields"][0]["operation"] == "splice_and_renumber"
+    assert manifest["validation"]["all_passed"] is True
+    assert manifest["equipment_executable"] is False
 
 
 @pytest.mark.parametrize(

@@ -27,6 +27,11 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Acknowledge that output is not validated for CTSPro or equipment execution",
     )
+    build.add_argument(
+        "--manifest",
+        type=Path,
+        help="Validation manifest path (default: <output>.manifest.json)",
+    )
 
     info = sub.add_parser("info", help="Show project summary")
     info.add_argument("project", type=Path, help="Input .schproj path")
@@ -47,6 +52,11 @@ def _build_parser() -> argparse.ArgumentParser:
     resume.add_argument("--step", type=int, help="Override resume SCH step")
     resume.add_argument("--loops", type=int, help="Override remaining loop count")
     resume.add_argument("--plan-only", action="store_true", help="Print plan without writing")
+    resume.add_argument(
+        "--manifest",
+        type=Path,
+        help="Validation manifest path (default: <output>.manifest.json)",
+    )
 
     bulk = sub.add_parser("bulk-edit", help="Bulk-edit module params in a .schproj")
     bulk.add_argument("project", type=Path, help="Input .schproj path")
@@ -78,7 +88,13 @@ def _build_parser() -> argparse.ArgumentParser:
     patch.add_argument("template", type=Path, help="CTSPro-authored template .sch")
     patch.add_argument("plan", type=Path, help="SCH patch-plan JSON")
     patch.add_argument("-o", "--output", type=Path, required=True, help="Output .sch path")
-    patch.add_argument("--report", type=Path, help="Patch report JSON path")
+    patch.add_argument(
+        "--manifest",
+        "--report",
+        dest="manifest",
+        type=Path,
+        help="Validation manifest path (default: <output>.manifest.json)",
+    )
     patch.add_argument(
         "--allow-analysis-output",
         action="store_true",
@@ -106,6 +122,11 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "build":
         from .io.writer import write_sch
+        from .io.validation_manifest import (
+            default_manifest_path,
+            experimental_build_manifest,
+            write_validation_manifest,
+        )
 
         if not args.allow_experimental_output:
             print(
@@ -116,8 +137,27 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 2
         project = ScheduleProject.load(args.project)
-        write_sch(project, args.output)
+        manifest_path = args.manifest or default_manifest_path(args.output)
+        output_existed = args.output.exists()
+        manifest_existed = manifest_path.exists()
+        try:
+            write_sch(project, args.output)
+            manifest = experimental_build_manifest(
+                args.project,
+                args.output,
+                sch_version=project.sch_version,
+                cell_profile=project.cell_profile.to_dict(),
+            )
+            write_validation_manifest(manifest_path, manifest)
+        except (OSError, TypeError, ValueError) as exc:
+            if not output_existed:
+                args.output.unlink(missing_ok=True)
+            if not manifest_existed:
+                manifest_path.unlink(missing_ok=True)
+            print(f"Experimental SCH build failed: {exc}", file=sys.stderr)
+            return 2
         print(f"Wrote experimental output to {args.output}")
+        print(f"Wrote validation manifest to {manifest_path}")
         print("WARNING: Do not load or execute this file on PNE equipment.")
         return 0
 
@@ -164,8 +204,10 @@ def main(argv: list[str] | None = None) -> int:
             args.output,
             resume_sch_step=args.step,
             remaining_loop_count=args.loops,
+            validation_manifest_path=args.manifest,
         )
         print(f"Wrote {result.output_path}")
+        print(f"Wrote validation manifest to {result.manifest_path}")
         print(result.plan.splice_summary)
         return 0
 
@@ -213,7 +255,14 @@ def main(argv: list[str] | None = None) -> int:
         import json
 
         from .io.template_writer import SchPatchPlan, apply_sch_patch
+        from .io.validation_manifest import (
+            default_manifest_path,
+            write_validation_manifest,
+        )
 
+        manifest_path = args.manifest or default_manifest_path(args.output)
+        output_existed = args.output.exists()
+        manifest_existed = manifest_path.exists()
         try:
             plan = SchPatchPlan.load(args.plan)
             result = apply_sch_patch(
@@ -223,19 +272,17 @@ def main(argv: list[str] | None = None) -> int:
                 allow_analysis_output=args.allow_analysis_output,
                 allow_unverified_fields=args.allow_unverified_fields,
             )
+            write_validation_manifest(manifest_path, result.report)
         except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            if not output_existed:
+                args.output.unlink(missing_ok=True)
+            if not manifest_existed:
+                manifest_path.unlink(missing_ok=True)
             print(f"SCH patch failed: {exc}", file=sys.stderr)
             return 2
 
-        report_path = args.report or args.output.with_suffix(
-            args.output.suffix + ".report.json"
-        )
-        report_path.write_text(
-            json.dumps(result.report, indent=2, ensure_ascii=False) + "\n",
-            encoding="utf-8",
-        )
         print(f"Wrote analysis-only SCH clone to {result.output_path}")
-        print(f"Wrote patch report to {report_path}")
+        print(f"Wrote validation manifest to {manifest_path}")
         print("WARNING: Do not execute this file on PNE equipment.")
         return 0
 

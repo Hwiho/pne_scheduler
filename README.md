@@ -40,7 +40,7 @@ python run_pne_scheduler.py view path\to\file.sch
 python -m pne_scheduler compare before.sch after.sch -o comparison.json
 python -m pne_scheduler flow example/example.schproj
 
-# Offline writer development only; never execute this output on equipment
+# Offline writer development only; also writes output.sch.manifest.json
 python run_pne_scheduler.py build example/example.schproj -o output.sch --allow-experimental-output
 ```
 
@@ -106,7 +106,9 @@ Values may be C-rate strings such as `C/3`, floats, integers, or JSON lists such
 
 The limited writer applies typed field patches to an exact CTSPro-authored template. It
 requires the template SHA-256, preserves the header, file length, step topology, and every
-byte outside declared field ranges, then emits a JSON provenance report.
+byte outside declared field ranges, then emits `<output>.manifest.json`. The validation
+manifest records the target profile, template and output hashes, changed fields, field
+evidence, preservation checks, and equipment-test status.
 
 ```powershell
 python -m pne_scheduler compare template.sch template.sch
@@ -119,7 +121,8 @@ python -m pne_scheduler patch-sch template.sch patch.json -o patched.sch `
 No current semantic field is marked writer-ready because controlled CTSPro reopen evidence
 has not been supplied. `--allow-unverified-fields` enables unresolved fields only for offline
 research. The separate `--allow-analysis-output` acknowledgement is required for every write,
-and the command always prints an equipment warning.
+and the command always prints an equipment warning. If the manifest cannot be written, the
+CLI removes the SCH output so an untracked artifact is not left behind.
 
 ## Module flow editor
 

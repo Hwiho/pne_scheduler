@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from pne_scheduler.__main__ import main
@@ -39,4 +40,38 @@ def test_experimental_build_emits_equipment_warning(
 
     assert result == 0
     assert output.exists()
+    manifest_path = output.with_suffix(".sch.manifest.json")
+    assert manifest_path.exists()
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["schema"] == "pne_scheduler.sch_validation_manifest/v1"
+    assert manifest["writer"] == "experimental_from_scratch"
+    assert manifest["equipment_executable"] is False
+    assert manifest["template"] is None
+    assert manifest["target_profile"]["status"] == "unspecified"
+    assert manifest["validation"]["all_passed"] is True
     assert "Do not load or execute" in capsys.readouterr().out
+
+
+def test_build_removes_output_when_manifest_cannot_be_written(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    output = tmp_path / "experimental.sch"
+    missing_manifest = tmp_path / "missing" / "validation.json"
+
+    result = main(
+        [
+            "build",
+            str(PROJECT),
+            "-o",
+            str(output),
+            "--manifest",
+            str(missing_manifest),
+            "--allow-experimental-output",
+        ]
+    )
+
+    assert result == 2
+    assert not output.exists()
+    assert not missing_manifest.exists()
+    assert "Manifest directory does not exist" in capsys.readouterr().err

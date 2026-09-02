@@ -46,9 +46,14 @@ python run_pne_scheduler_resume.py
 2. Obtain its SHA-256 from a `compare` report.
 3. Copy `example/sch-patch.template.json` and set the hash, expected version, step number, field, and raw value.
 4. Run `patch-sch ... --allow-analysis-output`.
-5. Review the generated `.report.json`.
+5. Review the generated `.sch.manifest.json`, including the target profile,
+   changed-field evidence, binary-diff checks, and equipment-test status.
 
 The default path rejects fields that are not marked writer-ready. `--allow-unverified-fields` is for offline reverse-engineering only. Every write requires `--allow-analysis-output`. Neither makes a file safe to execute on equipment.
+
+The `build`, `patch-sch`, and `resume` write paths all emit a required
+`<output>.manifest.json` sidecar. The standalone current-rescaling tool does the
+same. A newly created SCH is removed if its manifest cannot be written.
 
 ## Module flow editor
 

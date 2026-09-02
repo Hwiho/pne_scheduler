@@ -503,7 +503,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | # | Task | Status | Completion criteria |
 |---|------|--------|---------------------|
 | C0 | Guard experimental output | ✅ | Default CLI blocks `build`; explicit flag + equipment warning |
-| C0.1 | Build validation manifest | ⏳ | Every output records template hash, profile, changed fields, evidence, validation |
+| C0.1 | Build validation manifest | ✅ | Every output records template hash, profile, changed fields, evidence, validation |
 | C0.2 | Template-preserving patch slice | 🔄 | Allowlisted writer-ready fields only; all other bytes preserved |
 | C1 | Full header for `0x00010003` | ⏳ | Payload offset/size without 512-byte placeholder |
 | C2 | Complete step compiler | ⏳ | mode, end conditions, loop/goto, sampling, SOC, DCR |
@@ -520,6 +520,8 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 **Progress record**
 - C0: `--allow-experimental-output` gate with regression tests
+- C0.1: build and patch outputs emit required validation manifests; manifest-write
+  failure removes newly created SCH output
 - C0.2 partial: `patch-sch` SHA-256 lock, byte preservation, structural re-read, provenance report; semantic fields still blocked pending B5 evidence
 
 ---

@@ -256,6 +256,13 @@ def get_step_fields(version: int) -> tuple[SchFieldDefinition, ...]:
     return STEP_FIELDS_BY_VERSION.get(int(version), ())
 
 
+def get_writer_ready_fields(version: int) -> tuple[str, ...]:
+    """Return the explicitly evidence-promoted writable field names."""
+    return tuple(
+        field.name for field in get_step_fields(version) if field.writer_ready
+    )
+
+
 def get_step_field(version: int, offset: int) -> SchFieldDefinition | None:
     return next(
         (field for field in get_step_fields(version) if field.offset == offset),
