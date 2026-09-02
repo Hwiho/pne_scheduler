@@ -1,6 +1,6 @@
 {
   "schema": "pne_scheduler.gate_b_validation_report/v2",
-  "generated_at": "2026-09-02T05:17:59.016482+00:00",
+  "generated_at": "2026-09-02T05:21:32.855429+00:00",
   "status": "ready_for_controlled_pairs",
   "tooling_checks": {
     "pytest_subset": true,
@@ -21,15 +21,24 @@
     "passed": true,
     "exit_code": 0,
     "stdout_tail": [
-      "........................................................................ [ 98%]",
-      ".                                                                        [100%]",
-      "73 passed in 0.37s"
+      "........................................................................ [ 97%]",
+      "..                                                                       [100%]",
+      "74 passed in 1.02s"
     ],
     "stderr_tail": []
   },
   "offset_parity": {
     "shared_pairs": 3,
-    "documented_divergences": 5
+    "documented_divergences": 5,
+    "corpus_resolved_divergences": [
+      "fSocRate",
+      "bUseActualCapa",
+      "bUseDataStepNo"
+    ],
+    "externally_unresolved_divergences": [
+      "nGotoStepID",
+      "fMaxCapacity"
+    ]
   },
   "step_layout": {
     "extension_bytes": 84,
@@ -41,7 +50,27 @@
   "parser_fixture_checks": {
     "fixtures": [
       {
-        "path": "example/fixtures/hppc/HPPC_Full range.sch",
+        "path": "example/fixtures/capacheck_zip/00207966_260803_727도급셀_Set8_45도 Cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/capacheck_zip/07100766_260511_SJ1300_dry_40um_RPT_500cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/capacheck_zip/07100766_260617_Set2_bimodal-SJ1300-40um_80C_QPEED-2.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/capacheck_zip/07100766_260713_Set9_QPEED_SOC_setting_BM_SJ1300_6040_C_NCN.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/capacheck_zip/3.BM_C1%_FM.sch",
         "layout_match": true,
         "step_count_match": true
       },
@@ -49,13 +78,494 @@
         "path": "example/fixtures/capacheck_zip/9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
         "layout_match": true,
         "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/capacheck_zip/set3_bimodal-30_45도 0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/capacheck_zip/차효현_3350_L.4.36_NP1.08_RPT_SOC50 End_챔버미연동.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/hppc/HPPC_Full range.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/0.1C capa_SJ1300░╟╜─ #1.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/0.1C capa_SJ1300░╟╜─ #3.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/0.1C capa_SJ1300░╟╜─ #4.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/0.1C capa_SJ1300░╟╜─ #5.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/0.1C capa_SJ900 #1.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250611_1Ah_swelling 1st_FM.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250611_capa.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250611_capa2.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250616_1Ah_swelling_Gore 2.5Mpa_0.5C cycle_1-300.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250616_1Ah_swelling_Gore 3Mpa_0.5C cycle_1-300.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250616_1Ah_swelling_no pad_0.5C cycle_1-300.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250723_FD_╜║╟┴╕╡┴÷▒╫.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250723_FD_░φ┴ñ┴÷▒╫.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250827_Gr_2Mpa_288kgf╜║╟┴╕╡┴÷▒╫.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250827_Gr_2Mpa_90kgf╜║╟┴╕╡┴÷▒╫.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ_000.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250903_2Ah Gr_closed CTCP ╛╚└ⁿ╝║┐δ_001.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250912_1Ah_Gr-SiC_├╩▒Γ░í╛╨ ╞≥░í┐δ_FM.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250916_Gr-SiC_288kgf_1.0Mpa_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250916_Gr-SiC_288kgf_1.5Mpa_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_250916_Gr-SiC_288kgf_2.0Mpa_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_251016_1Ah_f.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260116_╖╬╡∙╞≥░í_L4.3-no7.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260116_╖╬╡∙╞≥░í_L5.0-no5.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260116_╖╬╡∙╞≥░í_L5.6-no7.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260421_8stack_SJ900 ╜└╜─_FM.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260421_8stack_SJ900 ╜└╜─_FM_000.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260422_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260424_8stack_SJ1300 ░╟╜─1┬≈_FM_SOC30 ╝╝╞├.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260427_8stack_SJ900 ╜└╜─_FM ╚─_SOC30 ╝╝╞├.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no1.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no3.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no4.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ1300░╟╜─_no5.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260428_8stack_45╡╡ 0.1C capacheck_SJ900╜└╜─_no1.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no1.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no3.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no4.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ1300░╟╜─_no5.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260429_8stack_45╡╡ 0.5C cycle_SJ900╜└╜─_no1.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260514_bimodal ╛τ▒╪ ╞≥░í_45╡╡ ╗τ└╠┼¼.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260514_bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_45╡╡ ╗τ└╠┼¼.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260519_S83S-SJ1300 ╡╡0%_45╡╡ ╗τ└╠┼¼.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260519_S83S-SJ1300 ╡╡1%_45╡╡ ╗τ└╠┼¼.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260519_╛τ▒╪86wt%-SJ1300 ╡╡1%_45╡╡ ╗τ└╠┼¼.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260819_514bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260820_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/00207966_260820_░φ┐┬╚░╝║╚¡ ░φ┐┬└·└σ set1_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/07100766_260522_Set1_SJ900_wet_QC_1_charge.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/07100766_260522_Set2_SJ1300_60-40_wet_QC_1_charge.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/07100766_260522_Set2_SJ1300_60-40_wet_QC_cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/07100766_260522_Set3_SJ1300_65-35_wet_QC_1_charge.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/07100766_260522_Set3_SJ1300_65-35_wet_QC_cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/07100766_260522_Set4_SJ900_dry_QC_1_charge.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/07100766_260522_Set4_SJ900_dry_QC_1_charge_2.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/07100766_260522_Set4_SJ900_dry_QC_1_charge_3.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/07100766_260522_Set4_SJ900_dry_QC_cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/1Ah capacheck.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/2Ah capacheck.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/86wt%-SJ1300 ╡╡1%_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/bimodal_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/bimodal_ref ╛τ▒╪_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/Capacheck_3)Set3_Capa_cycle_├¿╣÷╣╠┐¼╡┐.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/F-D.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/Monocell_FM_L4.3.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/Monocell_FM_L5.0.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/Monocell_FM_L5.6.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/S83S-SJ1300 ╡╡0%_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/S83S-SJ1300 ╡╡1%_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/Set1_QC_1_charge.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/Set2_QC_1_charge.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/Set2_QC_1N1Q.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/Set3_QC_1_charge.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/Set3_QC_1N1Q.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/Set4_QC_1_charge.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/Set4_QC_1N1Q.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/SiC_0.5CCycle_1Ah.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/SJ1300 ░╟╜─_8╜║┼├_FM.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/SJ1300_no1_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/SJ1300_no3_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/SJ1300_no4_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/SJ1300_no5_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/SJ900 ╜└╜─_8╜║┼├_FM.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/SJ900 ╜└╜─_8╜║┼├_SOC30╝╝╞├.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/SJ900_no1_0.5C cycle.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/└ⁿ╖∙└╬░í.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/└╙╝÷╟÷_SiC_0.5CCycle_1Ah_├¿╣÷╣╠┐¼╡┐.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/╜┼└»┴ñ_1Ah QC_1N1Q_910.727mAh_├¿╣÷╣╠┐¼╡┐.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/╜┼└»┴ñ_1Ah_QC 1 charge_948.729mAh_├¿╣÷╣╠┐¼╡┐.sch",
+        "layout_match": true,
+        "step_count_match": true
+      },
+      {
+        "path": "example/fixtures/sch_lab_zip/╣µ└ⁿ.sch",
+        "layout_match": true,
+        "step_count_match": true
       }
     ],
     "all_layout_match": true,
+    "all_step_count_match": true,
     "assb_summary": {
-      "fixture_count": 2,
-      "layout_match_count": 2,
-      "step_count_match_count": 2,
+      "fixture_count": 102,
+      "layout_match_count": 102,
+      "step_count_match_count": 102,
       "fixtures_with_field_mismatches": 0
     }
   },
@@ -84,6 +594,36 @@
     "valid_intake_count": 0,
     "reopen_verified_count": 0,
     "complete_evidence_count": 0,
+    "required_fields": {
+      "PNE02": [
+        "fEndI",
+        "fEndV",
+        "fIref",
+        "fVref",
+        "loop_count",
+        "loop_goto_ensol",
+        "record_time_s"
+      ],
+      "PNE16": [
+        "fIref",
+        "fVref"
+      ]
+    },
+    "missing_required_fields": {
+      "PNE02": [
+        "fEndI",
+        "fEndV",
+        "fIref",
+        "fVref",
+        "loop_count",
+        "loop_goto_ensol",
+        "record_time_s"
+      ],
+      "PNE16": [
+        "fIref",
+        "fVref"
+      ]
+    },
     "intakes": []
   },
   "gate_b_tasks": {
