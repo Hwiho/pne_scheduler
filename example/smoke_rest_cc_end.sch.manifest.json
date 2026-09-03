@@ -5,7 +5,7 @@
   "equipment_executable": false,
   "source_project": {
     "path": "pne_scheduler\\example\\smoke_rest_cc_end.schproj",
-    "sha256": "b32b05757bf62e0cab10bed43ade27a3244234b821020c1744c940e23a2ba167"
+    "sha256": "50d14e04d5f7d12ac6798f1fd88fc0eba75f6217506a10c332549389a654f3e8"
   },
   "template": null,
   "target_profile": {
@@ -24,7 +24,7 @@
   },
   "output": {
     "path": "pne_scheduler\\example\\smoke_rest_cc_end.sch",
-    "sha256": "80565dc814caf14e930fd9055d294295081612cf0fa7f13420a5297db3aad9fa",
+    "sha256": "29a7de295060890f9c889786e97ff59b1751c1850be99860ae4a00bcf403efd4",
     "size": 3596
   },
   "changed_fields": [],

@@ -15,6 +15,7 @@ from ..schema.ensol_v612 import (
     HEADER_SIZE_V3,
     HEADER_SIZE_V4,
     HOFF_AUTHOR,
+    HOFF_CTS_COMMON_SAFETY,
     HOFF_NAME,
     HOFF_SAFETY,
     HOFF_SIGNATURE,
@@ -35,6 +36,7 @@ _DEFAULT_SAFETY_MV_MA = {
     "max_current_mA": 0.0,
     "min_current_mA": 0.0,
     "max_capacity_mAh": 200.0,
+    "cell_capacity_mAh": 100.0,
     "max_temp_C": 70.0,
 }
 
@@ -122,6 +124,21 @@ def build_sch_header(
     for index, value in enumerate(values):
         struct.pack_into("<f", header, HOFF_SAFETY + index * 4, value)
 
+    # CTSEditorPro common-safety UI (capacity warning when this slot is 0).
+    cell_capacity = float(
+        limits.get("cell_capacity_mAh", limits["max_capacity_mAh"])
+    )
+    cts_common = (
+        float(limits["max_voltage_mV"]),
+        float(limits["min_voltage_mV"]),
+        0.0,
+        cell_capacity,
+        0.0,
+        float(limits["max_temp_C"]),
+    )
+    for index, value in enumerate(cts_common):
+        struct.pack_into("<f", header, HOFF_CTS_COMMON_SAFETY + index * 4, value)
+
     struct.pack_into("<i", header, _HOFF_STEP_HINT, 7)
     return bytes(header)
 
@@ -135,12 +152,14 @@ def safety_limits_from_cell(
     max_temp_C: float = 70.0,
 ) -> dict[str, float]:
     """Map CellProfile-style volts/amps into header safety millivolt/milliamp units."""
+    nominal = float(nominal_capacity_mAh)
     return {
         "max_voltage_mV": float(v_max) * 1000.0,
         "min_voltage_mV": float(v_min) * 1000.0,
         "max_current_mA": float(max_current_mA or 0.0),
         "min_current_mA": 0.0,
-        "max_capacity_mAh": max(float(nominal_capacity_mAh) * 10.0, float(nominal_capacity_mAh)),
+        "max_capacity_mAh": max(nominal * 10.0, nominal),
+        "cell_capacity_mAh": nominal,
         "max_temp_C": float(max_temp_C),
     }
 
