@@ -11,7 +11,8 @@
 | 2026-09-02 | Lab data policy: only `PNE##.zip` for cycler analysis; per-unit SCH layout + CTS build registry (`LAB_DATA_POLICY.md`, `EQUIPMENT_REGISTRY.json`) |
 | 2026-09-02 | Project directory map + code rules: [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md) |
 | 2026-09-02 | MD docs consolidated: [`planning/README.md`](README.md), [`LAB_CORPUS_REPORT.md`](LAB_CORPUS_REPORT.md), [`docs/README.md`](../docs/README.md), [`docs/GATE_B.md`](../docs/GATE_B.md) |
-| 2026-09-03 | Gate C audit: C5 blocking; C6 reframed; lessons checklist + Autolab/Nova-style product vision added (§1, §5.6, §6.6) |
+| 2026-09-03 | Gate C audit: C5 blocking; C6 reframed; lessons checklist + modular UX vision (§1, §5.6, §6.6) |
+| 2026-09-03 | Clarified UX intent: Autolab Nova + LabVIEW **feel** for schedule/module authoring — not realtime instrument control |
 
 ---
 
@@ -21,25 +22,25 @@ Enable creation of `.sch` binary schedule files for PNE cyclers **without using 
 
 ### 1.1 Product vision (target UX)
 
-**Primary metaphor: Metrohm Autolab / Nova-style potentiostat procedure interface**, adapted to PNE cyclers.
+**UI design inspiration (not a product clone):** schedule authoring should *feel* like building a method in **Autolab Nova** and wiring experiment blocks in **LabVIEW** — because that workflow already matches how battery schedules are composed from reusable modules.
 
-| Autolab / Nova concept | PNE scheduler equivalent |
-|------------------------|--------------------------|
-| Procedure / method editor | Linear (then branched) **step procedure** editor |
-| Command blocks (CV, CA, OCP, …) | Battery **step primitives** (CC, CCCV, Rest, Loop, END, …) + **experiment modules** |
-| Method library | Saved `.schproj` / module templates (Formation, Cycle Life, RPT, HPPC, …) |
-| Cell / setup panel | Explicit **Cell Profile** (1C = mA, V limits, equipment profile) — never inferred for write |
-| Parameter pane per command | Per-step / per-module property inspector (C-rate, cutoffs, sampling, loops) |
-| Validate before run | Pre-export validation + write manifest + release labels |
-| Instrument run | **Out of band:** export `.sch` → CTSPro / equipment (this repo does not replace CTS runtime) |
+What that means in practice:
 
-**Not in scope unless explicitly requested later:** live USB/Ethernet control of PNE like Autolab Nova’s instrument link, realtime I–V plotting during run, or replacing CTSMonPro. Those would be a separate “runtime” product line.
+| Feel we want | In this product |
+|--------------|-----------------|
+| Drop / place **modules** then tune parameters | Experiment modules (Formation, Cycle Life, RPT, HPPC, …) expand to steps |
+| Ordered **procedure** of commands | Step list: CC, CCCV, Rest, Loop, END, … with a property pane |
+| Library of reusable methods | Versioned `.schproj` / module templates |
+| Clear cell / setup before editing | Explicit **Cell Profile** (1C = mA, limits, equipment) — never inferred for write |
+| Check readiness before leaving the editor | Pre-export validation + manifest + release labels |
 
-**Secondary metaphor (still useful):** LabVIEW-style modular blocks for composing multi-module campaigns — complementary to, not a replacement for, the Autolab procedure metaphor.
+**Out of scope (clarified 2026-09-03):** realtime potentiostat-style instrument control, live I–V plots, CTSMonPro replacement. Export `.sch` → open/run on CTS remains the execution path. “Autolab” here is **visual/interaction language for making schedules**, nothing more.
+
+Nova and LabVIEW are **co-equal metaphors** for the same idea: modular composition. Prefer a clean procedure + module palette first; a free-form campaign canvas can follow if needed.
 
 ### 1.2 Functional goals
 
-- Users author **procedures** (primitives + modules), not raw binary fields
+- Users author **schedules from primitives + modules**, not raw binary fields
 - Users enter a **C-rate**; current (mA) is calculated from an **explicit** reference capacity (1C = ___ mA)
 - Generated `.sch` files must be **CTSPro-reopen-verified** (and later equipment-verified) before any “executable” label
 - Dual authoring paths: **`patch-sch`** (template-preserving, preferred near-term) and experimental from-scratch **`build`**
@@ -391,15 +392,15 @@ from-scratch binary generation.
 | P1 | **Schedule linter and execution preview** | Detects invalid loops, missing END, unsafe V/I limits, unreachable steps, and implausible duration before export | IR and parser |
 | P1 | **Read-only SCH → IR import** | Enables review, cloning, and diffing of existing schedules before editable round-trip is trusted | Semantic reader coverage |
 | P1 | **Versioned protocol templates** | Makes Formation/Cycle/RPT/HPPC defaults reviewable and traceable by equipment profile | Golden module fixtures |
-| P1 | **Autolab-style procedure workspace** | Procedure list + command palette + property pane + method library (Nova-like authoring, offline) | Trusted IR + Gate C exit |
+| P1 | **Autolab/LabVIEW-feel schedule workspace** | Procedure + module palette + property pane + library (authoring UX only) | Trusted IR + Gate C exit |
 | P2 | **Parameter sweep and batch export** | Produces controlled variants after one template is verified | Safe patcher and manifest |
 | P2 | **Approval/audit bundle** | Packages SCH hash, human-readable step table, diff report, screenshots, and operator approval | Stable export workflow |
-| P3 | **Campaign / multi-module canvas** | LabVIEW-like composition of module campaigns after single-procedure UX is solid | Gates D–E |
+| P3 | **Campaign / multi-module canvas** | Extra LabVIEW-like graph if procedure+modules UI is not enough | Gates D–E |
 
-Features that should not be prioritized yet are **live** hardware control, automatic upload to
-cycler PCs, realtime Nova-style run plots, and broad 0x00010007/EIS generation. Their failure
-modes are harder to inspect than offline file generation and they depend on unresolved schemas
-or a separate runtime product.
+Features that should not be prioritized yet are live hardware control, automatic upload to
+cycler PCs, realtime run plots, and broad 0x00010007/EIS generation. Their failure modes are
+harder to inspect than offline file generation and they depend on unresolved schemas
+or are simply outside the intended UX (authoring only).
 
 ### 5.6 Lessons from Gates A–C → permanent planning checks
 
@@ -456,7 +457,7 @@ Gate C  호환 SCH writer    🔄 lab-blocked on C5  ← current focus
   ↓
 Gate D  모듈 픽스처 검증   ⏳ deferred
   ↓
-Gate E  Autolab형 절차 UX  ⏳ (partial tools exist; vision expanded)
+Gate E  모듈형 스케줄 UX   ⏳ (partial tools; Nova+LabVIEW feel)
   ↓
 Gate F  운영 릴리스 / 추적성
 ```
@@ -645,41 +646,39 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 ---
 
-### 6.6 Gate E — Autolab-style Procedure UX (and Advanced Features)
+### 6.6 Gate E — Modular Schedule UX (Nova + LabVIEW feel)
 
 | | |
 |---|---|
-| **Status** | 🔄 **Partial** (viewer/flow spike exist; Autolab procedure workspace ⏳) |
+| **Status** | 🔄 **Partial** (viewer/flow spike exist; polished module workspace ⏳) |
 | **Depends on** | Gate C exit (semantic export requires trusted writer); Gate D strongly recommended before module palette claims |
-| **Exit criteria** | Nova-like **procedure authoring** usable for real lab schedules; unsafe export blocked; method library + Cell setup; optional `.sch` → IR import |
+| **Exit criteria** | Schedule authoring feels like **module + procedure** composition (Nova/LabVIEW-like); unsafe export blocked; library + Cell setup; optional `.sch` → IR import |
 | **Next gate** | Gate F |
-| **Product north star** | §1.1 — Autolab/Nova procedure metaphor on PNE `.sch` (offline); not live instrument control |
+| **UX intent** | §1.1 — design *feel* for making schedules with modules; **not** Autolab instrument control |
 
-| # | Task | Status | Completion criteria | Autolab analog |
-|---|------|--------|---------------------|----------------|
-| E0 | UX contract & IA | ⏳ | Document screens: Setup / Procedure / Library / Validate / Export; map to existing `ui/` | Nova workspace layout |
-| E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage | Review existing methods |
-| E2 | **Procedure editor** (ordered steps) | 🔄 | Insert/reorder/delete primitives; property pane; C-rate ↔ mA preview | Procedure / command list |
-| E2.1 | Command palette (primitives) | ⏳ | REST, CC, CCCV, CV, LOOP, END, OCV… with validated parameter forms | Command / technique picker |
-| E2.2 | Module palette (macros) | ⏳ | Formation, Cycle Life, RPT, HPPC, DC-IR expand into procedure steps | Method fragments / macros |
-| E2.3 | Method library | ⏳ | Save/load versioned procedures & modules per equipment profile | Method / procedure library |
-| E2.4 | Cell / equipment setup pane | ⏳ | Explicit 1C mA, V limits, PNE unit/range, layout target; blocks export if missing | Cell / instrument setup |
-| E3 | Pre-export validation UX | ⏳ | Block invalid loops, missing END, V/I violations; show linter like Nova readiness | Validate before run |
-| E3.1 | Export path choice | ⏳ | Default **patch-sch** onto approved template; optional experimental `build` with warnings | — (PNE-specific safety) |
-| E4 | `.sch` → IR import (read-only) | ⏳ | Reverse-parse for review/clone before editable round-trip | Open existing procedure |
-| E5 | Advanced: 0x00010007/EIS, fingerprint | ⏳ | Deferred until explicit schema evidence | EIS techniques (later) |
-| E6 | pne_studio2 integration | ⏳ | Shared cell profile and export workflow | Host app embedding |
-| E7 | Campaign canvas (optional) | ⏳ | LabVIEW-like multi-module graph **after** E2 procedure UX is solid | — (secondary metaphor) |
-| E8 | Live run / instrument link | ❌ deferred | Not Gate E; separate product if ever needed | Autolab instrument session |
+| # | Task | Status | Completion criteria | UX cue |
+|---|------|--------|---------------------|--------|
+| E0 | UX contract & IA | ⏳ | Screens: Setup / Procedure / Modules / Library / Validate / Export; map to `ui/` | Clean authoring layout |
+| E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage | Review existing schedules |
+| E2 | **Procedure editor** (ordered steps) | 🔄 | Insert/reorder/delete primitives; property pane; C-rate ↔ mA preview | Nova-like step list |
+| E2.1 | Primitive palette | ⏳ | REST, CC, CCCV, CV, LOOP, END, OCV… with validated forms | Command blocks |
+| E2.2 | **Module palette** | ⏳ | Formation, Cycle Life, RPT, HPPC, DC-IR expand into steps | LabVIEW-like modules |
+| E2.3 | Method / project library | ⏳ | Save/load versioned procedures & modules per equipment profile | Reusable methods |
+| E2.4 | Cell / equipment setup pane | ⏳ | Explicit 1C mA, V limits, PNE unit/range, layout target; blocks export if missing | Setup before edit |
+| E3 | Pre-export validation UX | ⏳ | Block invalid loops, missing END, V/I violations | Readiness before export |
+| E3.1 | Export path choice | ⏳ | Default **patch-sch** onto approved template; optional experimental `build` | PNE safety |
+| E4 | `.sch` → IR import (read-only) | ⏳ | Reverse-parse for review/clone before editable round-trip | Open existing schedule |
+| E5 | Advanced: 0x00010007/EIS, fingerprint | ⏳ | Deferred until explicit schema evidence | Later |
+| E6 | pne_studio2 integration | ⏳ | Shared cell profile and export workflow | Host embedding |
+| E7 | Campaign canvas (optional) | ⏳ | Free-form multi-module graph **only if** E2–E2.2 is insufficient | Extra LabVIEW canvas |
 
 **Progress record**
-- `pne_scheduler flow` / `run_pne_scheduler_flow.py`: linear graph, `.schproj` load/save, Cell Profile, step preview — **seed** for E2, not yet Autolab-complete
-- Remaining for Autolab parity (authoring only): command palette, rich property forms, method library, validation/export UX, undo/redo
+- `pne_scheduler flow` / `run_pne_scheduler_flow.py`: linear graph, `.schproj` load/save, Cell Profile, step preview — **seed** for E2/E2.2
+- Remaining for the intended feel: module palette prominence, richer property forms, library, validation/export UX, undo/redo
 
 **Rules**
 - Do not prioritize E3 semantic export until Gate C is complete
-- Do not claim “Autolab-like” until E0 + E2 + E2.1 + E2.4 + E3 exist at MVP depth
-- Live control (E8) stays out of Gate E unless product decision changes
+- “Nova/LabVIEW-like” means **authoring interaction**, not feature parity with those products
 - Apply §5.6 checklist on every E-task completion claim
 
 ---
@@ -743,7 +742,7 @@ pne_scheduler/                   # main package (repo root)
 │   ├── schedule_viewer.py
 │   ├── project_editor.py
 │   ├── resume_wizard.py
-│   ├── flow_editor.py           # seed; evolve toward Autolab procedure workspace
+│   ├── flow_editor.py           # seed; evolve toward modular procedure+module UX
 │   └── procedure_workspace.py   # planned (Gate E0–E2)
 ├── tools/                       # batch fixture analysis
 ├── docs/
@@ -788,15 +787,16 @@ tests to be skipped.
 ## 9. Current focus (active gate)
 
 **Active gate: C — lab-blocked on C5.**  
-Software Gate C work should pause except C5 support. Gate D is deferred. Gate E vision is
-**Autolab/Nova-style procedure UX** (§1.1, §6.6) but must not pull semantic export ahead of C exit.
+Software Gate C work should pause except C5 support. Gate D is deferred. Gate E UX goal is
+**Nova + LabVIEW feel for modular schedule authoring** (§1.1, §6.6) — not instrument control —
+and must not pull semantic export ahead of C exit.
 
 | Step | Gate | Action |
 |------|------|--------|
 | 1 | **C5** | Open `example/smoke_rest_cc_end.sch` in CTSEditorPro; fill checklist |
 | 2 | C exit | After C5 sign-off, mark Gate C complete with documented gaps (DCR IR-only; 696 tail unused) |
 | 3 | D | Deferred until explicitly requested; apply §5.6 |
-| 4 | E | After C (+ preferably D): Autolab procedure workspace (E0–E3), not live instrument link |
+| 4 | E | After C (+ preferably D): procedure + **module** workspace (E0–E3) |
 | 5 | F | Release gates later |
 
 Completed software prerequisites: Gate A; Gate B (`gate_b_passed`); C0–C4; C6 framing/corpus policy.
@@ -840,5 +840,5 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 | 2026-08-31 | C | normal | 89/93 lab fixtures use `0x10004/696`, not 612-byte layout | mitigated | C6 framing writer exists; full schedule parity deferred |
 | 2026-09-01 | B | normal | fEndV unit mismatch (fixture mV vs compiler V) | resolved | Ensol adoption; `tests/test_unit_contract.py` |
 | 2026-09-01 | B/D | normal | Golden fixtures locked from user intake (7 selected, PNE02+PNE16) | done | `planning/GOLDEN_FIXTURES_LOCKED.json` |
-| 2026-09-03 | E | normal | Product UX north star clarified: Autolab/Nova procedure metaphor (offline SCH), not LabVIEW-only | accepted | §1.1 + Gate E expansion; live instrument link deferred (E8) |
+| 2026-09-03 | E | normal | UX intent clarified: Nova + LabVIEW *feel* for modular schedule authoring (not live Autolab control) | accepted | §1.1 rewritten; Gate E retitled; E8 removed as false target |
 | | | | *(add new rows here)* | | |
