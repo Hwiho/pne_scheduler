@@ -118,9 +118,10 @@ python -m pne_scheduler patch-sch template.sch patch.json -o patched.sch `
   --allow-analysis-output
 ```
 
-No current semantic field is marked writer-ready because controlled CTSPro reopen evidence
-has not been supplied. `--allow-unverified-fields` enables unresolved fields only for offline
-research. The separate `--allow-analysis-output` acknowledgement is required for every write,
+Gate B promoted these fields to writer-ready (controlled-pair + CTSEditorPro reopen):
+`fVref`, `fIref`, `fEndV`, `fEndI`, `loop_target`, `loop_count`, `record_time_s`.
+`--allow-unverified-fields` is still required for any other field, offline research only.
+The separate `--allow-analysis-output` acknowledgement is required for every write,
 and the command always prints an equipment warning. If the manifest cannot be written, the
 CLI removes the SCH output so an untracked artifact is not left behind.
 

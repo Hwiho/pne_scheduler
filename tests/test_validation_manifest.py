@@ -44,10 +44,27 @@ def test_manifest_validator_reports_missing_required_fields() -> None:
     assert "validation: required object" in errors
 
 
-def test_writer_ready_allowlist_stays_empty_pending_gate_b() -> None:
-    assert get_writer_ready_fields(0x00010003) == ()
-    assert get_writer_ready_fields(0x00010004) == ()
-
+def test_writer_ready_allowlist_matches_gate_b_controlled_pairs() -> None:
+    expected = {
+        "fVref",
+        "fIref",
+        "fEndV",
+        "fEndI",
+        "loop_target",
+        "loop_count",
+        "record_time_s",
+    }
+    assert set(get_writer_ready_fields(0x00010002)) == expected
+    assert set(get_writer_ready_fields(0x00010003)) == expected
+    # 696 layout: shared-prefix Gate B fields only (no record_time_s until C6 registry).
+    assert set(get_writer_ready_fields(0x00010004)) == {
+        "fVref",
+        "fIref",
+        "fEndV",
+        "fEndI",
+        "loop_target",
+        "loop_count",
+    }
 
 def test_current_rescaler_writes_validation_manifest(tmp_path: Path) -> None:
     output = tmp_path / "rescaled.sch"

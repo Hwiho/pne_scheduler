@@ -84,12 +84,18 @@ def test_corpus_evidence_matches_canonical_v612_registry() -> None:
         497: "cap_ref_step",
         564: "loop_goto_ensol",
     }
+    writer_ready_offsets = {340}
     for offset, name in expected.items():
         field = get_step_field(0x00010003, offset)
         assert field is not None
         assert field.name == name
         assert field.confidence == FieldConfidence.CORPUS_INFERRED
-        assert field.writer_ready is False
+        assert field.writer_ready is (offset in writer_ready_offsets)
+
+    # Gate B controlled-pair fields are writer-ready; remaining corpus_inferred are not.
+    assert get_step_field(0x00010003, 16).writer_ready is True
+    assert get_step_field(0x00010003, 332).writer_ready is False
+    assert get_step_field(0x00010003, 564).writer_ready is False
 
     resolutions = evidence["assb_divergence_resolution"]
     assert resolutions["fSocRate"]["canonical_field"] == "dod_percent@384"

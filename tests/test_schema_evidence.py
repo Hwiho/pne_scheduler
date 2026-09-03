@@ -84,7 +84,7 @@ def test_controlled_diff_identifies_known_step_field(tmp_path: Path) -> None:
     assert word["field"] == "fEndV"
     assert word["confidence"] == "corpus_inferred"
     assert word["dtype"] == "float32"
-    assert word["writer_ready"] is False
+    assert word["writer_ready"] is True
     assert word["primary_before"] == 2500.0
     assert word["primary_after"] == 3123.0
     assert word["before"]["float32"] == 2500.0

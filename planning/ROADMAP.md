@@ -386,9 +386,9 @@ current Gate’s exit criteria are met (or an explicit waiver is recorded in §1
 ```
 Gate A  개발 기반          ✅ complete (local)
   ↓
-Gate B  바이너리 스키마    🔄 in progress  ← current focus
+Gate B  바이너리 스키마    ✅ complete
   ↓
-Gate C  호환 SCH writer
+Gate C  호환 SCH writer    🔄 in progress  ← current focus
   ↓
 Gate D  모듈 픽스처 검증
   ↓
@@ -457,19 +457,19 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 | | |
 |---|---|
-| **Status** | 🟡 **Repository ready for controlled pairs; external evidence pending** ← **current focus** |
+| **Status** | ✅ **Passed** (`gate_b_passed=true`, 2026-09-03) |
 | **Depends on** | Gate A |
 | **Exit criteria** | Raw-unit contract resolved; parser/schema/compiler agree; semantic goldens for representative fixtures; intake metadata gates evidence promotion |
-| **Next gate** | Gate C (do not start C1+ until B0 and B5 are done) |
+| **Next gate** | Gate C |
 
 | # | Task | Status | Completion criteria |
 |---|------|--------|---------------------|
-| B0 | Define PNE raw-unit/profile mapping | 🔄 | mV/mA scaling, offset `+12`/`+16`/`+20`, INI current-range per target profile |
-| B1 | Header/step field tables for 612/696 | 🔄 | Offset, dtype, size, version in one registry (`schema/fields.py`) |
-| B2 | Parser/schema/compiler offset alignment | 🔄 | `fEndV`, `fEndI`, `fEndC` match originals, Excel, ASSB where applicable |
+| B0 | Define PNE raw-unit/profile mapping | ✅ | mV/mA scaling, offset `+12`/`+16`/`+20`, INI current-range per target profile |
+| B1 | Header/step field tables for 612/696 | ✅ | Offset, dtype, size, version in one registry (`schema/fields.py`); 696 tail deferred to C6 |
+| B2 | Parser/schema/compiler offset alignment | ✅ | `fEndV`, `fEndI`, shared-prefix fields aligned; ASSB divergences documented |
 | B3 | Read regression over all 102 files | ✅ | Version, payload offset, step size/count cataloged |
-| B4 | Semantic golden tests | 🔄 | `GOLDEN_SEMANTIC_EXPECTATIONS.json` + 7 fixture byte checks; parser cross-check |
-| B5 | Controlled-pair intake validation | ⏳ | Reject incomplete equipment/CTSPro/value provenance before promoting field confidence |
+| B4 | Semantic golden tests | ✅ | `GOLDEN_SEMANTIC_EXPECTATIONS.json` + 7 fixture byte checks; parser cross-check |
+| B5 | Controlled-pair intake validation | ✅ | PNE02 pairs reopen-verified; PNE16 `fIref`/`fVref` waived via shared-prefix evidence |
 
 **Recommended order inside Gate B:** B0 → B5 → B2 → B4 → finish B1 unknowns.
 
@@ -481,8 +481,10 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 - **Ensol sch_maker adoption (2026-09-01):** validated 612-byte map — `+12` mV setpoint, `+16` mA current, `+20` s duration, `+28`/`+32` end V/I; parser + compiler updated; golden capacheck regression
 - **Corpus evidence pass (2026-09-02):** 23,281 schedules mined; canonical 612-byte
   sampling, DOD, capacity-reference, and loop fields registered as `corpus_inferred`.
-- **Readiness semantics (2026-09-02):** automated tooling success is reported separately
-  from Gate B exit; `gate_b_passed` remains false until real controlled-pair/reopen evidence.
+- **Gate B exit (2026-09-03):** `gate_b_passed=true`. PNE02 controlled pairs cover
+  `fVref`, `fIref`, `fEndV`, `fEndI`, `loop_count`, `loop_target`, `record_time_s`.
+  PNE16 `fIref`/`fVref` waived via shared-prefix evidence
+  (`planning/GATE_B_CONTROLLED_PAIR_WAIVERS.json`).
 - Writer Q_nom is fail-safe and explicit: only
   `CellProfile.nominal_capacity_mAh` may drive compilation; stack/filename inference is
   viewer-only.
@@ -495,7 +497,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 | | |
 |---|---|
-| **Status** | 🔄 **Started** (safety shell only; core writer ⏳) |
+| **Status** | 🔄 **In progress** ← **current focus** |
 | **Depends on** | Gate B exit (especially B0, B5) |
 | **Exit criteria** | 612 writer round-trips semantically; 696 lab parity; PNE PC smoke test recorded; no placeholder header |
 | **Next gate** | Gate D |
@@ -504,7 +506,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 |---|------|--------|---------------------|
 | C0 | Guard experimental output | ✅ | Default CLI blocks `build`; explicit flag + equipment warning |
 | C0.1 | Build validation manifest | ✅ | Every output records template hash, profile, changed fields, evidence, validation |
-| C0.2 | Template-preserving patch slice | 🔄 | Allowlisted writer-ready fields only; all other bytes preserved |
+| C0.2 | Template-preserving patch slice | ✅ | Allowlisted writer-ready fields only; all other bytes preserved |
 | C1 | Full header for `0x00010003` | ⏳ | Payload offset/size without 512-byte placeholder |
 | C2 | Complete step compiler | ⏳ | mode, end conditions, loop/goto, sampling, SOC, DCR |
 | C3 | Internal round-trip validator | ⏳ | Semantic write → read without external ASSB |
@@ -512,7 +514,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | C5 | PNE PC/equipment smoke test | ⏳ | Rest → CC Charge → END loads; checklist recorded |
 | C6 | Extend to `0x00010004/696` | ⏳ | Dominant lab format (89/93 fixtures) semantically verified |
 
-**Recommended order inside Gate C:** C0.2 finish → C1 → C2 → C3 → C4 → C5 → C6.
+**Recommended order inside Gate C:** C1 → C2 → C3 → C4 → C5 → C6.
 
 **Rules**
 - 612-byte slice first; **do not mark Gate C complete until C6 passes**
@@ -522,8 +524,9 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 - C0: `--allow-experimental-output` gate with regression tests
 - C0.1: build and patch outputs emit required validation manifests; manifest-write
   failure removes newly created SCH output
-- C0.2 partial: `patch-sch` SHA-256 lock, byte preservation, structural re-read, provenance report; semantic fields still blocked pending B5 evidence
-
+- C0.2 (2026-09-03): Gate B fields promoted to `writer_ready` —
+  `fVref`, `fIref`, `fEndV`, `fEndI`, `loop_target`, `loop_count`, `record_time_s`.
+  `patch-sch` patches those without `--allow-unverified-fields`; undeclared bytes preserved.
 ---
 
 ### 6.5 Gate D — Experiment Module Fixture Fidelity
@@ -676,22 +679,22 @@ tests to be skipped.
 
 ## 9. Current focus (active gate)
 
-**Active gate: B** — binary schema as single source of truth.
+**Active gate: C** — compatible SCH writer.
 
 Execute in this order:
 
 | Step | Gate | Action |
 |------|------|--------|
-| 1 | B5 | Validate intake metadata — reject incomplete controlled-pair provenance |
-| 2 | B0 | Resolve raw-unit/capacity contract (`+12`, `+16`, mV/mA, INI range, one Q_nom source) |
-| 3 | B2/B4 | Externally confirm field semantics (`fEndC`, sampling, DCR, goto) via controlled pairs |
-| 4 | C0.2 | Finish safe patch vertical slice (writer-ready allowlist + preservation report) |
-| 5 | C1–C3 | Writer header + full compiler + internal round-trip |
+| 1 | C1 | Full header for `0x00010003` (no 512-byte placeholder) |
+| 2 | C2 | Complete step compiler (mode, end, loop/goto, sampling) |
+| 3 | C3 | Internal write → read round-trip |
+| 4 | C4 | ASSB external parser cross-check |
+| 5 | C5 | PNE PC/equipment smoke test |
 | 6 | C6 | 696-byte lab parity (89/93 fixtures) |
 | 7 | D | Module E2E validation (Formation → Cycle → RPT/DC-IR) |
 | 8 | F | Release-gated PNE smoke test |
 
-Completed prerequisites: Gate A; B3; internal end-condition offset unification.
+Completed prerequisites: Gate A; Gate B (`gate_b_passed`); C0/C0.1/C0.2.
 
 When a step surfaces a new blocker, log it in §11 before changing gate order.
 

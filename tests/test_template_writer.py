@@ -48,7 +48,7 @@ def test_template_writer_blocks_unverified_field_by_default(tmp_path: Path) -> N
     with pytest.raises(ValueError, match="not writer-ready"):
         apply_sch_patch(
             TEMPLATE,
-            _plan(),
+            _plan(patches=(SchFieldPatch(step_no=6, field="fEndC", value=1.0),)),
             output,
             allow_analysis_output=True,
         )
@@ -63,7 +63,6 @@ def test_template_writer_preserves_every_undeclared_byte(tmp_path: Path) -> None
         _plan(),
         output,
         allow_analysis_output=True,
-        allow_unverified_fields=True,
     )
 
     before = TEMPLATE.read_bytes()
@@ -78,6 +77,8 @@ def test_template_writer_preserves_every_undeclared_byte(tmp_path: Path) -> None
     assert result.report["equipment_executable"] is False
     assert result.report["target_profile"]["equipment"] == "PNE02"
     assert result.report["changed_fields"] == result.report["applied"]
+    assert result.report["changed_fields"][0]["field"] == "fEndV"
+    assert result.report["changed_fields"][0]["writer_ready"] is True
     assert result.report["changed_fields"][0]["evidence"]
     assert result.report["validation"]["all_passed"] is True
     assert result.report["validation"]["diff"]["compatible"] is True
@@ -85,7 +86,35 @@ def test_template_writer_preserves_every_undeclared_byte(tmp_path: Path) -> None
     assert result.report["validation"]["equipment_smoke_test"] == "not_run"
     assert result.report["header_preserved"] is True
     assert result.report["file_length_preserved"] is True
-    assert result.report["warnings"]
+    assert result.report["warnings"] == []
+
+
+def test_template_writer_patches_pne02_controlled_pair_template(tmp_path: Path) -> None:
+    template = (
+        ROOT / "example" / "gate_b_pairs" / "pne02-charge-current" / "before.sch"
+    )
+    output = tmp_path / "pne02-patched.sch"
+    result = apply_sch_patch(
+        template,
+        SchPatchPlan(
+            template_sha256=_sha256(template),
+            expected_version=0x00010002,
+            target_profile={
+                "equipment": "PNE02",
+                "channel_profile": "500mA",
+                "ctspro_version": "CYCC-1004-S01-R004-N01",
+            },
+            patches=(SchFieldPatch(step_no=1, field="fVref", value=17.0),),
+        ),
+        output,
+        allow_analysis_output=True,
+    )
+
+    assert result.report["changed_fields"][0]["writer_ready"] is True
+    assert result.report["validation"]["diff"]["controlled_pair_clean"] is True
+    assert result.report["warnings"] == []
+    word = result.report["validation"]["diff"]["changed_step_count"]
+    assert word == 1
 
 
 def test_template_writer_requires_exact_template_hash(tmp_path: Path) -> None:
@@ -116,7 +145,7 @@ def test_template_writer_requires_analysis_output_acknowledgement(
     assert not output.exists()
 
 
-def test_patch_cli_writes_report_and_warns(tmp_path: Path, capsys) -> None:
+def test_patch_cli_writes_report_for_writer_ready_field(tmp_path: Path, capsys) -> None:
     output = tmp_path / "patched.sch"
     plan_path = tmp_path / "plan.json"
     plan_path.write_text(
@@ -144,7 +173,6 @@ def test_patch_cli_writes_report_and_warns(tmp_path: Path, capsys) -> None:
             "-o",
             str(output),
             "--allow-analysis-output",
-            "--allow-unverified-fields",
         ]
     )
 
@@ -156,7 +184,9 @@ def test_patch_cli_writes_report_and_warns(tmp_path: Path, capsys) -> None:
     assert manifest["template"]["sha256"] == _sha256(TEMPLATE)
     assert manifest["target_profile"]["equipment"] == "PNE02"
     assert manifest["changed_fields"][0]["field"] == "fEndV"
+    assert manifest["changed_fields"][0]["writer_ready"] is True
     assert manifest["changed_fields"][0]["evidence"]
+    assert manifest["warnings"] == []
     assert manifest["validation"]["all_passed"] is True
     assert manifest["validation"]["diff"]["controlled_pair_clean"] is True
     assert "Do not execute" in capsys.readouterr().out
@@ -189,7 +219,6 @@ def test_patch_cli_removes_output_when_manifest_cannot_be_written(
             "--manifest",
             str(tmp_path / "missing" / "manifest.json"),
             "--allow-analysis-output",
-            "--allow-unverified-fields",
         ]
     )
 
@@ -222,7 +251,6 @@ def test_patch_cli_does_not_delete_preexisting_output_on_plan_failure(
             "-o",
             str(output),
             "--allow-analysis-output",
-            "--allow-unverified-fields",
         ]
     )
 

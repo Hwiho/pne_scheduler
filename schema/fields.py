@@ -85,14 +85,18 @@ COMMON_STEP_FIELDS: tuple[SchFieldDefinition, ...] = (
         OFFSET_F_VREF,
         "float32",
         FieldConfidence.CORPUS_INFERRED,
-        "Legacy name; Ensol v612: current_mA @+16 (not voltage). Golden capacheck + parser verified.",
+        "Ensol v612 current_mA @+16. Gate B: pne02-charge-current (10→17 mA), "
+        "pne02-discharge-current (10→19 mA); CTSEditorPro reopen verified.",
+        writer_ready=True,
     ),
     SchFieldDefinition(
         "fIref",
         OFFSET_F_IREF,
         "float32",
         FieldConfidence.CORPUS_INFERRED,
-        "Legacy name; Ensol v612: time_or_rest_s @+20 — CC time limit or REST duration (seconds).",
+        "Ensol v612 time_or_rest_s @+20. Gate B: pne02-rest-duration (60→123 s); "
+        "CTSEditorPro reopen verified.",
+        writer_ready=True,
     ),
     SchFieldDefinition(
         "fEndTime",
@@ -106,14 +110,18 @@ COMMON_STEP_FIELDS: tuple[SchFieldDefinition, ...] = (
         OFFSET_F_END_V,
         "float32",
         FieldConfidence.CORPUS_INFERRED,
-        "Ensol v612: voltage_cutoff_mV @+28 — CCDi end voltage (mV); golden capacheck discharge step.",
+        "Ensol v612 voltage_cutoff_mV @+28. Gate B: pne02-end-voltage; "
+        "CTSEditorPro reopen verified.",
+        writer_ready=True,
     ),
     SchFieldDefinition(
         "fEndI",
         OFFSET_F_END_I,
         "float32",
         FieldConfidence.CORPUS_INFERRED,
-        "Ensol v612: cv_cutoff_mA @+32 — CCCV CV cutoff current (mA); golden capacheck verified.",
+        "Ensol v612 cv_cutoff_mA @+32. Gate B: pne02-cv-cutoff (2→3 mA, cap496 "
+        "normalized); CTSEditorPro reopen verified.",
+        writer_ready=True,
     ),
     SchFieldDefinition(
         "fEndC",
@@ -127,14 +135,17 @@ COMMON_STEP_FIELDS: tuple[SchFieldDefinition, ...] = (
         OFFSET_LOOP_GOTO,
         "uint32",
         FieldConfidence.CORPUS_INFERRED,
-        "LOOP-only target-like values verified in representative 612/696 fixtures.",
+        "LOOP goto @+48. Gate B: pne02-loop-goto (baseline3, step 17, 1→7); "
+        "CTSEditorPro reopen verified. PNE02 UI writes here, not loop_goto_ensol@564.",
+        writer_ready=True,
     ),
     SchFieldDefinition(
         "loop_count",
         OFFSET_LOOP_COUNT,
         "uint32",
         FieldConfidence.CORPUS_INFERRED,
-        "LOOP-only repeat-like values verified in representative 612/696 fixtures.",
+        "LOOP repeat count @+52. Gate B: pne02-loop-count; CTSEditorPro reopen verified.",
+        writer_ready=True,
     ),
 )
 
@@ -198,7 +209,9 @@ V3_612_CORPUS_STEP_FIELDS: tuple[SchFieldDefinition, ...] = (
         OFFSET_RECORD_TIME_S,
         "float32",
         FieldConfidence.CORPUS_INFERRED,
-        "Ensol map plus 77 normalized 612-byte pair comparisons with changes in this word.",
+        "Ensol sampling Δt @+340. Gate B: pne02-sampling-interval (60→120 s) and "
+        "pne02-sampling-interval-discharge; CTSEditorPro reopen verified.",
+        writer_ready=True,
     ),
     SchFieldDefinition(
         "dod_percent",
@@ -235,12 +248,17 @@ V3_612_CORPUS_STEP_FIELDS: tuple[SchFieldDefinition, ...] = (
 )
 
 STEP_FIELDS_BY_VERSION: dict[int, tuple[SchFieldDefinition, ...]] = {
-    int(SchFileVersion.V0X00010002): COMMON_STEP_FIELDS,
+    # 0x10002 shares the 612-byte Ensol map with 0x10003 (PNE02 Gate B pairs).
+    int(SchFileVersion.V0X00010002): (
+        *COMMON_STEP_FIELDS,
+        *V3_612_CORPUS_STEP_FIELDS,
+    ),
     int(SchFileVersion.V0X00010003): (
         *COMMON_STEP_FIELDS,
         *V3_612_CORPUS_STEP_FIELDS,
         *V3_612_LEGACY_STEP_FIELDS,
     ),
+    # 0x10004/696: shared-prefix fields only until C6 maps the 84-byte tail.
     int(SchFileVersion.V0X00010004): COMMON_STEP_FIELDS,
 }
 

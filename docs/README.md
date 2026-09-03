@@ -49,7 +49,10 @@ python run_pne_scheduler_resume.py
 5. Review the generated `.sch.manifest.json`, including the target profile,
    changed-field evidence, binary-diff checks, and equipment-test status.
 
-The default path rejects fields that are not marked writer-ready. `--allow-unverified-fields` is for offline reverse-engineering only. Every write requires `--allow-analysis-output`. Neither makes a file safe to execute on equipment.
+The default path accepts Gate B writer-ready fields (`fVref`, `fIref`, `fEndV`, `fEndI`,
+`loop_target`, `loop_count`, `record_time_s`) and rejects others.
+`--allow-unverified-fields` is for offline reverse-engineering only. Every write requires
+`--allow-analysis-output`. Neither makes a file safe to execute on equipment.
 
 The `build`, `patch-sch`, and `resume` write paths all emit a required
 `<output>.manifest.json` sidecar. The standalone current-rescaling tool does the

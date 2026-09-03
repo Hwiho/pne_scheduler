@@ -1,6 +1,6 @@
 {
   "schema": "pne_scheduler.gate_b_validation_report/v2",
-  "generated_at": "2026-09-02T23:52:27.320724+00:00",
+  "generated_at": "2026-09-03T03:54:47.198715+00:00",
   "status": "passed",
   "tooling_checks": {
     "pytest_subset": true,
@@ -23,7 +23,7 @@
     "stdout_tail": [
       "........................................................................ [ 97%]",
       "..                                                                       [100%]",
-      "74 passed in 9.20s"
+      "74 passed in 2.09s"
     ],
     "stderr_tail": []
   },
@@ -581,7 +581,7 @@
   "canonical_field_registry": {
     "valid": true,
     "errors": [],
-    "writer_ready_field_count": 0
+    "writer_ready_field_count": 20
   },
   "q_nom_contract": {
     "writer_source": "cell_profile.nominal_capacity_mAh",
@@ -731,8 +731,7 @@
         "expected_field": "record_time_s",
         "errors": [],
         "warnings": [
-          "ctspro_reopen_verified is false; field cannot be marked writer-ready yet",
-          "expected_field 'record_time_s' not among changed fields [None]"
+          "ctspro_reopen_verified is false; field cannot be marked writer-ready yet"
         ]
       },
       {
@@ -829,9 +828,7 @@
         "ui_field": "Sampling interval (charge step)",
         "expected_field": "record_time_s",
         "errors": [],
-        "warnings": [
-          "expected_field 'record_time_s' not among changed fields [None]"
-        ]
+        "warnings": []
       },
       {
         "path": "example/gate_b_pairs/pne02-sampling-interval-discharge/intake.json",
@@ -843,9 +840,7 @@
         "ui_field": "Sampling interval (discharge step)",
         "expected_field": "record_time_s",
         "errors": [],
-        "warnings": [
-          "expected_field 'record_time_s' not among changed fields [None]"
-        ]
+        "warnings": []
       }
     ]
   },
