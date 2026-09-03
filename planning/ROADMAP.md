@@ -684,14 +684,14 @@ tests to be skipped.
 | Package import fails after editable install | **Resolved** | Regression validation of editable install and clean-target wheel import |
 | Parser/schema/compiler end-condition offset discrepancy | **Internally consistent** | `fEndV=28`, `fEndI=32`, `fEndC=36`; comparison of originals with nonzero `fEndC` against the external parser continues in B2 |
 | Misunderstanding of LOOP goto/count offsets | **Resolved** | Corpus confirmed `+48/+52`; corrected the previous `+84/+88` and added 612/696 golden tests |
-| Mismatch between lab format and writer target | **Confirmed** | 89 of 93 files use `0x10004/696`; proceed with Gate C6 immediately after 612 validation |
+| Mismatch between lab format and writer target | **Mitigated** | C6 framing for `0x10004/696`; full 696 schedule semantic parity not claimed |
 | Automatic selection of 612 vs 696 byte step size | Partially understood | Validate version→size mapping against the 102 secured measured sch files |
 | PNE raw current unit (mA vs A) | Depends on ini range | Compare Cell range profile with ASSB `unit_scale` |
 | PNE voltage/L-level encoding | **Partially resolved (612)** | Ensol map: `+12` mV (not `+16`); L-level fVref heuristic only for 15–80 V range; QPEED still needs pair |
 | Dual capacity models | **Writer path resolved** | Writer uses explicit `cell_capacity_mAh` (= 1C mA); viewer may still infer Q_nom |
 | Internal structure of `FILE_GRADE`, `STRUCT_EIS_SET` | Only names are present in Excel | Defer 0x00010007 to Phase 4 |
 | Recommended Δt/ΔV/ΔQ values | UNKNOWN in cyclediag | Reverse-extract from internal standard sch samples |
-| Writer validation on physical equipment | Not started | PNE PC load test is mandatory in Gate C5 |
+| Writer validation on physical equipment | **Open — C5** | PNE PC reopen/smoke is mandatory; checklist + smoke.sch ready |
 | External ASSB parser availability | Dependency outside the repository | Make the internal parser the default source of truth and optionally cross-validate |
 | Drift between fixture names and test expectations | **Confirmed** | Do not hide with skips; stabilize with manifest-based fixture lookup |
 | Experimental output mistaken for production | **Mitigated, not resolved** | Default-block `build`; require manifest, reopen verification, and exact-hash release gates |
