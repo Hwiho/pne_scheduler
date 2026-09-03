@@ -258,8 +258,11 @@ STEP_FIELDS_BY_VERSION: dict[int, tuple[SchFieldDefinition, ...]] = {
         *V3_612_CORPUS_STEP_FIELDS,
         *V3_612_LEGACY_STEP_FIELDS,
     ),
-    # 0x10004/696: shared-prefix fields only until C6 maps the 84-byte tail.
-    int(SchFileVersion.V0X00010004): COMMON_STEP_FIELDS,
+    # 0x10004/696: shared 612-byte prefix fields; 84-byte tail still unmapped (C6 partial).
+    int(SchFileVersion.V0X00010004): (
+        *COMMON_STEP_FIELDS,
+        *V3_612_CORPUS_STEP_FIELDS,
+    ),
 }
 
 _DTYPE_SIZES = {

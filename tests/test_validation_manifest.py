@@ -56,15 +56,8 @@ def test_writer_ready_allowlist_matches_gate_b_controlled_pairs() -> None:
     }
     assert set(get_writer_ready_fields(0x00010002)) == expected
     assert set(get_writer_ready_fields(0x00010003)) == expected
-    # 696 layout: shared-prefix Gate B fields only (no record_time_s until C6 registry).
-    assert set(get_writer_ready_fields(0x00010004)) == {
-        "fVref",
-        "fIref",
-        "fEndV",
-        "fEndI",
-        "loop_target",
-        "loop_count",
-    }
+    # 696 layout: shared-prefix Gate B fields including record_time_s (C6 prefix registry).
+    assert set(get_writer_ready_fields(0x00010004)) == expected
 
 def test_current_rescaler_writes_validation_manifest(tmp_path: Path) -> None:
     output = tmp_path / "rescaled.sch"

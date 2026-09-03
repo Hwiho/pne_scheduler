@@ -35,6 +35,7 @@ OFF_LOOP_GOTO_ENSOL = 564  # Ensol writer sets goto=1 here
 # Header (0x00010003 corpus uses 1760-byte payload; Ensol writer uses 1632)
 HEADER_SIZE_V2 = 1632
 HEADER_SIZE_V3 = 1760
+HEADER_SIZE_V4 = 1844
 HEADER_MAGIC = bytes([0x71, 0x4D, 0x0B, 0x00, 0x02, 0x00, 0x01, 0x00])
 FILE_SIGNATURE = b"PNE CTSPro Schedule File."
 HOFF_SIGNATURE = 0x48

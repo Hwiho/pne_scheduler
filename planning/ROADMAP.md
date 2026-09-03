@@ -422,8 +422,8 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | Classification/stack/C-rate inference | **Partially complete** | Unit tests exist and analysis reports have been generated |
 | `.schproj` IR/JSON | **Partially complete** | Serialization and linear DAG sorting implemented; no schema validation/version migration |
 | Experiment modules | **prototype** | expand implemented for Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED, etc. |
-| Binary compiler | **spike** | Packs only some fields; does not write core fields such as mode, loop, DCR, and sampling |
-| SCH writer | **Partial (C1 header)** | Full `0x00010003`/1760 header; step compiler still incomplete; CLI requires experimental acknowledgement |
+| Binary compiler | **C2 done** | Mode, end, loop/goto, sampling, SOC packed; DCR IR-only |
+| SCH writer | **C1–C4 + C6 prefix** | 0x10003/1760 and 0x10004/1844+696 framing; experimental until C5 |
 | Round-trip validator | **Incomplete** | The repository can re-read output, but currently compares only step count and has no independent semantic field comparison |
 | GUI | **Partially complete** | Viewer/resume/bulk editor exist; first flow editor supports module connections, graph validation, property editing, save/load, and step preview |
 | Test execution environment | **Restored** | Editable install and wheel import succeed; local suite **112 passed** (sync README badge) |
@@ -509,13 +509,13 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | C0.1 | Build validation manifest | ✅ | Every output records template hash, profile, changed fields, evidence, validation |
 | C0.2 | Template-preserving patch slice | ✅ | Allowlisted writer-ready fields only; all other bytes preserved |
 | C1 | Full header for `0x00010003` | ✅ | Payload offset/size without 512-byte placeholder |
-| C2 | Complete step compiler | ⏳ | mode, end conditions, loop/goto, sampling, SOC, DCR |
-| C3 | Internal round-trip validator | ⏳ | Semantic write → read without external ASSB |
-| C4 | External parser cross-check | ⏳ | Internal results match vendored ASSB when run |
+| C2 | Complete step compiler | ✅ | mode, end conditions, loop/goto, sampling, SOC; DCR IR-only (offsets unresolved) |
+| C3 | Internal round-trip validator | ✅ | Semantic write → read without external ASSB |
+| C4 | External parser cross-check | ✅ | Internal results match vendored ASSB when run |
 | C5 | PNE PC/equipment smoke test | ⏳ | Rest → CC Charge → END loads; checklist recorded |
-| C6 | Extend to `0x00010004/696` | ⏳ | Dominant lab format (89/93 fixtures) semantically verified |
+| C6 | Extend to `0x00010004/696` | 🔄 | Shared-prefix writer + registry; 84-byte tail still unmapped |
 
-**Recommended order inside Gate C:** C2 → C3 → C4 → C5 → C6.
+**Recommended order inside Gate C:** C5 (lab) → finish C6 tail map.
 
 **Rules**
 - 612-byte slice first; **do not mark Gate C complete until C6 passes**
@@ -530,6 +530,14 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
   `patch-sch` patches those without `--allow-unverified-fields`; undeclared bytes preserved.
 - C1 (2026-09-03): `io/header.py` builds a full 1760-byte `0x00010003` header
   (magic/version/signature/safety); `io/writer.py` no longer uses a 512-byte placeholder.
+- C2 (2026-09-03): `engine/compiler.py` packs mode (CCCV/CC), end V/I/time, loop
+  `@48/@52/@564`, sampling `@332/@340`, SOC `dod_percent@384`, default `cap_mode`.
+  DCR stays on IR (`compile_step_warnings`) until binary offsets are verified.
+- C3 (2026-09-03): `validate/roundtrip.py` semantic write→read against Ensol offsets.
+- C4 (2026-09-03): `validate/writer_assb_check.py` layout/step/field parity vs vendored ASSB.
+- C5: checklist at `planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` (lab pending).
+- C6 partial (2026-09-03): `0x00010004`/1844 header + 696-byte steps (612 prefix + zero
+  tail); shared-prefix field registry; full tail semantics still open.
 ---
 
 ### 6.5 Gate D — Experiment Module Fixture Fidelity
@@ -688,15 +696,12 @@ Execute in this order:
 
 | Step | Gate | Action |
 |------|------|--------|
-| 1 | C2 | Complete step compiler (mode, end, loop/goto, sampling) |
-| 2 | C3 | Internal write → read round-trip |
-| 3 | C4 | ASSB external parser cross-check |
-| 4 | C5 | PNE PC/equipment smoke test |
-| 5 | C6 | 696-byte lab parity (89/93 fixtures) |
-| 6 | D | Module E2E validation (Formation → Cycle → RPT/DC-IR) |
-| 7 | F | Release-gated PNE smoke test |
+| 1 | C5 | PNE PC smoke test — fill `planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` |
+| 2 | C6 | Map 696-byte tail (bytes 612–695) + lab fixture parity |
+| 3 | D | Module E2E validation (Formation → Cycle → RPT/DC-IR) |
+| 4 | F | Release-gated PNE smoke test |
 
-Completed prerequisites: Gate A; Gate B (`gate_b_passed`); C0/C0.1/C0.2/C1.
+Completed prerequisites: Gate A; Gate B (`gate_b_passed`); C0–C4; C6 shared-prefix writer.
 
 When a step surfaces a new blocker, log it in §11 before changing gate order.
 
@@ -725,7 +730,8 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 | 2026-08-31 | B | blocking | PNE voltage/L-level encoding (`+12` mode vs `+16` fVref) | open | Needs controlled pair per target profile (B0) |
 | 2026-08-31 | B | blocking | Dual capacity models (CellProfile vs stack-inferred Q_nom) | resolved | Writer uses explicit `CellProfile.nominal_capacity_mAh`; inferred Q_nom is display-only |
 | 2026-08-31 | B | normal | Controlled-pair metadata incomplete → evidence promotion unsafe | open | Implement B5 intake schema validation |
-| 2026-08-31 | C | normal | 89/93 lab fixtures use `0x10004/696`, not 612-byte layout | open | C6 after 612 slice; separate field map (not +84 append) |
+| 2026-09-03 | C | normal | C5 equipment smoke still required before executable builds | open | Use `planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` |
+| 2026-09-03 | C | normal | 696-byte tail (612–695) semantics unmapped | open | C6 controlled pairs or Excel+fixture correlation |
 | 2026-08-31 | E | safety | Resume may renumber steps without goto remap proof | open | Block or remap only after semantic confirmation; track under E1/resume |
 | 2026-09-01 | B | low | README test badge (100) lags actual count (125) | open | Sync badge in README when touching docs |
 | 2026-09-01 | B | normal | B5 intake validator implemented; awaiting real pair files | in progress | `validate/intake.py`, `schema/validation_intake.schema.json` |

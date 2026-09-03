@@ -13,6 +13,7 @@ from typing import Mapping
 from ..schema.ensol_v612 import (
     FILE_SIGNATURE,
     HEADER_SIZE_V3,
+    HEADER_SIZE_V4,
     HOFF_AUTHOR,
     HOFF_NAME,
     HOFF_SAFETY,
@@ -37,6 +38,11 @@ _DEFAULT_SAFETY_MV_MA = {
     "max_temp_C": 70.0,
 }
 
+_HEADER_SIZE_BY_VERSION = {
+    int(SchFileVersion.V0X00010003): HEADER_SIZE_V3,
+    int(SchFileVersion.V0X00010004): HEADER_SIZE_V4,
+}
+
 
 def build_sch_header_v00010003(
     *,
@@ -46,9 +52,51 @@ def build_sch_header_v00010003(
     created_at: datetime | None = None,
 ) -> bytes:
     """Return a 1760-byte ``0x00010003`` header (no 512-byte placeholder)."""
-    header = bytearray(HEADER_SIZE_V3)
+    return build_sch_header(
+        version=int(SchFileVersion.V0X00010003),
+        schedule_name=schedule_name,
+        author=author,
+        safety=safety,
+        created_at=created_at,
+    )
+
+
+def build_sch_header_v00010004(
+    *,
+    schedule_name: str,
+    author: str = "pne_scheduler",
+    safety: Mapping[str, float] | None = None,
+    created_at: datetime | None = None,
+) -> bytes:
+    """Return a 1844-byte ``0x00010004`` header (696-byte step framing)."""
+    return build_sch_header(
+        version=int(SchFileVersion.V0X00010004),
+        schedule_name=schedule_name,
+        author=author,
+        safety=safety,
+        created_at=created_at,
+    )
+
+
+def build_sch_header(
+    *,
+    version: int,
+    schedule_name: str,
+    author: str = "pne_scheduler",
+    safety: Mapping[str, float] | None = None,
+    created_at: datetime | None = None,
+) -> bytes:
+    """Build a versioned SCH header using the shared Ensol/corpus prefix layout."""
+    try:
+        header_size = _HEADER_SIZE_BY_VERSION[int(version)]
+    except KeyError as exc:
+        raise ValueError(
+            f"No from-scratch header builder for version 0x{int(version):08x}"
+        ) from exc
+
+    header = bytearray(header_size)
     struct.pack_into("<I", header, 0, SCH_FILE_MAGIC)
-    struct.pack_into("<I", header, 4, int(SchFileVersion.V0X00010003))
+    struct.pack_into("<I", header, 4, int(version))
 
     stamp = (created_at or datetime.now()).strftime("%Y-%m-%d %H:%M:%S.000")
     _write_ascii(header, 0x08, stamp, limit=63)
@@ -74,7 +122,6 @@ def build_sch_header_v00010003(
     for index, value in enumerate(values):
         struct.pack_into("<f", header, HOFF_SAFETY + index * 4, value)
 
-    # Ensol writer stamps this nonzero control word; corpus often leaves it 0.
     struct.pack_into("<i", header, _HOFF_STEP_HINT, 7)
     return bytes(header)
 
