@@ -24,7 +24,7 @@
   },
   "output": {
     "path": "pne_scheduler\\example\\smoke_rest_cc_end.sch",
-    "sha256": "ae651d6a1579a512657482c55265e1a9cb373223d302bf34885f20e24a14480d",
+    "sha256": "80565dc814caf14e930fd9055d294295081612cf0fa7f13420a5297db3aad9fa",
     "size": 3596
   },
   "changed_fields": [],
