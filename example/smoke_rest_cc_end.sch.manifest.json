@@ -1,0 +1,52 @@
+{
+  "schema": "pne_scheduler.sch_validation_manifest/v1",
+  "writer": "experimental_from_scratch",
+  "status": "experimental",
+  "equipment_executable": false,
+  "source_project": {
+    "path": "pne_scheduler\\example\\smoke_rest_cc_end.schproj",
+    "sha256": "b32b05757bf62e0cab10bed43ade27a3244234b821020c1744c940e23a2ba167"
+  },
+  "template": null,
+  "target_profile": {
+    "status": "unspecified",
+    "equipment": null,
+    "channel_profile": null,
+    "ctspro_version": null,
+    "sch_version": "0x00010003",
+    "cell_profile": {
+      "nominal_capacity_mAh": 80.0,
+      "v_max": 4.2,
+      "v_min": 2.5,
+      "max_current_mA": 800.0,
+      "formation_capacity_mAh": null
+    }
+  },
+  "output": {
+    "path": "pne_scheduler\\example\\smoke_rest_cc_end.sch",
+    "sha256": "ae651d6a1579a512657482c55265e1a9cb373223d302bf34885f20e24a14480d",
+    "size": 3596
+  },
+  "changed_fields": [],
+  "evidence": [],
+  "validation": {
+    "all_passed": true,
+    "checks": [
+      {
+        "name": "output_written",
+        "passed": true
+      },
+      {
+        "name": "output_nonempty",
+        "passed": true
+      }
+    ],
+    "structural_reread": "not_run",
+    "equipment_smoke_test": "not_run"
+  },
+  "warnings": [
+    "From-scratch builds use a full 0x00010003/1760 header, but step semantics and equipment smoke tests are still incomplete (Gate C2–C5).",
+    "No target equipment profile was supplied.",
+    "Do not load or execute this file on PNE equipment."
+  ]
+}

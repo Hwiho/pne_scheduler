@@ -1,0 +1,29 @@
+{
+  "schema": "pne_scheduler.sch_696_tail_analysis/v1",
+  "generated_at": "2026-09-03",
+  "summary": "Across secured fixtures and sampled corpus zips, the 84-byte 696-step tail (offsets 612-695) is entirely zero. From-scratch writer zero-padding matches observed lab files.",
+  "scope": {
+    "catalog_696_fixtures": 92,
+    "catalog_696_step_records": 2056,
+    "corpus_zip_0x10004_files_scanned": 15,
+    "nonzero_tail_records": 0
+  },
+  "shared_prefix_bytes": 612,
+  "extension_bytes": 84,
+  "extension_nonzero_hotspots": [],
+  "writer_policy": {
+    "0x00010004_step_encoding": "compile Ensol/Gate-B 612-byte prefix, append 84 zero bytes",
+    "header": "1844-byte 0x00010004 header via io/header.py"
+  },
+  "interpretation": [
+    "696-byte framing is not a differently ordered 612-byte map; the first 612 bytes carry the verified Ensol/Gate B fields.",
+    "Bytes 612-695 are unused (all zero) in the current secured fixture set and scanned 0x10004 corpus samples.",
+    "Excel 0x00010004 sheet field offsets are logical struct offsets and do not directly map onto the 612-695 binary tail.",
+    "If a future CTSPro build writes nonzero tail bytes, collect a controlled pair before naming those fields."
+  ],
+  "gate_c6_status": "complete_for_observed_corpus",
+  "remaining_optional": [
+    "Re-scan when PNE16.zip or new 696 lab dumps arrive",
+    "Controlled pair only if nonzero tail appears in CTSPro saves"
+  ]
+}

@@ -513,12 +513,12 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | C3 | Internal round-trip validator | ✅ | Semantic write → read without external ASSB |
 | C4 | External parser cross-check | ✅ | Internal results match vendored ASSB when run |
 | C5 | PNE PC/equipment smoke test | ⏳ | Rest → CC Charge → END loads; checklist recorded |
-| C6 | Extend to `0x00010004/696` | 🔄 | Shared-prefix writer + registry; 84-byte tail still unmapped |
+| C6 | Extend to `0x00010004/696` | ✅ | Header + shared-prefix writer; tail all-zero in secured corpus |
 
-**Recommended order inside Gate C:** C5 (lab) → finish C6 tail map.
+**Recommended order inside Gate C:** **C5 lab smoke** (only remaining Gate C exit item).
 
 **Rules**
-- 612-byte slice first; **do not mark Gate C complete until C6 passes**
+- 612-byte slice first; **do not mark Gate C complete until C5 + C6 pass**
 - Until C5 passes, never label CLI `build` output as equipment-executable
 
 **Progress record**
@@ -536,8 +536,10 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 - C3 (2026-09-03): `validate/roundtrip.py` semantic write→read against Ensol offsets.
 - C4 (2026-09-03): `validate/writer_assb_check.py` layout/step/field parity vs vendored ASSB.
 - C5: checklist at `planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` (lab pending).
-- C6 partial (2026-09-03): `0x00010004`/1844 header + 696-byte steps (612 prefix + zero
-  tail); shared-prefix field registry; full tail semantics still open.
+  Smoke project: `example/smoke_rest_cc_end.schproj`.
+- C6 (2026-09-03): `0x00010004`/1844 header + 696-byte steps (612 prefix + zero
+  tail). Secured fixtures/corpus samples show **all-zero tails** —
+  [`planning/SCH_696_TAIL_ANALYSIS.md`](SCH_696_TAIL_ANALYSIS.md).
 ---
 
 ### 6.5 Gate D — Experiment Module Fixture Fidelity
@@ -696,12 +698,12 @@ Execute in this order:
 
 | Step | Gate | Action |
 |------|------|--------|
-| 1 | C5 | PNE PC smoke test — fill `planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` |
-| 2 | C6 | Map 696-byte tail (bytes 612–695) + lab fixture parity |
-| 3 | D | Module E2E validation (Formation → Cycle → RPT/DC-IR) |
+| 1 | C5 | PNE PC smoke — `example/smoke_rest_cc_end.schproj` + checklist |
+| 2 | — | User actions summary: [`USER_ACTION_ITEMS.md`](USER_ACTION_ITEMS.md) |
+| 3 | D | Deferred until you ask |
 | 4 | F | Release-gated PNE smoke test |
 
-Completed prerequisites: Gate A; Gate B (`gate_b_passed`); C0–C4; C6 shared-prefix writer.
+Completed prerequisites: Gate A; Gate B; C0–C4; C6 (observed corpus).
 
 When a step surfaces a new blocker, log it in §11 before changing gate order.
 
@@ -730,8 +732,8 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 | 2026-08-31 | B | blocking | PNE voltage/L-level encoding (`+12` mode vs `+16` fVref) | open | Needs controlled pair per target profile (B0) |
 | 2026-08-31 | B | blocking | Dual capacity models (CellProfile vs stack-inferred Q_nom) | resolved | Writer uses explicit `CellProfile.nominal_capacity_mAh`; inferred Q_nom is display-only |
 | 2026-08-31 | B | normal | Controlled-pair metadata incomplete → evidence promotion unsafe | open | Implement B5 intake schema validation |
-| 2026-09-03 | C | normal | C5 equipment smoke still required before executable builds | open | Use `planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` |
-| 2026-09-03 | C | normal | 696-byte tail (612–695) semantics unmapped | open | C6 controlled pairs or Excel+fixture correlation |
+| 2026-09-03 | C | normal | C5 equipment smoke still required before executable builds | open | Use `planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` + `example/smoke_rest_cc_end.schproj` |
+| 2026-09-03 | C | normal | 696-byte tail (612–695) all-zero in secured corpus | resolved | Writer zero-pad matches corpus; see `SCH_696_TAIL_ANALYSIS.md` |
 | 2026-08-31 | E | safety | Resume may renumber steps without goto remap proof | open | Block or remap only after semantic confirmation; track under E1/resume |
 | 2026-09-01 | B | low | README test badge (100) lags actual count (125) | open | Sync badge in README when touching docs |
 | 2026-09-01 | B | normal | B5 intake validator implemented; awaiting real pair files | in progress | `validate/intake.py`, `schema/validation_intake.schema.json` |

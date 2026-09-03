@@ -16,18 +16,19 @@ below is recorded for at least one PNE unit (prefer PNE02).
 | PNE unit | e.g. PNE02 |
 | CTSPro / CTSEditorPro build | e.g. CYCC-1004-S01-R004-N01 |
 | Channel / profile | |
-| Output file | `Rest → CC Charge → END` from `pne_scheduler build` |
+| Project | `example/smoke_rest_cc_end.schproj` |
+| Output file | `smoke_rest_cc_end.sch` — Rest → CCCV → END |
 
 ## Procedure
 
 1. Generate offline:
    ```powershell
-   python -m pne_scheduler build example/example.schproj -o smoke.sch --allow-experimental-output
+   cd c:\Users\LGES\Cursor\pne_scheduler
+   python -m pne_scheduler build example/smoke_rest_cc_end.schproj -o smoke_rest_cc_end.sch --allow-experimental-output
    ```
-   Or a minimal Rest→CC→END project if the example is too large for a first open.
-2. Copy `smoke.sch` to the PNE PC.
+2. Copy `smoke_rest_cc_end.sch` to the PNE PC.
 3. Open in CTSEditorPro (save-only; do **not** execute on a cell for the first pass).
-4. Confirm UI values match the IR (rest duration, charge current/voltage, END present).
+4. Confirm UI values: REST 60 s, charge ~8 mA @ 4.2 V (0.1C × 80 mAh), END present.
 5. Re-save once from CTSEditorPro and keep both files for `compare_sch`.
 6. Optional second pass: execute Rest→CC→END on an open channel only after reopen looks correct.
 

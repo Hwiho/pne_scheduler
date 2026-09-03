@@ -1,0 +1,24 @@
+{
+  "schema": "pne_scheduler.schproj/v1",
+  "name": "smoke_rest_cc_end",
+  "sch_version": 65539,
+  "cell_profile": {
+    "nominal_capacity_mAh": 80.0,
+    "v_max": 4.2,
+    "v_min": 2.5,
+    "max_current_mA": 800.0
+  },
+  "modules": [
+    {
+      "id": "smoke_1",
+      "module_type": "smoke_rest_cc_end",
+      "params": {
+        "rest_s": 60.0,
+        "charge_c_rate": 0.1,
+        "cv_cutoff_c_rate": 0.05,
+        "record_time_s": 60.0
+      }
+    }
+  ],
+  "connections": []
+}

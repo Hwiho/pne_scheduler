@@ -48,7 +48,18 @@ def get_module_class(module_type: str) -> type | None:
     return _MODULE_REGISTRY.get(module_type)
 
 
-from . import capacheck, cycle_life, dcir, formation, hppc, insitu_cycle, qpeed, rest, rpt  # noqa: E402,F401
+from . import (  # noqa: E402,F401
+    capacheck,
+    cycle_life,
+    dcir,
+    formation,
+    hppc,
+    insitu_cycle,
+    qpeed,
+    rest,
+    rpt,
+    smoke_rest_cc_end,
+)
 
 __all__ = [
     "ExperimentModule",

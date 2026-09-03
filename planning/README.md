@@ -8,6 +8,7 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 
 | Document | Purpose |
 |----------|---------|
+| [`USER_ACTION_ITEMS.md`](USER_ACTION_ITEMS.md) | **What you still need to do in the lab** |
 | [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md) | Directory map, code rules, cleanup workflow |
 | [`LAB_DATA_POLICY.md`](LAB_DATA_POLICY.md) | PNE##.zip only, per-unit layout, CTS build |
 | [`SCH_LAYOUT_TIER_SHARING.md`](SCH_LAYOUT_TIER_SHARING.md) | 500 mA vs 20 A — shared offsets, separate evidence |

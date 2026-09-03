@@ -7,6 +7,7 @@ from .insitu_cycle import InsituCycleModule
 from .hppc import HppcModule
 from .rest import RestModule
 from .qpeed import QpeedModule
+from .smoke_rest_cc_end import SmokeRestCcEndModule
 from .rpt import RptModule
 
 __all__ = [
@@ -20,6 +21,7 @@ __all__ = [
     "QpeedModule",
     "RestModule",
     "RptModule",
+    "SmokeRestCcEndModule",
     "expand_module",
     "register_module",
 ]

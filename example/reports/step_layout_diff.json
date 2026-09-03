@@ -10,12 +10,12 @@
   "extension_nonzero_hotspots": [],
   "prefix_float_value_divergence": [],
   "interpretation": [
-    "696-byte records are NOT a simple 84-byte append to 612-byte records.",
+    "696-byte records share the verified 612-byte Ensol/Gate B prefix; the 84-byte tail is unused (all zero) in secured fixtures.",
     "Late-field offsets in 0x00010003 corpus differ from ASSB legacy table (+8/+16 shifts).",
-    "Semantic field names for bytes 612-695 require controlled pairs or Excel+fixture correlation."
+    "From-scratch 0x00010004 writer: 612-byte compiled prefix + 84 zero bytes (see planning/SCH_696_TAIL_ANALYSIS.md)."
   ],
   "next_actions": [
-    "Map hot extension offsets against sch_file_structure_20250211.xlsx 0x00010004 sheet.",
-    "Collect controlled pairs on a 696-byte PNE16 template."
+    "Gate C5 equipment smoke on PNE PC (planning/USER_ACTION_ITEMS.md).",
+    "Re-scan 696 tails only if a new CTSPro build writes nonzero bytes past offset 612."
   ]
 }
