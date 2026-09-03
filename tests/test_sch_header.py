@@ -12,6 +12,8 @@ from pne_scheduler.schema.ensol_v612 import (
     FILE_SIGNATURE,
     HEADER_SIZE_V3,
     HOFF_CTS_COMMON_SAFETY,
+    HOFF_CTS_STEP_HINT,
+    HOFF_CTS_TIMESTAMP,
     HOFF_SAFETY,
     HOFF_SIGNATURE,
 )
@@ -37,14 +39,14 @@ def test_build_sch_header_v00010003_is_full_framed_header() -> None:
     assert struct.unpack_from("<I", header, 0)[0] == SCH_FILE_MAGIC
     assert struct.unpack_from("<I", header, 4)[0] == 0x00010003
     assert header[HOFF_SIGNATURE : HOFF_SIGNATURE + len(FILE_SIGNATURE)] == FILE_SIGNATURE
-    assert struct.unpack_from("<f", header, HOFF_SAFETY)[0] == 4200.0
-    assert struct.unpack_from("<f", header, HOFF_SAFETY + 4)[0] == 2500.0
-    assert struct.unpack_from("<f", header, HOFF_SAFETY + 8)[0] == 800.0
-    # CTSEditorPro common-safety capacity (empty → "용량값이 설정되지 않았습니다")
+    # Default CTS layout: Ensol 0x3D8 empty; common safety at 0x458
+    assert struct.unpack_from("<f", header, HOFF_SAFETY)[0] == 0.0
     assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY)[0] == 4200.0
     assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 4)[0] == 2500.0
     assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 12)[0] == 80.0
     assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 20)[0] == 70.0
+    assert header[HOFF_CTS_TIMESTAMP : HOFF_CTS_TIMESTAMP + 4].startswith(b"20")
+    assert struct.unpack_from("<i", header, HOFF_CTS_STEP_HINT)[0] == 7
 
 
 def test_write_sch_uses_1760_byte_header_not_512_placeholder(tmp_path: Path) -> None:

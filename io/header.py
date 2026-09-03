@@ -1,7 +1,8 @@
 """Build CTSPro-compatible SCH file headers (Gate C1).
 
-Framing follows the Ensol sch_maker layout and observed 0x00010003 corpus files:
-1760-byte header, magic ``0x000B4D71``, version at offset 4, safety floats at 0x3D8.
+Framing follows observed 0x00010003 lab corpus files (1760-byte header):
+magic ``0x000B4D71``, version at offset 4, CTS common safety at ``0x458``.
+The Ensol ``0x3D8`` safety block is left empty by default (lab files do the same).
 """
 
 from __future__ import annotations
@@ -16,6 +17,8 @@ from ..schema.ensol_v612 import (
     HEADER_SIZE_V4,
     HOFF_AUTHOR,
     HOFF_CTS_COMMON_SAFETY,
+    HOFF_CTS_STEP_HINT,
+    HOFF_CTS_TIMESTAMP,
     HOFF_NAME,
     HOFF_SAFETY,
     HOFF_SIGNATURE,
@@ -111,18 +114,24 @@ def build_sch_header(
     file_label = schedule_name if schedule_name.lower().endswith(".sch") else f"{schedule_name}.sch"
     _write_cp949(header, HOFF_NAME, file_label, limit=100)
     _write_ascii(header, HOFF_TIMESTAMP_3, stamp, limit=63)
+    _write_ascii(header, HOFF_CTS_TIMESTAMP, stamp, limit=63)
 
     limits = {**_DEFAULT_SAFETY_MV_MA, **dict(safety or {})}
-    values = (
-        float(limits["max_voltage_mV"]),
-        float(limits["min_voltage_mV"]),
-        float(limits["max_current_mA"]),
-        float(limits["min_current_mA"]),
-        float(limits["max_capacity_mAh"]),
-        float(limits["max_temp_C"]),
-    )
-    for index, value in enumerate(values):
-        struct.pack_into("<f", header, HOFF_SAFETY + index * 4, value)
+    # Lab CTS files leave the Ensol 0x3D8 block empty; CTSEditorPro reads
+    # 시험/공통 안전조건 from HOFF_CTS_COMMON_SAFETY (0x458). Keep writing
+    # Ensol 0x3D8 only when explicitly requested for Ensol-tooling compatibility.
+    write_ensol_safety = bool(limits.get("write_ensol_safety_block", False))
+    if write_ensol_safety:
+        values = (
+            float(limits["max_voltage_mV"]),
+            float(limits["min_voltage_mV"]),
+            float(limits["max_current_mA"]),
+            float(limits["min_current_mA"]),
+            float(limits["max_capacity_mAh"]),
+            float(limits["max_temp_C"]),
+        )
+        for index, value in enumerate(values):
+            struct.pack_into("<f", header, HOFF_SAFETY + index * 4, value)
 
     # CTSEditorPro common-safety UI (capacity warning when this slot is 0).
     cell_capacity = float(
@@ -139,7 +148,9 @@ def build_sch_header(
     for index, value in enumerate(cts_common):
         struct.pack_into("<f", header, HOFF_CTS_COMMON_SAFETY + index * 4, value)
 
+    # Prefer lab step-hint offset; keep Ensol 0x404 for dual-layout tooling.
     struct.pack_into("<i", header, _HOFF_STEP_HINT, 7)
+    struct.pack_into("<i", header, HOFF_CTS_STEP_HINT, 7)
     return bytes(header)
 
 

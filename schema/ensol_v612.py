@@ -44,9 +44,11 @@ HOFF_TIMESTAMP_2 = 0x250
 HOFF_NAME = 0x298
 HOFF_TIMESTAMP_3 = 0x398
 HOFF_SAFETY = 0x3D8  # Ensol-style: max V mV, min V mV, max I mA, min I mA, max cap mAh, max temp C
-# CTSEditorPro "공통 안전조건" block (corpus majority). Capacity for the UI lives at +12.
-# Layout: max V mV, min V mV, reserved(0), capacity mAh, reserved(0), max temp C
+# CTS 1760-byte files (lab corpus): timestamp @0x418, common safety @0x458, step hint @0x484
+HOFF_CTS_TIMESTAMP = 0x418
 HOFF_CTS_COMMON_SAFETY = 0x458
+HOFF_CTS_STEP_HINT = 0x484
+
 
 CCDI_VLIM_DEFAULT_MV = 2000.0
 
