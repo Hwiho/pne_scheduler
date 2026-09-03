@@ -389,9 +389,9 @@ Gate A  개발 기반          ✅ complete (local)
   ↓
 Gate B  바이너리 스키마    ✅ complete
   ↓
-Gate C  호환 SCH writer    🔄 in progress  ← current focus
+Gate C  호환 SCH writer    🔄 lab-blocked on C5  ← current focus
   ↓
-Gate D  모듈 픽스처 검증
+Gate D  모듈 픽스처 검증   ⏳ deferred
   ↓
 Gate E  편집 UX / 고급 기능
   ↓
@@ -412,21 +412,22 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 ---
 
-### 6.1 Repository Assessment Results as of 2026-09-01
+### 6.1 Repository Assessment Results as of 2026-09-03
 
 | Area | Status | Evidence / assessment |
 |------|--------|-----------------------|
-| Original fixtures | **Secured** | 8-file and 93-file SCH ZIPs in `example/archives/`, and 1 HPPC file in `example/fixtures/hppc/` |
-| File reading/viewer | **Partially complete** | Implemented registry-first 612/696-byte layout detection; all 102 fixtures have automated structural golden regression coverage |
-| Equipment provenance | **Partially classified** | Current fixture-only catalog records user-confirmed, user-attributed, and unknown equipment sources without creating filename rules for future files |
-| Classification/stack/C-rate inference | **Partially complete** | Unit tests exist and analysis reports have been generated |
-| `.schproj` IR/JSON | **Partially complete** | Serialization and linear DAG sorting implemented; no schema validation/version migration |
-| Experiment modules | **prototype** | expand implemented for Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED, etc. |
-| Binary compiler | **C2 done** | Mode, end, loop/goto, sampling, SOC packed; DCR IR-only |
-| SCH writer | **C1–C4 + C6 prefix** | 0x10003/1760 and 0x10004/1844+696 framing; experimental until C5 |
-| Round-trip validator | **Incomplete** | The repository can re-read output, but currently compares only step count and has no independent semantic field comparison |
-| GUI | **Partially complete** | Viewer/resume/bulk editor exist; first flow editor supports module connections, graph validation, property editing, save/load, and step preview |
-| Test execution environment | **Restored** | Editable install and wheel import succeed; local suite **112 passed** (sync README badge) |
+| Original fixtures | **Secured** | 102-file catalog + archives; Gate B controlled pairs under `example/gate_b_pairs/` |
+| File reading/viewer | **Usable** | Registry-first 612/696 layout detection; structural goldens; Ensol-aligned display fields |
+| Equipment provenance | **Partially classified** | Explicit intake metadata required; filename inference prohibited |
+| Classification/stack/C-rate inference | **Partially complete** | Unit tests + analysis reports; viewer-only Q_nom inference |
+| `.schproj` IR/JSON | **Partially complete** | Serialization and linear DAG sorting; no schema version migration yet |
+| Experiment modules | **prototype** | `expand` for Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED, smoke |
+| Binary compiler | **C2 done (with DCR gap)** | Mode, end, loop/goto, sampling, SOC packed; DCR remains IR-only |
+| SCH writer | **Software-complete pending C5** | Full `0x10003` header; `0x10004` framing; still experimental until equipment smoke |
+| Round-trip validator | **C3 done** | `validate/roundtrip.py` semantic field compare on Ensol offsets |
+| ASSB cross-check | **C4 thin-but-green** | Layout/step parity + limited field overlap (`fEndC`); not full semantic ASSB parity |
+| GUI | **Partially complete** | Viewer/resume/flow editor exist; export still gated |
+| Test execution environment | **Restored** | Local `pytest` green (~250+); hosted CI still Gate F |
 
 ---
 
@@ -498,48 +499,60 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 | | |
 |---|---|
-| **Status** | 🔄 **In progress** ← **current focus** |
-| **Depends on** | Gate B exit (especially B0, B5) |
-| **Exit criteria** | 612 writer round-trips semantically; 696 lab parity; PNE PC smoke test recorded; no placeholder header |
-| **Next gate** | Gate D |
+| **Status** | 🔄 **Lab-blocked on C5** ← **current focus** |
+| **Depends on** | Gate B exit (`gate_b_passed=true`) |
+| **Exit criteria (original)** | 612 writer round-trips semantically; 696 lab parity; PNE PC smoke test recorded; no placeholder header |
+| **Exit criteria (accepted 2026-09-03)** | See honest assessment below — software slice done; **C5 remaining**; C6 reframed as framing/corpus policy |
+| **Next gate** | Gate D (deferred until requested) |
 
-| # | Task | Status | Completion criteria |
-|---|------|--------|---------------------|
-| C0 | Guard experimental output | ✅ | Default CLI blocks `build`; explicit flag + equipment warning |
-| C0.1 | Build validation manifest | ✅ | Every output records template hash, profile, changed fields, evidence, validation |
-| C0.2 | Template-preserving patch slice | ✅ | Allowlisted writer-ready fields only; all other bytes preserved |
-| C1 | Full header for `0x00010003` | ✅ | Payload offset/size without 512-byte placeholder |
-| C2 | Complete step compiler | ✅ | mode, end conditions, loop/goto, sampling, SOC; DCR IR-only (offsets unresolved) |
-| C3 | Internal round-trip validator | ✅ | Semantic write → read without external ASSB |
-| C4 | External parser cross-check | ✅ | Internal results match vendored ASSB when run |
-| C5 | PNE PC/equipment smoke test | ⏳ | Rest → CC Charge → END loads; checklist recorded |
-| C6 | Extend to `0x00010004/696` | ✅ | Header + shared-prefix writer; tail all-zero in secured corpus |
+| # | Task | Status | Completion criteria | Honest note |
+|---|------|--------|---------------------|-------------|
+| C0 | Guard experimental output | ✅ | Default CLI blocks `build`; explicit flag + warning | Solid |
+| C0.1 | Build validation manifest | ✅ | Manifest on every write path | Solid |
+| C0.2 | Template-preserving patch slice | ✅ | Writer-ready allowlist + byte preservation | **Preferred near-term lab path** vs from-scratch `build` |
+| C1 | Full header for `0x00010003` | ✅ | No 512-byte placeholder; 1760 B framing | Solid |
+| C2 | Step compiler | ✅ | mode, end, loop/goto, sampling, SOC | **DCR not packed** (Excel≠Ensol); intentional |
+| C3 | Internal round-trip | ✅ | Semantic write→read on Ensol offsets | Covers smoke/intent fields; not every module E2E (that is Gate D) |
+| C4 | ASSB cross-check | ✅ | Layout + step-count + overlapping fields | **Thin**: shared ASSB candidate compare is mostly `fEndC`; currents checked via ASSB helpers. Do not read as full ASSB semantic parity |
+| C5 | PNE PC smoke test | ⏳ **blocking** | CTSEditorPro reopen (+ optional run) recorded | **Only Gate C exit item left** |
+| C6 | `0x00010004/696` | ✅ *reframed* | Header 1844 + 696 steps (612 prefix + zero tail) | Original “696 lab parity / semantically verified” **not** fully claimed. Secured corpus tails are all-zero; writer matches that. Nonzero-tail mapping deferred until evidence appears |
 
-**Recommended order inside Gate C:** **C5 lab smoke** (only remaining Gate C exit item).
+**Recommended order:** stop new Gate C software work → **run C5** → then decide Gate D.
+
+#### Gate C honest assessment (2026-09-03)
+
+**What went right (direction is sound)**
+1. Gate order respected: B evidence → C0 safety → C1 header → C2 compiler → C3/C4 validators before equipment.
+2. Dual writer strategy is correct: `patch-sch` (template-preserving, evidence-gated) is safer for near-term lab use; from-scratch `build` stays experimental until C5.
+3. Refusing to invent DCR / 696-tail semantics without bytes in corpus was the right call.
+4. C5 is correctly the remaining hard gate — software cannot close equipment reopen.
+
+**Where status was overstated (corrected here)**
+1. **C6** was marked done against a stronger original bar (“696 lab parity / semantically verified”). Accepted bar is now: **framing + corpus-aligned zero-tail policy**. Full 696 semantic parity of complex lab schedules remains future work if tails become nonzero or if module E2E (Gate D) requires it.
+2. **C4** is a useful smoke cross-check, not deep ASSB field-by-field validation of writer outputs.
+3. **§6.1** previously still said round-trip was incomplete — that was stale after C3.
+4. **§11** still listed some Gate B items as open/blocking after `gate_b_passed` — cleaned below.
+
+**Optimal next moves**
+| Priority | Action | Why |
+|--------:|--------|-----|
+| 1 | **C5 lab smoke** on `example/smoke_rest_cc_end.sch` | Sole remaining Gate C exit criterion |
+| 2 | Prefer `patch-sch` for real schedule edits until C5 signed | Lower risk than from-scratch builds |
+| 3 | Do **not** start Gate D until asked | Per product decision; C2/C3 already satisfy D’s software dependency minimum |
+| 4 | Do **not** invent 696-tail or DCR binary maps | Wait for nonzero evidence / controlled pairs |
+| 5 | After C5 pass: mark Gate C exited with documented gaps (DCR IR-only; 696 tail unused) | Keeps exit criteria honest |
 
 **Rules**
-- 612-byte slice first; **do not mark Gate C complete until C5 + C6 pass**
 - Until C5 passes, never label CLI `build` output as equipment-executable
+- Do not mark Gate C complete without C5 sign-off
+- C6 “complete” means framing/corpus policy only unless upgraded later
 
 **Progress record**
-- C0: `--allow-experimental-output` gate with regression tests
-- C0.1: build and patch outputs emit required validation manifests; manifest-write
-  failure removes newly created SCH output
-- C0.2 (2026-09-03): Gate B fields promoted to `writer_ready` —
-  `fVref`, `fIref`, `fEndV`, `fEndI`, `loop_target`, `loop_count`, `record_time_s`.
-  `patch-sch` patches those without `--allow-unverified-fields`; undeclared bytes preserved.
-- C1 (2026-09-03): `io/header.py` builds a full 1760-byte `0x00010003` header
-  (magic/version/signature/safety); `io/writer.py` no longer uses a 512-byte placeholder.
-- C2 (2026-09-03): `engine/compiler.py` packs mode (CCCV/CC), end V/I/time, loop
-  `@48/@52/@564`, sampling `@332/@340`, SOC `dod_percent@384`, default `cap_mode`.
-  DCR stays on IR (`compile_step_warnings`) until binary offsets are verified.
-- C3 (2026-09-03): `validate/roundtrip.py` semantic write→read against Ensol offsets.
-- C4 (2026-09-03): `validate/writer_assb_check.py` layout/step/field parity vs vendored ASSB.
-- C5: checklist at `planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` (lab pending).
-  Smoke project: `example/smoke_rest_cc_end.schproj`.
-- C6 (2026-09-03): `0x00010004`/1844 header + 696-byte steps (612 prefix + zero
-  tail). Secured fixtures/corpus samples show **all-zero tails** —
-  [`planning/SCH_696_TAIL_ANALYSIS.md`](SCH_696_TAIL_ANALYSIS.md).
+- C0 / C0.1 / C0.2 / C1 / C2 / C3 / C4: implemented 2026-09-03 (see git history `dbf7fed`…`1eeceb3`)
+- C5: checklist [`GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md); smoke assets `example/smoke_rest_cc_end.*`
+- C6: [`SCH_696_TAIL_ANALYSIS.md`](SCH_696_TAIL_ANALYSIS.md) — 92 catalog fixtures / 2056 steps, zero nonzero tails
+- User action list: [`USER_ACTION_ITEMS.md`](USER_ACTION_ITEMS.md)
+
 ---
 
 ### 6.5 Gate D — Experiment Module Fixture Fidelity
@@ -692,20 +705,19 @@ tests to be skipped.
 
 ## 9. Current focus (active gate)
 
-**Active gate: C** — compatible SCH writer.
-
-Execute in this order:
+**Active gate: C — lab-blocked on C5.**  
+Software Gate C work should pause except C5 support. Gate D is deferred.
 
 | Step | Gate | Action |
 |------|------|--------|
-| 1 | C5 | PNE PC smoke — `example/smoke_rest_cc_end.schproj` + checklist |
-| 2 | — | User actions summary: [`USER_ACTION_ITEMS.md`](USER_ACTION_ITEMS.md) |
-| 3 | D | Deferred until you ask |
-| 4 | F | Release-gated PNE smoke test |
+| 1 | **C5** | Open `example/smoke_rest_cc_end.sch` in CTSEditorPro; fill checklist |
+| 2 | C exit | After C5 sign-off, mark Gate C complete with documented gaps (DCR IR-only; 696 tail unused) |
+| 3 | D | Deferred until explicitly requested |
+| 4 | F | Release gates later |
 
-Completed prerequisites: Gate A; Gate B; C0–C4; C6 (observed corpus).
+Completed software prerequisites: Gate A; Gate B (`gate_b_passed`); C0–C4; C6 framing/corpus policy.
 
-When a step surfaces a new blocker, log it in §11 before changing gate order.
+See also: [`USER_ACTION_ITEMS.md`](USER_ACTION_ITEMS.md).
 
 ---
 
@@ -729,14 +741,17 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 
 | Date | Gate | Severity | Issue | Status | Resolution / next action |
 |------|------|----------|-------|--------|--------------------------|
-| 2026-08-31 | B | blocking | PNE voltage/L-level encoding (`+12` mode vs `+16` fVref) | open | Needs controlled pair per target profile (B0) |
+| 2026-08-31 | B | blocking | PNE voltage/L-level encoding (`+12` mode vs `+16` fVref) | **resolved for writer path** | Ensol map + Gate B pairs: `@12` volt/vlim, `@16` current_mA |
 | 2026-08-31 | B | blocking | Dual capacity models (CellProfile vs stack-inferred Q_nom) | resolved | Writer uses explicit `CellProfile.nominal_capacity_mAh`; inferred Q_nom is display-only |
-| 2026-08-31 | B | normal | Controlled-pair metadata incomplete → evidence promotion unsafe | open | Implement B5 intake schema validation |
-| 2026-09-03 | C | normal | C5 equipment smoke still required before executable builds | open | Use `planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` + `example/smoke_rest_cc_end.schproj` |
-| 2026-09-03 | C | normal | 696-byte tail (612–695) all-zero in secured corpus | resolved | Writer zero-pad matches corpus; see `SCH_696_TAIL_ANALYSIS.md` |
+| 2026-08-31 | B | normal | Controlled-pair metadata incomplete → evidence promotion unsafe | resolved | B5 intake validation + PNE02 pairs; PNE16 waived |
+| 2026-09-03 | C | **blocking** | C5 equipment smoke still required before executable builds | open | `GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` + `example/smoke_rest_cc_end.sch` |
+| 2026-09-03 | C | normal | C6 original “696 semantic lab parity” stronger than delivered | **accepted waiver** | Reframed: framing + zero-tail corpus policy; see §6.4 honest assessment |
+| 2026-09-03 | C | normal | C4 ASSB cross-check is thin (layout/steps/`fEndC`) | accepted | Enough as smoke; deepen only if C5 or lab diffs demand it |
+| 2026-09-03 | C | normal | 696-byte tail (612–695) all-zero in secured corpus | resolved | Writer zero-pad matches corpus; `SCH_696_TAIL_ANALYSIS.md` |
+| 2026-09-03 | C | normal | DCR binary offsets unresolved | accepted deferral | IR-only until controlled evidence; blocks DC-IR fidelity (Gate D), not C5 |
 | 2026-08-31 | E | safety | Resume may renumber steps without goto remap proof | open | Block or remap only after semantic confirmation; track under E1/resume |
-| 2026-09-01 | B | low | README test badge (100) lags actual count (125) | open | Sync badge in README when touching docs |
-| 2026-09-01 | B | normal | B5 intake validator implemented; awaiting real pair files | in progress | `validate/intake.py`, `schema/validation_intake.schema.json` |
+| 2026-09-01 | B | low | README test badge lags actual count | open | Sync badge when next touching README |
+| 2026-08-31 | C | normal | 89/93 lab fixtures use `0x10004/696`, not 612-byte layout | mitigated | C6 framing writer exists; full schedule parity deferred |
 | 2026-09-01 | B | normal | fEndV unit mismatch (fixture mV vs compiler V) | resolved | Ensol adoption; `tests/test_unit_contract.py` |
-| 2026-09-01 | B/D | normal | Golden fixtures locked from user intake (7 selected, PNE02+PNE16) | in progress | `planning/GOLDEN_FIXTURES_LOCKED.json` |
+| 2026-09-01 | B/D | normal | Golden fixtures locked from user intake (7 selected, PNE02+PNE16) | done | `planning/GOLDEN_FIXTURES_LOCKED.json` |
 | | | | *(add new rows here)* | | |

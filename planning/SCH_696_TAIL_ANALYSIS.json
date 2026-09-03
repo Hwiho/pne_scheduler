@@ -21,7 +21,8 @@
     "Excel 0x00010004 sheet field offsets are logical struct offsets and do not directly map onto the 612-695 binary tail.",
     "If a future CTSPro build writes nonzero tail bytes, collect a controlled pair before naming those fields."
   ],
-  "gate_c6_status": "complete_for_observed_corpus",
+  "gate_c6_status": "complete_for_observed_corpus_framing_policy",
+  "roadmap_note": "Original Gate C exit text '696 lab parity / semantically verified' is stronger than delivered; accepted bar is framing + zero-tail policy (ROADMAP §6.4).",
   "remaining_optional": [
     "Re-scan when PNE16.zip or new 696 lab dumps arrive",
     "Controlled pair only if nonzero tail appears in CTSPro saves"

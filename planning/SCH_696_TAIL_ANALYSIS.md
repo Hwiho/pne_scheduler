@@ -29,4 +29,8 @@ Excel’s `0x00010004` sheet still lists many logical fields, but those offsets 
 1. If a new CTSPro build writes nonzero bytes past 612, capture a controlled before/after pair.
 2. Re-run the catalog/corpus scan and update this report.
 
-Until then, **C6 is complete for the observed corpus**.
+Until then, **C6 framing is complete for the observed corpus**.
+
+> Roadmap note (2026-09-03): original Gate C exit wording “696 lab parity / semantically verified”
+> is **stronger** than this result. Accepted C6 bar is framing + zero-tail policy; deep 696
+> schedule parity is not claimed.
