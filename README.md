@@ -7,9 +7,9 @@ QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 [![Tests](https://img.shields.io/badge/tests-100%20passed-brightgreen)](#tests)
 
 > [!WARNING]
-> The from-scratch SCH writer still uses a placeholder header. Its output is not validated
-> for CTSPro or equipment execution. Reading, comparison, and template-preserving resume
-> operations are further along than new-file generation.
+> The from-scratch SCH writer now emits a full `0x00010003`/1760-byte header, but
+> step semantics and equipment smoke tests are still incomplete. Output is not
+> validated for CTSPro or equipment execution. Prefer `patch-sch` for evidence-gated edits.
 
 ## Installation
 

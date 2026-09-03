@@ -82,7 +82,8 @@ def experimental_build_manifest(
             "equipment_smoke_test": "not_run",
         },
         "warnings": [
-            "The writer uses a placeholder header.",
+            "From-scratch builds use a full 0x00010003/1760 header, but step semantics "
+            "and equipment smoke tests are still incomplete (Gate C2–C5).",
             "No target equipment profile was supplied.",
             "Do not load or execute this file on PNE equipment.",
         ],

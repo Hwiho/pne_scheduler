@@ -19,7 +19,7 @@ def test_build_is_blocked_without_experimental_acknowledgement(
 
     assert result == 2
     assert not output.exists()
-    assert "not equipment-ready" in capsys.readouterr().err
+    assert "equipment-ready" in capsys.readouterr().err
 
 
 def test_experimental_build_emits_equipment_warning(
@@ -40,6 +40,7 @@ def test_experimental_build_emits_equipment_warning(
 
     assert result == 0
     assert output.exists()
+    assert len(output.read_bytes()) >= 1760
     manifest_path = output.with_suffix(".sch.manifest.json")
     assert manifest_path.exists()
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -49,6 +50,7 @@ def test_experimental_build_emits_equipment_warning(
     assert manifest["template"] is None
     assert manifest["target_profile"]["status"] == "unspecified"
     assert manifest["validation"]["all_passed"] is True
+    assert any("0x00010003/1760 header" in warning for warning in manifest["warnings"])
     assert "Do not load or execute" in capsys.readouterr().out
 
 

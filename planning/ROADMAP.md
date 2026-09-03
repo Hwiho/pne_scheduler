@@ -40,7 +40,8 @@ Enable creation of `.sch` binary schedule files for PNE cyclers **without using 
 
 > **Current implementation:** The standalone layout detector/viewer parser in `io/sch_parser.py`
 > coexists with the ASSB/Ensol adapter in `io/reader.py`. `io/writer.py` is a spike
-> that writes a 512-byte placeholder header and must not yet be considered a PNE-compatible writer.
+> that builds a full `0x00010003`/1760 header but must not yet be considered a
+> PNE-compatible writer until Gate C2–C5 complete.
 > The CLI blocks `build` by default unless the developer explicitly passes
 > `--allow-experimental-output`; even acknowledged output is for offline analysis only.
 
@@ -422,7 +423,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | `.schproj` IR/JSON | **Partially complete** | Serialization and linear DAG sorting implemented; no schema validation/version migration |
 | Experiment modules | **prototype** | expand implemented for Formation, Cycle Life, RPT, DC-IR, HPPC, capacheck, QPEED, etc. |
 | Binary compiler | **spike** | Packs only some fields; does not write core fields such as mode, loop, DCR, and sampling |
-| SCH writer | **Incomplete/guarded** | Uses a 512-byte placeholder header; CLI output now requires explicit experimental acknowledgement and remains offline-only |
+| SCH writer | **Partial (C1 header)** | Full `0x00010003`/1760 header; step compiler still incomplete; CLI requires experimental acknowledgement |
 | Round-trip validator | **Incomplete** | The repository can re-read output, but currently compares only step count and has no independent semantic field comparison |
 | GUI | **Partially complete** | Viewer/resume/bulk editor exist; first flow editor supports module connections, graph validation, property editing, save/load, and step preview |
 | Test execution environment | **Restored** | Editable install and wheel import succeed; local suite **112 passed** (sync README badge) |
@@ -507,14 +508,14 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | C0 | Guard experimental output | ✅ | Default CLI blocks `build`; explicit flag + equipment warning |
 | C0.1 | Build validation manifest | ✅ | Every output records template hash, profile, changed fields, evidence, validation |
 | C0.2 | Template-preserving patch slice | ✅ | Allowlisted writer-ready fields only; all other bytes preserved |
-| C1 | Full header for `0x00010003` | ⏳ | Payload offset/size without 512-byte placeholder |
+| C1 | Full header for `0x00010003` | ✅ | Payload offset/size without 512-byte placeholder |
 | C2 | Complete step compiler | ⏳ | mode, end conditions, loop/goto, sampling, SOC, DCR |
 | C3 | Internal round-trip validator | ⏳ | Semantic write → read without external ASSB |
 | C4 | External parser cross-check | ⏳ | Internal results match vendored ASSB when run |
 | C5 | PNE PC/equipment smoke test | ⏳ | Rest → CC Charge → END loads; checklist recorded |
 | C6 | Extend to `0x00010004/696` | ⏳ | Dominant lab format (89/93 fixtures) semantically verified |
 
-**Recommended order inside Gate C:** C1 → C2 → C3 → C4 → C5 → C6.
+**Recommended order inside Gate C:** C2 → C3 → C4 → C5 → C6.
 
 **Rules**
 - 612-byte slice first; **do not mark Gate C complete until C6 passes**
@@ -527,6 +528,8 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 - C0.2 (2026-09-03): Gate B fields promoted to `writer_ready` —
   `fVref`, `fIref`, `fEndV`, `fEndI`, `loop_target`, `loop_count`, `record_time_s`.
   `patch-sch` patches those without `--allow-unverified-fields`; undeclared bytes preserved.
+- C1 (2026-09-03): `io/header.py` builds a full 1760-byte `0x00010003` header
+  (magic/version/signature/safety); `io/writer.py` no longer uses a 512-byte placeholder.
 ---
 
 ### 6.5 Gate D — Experiment Module Fixture Fidelity
@@ -685,16 +688,15 @@ Execute in this order:
 
 | Step | Gate | Action |
 |------|------|--------|
-| 1 | C1 | Full header for `0x00010003` (no 512-byte placeholder) |
-| 2 | C2 | Complete step compiler (mode, end, loop/goto, sampling) |
-| 3 | C3 | Internal write → read round-trip |
-| 4 | C4 | ASSB external parser cross-check |
-| 5 | C5 | PNE PC/equipment smoke test |
-| 6 | C6 | 696-byte lab parity (89/93 fixtures) |
-| 7 | D | Module E2E validation (Formation → Cycle → RPT/DC-IR) |
-| 8 | F | Release-gated PNE smoke test |
+| 1 | C2 | Complete step compiler (mode, end, loop/goto, sampling) |
+| 2 | C3 | Internal write → read round-trip |
+| 3 | C4 | ASSB external parser cross-check |
+| 4 | C5 | PNE PC/equipment smoke test |
+| 5 | C6 | 696-byte lab parity (89/93 fixtures) |
+| 6 | D | Module E2E validation (Formation → Cycle → RPT/DC-IR) |
+| 7 | F | Release-gated PNE smoke test |
 
-Completed prerequisites: Gate A; Gate B (`gate_b_passed`); C0/C0.1/C0.2.
+Completed prerequisites: Gate A; Gate B (`gate_b_passed`); C0/C0.1/C0.2/C1.
 
 When a step surfaces a new blocker, log it in §11 before changing gate order.
 

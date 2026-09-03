@@ -130,9 +130,9 @@ def main(argv: list[str] | None = None) -> int:
 
         if not args.allow_experimental_output:
             print(
-                "Refusing to write an SCH file: the writer still uses a placeholder "
-                "header and is not equipment-ready. Pass --allow-experimental-output "
-                "only for offline development.",
+                "Refusing to write an SCH file: from-scratch builds are not yet "
+                "equipment-ready (step compiler / smoke test incomplete). Pass "
+                "--allow-experimental-output only for offline development.",
                 file=sys.stderr,
             )
             return 2
