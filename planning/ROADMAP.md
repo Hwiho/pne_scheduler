@@ -11,19 +11,41 @@
 | 2026-09-02 | Lab data policy: only `PNE##.zip` for cycler analysis; per-unit SCH layout + CTS build registry (`LAB_DATA_POLICY.md`, `EQUIPMENT_REGISTRY.json`) |
 | 2026-09-02 | Project directory map + code rules: [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md) |
 | 2026-09-02 | MD docs consolidated: [`planning/README.md`](README.md), [`LAB_CORPUS_REPORT.md`](LAB_CORPUS_REPORT.md), [`docs/README.md`](../docs/README.md), [`docs/GATE_B.md`](../docs/GATE_B.md) |
+| 2026-09-03 | Gate C audit: C5 blocking; C6 reframed; lessons checklist + Autolab/Nova-style product vision added (§1, §5.6, §6.6) |
 
 ---
 
 ## 1. Goal
 
-Enable creation of `.sch` binary schedule files for PNE cyclers **without using the native editor**.
+Enable creation of `.sch` binary schedule files for PNE cyclers **without using the native CTSEditorPro workflow as the primary authoring tool**.
 
-- **LabVIEW-style** modular visual interface: drag, place, and connect experiment blocks
-- Provide battery experiment types as **template modules** (cycle life, formation, RPT, HPPC, DC-IR, etc.)
-- Users enter a **C-rate**, and current (A/mA) is calculated automatically from the **reference capacity**
-- Generated `.sch` files must be directly executable on PNE equipment
+### 1.1 Product vision (target UX)
+
+**Primary metaphor: Metrohm Autolab / Nova-style potentiostat procedure interface**, adapted to PNE cyclers.
+
+| Autolab / Nova concept | PNE scheduler equivalent |
+|------------------------|--------------------------|
+| Procedure / method editor | Linear (then branched) **step procedure** editor |
+| Command blocks (CV, CA, OCP, …) | Battery **step primitives** (CC, CCCV, Rest, Loop, END, …) + **experiment modules** |
+| Method library | Saved `.schproj` / module templates (Formation, Cycle Life, RPT, HPPC, …) |
+| Cell / setup panel | Explicit **Cell Profile** (1C = mA, V limits, equipment profile) — never inferred for write |
+| Parameter pane per command | Per-step / per-module property inspector (C-rate, cutoffs, sampling, loops) |
+| Validate before run | Pre-export validation + write manifest + release labels |
+| Instrument run | **Out of band:** export `.sch` → CTSPro / equipment (this repo does not replace CTS runtime) |
+
+**Not in scope unless explicitly requested later:** live USB/Ethernet control of PNE like Autolab Nova’s instrument link, realtime I–V plotting during run, or replacing CTSMonPro. Those would be a separate “runtime” product line.
+
+**Secondary metaphor (still useful):** LabVIEW-style modular blocks for composing multi-module campaigns — complementary to, not a replacement for, the Autolab procedure metaphor.
+
+### 1.2 Functional goals
+
+- Users author **procedures** (primitives + modules), not raw binary fields
+- Users enter a **C-rate**; current (mA) is calculated from an **explicit** reference capacity (1C = ___ mA)
+- Generated `.sch` files must be **CTSPro-reopen-verified** (and later equipment-verified) before any “executable” label
+- Dual authoring paths: **`patch-sch`** (template-preserving, preferred near-term) and experimental from-scratch **`build`**
 
 ---
+
 
 ## 2. `.sch` File Structure (Current Understanding)
 
@@ -369,13 +391,54 @@ from-scratch binary generation.
 | P1 | **Schedule linter and execution preview** | Detects invalid loops, missing END, unsafe V/I limits, unreachable steps, and implausible duration before export | IR and parser |
 | P1 | **Read-only SCH → IR import** | Enables review, cloning, and diffing of existing schedules before editable round-trip is trusted | Semantic reader coverage |
 | P1 | **Versioned protocol templates** | Makes Formation/Cycle/RPT/HPPC defaults reviewable and traceable by equipment profile | Golden module fixtures |
+| P1 | **Autolab-style procedure workspace** | Procedure list + command palette + property pane + method library (Nova-like authoring, offline) | Trusted IR + Gate C exit |
 | P2 | **Parameter sweep and batch export** | Produces controlled variants after one template is verified | Safe patcher and manifest |
 | P2 | **Approval/audit bundle** | Packages SCH hash, human-readable step table, diff report, screenshots, and operator approval | Stable export workflow |
-| P3 | **Visual flow editor** | Improves composition UX after the underlying semantic and safety contracts are reliable | Gates C, D, and release gate |
+| P3 | **Campaign / multi-module canvas** | LabVIEW-like composition of module campaigns after single-procedure UX is solid | Gates D–E |
 
-Features that should not be prioritized yet are direct hardware control, automatic upload to
-cycler PCs, and broad 0x00010007/EIS generation. Their failure modes are harder to inspect
-than offline file generation and they depend on unresolved schemas.
+Features that should not be prioritized yet are **live** hardware control, automatic upload to
+cycler PCs, realtime Nova-style run plots, and broad 0x00010007/EIS generation. Their failure
+modes are harder to inspect than offline file generation and they depend on unresolved schemas
+or a separate runtime product.
+
+### 5.6 Lessons from Gates A–C → permanent planning checks
+
+These are **recurring failure modes** observed while closing A–C. Every later gate plan and
+status update must pass this checklist (also use before claiming an exit criterion).
+
+| # | Lesson (what went wrong or almost went wrong) | Permanent check |
+|---|-----------------------------------------------|-----------------|
+| L1 | Assumed Excel / ASSB / Ensol / corpus agreed on offsets & units | Require an **evidence hierarchy**: controlled pair > reopen-verified fixture > corpus majority > Excel name. Document conflicts; do not silently pick one |
+| L2 | Compiler wrote V while fixtures store mV (unit contract drift) | Any new packed field needs **unit + scale tests** before `writer_ready` |
+| L3 | Invented / guessed maps (LOOP `+84`, DCR Excel offsets, 696 nonzero tails) without bytes | **No speculative packing.** Missing evidence → IR-only, waiver, or deferral in §11 |
+| L4 | Marked tasks “done” against stronger wording than delivered (C6 “lab parity”, thin C4) | Exit criteria must match **deliverable depth**; if scope shrinks, **reframe the bar** and record waiver |
+| L5 | Status tables went stale after code advanced (round-trip, Gate B blockers) | Status refresh is part of the change: ROADMAP §6 / §9 / §11 updated in the same PR as the claim |
+| L6 | From-scratch `build` looked “done” before equipment reopen | **Never** label executable without C5/F-class reopen for that artifact class |
+| L7 | Filename / stack inference tempting for Q_nom and equipment | Writer path: **explicit profile only**; inference is viewer/analysis-only |
+| L8 | Skipping evidence promotion process burned time; waivers unblocked correctly | Controlled-pair **or** documented waiver before promoting `writer_ready` |
+| L9 | Dual writer paths confused risk (patch vs build) | Prefer **`patch-sch`** for near-term lab edits; keep `build` experimental until reopen proves framing |
+| L10 | Software work continued past the only true blocker (C5) | When lab-blocked, **pause non-support software** and push user action items |
+| L11 | Hosted CI / badge lag treated as Gate A “done” signal | Local green ≠ release; F6 is separate |
+| L12 | UX/export prioritized before trusted writer | **No semantic export UX (E3+)** until Gate C exit (or explicit waiver) |
+
+**Gate planning template (paste into new gate notes):**
+
+```text
+[ ] Evidence hierarchy named for each new packed field
+[ ] Unit/scale tests added or N/A justified
+[ ] No invented offsets (corpus or pair cited)
+[ ] Exit criteria wording matches actual depth
+[ ] ROADMAP status rows updated with the claim
+[ ] Executable / equipment-ready label? → reopen record required
+[ ] Writer uses explicit CellProfile / equipment profile only
+[ ] writer_ready promotion: pair or §11 waiver
+[ ] Near-term path: patch-sch vs experimental build stated
+[ ] If blocked on lab/user: USER_ACTION_ITEMS updated; software paused
+```
+
+**Can these checks govern future plans?** **Yes.** They are process constraints, not one-off notes.
+Gate D/E/F task definitions below already inherit them; new work that fails the template should
+not be marked done.
 
 ---
 
@@ -393,10 +456,12 @@ Gate C  호환 SCH writer    🔄 lab-blocked on C5  ← current focus
   ↓
 Gate D  모듈 픽스처 검증   ⏳ deferred
   ↓
-Gate E  편집 UX / 고급 기능
+Gate E  Autolab형 절차 UX  ⏳ (partial tools exist; vision expanded)
   ↓
 Gate F  운영 릴리스 / 추적성
 ```
+
+Before claiming any gate exit, run the §5.6 checklist.
 
 ### 6.0 Gate maintenance rules
 
@@ -546,6 +611,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 - Until C5 passes, never label CLI `build` output as equipment-executable
 - Do not mark Gate C complete without C5 sign-off
 - C6 “complete” means framing/corpus policy only unless upgraded later
+- Apply §5.6 checklist when claiming any further C/D work complete
 
 **Progress record**
 - C0 / C0.1 / C0.2 / C1 / C2 / C3 / C4: implemented 2026-09-03 (see git history `dbf7fed`…`1eeceb3`)
@@ -575,31 +641,46 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 **Recommended order inside Gate D:** harness → capacity contract → Formation/Rest → Cycle Life → RPT/DC-IR → HPPC → capacheck/QPEED.
 
+**Planning check:** §5.6 (especially L3 DCR evidence, L7 capacity contract, L4 honest exit depth). DCR packing stays blocked until controlled evidence exists.
+
 ---
 
-### 6.6 Gate E — Editing UX and Advanced Features
+### 6.6 Gate E — Autolab-style Procedure UX (and Advanced Features)
 
 | | |
 |---|---|
-| **Status** | 🔄 **Partial** (read/edit tools exist; export UX ⏳) |
-| **Depends on** | Gate C exit (semantic export requires trusted writer) |
-| **Exit criteria** | Flow editor production-ready; unsafe export blocked; optional `.sch` → IR import |
+| **Status** | 🔄 **Partial** (viewer/flow spike exist; Autolab procedure workspace ⏳) |
+| **Depends on** | Gate C exit (semantic export requires trusted writer); Gate D strongly recommended before module palette claims |
+| **Exit criteria** | Nova-like **procedure authoring** usable for real lab schedules; unsafe export blocked; method library + Cell setup; optional `.sch` → IR import |
 | **Next gate** | Gate F |
+| **Product north star** | §1.1 — Autolab/Nova procedure metaphor on PNE `.sch` (offline); not live instrument control |
 
-| # | Task | Status | Completion criteria |
-|---|------|--------|---------------------|
-| E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage |
-| E2 | Flow editor (palette, canvas, properties, preview) | 🔄 | Linear DAG editor usable for real projects |
-| E3 | Pre-export validation UX | ⏳ | Block invalid loops, missing END, V/I violations |
-| E4 | `.sch` → IR import (read-only) | ⏳ | Reverse-parse for review/clone before editable round-trip |
-| E5 | Advanced: 0x00010007/EIS, fingerprint | ⏳ | Deferred until C6 + explicit schema work |
-| E6 | pne_studio2 integration | ⏳ | Shared cell profile and export workflow |
+| # | Task | Status | Completion criteria | Autolab analog |
+|---|------|--------|---------------------|----------------|
+| E0 | UX contract & IA | ⏳ | Document screens: Setup / Procedure / Library / Validate / Export; map to existing `ui/` | Nova workspace layout |
+| E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage | Review existing methods |
+| E2 | **Procedure editor** (ordered steps) | 🔄 | Insert/reorder/delete primitives; property pane; C-rate ↔ mA preview | Procedure / command list |
+| E2.1 | Command palette (primitives) | ⏳ | REST, CC, CCCV, CV, LOOP, END, OCV… with validated parameter forms | Command / technique picker |
+| E2.2 | Module palette (macros) | ⏳ | Formation, Cycle Life, RPT, HPPC, DC-IR expand into procedure steps | Method fragments / macros |
+| E2.3 | Method library | ⏳ | Save/load versioned procedures & modules per equipment profile | Method / procedure library |
+| E2.4 | Cell / equipment setup pane | ⏳ | Explicit 1C mA, V limits, PNE unit/range, layout target; blocks export if missing | Cell / instrument setup |
+| E3 | Pre-export validation UX | ⏳ | Block invalid loops, missing END, V/I violations; show linter like Nova readiness | Validate before run |
+| E3.1 | Export path choice | ⏳ | Default **patch-sch** onto approved template; optional experimental `build` with warnings | — (PNE-specific safety) |
+| E4 | `.sch` → IR import (read-only) | ⏳ | Reverse-parse for review/clone before editable round-trip | Open existing procedure |
+| E5 | Advanced: 0x00010007/EIS, fingerprint | ⏳ | Deferred until explicit schema evidence | EIS techniques (later) |
+| E6 | pne_studio2 integration | ⏳ | Shared cell profile and export workflow | Host app embedding |
+| E7 | Campaign canvas (optional) | ⏳ | LabVIEW-like multi-module graph **after** E2 procedure UX is solid | — (secondary metaphor) |
+| E8 | Live run / instrument link | ❌ deferred | Not Gate E; separate product if ever needed | Autolab instrument session |
 
 **Progress record**
-- `pne_scheduler flow` / `run_pne_scheduler_flow.py`: linear graph, `.schproj` load/save, Cell Profile, step preview
-- Remaining: drag layout, rich widgets, undo/redo, **semantic SCH export**, GUI automation
+- `pne_scheduler flow` / `run_pne_scheduler_flow.py`: linear graph, `.schproj` load/save, Cell Profile, step preview — **seed** for E2, not yet Autolab-complete
+- Remaining for Autolab parity (authoring only): command palette, rich property forms, method library, validation/export UX, undo/redo
 
-**Rule:** Do not prioritize E3/E4 semantic export until Gate C is complete.
+**Rules**
+- Do not prioritize E3 semantic export until Gate C is complete
+- Do not claim “Autolab-like” until E0 + E2 + E2.1 + E2.4 + E3 exist at MVP depth
+- Live control (E8) stays out of Gate E unless product decision changes
+- Apply §5.6 checklist on every E-task completion claim
 
 ---
 
@@ -662,7 +743,8 @@ pne_scheduler/                   # main package (repo root)
 │   ├── schedule_viewer.py
 │   ├── project_editor.py
 │   ├── resume_wizard.py
-│   └── flow_editor.py           # placeholder
+│   ├── flow_editor.py           # seed; evolve toward Autolab procedure workspace
+│   └── procedure_workspace.py   # planned (Gate E0–E2)
 ├── tools/                       # batch fixture analysis
 ├── docs/
 └── tests/
@@ -706,16 +788,20 @@ tests to be skipped.
 ## 9. Current focus (active gate)
 
 **Active gate: C — lab-blocked on C5.**  
-Software Gate C work should pause except C5 support. Gate D is deferred.
+Software Gate C work should pause except C5 support. Gate D is deferred. Gate E vision is
+**Autolab/Nova-style procedure UX** (§1.1, §6.6) but must not pull semantic export ahead of C exit.
 
 | Step | Gate | Action |
 |------|------|--------|
 | 1 | **C5** | Open `example/smoke_rest_cc_end.sch` in CTSEditorPro; fill checklist |
 | 2 | C exit | After C5 sign-off, mark Gate C complete with documented gaps (DCR IR-only; 696 tail unused) |
-| 3 | D | Deferred until explicitly requested |
-| 4 | F | Release gates later |
+| 3 | D | Deferred until explicitly requested; apply §5.6 |
+| 4 | E | After C (+ preferably D): Autolab procedure workspace (E0–E3), not live instrument link |
+| 5 | F | Release gates later |
 
 Completed software prerequisites: Gate A; Gate B (`gate_b_passed`); C0–C4; C6 framing/corpus policy.
+
+Process: use §5.6 lessons checklist on every future gate claim.
 
 See also: [`USER_ACTION_ITEMS.md`](USER_ACTION_ITEMS.md).
 
@@ -754,4 +840,5 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 | 2026-08-31 | C | normal | 89/93 lab fixtures use `0x10004/696`, not 612-byte layout | mitigated | C6 framing writer exists; full schedule parity deferred |
 | 2026-09-01 | B | normal | fEndV unit mismatch (fixture mV vs compiler V) | resolved | Ensol adoption; `tests/test_unit_contract.py` |
 | 2026-09-01 | B/D | normal | Golden fixtures locked from user intake (7 selected, PNE02+PNE16) | done | `planning/GOLDEN_FIXTURES_LOCKED.json` |
+| 2026-09-03 | E | normal | Product UX north star clarified: Autolab/Nova procedure metaphor (offline SCH), not LabVIEW-only | accepted | §1.1 + Gate E expansion; live instrument link deferred (E8) |
 | | | | *(add new rows here)* | | |

@@ -50,6 +50,14 @@ template (Gate C0.2) over from-scratch `build`.
 
 ## 3. Do not start yet
 
-- **Gate D**
+- **Gate D** (until you ask)
+- **Gate E Autolab procedure UX** semantic export (until C5 closes Gate C)
 - Claiming full “696 lab semantic parity” beyond framing/zero-tail policy
 - Labeling `build` output as equipment-safe
+- Live Autolab-style instrument control / realtime plots (deferred product line)
+
+## 4. Product direction (locked in roadmap)
+
+Target UX is **Autolab / Nova-style procedure authoring** for PNE `.sch` (offline), not
+LabVIEW-only and not CTS runtime replacement. See `ROADMAP.md` §1.1 and §6.6.
+Gate A–C lessons are now a permanent checklist in §5.6.

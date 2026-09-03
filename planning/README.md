@@ -12,7 +12,7 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 | [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md) | Directory map, code rules, cleanup workflow |
 | [`LAB_DATA_POLICY.md`](LAB_DATA_POLICY.md) | PNE##.zip only, per-unit layout, CTS build |
 | [`SCH_LAYOUT_TIER_SHARING.md`](SCH_LAYOUT_TIER_SHARING.md) | 500 mA vs 20 A — shared offsets, separate evidence |
-| [`ROADMAP.md`](ROADMAP.md) | SCH structure analysis & implementation roadmap |
+| [`ROADMAP.md`](ROADMAP.md) | SCH structure, gates, **§5.6 lessons checklist**, Autolab UX vision (§1.1 / §6.6) |
 | [`LAB_CORPUS_REPORT.md`](LAB_CORPUS_REPORT.md) | **Generated** per-cycler zip analysis (human-readable) |
 
 ## Machine-readable data
