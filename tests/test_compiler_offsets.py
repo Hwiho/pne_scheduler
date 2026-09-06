@@ -11,7 +11,6 @@ from pne_scheduler.io.sch_parser import _read_steps
 from pne_scheduler.schema.ensol_v612 import (
     OFF_CURRENT_MA,
     OFF_CV_CUTOFF_MA,
-    OFF_TIME_OR_REST_S,
     OFF_VOLT_OR_VLIM_MV,
     OFF_VOLTAGE_CUTOFF_MV,
 )

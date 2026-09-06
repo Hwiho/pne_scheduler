@@ -3,7 +3,6 @@ from __future__ import annotations
 import pytest
 
 from pne_scheduler.engine.c_rate import (
-    FAST_CHARGE_MIN_C_RATE,
     format_c_rate_label,
     is_fast_charge_c_rate,
     snap_c_rate,

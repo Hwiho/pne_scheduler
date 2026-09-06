@@ -18,18 +18,24 @@ _SUPPORTED_WRITE_VERSIONS = {
 }
 
 
-def write_sch(project: ScheduleProject, output_path: Path) -> None:
-    """Compile project to a framed SCH file (``0x00010003`` or ``0x00010004``)."""
+def write_sch(project: ScheduleProject, output_path: Path) -> list[str]:
+    """Compile project to a framed SCH file (``0x00010003`` or ``0x00010004``).
+
+    Returns non-fatal warnings about IR fields the binary compiler cannot pack
+    with confidence yet (see ``compile_step_warnings``), so callers can surface
+    them instead of silently discarding them.
+    """
     intents = project.expand_steps()
     if not intents or intents[-1].step_type != "end":
         from ..ir.step_intent import StepIntent
 
         intents = [*intents, StepIntent(step_type="end")]
 
-    _ = compile_step_warnings(intents)
+    warnings = compile_step_warnings(intents)
     step_records = compile_steps(intents, project.cell_profile)
     payload = _build_file_bytes(project, step_records)
     output_path.write_bytes(payload)
+    return warnings
 
 
 def _pad_step_record(record: bytes, step_size: int) -> bytes:

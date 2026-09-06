@@ -7,9 +7,6 @@ import sys
 from pathlib import Path
 
 from pne_scheduler.io.current_rescaler import (
-    C_RATE_DIGITS,
-    CURRENT_DIGITS,
-    FRACTION_C_RATE_TOLERANCE,
     collect_current_fields,
     scale_current_fields,
 )

@@ -10,19 +10,8 @@ from dataclasses import dataclass
 
 from .enums import DEFAULT_SCH_VERSION, DEFAULT_STEP_SIZE
 from .fields import (
-    OFFSET_B_USE_ACTUAL_CAPA,
-    OFFSET_B_USE_DATA_STEP_NO,
-    OFFSET_F_END_C,
     OFFSET_F_END_I,
-    OFFSET_F_END_TIME,
-    OFFSET_F_END_V,
-    OFFSET_F_IREF,
-    OFFSET_F_MAX_CAPACITY,
-    OFFSET_F_SOC_RATE,
     OFFSET_F_VREF,
-    OFFSET_N_GOTO_STEP_ID,
-    OFFSET_STEP_NO,
-    OFFSET_STEP_TYPE,
     get_step_fields,
 )
 

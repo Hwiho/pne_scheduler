@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 
 from pne_scheduler.edit import apply_bulk_edit, parse_param_value, parse_set_args
+from pne_scheduler.edit.bulk_edit import coerce_param_for_field
 from pne_scheduler.ir import CellProfile
 from pne_scheduler.ir.project import ModuleNode, ScheduleProject
 
@@ -62,6 +63,17 @@ def test_bulk_edit_by_module_type() -> None:
     )
     assert result.updated_count == 2
     assert project.modules[1].params["loop_count"] == 500
+
+
+def test_coerce_param_for_field_keeps_int_fields_as_int() -> None:
+    """`from __future__ import annotations` turns dataclass field.type into the
+    string "int"/"float", not the real type object -- coerce_param_for_field
+    must resolve by name, not by `field_type in (int, float, ...)` (which never
+    matched). A negative loop_count isn't str.isdigit(), so without the fix it
+    silently became the float -5.0 instead of the int -5."""
+    value = coerce_param_for_field("cycle_life", "loop_count", "-5")
+    assert value == -5
+    assert isinstance(value, int)
 
 
 def test_bulk_edit_skips_incompatible_keys() -> None:

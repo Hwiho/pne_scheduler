@@ -67,6 +67,34 @@ def test_c4_writer_output_matches_assb(tmp_path: Path) -> None:
     assert check.field_mismatch_count == 0
 
 
+def test_write_sch_returns_compiler_warnings_instead_of_discarding_them(
+    tmp_path: Path,
+) -> None:
+    """write_sch used to compute compile_step_warnings and throw it away, so the
+    CLI `build` path (the one users actually run) never saw DCR/goto_step_id/
+    end_capacity_fraction warnings even though the compiler already computes
+    them. It must return them so callers (CLI, manifest) can surface them."""
+    output = tmp_path / "dcir_smoke.sch"
+    project = ScheduleProject(
+        name="dcir-warning-smoke",
+        cell_profile=CELL,
+        sch_version=0x00010003,
+        modules=[],
+        connections=[],
+    )
+    project.expand_steps = lambda: [  # type: ignore[method-assign]
+        StepIntent(
+            step_type="discharge",
+            mode="CC",
+            c_rate=1.0 / 3.0,
+            end_capacity_fraction=0.3,
+        ),
+        StepIntent(step_type="end"),
+    ]
+    warnings = write_sch(project, output)
+    assert any("end_capacity_fraction" in w for w in warnings)
+
+
 def test_c6_writer_emits_696_shared_prefix_framing(tmp_path: Path) -> None:
     output = tmp_path / "v10004.sch"
     project = ScheduleProject(

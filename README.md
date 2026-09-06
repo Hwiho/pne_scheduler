@@ -4,7 +4,7 @@ Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` sch
 The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
 QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-100%20passed-brightgreen)](#tests)
+[![Tests](https://img.shields.io/badge/tests-264%20passed-brightgreen)](#tests)
 
 > [!WARNING]
 > The from-scratch SCH writer now emits a full `0x00010003`/1760-byte header, but
@@ -202,6 +202,15 @@ pne_scheduler/
 ```powershell
 python -m pytest tests/ -q
 ```
+
+## Lint
+
+```powershell
+ruff check .
+```
+
+Minimal ruleset (unused/undefined names, a few pycodestyle basics) — see
+`[tool.ruff]` in `pyproject.toml`. Runs in CI before the test suite.
 
 ## Documentation
 

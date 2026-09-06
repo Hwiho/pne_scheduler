@@ -12,7 +12,7 @@ from pne_scheduler.io.current_rescaler import (
     collect_current_fields,
     scale_current_fields,
 )
-from pne_scheduler.schema.ensol_v612 import OFF_CURRENT_MA, OFF_CV_CUTOFF_MA
+from pne_scheduler.schema.ensol_v612 import OFF_CURRENT_MA
 
 CAPACHECK = (
     Path(__file__).resolve().parents[1]
@@ -41,7 +41,6 @@ def test_scale_doubles_current_when_capacity_doubles() -> None:
 
     # First CCCV step current in output should match scaled value
     header = summary["header_size"]
-    block = memoryview(out)[header : header + 612]
     step4_base = header + 3 * 612
     step4 = memoryview(out)[step4_base : step4_base + 612]
     assert struct.unpack_from("<f", step4, OFF_CURRENT_MA)[0] == pytest.approx(

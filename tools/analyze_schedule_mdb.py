@@ -7,11 +7,13 @@ import json
 import sys
 from collections import Counter
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 
-from access_parser import AccessParser  # noqa: E402
+if TYPE_CHECKING:
+    from access_parser import AccessParser
 
 REPORT_JSON = ROOT / "planning" / "SCHEDULE_MDB_ANALYSIS.json"
 
@@ -79,6 +81,8 @@ def _table_summary(db: AccessParser, name: str) -> dict:
 
 
 def build_schedule_mdb_report(path: Path) -> dict:
+    from access_parser import AccessParser
+
     db = AccessParser(str(path))
     user_tables = sorted(name for name in db.catalog if not name.startswith("MSys"))
     tables = {name: _table_summary(db, name) for name in user_tables}

@@ -7,7 +7,7 @@ from pathlib import Path
 from tkinter import filedialog, messagebox, ttk
 
 from ..io.sch_parser import parse_schedule_file
-from ..resume import build_resume_plan, detect_checkpoint, splice_resume_schedule
+from ..resume import build_resume_plan, splice_resume_schedule
 
 
 class ResumeWizardApp:
@@ -112,7 +112,6 @@ class ResumeWizardApp:
             messagebox.showwarning("Missing files", "Open both .sch and data CSV.")
             return
         try:
-            checkpoint = detect_checkpoint(self.data_path, source_sch=self.sch_path)
             resume_override = self._optional_int(self.resume_step_var.get())
             loops_override = self._optional_int(self.remaining_loops_var.get())
             plan = build_resume_plan(

@@ -204,7 +204,14 @@ def validate_intake_with_compare_report(
             for word in change.get("words") or []
         }
         if expected_field not in reported_fields:
-            warnings.append(
+            # This must be a hard error, not a warning: `pair_clean` (and from
+            # there `evidence_complete`) is derived from `valid`, which only
+            # reflects `errors`. A warning here let a controlled pair whose
+            # observed byte change landed on the *wrong* offset still be
+            # counted as controlled-pair evidence for the field named in
+            # `expected_field` -- silently promoting an incorrect offset to
+            # the strongest evidence tier (see ROADMAP.md §5.6 L1).
+            errors.append(
                 f"expected_field {expected_field!r} not among changed fields "
                 f"{sorted(reported_fields)}"
             )

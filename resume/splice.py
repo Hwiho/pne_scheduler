@@ -10,6 +10,7 @@ from ..io.sch_binary import (
     SchBinaryDocument,
     SchBinaryStep,
     patch_loop_count,
+    patch_loop_goto,
     read_loop_info,
     read_sch_binary,
     renumber_steps,
@@ -112,6 +113,9 @@ def splice_resume_schedule(
     if not selected:
         raise ValueError(f"No steps to resume from step {plan.resume_sch_step}")
 
+    selected, goto_warnings = _remap_loop_goto_targets(selected, plan.resume_sch_step)
+    plan.warnings.extend(goto_warnings)
+
     if plan.remaining_loop_count is not None:
         selected = _apply_remaining_loops(selected, plan.remaining_loop_count)
 
@@ -194,6 +198,45 @@ def splice_resume_schedule(
         document=resumed,
         manifest_path=manifest_path,
     )
+
+
+def _remap_loop_goto_targets(
+    steps: list[SchBinaryStep], resume_sch_step: int
+) -> tuple[list[SchBinaryStep], list[str]]:
+    """Rewrite LOOP goto targets from original absolute step numbers to the
+    post-splice numbering (splicing drops steps before ``resume_sch_step`` and
+    ``renumber_steps`` restarts numbering at 1 for what remains).
+
+    Without this, a LOOP step kept in the resumed schedule would still point at
+    whatever original step number it had, which after renumbering is either the
+    wrong step or does not exist (previously an open safety issue: resume could
+    silently produce a schedule whose LOOP jumps to the wrong place).
+    """
+    warnings: list[str] = []
+    remapped: list[SchBinaryStep] = []
+    for step in steps:
+        if not step.is_loop:
+            remapped.append(step)
+            continue
+        goto, _count = read_loop_info(step)
+        if goto is None:
+            remapped.append(step)
+            continue
+        if goto < resume_sch_step:
+            raise ValueError(
+                f"LOOP at original step {step.step_no} targets step {goto}, which is "
+                f"before the resume point (step {resume_sch_step}) and would be "
+                "dropped by splicing. Automatic resume cannot safely remap this "
+                f"reference -- resume from step {goto} or earlier, or edit the "
+                "schedule manually."
+            )
+        new_target = goto - resume_sch_step + 1
+        remapped.append(patch_loop_goto(step, new_target))
+        warnings.append(
+            f"LOOP at original step {step.step_no}: goto target remapped "
+            f"{goto} -> {new_target} for the resumed step numbering."
+        )
+    return remapped, warnings
 
 
 def _find_loop_step(steps: tuple[SchBinaryStep, ...]) -> tuple[SchBinaryStep | None, int | None]:

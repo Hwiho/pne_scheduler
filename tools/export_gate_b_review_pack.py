@@ -6,7 +6,6 @@ import re
 import shutil
 import zipfile
 import xml.etree.ElementTree as ET
-from collections import Counter, defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]

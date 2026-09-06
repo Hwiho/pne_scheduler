@@ -12,11 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 
 from pne_scheduler.classify.signature_labels import (  # noqa: E402
-    SIGNATURE_LABELS_SCHEMA,
     save_signature_labels,
 )
 from pne_scheduler.classify.training_labels import (  # noqa: E402
-    VERIFIED_LABELS_SCHEMA,
     load_verified_labels,
     save_verified_labels,
 )

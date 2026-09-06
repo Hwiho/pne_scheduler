@@ -25,6 +25,30 @@ def test_filename_6040_is_not_l_level() -> None:
     assert guess is None
 
 
+@pytest.mark.parametrize(
+    "filename",
+    [
+        "Cell01_3350_FM.sch",
+        "Model3350.sch",
+    ],
+)
+def test_filename_letter_before_digit_is_not_l_level(filename: str) -> None:
+    """`_L_EXPLICIT` used to match "L" preceded by any other letter (no token
+    boundary), so ordinary names like "Cell01" ("l0") or "Model3350" ("l3")
+    were mistaken for an explicit L-level marker."""
+    guess = infer_l_from_filename(filename)
+    assert guess is None
+
+
+def test_filename_explicit_l_not_shadowed_by_earlier_letter_digit_run() -> None:
+    """A real "L5.0" later in the filename must still be found even though an
+    unrelated letter+digit run ("Cell1") appears earlier -- `re.search` only
+    returns the leftmost match, so the false positive used to win."""
+    guess = infer_l_from_filename("Cell1_multi_L5.0.sch")
+    assert guess is not None
+    assert guess.l_value == pytest.approx(5.0)
+
+
 def test_fvref_inference_l65_from_qpeed() -> None:
     guess = l_from_fvref(36.293)
     assert guess is not None

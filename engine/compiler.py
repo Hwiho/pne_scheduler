@@ -77,6 +77,13 @@ def compile_step_warnings(intents: list[StepIntent]) -> list[str]:
                 f"Step {index}: goto_step_id packs legacy nGotoStepID@92 "
                 "(ASSB name; semantic still unverified)."
             )
+        if intent.end_capacity_fraction is not None:
+            warnings.append(
+                f"Step {index}: end_capacity_fraction packs fEndC@36, which is "
+                "semantic_unverified (no nonzero example exists in the corpus; "
+                "schema/fields.py). SOC-targeting via this field is unconfirmed "
+                "pending controlled-pair evidence (Gate D)."
+            )
     return warnings
 
 

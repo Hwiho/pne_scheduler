@@ -4,7 +4,7 @@ import pytest
 
 from pne_scheduler.stack.footprint import infer_footprint_from_filename
 from pne_scheduler.stack.cell_mode import CellMode, infer_cell_mode_from_filename
-from pne_scheduler.stack.capacity import c_rate_from_current, nominal_capacity_mAh
+from pne_scheduler.stack.capacity import nominal_capacity_mAh
 from pne_scheduler.stack.infer import infer_cell_geometry
 from pne_scheduler.io.sch_parser import parse_schedule_file
 

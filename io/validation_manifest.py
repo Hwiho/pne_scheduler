@@ -41,6 +41,7 @@ def experimental_build_manifest(
     *,
     sch_version: int,
     cell_profile: dict[str, Any],
+    extra_warnings: list[str] | None = None,
 ) -> dict[str, Any]:
     """Describe an intentionally non-equipment-ready from-scratch build."""
     project = Path(project_path)
@@ -86,6 +87,7 @@ def experimental_build_manifest(
             "and equipment smoke tests are still incomplete (Gate C2–C5).",
             "No target equipment profile was supplied.",
             "Do not load or execute this file on PNE equipment.",
+            *(extra_warnings or []),
         ],
     }
 

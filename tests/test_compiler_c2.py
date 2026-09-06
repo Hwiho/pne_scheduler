@@ -150,3 +150,19 @@ def test_compiler_warns_when_dcr_ir_cannot_be_packed() -> None:
     record = compile_steps(intents, CELL)[0]
     assert _f(record, 241) == pytest.approx(0.0)
     assert _f(record, 245) == pytest.approx(0.0)
+
+
+def test_compiler_warns_when_end_capacity_fraction_is_unverified() -> None:
+    """fEndC@36 has no nonzero example in the corpus (schema/fields.py) -- modules
+    like dcir/hppc/rpt that SOC-target via end_capacity_fraction should surface
+    that this field is unconfirmed, the same way DCR and goto_step_id do."""
+    intents = [
+        StepIntent(
+            step_type="discharge",
+            mode="CC",
+            c_rate=1.0 / 3.0,
+            end_capacity_fraction=0.3,
+        )
+    ]
+    warnings = compile_step_warnings(intents)
+    assert any("end_capacity_fraction" in item and "fEndC" in item for item in warnings)

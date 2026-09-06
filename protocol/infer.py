@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from enum import StrEnum
 
 from .defaults import (
-    CAPACHECK_INITIAL_C_RATE,
     CAPACHECK_MEASUREMENT_C_RATE,
     CYCLE_DEFAULT_C_RATE,
     FORMATION_C_RATE,
@@ -68,7 +67,6 @@ def _distinct_rates(rates: list[float], *, rtol: float = 0.08) -> list[float]:
 
 
 def _has_rpt_pattern(steps: list[object], rates: list[float]) -> bool:
-    filename_hint = False
     has_c3 = any(_close(r, RPT_DISCHARGE_C_RATE) for r in rates)
     has_pulse = any(
         _close(r, RPT_DCIR_PULSE_C_RATE_DEFAULT) or _close(r, RPT_DCIR_PULSE_C_RATE_ALT)

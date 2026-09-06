@@ -12,21 +12,16 @@ from pathlib import Path, PurePosixPath
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT.parent))
 
-from pne_scheduler.classify import ScheduleCategory, classify_schedule
+from pne_scheduler.classify import classify_schedule
 from pne_scheduler.io.layout import detect_sch_layout
 from pne_scheduler.schema.corpus_paths import default_corpus_zip_map
 from pne_scheduler.schema.equipment import rating_hint_for_unit
 from pne_scheduler.schema.lab_corpus import validate_unit_corpus_zip
 from pne_scheduler.schema.ensol_v612 import (
     OFF_CURRENT_MA,
-    OFF_CV_CUTOFF_MA,
-    OFF_LOOP_COUNT,
     OFF_LOOP_GOTO_ENSOL,
     OFF_LOOP_GOTO_LEGACY,
     OFF_STEP_TYPE,
-    OFF_TIME_OR_REST_S,
-    OFF_VOLT_OR_VLIM_MV,
-    OFF_VOLTAGE_CUTOFF_MV,
 )
 from pne_scheduler.schema.enums import (
     SCH_STEP_TYPE_CC_CHARGE,

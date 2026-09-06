@@ -59,6 +59,7 @@ from . import (  # noqa: E402,F401
     rest,
     rpt,
     smoke_rest_cc_end,
+    smoke_writer_probe,
 )
 
 __all__ = [

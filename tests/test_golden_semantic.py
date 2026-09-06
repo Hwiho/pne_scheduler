@@ -18,7 +18,6 @@ from pne_scheduler.schema.ensol_v612 import (
     OFF_LOOP_GOTO_LEGACY,
     OFF_RECORD_DV_MV,
     OFF_RECORD_TIME_S,
-    OFF_STEP_TYPE,
     OFF_TIME_OR_REST_S,
     OFF_VOLT_OR_VLIM_MV,
     OFF_VOLTAGE_CUTOFF_MV,

@@ -23,6 +23,6 @@ class InsituCycleModule(CycleLifeModule):
 
     def expand(self, cell: CellProfile) -> list[StepIntent]:
         steps = super().expand(cell)
-        if steps and steps[0].label is None:
+        if steps and steps[0].step_type == "cycle":
             steps[0] = StepIntent(step_type="cycle", label="in-situ cycle marker (no RPT)")
         return steps

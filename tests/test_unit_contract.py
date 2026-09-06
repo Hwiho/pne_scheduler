@@ -13,7 +13,6 @@ from pne_scheduler.ir.cell_profile import CellProfile
 from pne_scheduler.ir.step_intent import StepIntent
 from pne_scheduler.io.sch_parser import _read_steps
 from pne_scheduler.schema.ensol_v612 import OFF_CURRENT_MA, OFF_VOLTAGE_CUTOFF_MV
-from pne_scheduler.schema.v0x00010003_612 import STEP_RECORD_SIZE
 
 ARCHIVE = (
     Path(__file__).resolve().parents[1]

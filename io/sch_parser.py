@@ -11,10 +11,7 @@ from ..schema.enums import (
     SCH_STEP_TYPE_CC_CHARGE,
     SCH_STEP_TYPE_CC_DISCHARGE,
     SCH_STEP_TYPE_CCCV,
-    SCH_STEP_TYPE_CYCLE_MARKER,
     SCH_STEP_TYPE_END,
-    SCH_STEP_TYPE_LOOP,
-    SCH_STEP_TYPE_REST,
     SCH_STEP_TYPES,
 )
 from ..engine.c_rate import snap_c_rate

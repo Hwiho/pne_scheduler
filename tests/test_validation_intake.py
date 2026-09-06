@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
 
 from pne_scheduler.tools.compare_sch import compare_sch_files
 from pne_scheduler.validate.intake import (
@@ -89,6 +88,35 @@ def test_intake_with_compare_report_rejects_multi_change_pair(tmp_path: Path) ->
     result = validate_intake_with_compare_report(intake, report)
     assert not result.valid
     assert any("not a clean single-field" in error for error in result.errors)
+
+
+def test_intake_with_compare_report_rejects_wrong_expected_field(tmp_path: Path) -> None:
+    """A controlled pair claiming expected_field="fEndV" but whose observed byte
+    change actually lands on a different field (fIref@20 here) must be rejected
+    outright, not merely warned about -- otherwise the wrong offset could be
+    counted as controlled-pair evidence for the field it does not support."""
+    intake = json.loads(TEMPLATE.read_text(encoding="utf-8"))
+    intake["changed_step"] = 6
+    intake["expected_field"] = "fEndV"
+    intake["ctspro_reopen_verified"] = True
+
+    before = CAPACHECK.read_bytes()
+    after = bytearray(before)
+    import struct
+
+    # Change fIref@20 (time_or_rest_s), not fEndV@28 -- a mismatched pair.
+    struct.pack_into("<f", after, 1760 + 5 * 612 + 20, 999.0)
+    after_path = tmp_path / "after.sch"
+    after_path.write_bytes(after)
+    before_path = tmp_path / "before.sch"
+    before_path.write_bytes(before)
+    intake["before_file"] = before_path.name
+    intake["after_file"] = after_path.name
+
+    report = compare_sch_files(before_path, after_path)
+    result = validate_intake_with_compare_report(intake, report)
+    assert not result.valid
+    assert any("expected_field" in error for error in result.errors)
 
 
 def test_intake_schema_id_constant_matches_template() -> None:

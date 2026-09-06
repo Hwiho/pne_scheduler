@@ -213,7 +213,6 @@ def import_pairs(zip_path: Path, *, copy_zip: bool = True) -> list[str]:
     if baseline_path is None:
         raise FileNotFoundError(f"No baseline2 before file in {zip_path}")
 
-    baseline_before = baseline_path.read_bytes()
     written: list[str] = []
 
     for spec in PAIR_SPECS:

@@ -184,7 +184,7 @@ pne_scheduler/
 | **`template_writer.py`** | 템플릿 보존 필드 패치 (`patch-sch`) | **유지·확장** |
 | `current_rescaler.py` | 스텝 전류 스케일 (Ensol 로직 in-tree화) | 유지 |
 | `writer.py` | IR → 전체 .sch (stub 헤더) | 실험적; `build --allow-experimental-output` 전용 |
-| `reader.py` | ASSB vendor thin wrapper | **삭제 예정** → `sch_parser`로 통합 |
+| `reader.py` | ASSB vendor thin wrapper (`read_sch`) | **유지** — `validate/roundtrip.py`가 계속 import함 (2026-09-06 확인, 이전의 "삭제 예정" 표기는 틀렸음) |
 
 ### `schema/` — 바이너리·장비 지식
 
@@ -210,7 +210,7 @@ pne_scheduler/
 
 - **`intake.py`** — Gate B controlled-pair JSON 검증.
 - **`assb_parser_diff.py`** — in-tree vs ASSB vendor 파서 diff.
-- `roundtrip.py` — write→read 검증 (현재 미사용 export; 정리 대상).
+- **`roundtrip.py`** — write→read 검증 (Gate C3 핵심 산출물). `tests/test_gate_c_roundtrip.py`, `tests/test_c6_tail_and_smoke.py`가 사용 중 — 2026-09-06 확인, 이전의 "미사용/정리 대상" 표기는 틀렸음.
 
 ### `tools/` — 오프라인 분석 CLI
 
@@ -226,7 +226,7 @@ pne_scheduler/
 | `rescale_sch_current.py` | CLI 전류 리스케일 |
 | `export_sch_schema_xlsx.py` | 스키마 xlsx export |
 
-`_` 접두·`analyze_pne_zip_corpus.py` 등은 **삭제 예정** (0 import).
+`_` 접두·`analyze_pne_zip_corpus.py` 등은 **삭제 예정** (0 import; 2026-09-06 재확인 — 여전히 정확함, 삭제는 사용자 확인 후 진행).
 
 ### `planning/` — 정책·증거·리포트 (코드 아님)
 
@@ -245,7 +245,7 @@ pne_scheduler/
 
 - **`assb_sch/`** — ASSB SCH 파서 (diff·parity 검증용).
 - **`ensol_sch_maker_ref/`** — Ensol zip 참조. **`battery_scheduler/`** 만 active 참조.
-- **`project_archive/`** — 삭제 예정 (0 import, git 외부 보관 불필요).
+- **`project_archive/`** — 삭제 예정 (0 import, 3.7MB; 2026-09-06 재확인 — 여전히 정확함, 삭제는 사용자 확인 후 진행).
 
 vendor 코드는 **가져오기(copy-in) 후 in-tree에서 수정**한다. vendor를 runtime에서 직접 import 하지 않는다 (ASSB parser 예외는 `io/reader` 경유로 축소 중).
 
@@ -316,4 +316,4 @@ grep으로 import/호출 0건 항목을 표로 분류:
 
 ---
 
-*Last updated: 2026-09-02*
+*Last updated: 2026-09-06 — corrected two stale "삭제 예정" notes (`io/reader.py`, `validate/roundtrip.py` are both active dependencies of Gate C3's round-trip validator, confirmed by grep); re-verified the remaining cleanup candidates still have zero references.*

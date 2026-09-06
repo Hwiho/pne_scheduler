@@ -141,12 +141,13 @@ def main(argv: list[str] | None = None) -> int:
         output_existed = args.output.exists()
         manifest_existed = manifest_path.exists()
         try:
-            write_sch(project, args.output)
+            compile_warnings = write_sch(project, args.output)
             manifest = experimental_build_manifest(
                 args.project,
                 args.output,
                 sch_version=project.sch_version,
                 cell_profile=project.cell_profile.to_dict(),
+                extra_warnings=compile_warnings,
             )
             write_validation_manifest(manifest_path, manifest)
         except (OSError, TypeError, ValueError) as exc:
@@ -158,6 +159,8 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         print(f"Wrote experimental output to {args.output}")
         print(f"Wrote validation manifest to {manifest_path}")
+        for warning in compile_warnings:
+            print(f"  WARN: {warning}")
         print("WARNING: Do not load or execute this file on PNE equipment.")
         return 0
 

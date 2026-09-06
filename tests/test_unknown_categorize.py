@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 import json
-from collections import Counter
 from pathlib import Path
 
-import pytest
 
 from pne_scheduler.classify.sch_binary_profile import distinct_current_levels
 from pne_scheduler.classify.training_labels import (

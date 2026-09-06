@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from ..ir.project import ModuleNode, ScheduleProject
-from ..modules.base import get_module_class, list_module_types
+from ..modules.base import get_module_class
 
 
 @dataclass(frozen=True, slots=True)
@@ -60,6 +60,9 @@ def parse_param_value(raw: str, *, target_type: type | None = None) -> Any:
         return text
 
 
+_SIMPLE_FIELD_TYPES: dict[str, type] = {"int": int, "float": float, "str": str, "bool": bool}
+
+
 def coerce_param_for_field(module_type: str, key: str, raw: Any) -> Any:
     cls = get_module_class(module_type)
     if cls is None:
@@ -72,13 +75,19 @@ def coerce_param_for_field(module_type: str, key: str, raw: Any) -> Any:
         return raw
 
     field_type = fields[key].type
-    # list[float] etc.
-    if str(field_type).startswith("list") or getattr(field_type, "__origin__", None) is list:
+    # Every module uses `from __future__ import annotations`, so dataclass field
+    # types are the annotation *strings* (e.g. "int", "list[float]"), not the
+    # runtime type objects -- resolve by name instead of `field_type in (int, ...)`,
+    # which never matched and left every param coerced by string-content
+    # guessing alone (e.g. a negative int like "-5" isn't .isdigit(), so it
+    # silently became the float -5.0 instead of the int -5).
+    type_name = field_type if isinstance(field_type, str) else getattr(field_type, "__name__", "")
+    if type_name.startswith("list") or getattr(field_type, "__origin__", None) is list:
         if raw.startswith("["):
             return parse_param_value(raw)
         return [parse_param_value(part.strip()) for part in raw.split(",") if part.strip()]
 
-    return parse_param_value(raw, target_type=field_type if field_type in (int, float, str, bool) else None)
+    return parse_param_value(raw, target_type=_SIMPLE_FIELD_TYPES.get(type_name))
 
 
 def list_editable_params(module_type: str) -> tuple[str, ...]:

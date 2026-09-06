@@ -8,6 +8,7 @@ from .hppc import HppcModule
 from .rest import RestModule
 from .qpeed import QpeedModule
 from .smoke_rest_cc_end import SmokeRestCcEndModule
+from .smoke_writer_probe import SmokeWriterProbeModule
 from .rpt import RptModule
 
 __all__ = [
@@ -22,6 +23,7 @@ __all__ = [
     "RestModule",
     "RptModule",
     "SmokeRestCcEndModule",
+    "SmokeWriterProbeModule",
     "expand_module",
     "register_module",
 ]

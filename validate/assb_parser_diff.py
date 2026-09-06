@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-import json
-import struct
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from pne_scheduler.io.sch_parser import parse_schedule_file
-from pne_scheduler.schema.fields import get_step_fields
 from pne_scheduler.vendor.assb_sch import (
     DOCUMENTED_DIVERGENCES,
     SHARED_OFFSET_PAIRS,

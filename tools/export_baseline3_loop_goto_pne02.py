@@ -15,7 +15,6 @@ sys.path.insert(0, str(ROOT.parent))
 from pne_scheduler.io.sch_binary import (  # noqa: E402
     SchBinaryDocument,
     SchBinaryStep,
-    read_sch_binary,
     write_sch_binary,
 )
 from pne_scheduler.io.sch_parser import parse_schedule_file  # noqa: E402
@@ -35,7 +34,6 @@ from pne_scheduler.tools.export_baseline2_pne02 import (  # noqa: E402
     DISCHARGE_VLIM_MV,
     LOOP_COUNT,
     PNE02_ZIP,
-    RECORD_INTERVAL_S,
     REST_DURATION_S,
     SAFETY_LIMITS,
     _discharge_step_template,

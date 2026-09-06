@@ -1,0 +1,19 @@
+{
+  "schema": "pne_scheduler.schproj/v1",
+  "name": "smoke_writer_probe",
+  "sch_version": 65539,
+  "cell_profile": {
+    "nominal_capacity_mAh": 80.0,
+    "v_max": 4.2,
+    "v_min": 2.5,
+    "max_current_mA": 800.0
+  },
+  "modules": [
+    {
+      "id": "probe_1",
+      "module_type": "smoke_writer_probe",
+      "params": {}
+    }
+  ],
+  "connections": []
+}

@@ -9,24 +9,34 @@ Software Gate A–C work that can run without equipment is done and was
 ## 1. Gate C5 — PNE PC smoke test (**required** to close Gate C)
 
 Checklist: [`GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md)
+Why one file now covers everything: [`GATE_C5_EVIDENCE_COVERAGE.md`](GATE_C5_EVIDENCE_COVERAGE.md)
 
-Pre-built file (preferred): `example/smoke_rest_cc_end.sch`  
+Pre-built file (preferred, replaces the old rest→CC→end-only smoke): `example/smoke_writer_probe.sch`
 Or regenerate:
 
 ```powershell
-cd c:\Users\LGES\Cursor
-python -m pne_scheduler build pne_scheduler/example/smoke_rest_cc_end.schproj -o pne_scheduler/example/smoke_rest_cc_end.sch --allow-experimental-output
+python -m pne_scheduler.tools.rebuild_smoke_sch_from_lab_header example/smoke_writer_probe.schproj
 ```
 
-Expected: **REST 60 s → CCCV charge (~8 mA @ 4.2 V) → END**.
+Expected: **cycle marker → CCCV charge (8 mA @ 4.2 V) → rest → CC discharge
+(8 mA, cutoff 2.5 V) → rest → LOOP x2 → END**, 7 steps. This single file combines
+every field that already has controlled-pair or corpus evidence (charge, discharge,
+CV cutoff, LOOP, per-step sampling) so one reopen replaces what would otherwise be
+several separate physical checks — see the evidence-coverage doc for the full
+field-by-field justification.
 
 ### On the PNE PC
 
-1. Copy `smoke_rest_cc_end.sch` to the cycler PC.
+1. Copy `smoke_writer_probe.sch` to the cycler PC (overwrite any older smoke file
+   already loaded on a channel).
 2. Open in **CTSEditorPro** (save-only first).
-3. Confirm rest / charge current·voltage / END.
+3. Walk the per-step value table in the checklist (charge/discharge current &
+   voltage, LOOP count/goto, sampling intervals, END).
 4. Re-save once; keep both files if possible.
 5. Fill the checklist (date, unit, CTSPro build, pass/fail).
+
+The old minimal file (`example/smoke_rest_cc_end.sch`) still exists as a fallback
+to isolate header-framing issues from step-logic issues if the probe fails to open.
 
 Until C5 is signed off, `build` stays **experimental**.
 

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
 
 from pne_scheduler.schema.equipment_registry import get_unit_equipment_profile
 from pne_scheduler.schema.lab_corpus import (

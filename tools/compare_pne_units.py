@@ -7,7 +7,7 @@ import struct
 import sys
 import zipfile
 from collections import Counter, defaultdict
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 from statistics import median
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,7 +15,6 @@ sys.path.insert(0, str(ROOT.parent))
 
 from pne_scheduler.classify import classify_schedule_filename
 from pne_scheduler.schema.corpus_paths import default_corpus_zip_map
-from pne_scheduler.schema.equipment import rating_hint_for_unit
 from pne_scheduler.schema.equipment_registry import get_unit_equipment_profile
 from pne_scheduler.schema.lab_corpus import validate_unit_corpus_zip
 from pne_scheduler.io.layout import detect_sch_layout

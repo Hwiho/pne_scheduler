@@ -13,7 +13,8 @@ authors = [{ name = "Hwiho Kim", email = "hwiho@hotmail.com" }]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+dev = ["pytest>=7.0", "ruff>=0.6"]
+mdb = ["access_parser"]
 
 [project.scripts]
 pne-scheduler = "pne_scheduler.__main__:main"
@@ -43,3 +44,21 @@ packages = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+extend-exclude = ["vendor"]
+
+[tool.ruff.lint]
+# Deliberately minimal first pass: ruff's own default set (pyflakes F +
+# pycodestyle E4/E7/E9) catches real bugs -- unused/undefined names, bare
+# `except`, comparisons like `is None` on values that can never be None --
+# without the noise of full style rules (line length, import sorting, etc).
+# Broaden this only as a deliberate follow-up, not bundled in here.
+select = ["E4", "E7", "E9", "F"]
+# E402 (import not at top of file) fires on every run_pne_scheduler_*.py
+# launcher and several tools/*.py scripts that deliberately sys.path.insert()
+# before importing the local package pre-install -- a working, intentional
+# pattern here, not a bug.
+ignore = ["E402"]

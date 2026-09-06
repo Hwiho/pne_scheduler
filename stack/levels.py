@@ -48,7 +48,10 @@ class StackLevelInference:
     current_guess: StackLevelGuess | None
 
 
-_L_EXPLICIT = re.compile(r"L[\s._-]*(\d(?:\.\d+)?)", re.IGNORECASE)
+# Require a token boundary before "L" (not preceded by another letter) so
+# ordinary filename fragments like "Cell01" ("l0") or "Model3350" ("l3") are
+# not mistaken for an explicit L-level marker.
+_L_EXPLICIT = re.compile(r"(?<![A-Za-z])L[\s._-]*(\d(?:\.\d+)?)", re.IGNORECASE)
 
 
 def l_label(l_value: float) -> str:

@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from ..schema.enums import SCH_STEP_TYPE_END, SCH_STEP_TYPES
-from ..schema.fields import OFFSET_LOOP_COUNT, OFFSET_LOOP_GOTO
+from ..schema.fields import OFFSET_LOOP_COUNT, OFFSET_LOOP_GOTO, OFFSET_LOOP_GOTO_ENSOL
 from .layout import detect_sch_layout
 
 
@@ -115,3 +115,13 @@ def read_loop_info(step: SchBinaryStep) -> tuple[int | None, int | None]:
     goto = struct.unpack_from("<I", step.record, OFFSET_LOOP_GOTO)[0]
     count = struct.unpack_from("<I", step.record, OFFSET_LOOP_COUNT)[0]
     return goto or None, count or None
+
+
+def patch_loop_goto(step: SchBinaryStep, new_goto_step_no: int) -> SchBinaryStep:
+    """Rewrite a LOOP step's goto target (both the legacy @48 and Ensol @564 mirror)."""
+    if not step.is_loop:
+        raise ValueError("step is not LOOP")
+    record = bytearray(step.record)
+    struct.pack_into("<I", record, OFFSET_LOOP_GOTO, int(new_goto_step_no))
+    struct.pack_into("<I", record, OFFSET_LOOP_GOTO_ENSOL, int(new_goto_step_no))
+    return SchBinaryStep(step_no=step.step_no, step_type_code=step.step_type_code, record=bytes(record))

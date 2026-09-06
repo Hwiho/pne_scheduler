@@ -11,7 +11,7 @@ from .schedule_filename import (
     ScheduleFilenameMatch,
     classify_schedule_filename,
 )
-from .signature_labels import classify_from_signature, load_signature_labels
+from .signature_labels import classify_from_signature
 from .training_labels import classify_with_verified_labels, load_verified_labels
 
 DEFAULT_VERIFIED_PATH = (

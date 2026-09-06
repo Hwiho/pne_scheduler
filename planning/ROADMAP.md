@@ -13,6 +13,11 @@
 | 2026-09-02 | MD docs consolidated: [`planning/README.md`](README.md), [`LAB_CORPUS_REPORT.md`](LAB_CORPUS_REPORT.md), [`docs/README.md`](../docs/README.md), [`docs/GATE_B.md`](../docs/GATE_B.md) |
 | 2026-09-03 | Gate C audit: C5 blocking; C6 reframed; lessons checklist + modular UX vision (§1, §5.6, §6.6) |
 | 2026-09-03 | Clarified UX intent: Autolab Nova + LabVIEW **feel** for schedule/module authoring — not realtime instrument control |
+| 2026-09-06 | Audited all step-field evidence against PNE02 controlled pairs and corpus mining; replaced the single-purpose C5 smoke fixture with one combinatorial `smoke_writer_probe` covering charge/discharge/LOOP/sampling so one reopen suffices (`GATE_C5_EVIDENCE_COVERAGE.md`) |
+| 2026-09-06 | Fixed the open resume safety issue: LOOP goto targets are now remapped to post-splice step numbering (or resume is blocked with a clear error) instead of silently keeping stale original step numbers |
+| 2026-09-06 | Code audit pass: `write_sch` no longer discards `compile_step_warnings()` (CLI `build` now prints/records DCR, `goto_step_id`, and the newly-added `end_capacity_fraction`/`fEndC` warnings), fixed a dead label-check in `insitu_cycle`, and fixed a dataclass-field type-resolution bug in `bulk_edit` that silently turned negative int params into floats |
+| 2026-09-06 | Second audit pass (background agent + manual verification): fixed a Gate B5 evidence-integrity bug where a controlled pair's `expected_field` mismatch was only a warning, not an error, letting the wrong offset be counted as controlled-pair evidence; fixed an overly-permissive `_L_EXPLICIT` regex in `stack/levels.py` that mistook ordinary letter+digit filename fragments (e.g. "Cell01", "bimodal-30") for explicit L-level markers, confirmed against 2 real corpus fixtures |
+| 2026-09-06 | Roadmap-process audit: discovered hosted CI (`.github/workflows/ci.yml`, live since 2026-09-02) has been red for 12 consecutive commits despite ROADMAP claiming F6 "not started"; corrected §6.1/§6.7/L13. Corrected two now-false "scheduled for deletion" notes in `PROJECT_STRUCTURE.md` (`io/reader.py`, `validate/roundtrip.py` are both load-bearing). Synced `planning/README.md`'s index (10 missing files). Added `ruff` as a lint dev-dependency, wired into CI |
 
 ---
 
@@ -421,6 +426,7 @@ status update must pass this checklist (also use before claiming an exit criteri
 | L10 | Software work continued past the only true blocker (C5) | When lab-blocked, **pause non-support software** and push user action items |
 | L11 | Hosted CI / badge lag treated as Gate A “done” signal | Local green ≠ release; F6 is separate |
 | L12 | UX/export prioritized before trusted writer | **No semantic export UX (E3+)** until Gate C exit (or explicit waiver) |
+| L13 | Worse than L11 anticipated: hosted CI didn't just lag, it existed, was active, and was **red for 12 consecutive commits** (2026-09-02→03) while ROADMAP still claimed Gate F6 "not started" — nothing in the process ever checked GitHub's actual workflow status against the doc | Periodically verify external status (CI, badges) against ROADMAP claims, not just local `pytest`; use a real GitHub Actions status badge in README (not a static hand-set one) so silent red CI is visible on the repo front page instead of requiring someone to remember to check |
 
 **Gate planning template (paste into new gate notes):**
 
@@ -493,7 +499,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | Round-trip validator | **C3 done** | `validate/roundtrip.py` semantic field compare on Ensol offsets |
 | ASSB cross-check | **C4 thin-but-green** | Layout/step parity + limited field overlap (`fEndC`); not full semantic ASSB parity |
 | GUI | **Partially complete** | Viewer/resume/flow editor exist; export still gated |
-| Test execution environment | **Restored** | Local `pytest` green (~250+); hosted CI still Gate F |
+| Test execution environment | **Restored locally; hosted CI exists but is red** | Local `pytest` green (264+). `.github/workflows/ci.yml` has existed since 2026-09-02 (commit `be373a8`) and is active on GitHub, but has failed on all 12 commits since `0aa9b6f` (2026-09-02) — the pytest step aborts on collection because `tools/analyze_schedule_mdb.py` imports `access_parser` unconditionally. Fixed locally 2026-09-06 (see §11); **not yet pushed**, so GitHub still shows red |
 
 ---
 
@@ -512,12 +518,12 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | A2 | Establish the test command and CI baseline | ✅ local | `python -m pytest tests/ -q` passes; README badge matches count |
 | A3 | Add fixture inventory tests | ✅ | ZIP counts (8, 93) + HPPC presence verified automatically |
 
-**Notes:** Hosted CI is deferred to **F6**; local pass count is not equipment-compatibility evidence.
+**Notes:** A hosted CI workflow already exists (`.github/workflows/ci.yml`, since 2026-09-02) — "hosted CI" is not a Gate A/F gap in the sense of "not built," only in the sense of "not currently green" (see §6.1, §11). Full CI maturity (F6: packaging, schema-invariant checks, doc checks on every PR) remains future work. Local pass count is not equipment-compatibility evidence regardless of CI color.
 
 **Progress record**
 - A1: package/subpackage imports verified from editable install and clean-target wheel
 - A3: 8 + 93 + 1 HPPC = 102 fixtures locked
-- A2: 112 tests pass locally; README still shows 100 — update badge when convenient
+- A2: 252 tests pass locally (1 skipped, lab-only); README badge synced (2026-09-06)
 
 ---
 
@@ -616,7 +622,18 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 **Progress record**
 - C0 / C0.1 / C0.2 / C1 / C2 / C3 / C4: implemented 2026-09-03 (see git history `dbf7fed`…`1eeceb3`)
-- C5: checklist [`GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md); smoke assets `example/smoke_rest_cc_end.*`
+- C5: checklist [`GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md); smoke assets `example/smoke_rest_cc_end.*` (kept as a fallback)
+- C5 (2026-09-06): field-by-field evidence audit against `schema/fields.py`,
+  `GATE_B_CORPUS_EVIDENCE.json`, `GOLDEN_SEMANTIC_EXPECTATIONS.json`, and all 9
+  reopen-verified PNE02 pairs — see [`GATE_C5_EVIDENCE_COVERAGE.md`](GATE_C5_EVIDENCE_COVERAGE.md).
+  Conclusion: every writer-ready/high-confidence field was already individually
+  reopen- or corpus-verified; the only genuinely untested axis was a from-scratch
+  build combining charge+discharge+LOOP+per-step sampling in one header. Added a
+  single combinatorial fixture (`modules/smoke_writer_probe.py`,
+  `example/smoke_writer_probe.sch`) so one physical reopen covers that instead of
+  several separate sessions; checklist rewritten around it. Byte-diffing
+  `build_sch_header()` against a real lab header also surfaced 54/1760 unexplained
+  header bytes (see §11) — logged, not packed (no evidence for their meaning yet).
 - C6: [`SCH_696_TAIL_ANALYSIS.md`](SCH_696_TAIL_ANALYSIS.md) — 92 catalog fixtures / 2056 steps, zero nonzero tails
 - User action list: [`USER_ACTION_ITEMS.md`](USER_ACTION_ITEMS.md)
 
@@ -699,7 +716,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | F3 | Equipment smoke-test protocol | ⏳ | Dummy-cell procedure, abort criteria, signed result |
 | F4 | Artifact immutability | ⏳ | Released hash == smoke-tested hash; reapproval on change |
 | F5 | Release status labels | ⏳ | `analysis-only` / `CTSPro-reopen-verified` / `equipment-verified` in CLI/UI |
-| F6 | Hosted CI | ⏳ | Packaging, fixtures, schema invariants, doc checks on every PR |
+| F6 | Hosted CI | 🔄 **exists, currently red** | `.github/workflows/ci.yml` runs pytest + `tools/compare_pne_units.py` on push/PR since 2026-09-02; failing since commit `0aa9b6f` on the `access_parser` collection bug (fixed locally 2026-09-06, not yet pushed). Remaining F6 scope: packaging checks, schema-invariant checks, doc checks on every PR, and a real status badge (README currently shows a static hardcoded shields.io badge, not the workflow's own) |
 
 **Rule:** No “equipment-ready” label until F1–F4 pass for the **exact** artifact and target profile.
 
@@ -779,7 +796,7 @@ tests to be skipped.
 | Binary changes after parsed END ignored by diff | **Resolved** | Compare and report unparsed tails in addition to header and step records |
 | Equipment profile inferred from filenames | **Prohibited** | Require explicit provenance/profile metadata and retain unknown when unavailable |
 | Controlled-pair metadata is incomplete or inconsistent | Open | Add schema validation before evidence promotion (B5) |
-| Resume renumbers steps without proven goto remapping | Open safety issue | Detect nonzero reference fields and block or remap only after controlled semantic confirmation |
+| Resume renumbers steps without proven goto remapping | **Resolved (2026-09-06)** | `resume/splice.py::_remap_loop_goto_targets` now rewrites LOOP goto (@48 + Ensol mirror @564) to the post-splice numbering, and raises before writing if the original target falls before the resume point (unrepresentable). `io/sch_binary.patch_loop_goto` added; covered by `tests/test_resume.py::test_resume_remaps_loop_goto_target_within_resumed_range` / `test_resume_blocks_when_loop_target_would_be_dropped` |
 | Documentation language/status drift | Partially resolved | README and user guide are English; audit remaining public docs and derive test status in CI |
 
 ---
@@ -835,10 +852,19 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 | 2026-09-03 | C | normal | C4 ASSB cross-check is thin (layout/steps/`fEndC`) | accepted | Enough as smoke; deepen only if C5 or lab diffs demand it |
 | 2026-09-03 | C | normal | 696-byte tail (612–695) all-zero in secured corpus | resolved | Writer zero-pad matches corpus; `SCH_696_TAIL_ANALYSIS.md` |
 | 2026-09-03 | C | normal | DCR binary offsets unresolved | accepted deferral | IR-only until controlled evidence; blocks DC-IR fidelity (Gate D), not C5 |
-| 2026-08-31 | E | safety | Resume may renumber steps without goto remap proof | open | Block or remap only after semantic confirmation; track under E1/resume |
-| 2026-09-01 | B | low | README test badge lags actual count | open | Sync badge when next touching README |
+| 2026-08-31 | E | safety | Resume may renumber steps without goto remap proof | **resolved (2026-09-06)** | LOOP goto now remapped to post-splice numbering, or resume is blocked with a clear error when the original target would be dropped; see §8 row and `resume/splice.py` |
+| 2026-09-01 | B | low | README test badge lags actual count | resolved | Badge synced to 252 passed (2026-09-06) |
+| 2026-09-06 | A | normal | `tools/analyze_schedule_mdb.py` imported `access_parser` unconditionally at module scope, so its absence aborted **all** test collection (not just the skipped MDB test), contradicting the "local pytest green" claim | resolved | Import made lazy (`TYPE_CHECKING` + in-function import); `access_parser` registered as the `mdb` optional extra in `pyproject.toml` |
 | 2026-08-31 | C | normal | 89/93 lab fixtures use `0x10004/696`, not 612-byte layout | mitigated | C6 framing writer exists; full schedule parity deferred |
 | 2026-09-01 | B | normal | fEndV unit mismatch (fixture mV vs compiler V) | resolved | Ensol adoption; `tests/test_unit_contract.py` |
 | 2026-09-01 | B/D | normal | Golden fixtures locked from user intake (7 selected, PNE02+PNE16) | done | `planning/GOLDEN_FIXTURES_LOCKED.json` |
 | 2026-09-03 | E | normal | UX intent clarified: Nova + LabVIEW *feel* for modular schedule authoring (not live Autolab control) | accepted | §1.1 rewritten; Gate E retitled; E8 removed as false target |
+| 2026-09-06 | C | normal | C5 required a physical reopen per field/module shape; most of that risk was already closed by existing PNE02 pairs and corpus mining but never consolidated | resolved | [`GATE_C5_EVIDENCE_COVERAGE.md`](GATE_C5_EVIDENCE_COVERAGE.md) audits every step field; `smoke_writer_probe` module/fixture combines charge+discharge+LOOP+per-step sampling into one from-scratch build so a single reopen replaces several |
+| 2026-09-06 | C | normal | `build_sch_header()` (CLI `build` path) leaves 54/1760 header bytes at zero where a real lab-authored header has non-zero content (concentrated ~0x2D8-0x361, past `HOFF_NAME`'s window — plausibly the second `FILE_TEST_INFORMATION` name/description block from §2.3) | open, no action needed yet | Not packed — no controlled-pair/corpus evidence for their meaning (L3). `tools/rebuild_smoke_sch_from_lab_header.py` sidesteps this by cloning a real header instead of using `build_sch_header()`; a clean C5 on `smoke_writer_probe.sch` does **not** clear this for the plain CLI `build` path specifically. Revisit only if `build_sch_header()`'s output needs to go to equipment directly |
+| 2026-09-06 | D | normal | `dcir`/`hppc`/`rpt`/`qpeed` modules SOC-target via `end_capacity_fraction`, which packs `fEndC`@36 -- a field `schema/fields.py` marks `semantic_unverified` with **no nonzero example in the corpus** (weaker evidence than DCR, which at least gets a warning). `compile_step_warnings()` already warns for DCR and `goto_step_id` but silently skipped this one | resolved | Added the missing warning in `engine/compiler.py::compile_step_warnings`; also fixed `io/writer.py::write_sch` discarding `compile_step_warnings()`'s result (`_ = ...`) instead of returning it, so the CLI `build` path had **zero** visibility into any of these warnings even though the compiler always computed them. `build` now prints `WARN:` lines and the manifest's `warnings` include them |
+| 2026-09-06 | D | normal | `modules/insitu_cycle.py::expand()` checked `steps[0].label is None` to decide whether to relabel the inherited cycle marker, but `StepIntent.label` defaults to `""` (never `None`) and `CycleLifeModule` always sets a real label -- the condition could never be true, so in-situ projects always kept the generic "cycle marker" label instead of "in-situ cycle marker (no RPT)" | resolved | Condition changed to `steps[0].step_type == "cycle"`; `tests/test_insitu_cycle.py` added |
+| 2026-09-06 | E | normal | `edit/bulk_edit.py::coerce_param_for_field` compared a dataclass field's `.type` against the real `int`/`float`/`str`/`bool` type objects, but every module uses `from __future__ import annotations`, which makes `.type` the annotation **string** (e.g. `"int"`) -- the comparison never matched, so `target_type` was always `None` and coercion fell back to guessing from string content alone. Concretely, bulk-editing an `int` field with a negative value (e.g. `loop_count=-5`) silently stored the **float** `-5.0` instead of the int `-5` (`"-5".isdigit()` is `False`) | resolved | Resolve by annotation name via a small `int`/`float`/`str`/`bool` lookup instead of identity comparison; `tests/test_bulk_edit.py::test_coerce_param_for_field_keeps_int_fields_as_int` added |
+| 2026-09-06 | B | **blocking (evidence integrity)** | `validate/intake.py::validate_intake_with_compare_report` recorded an `expected_field` vs. actual-changed-field mismatch as a **warning**, not an error. `IntakeValidationResult.valid = not errors` ignores warnings, so `tools/run_gate_b_validation.py`'s `_controlled_pair_evidence()` (`pair_clean = combined.valid`) could mark a pair `evidence_complete` and register the **wrong** offset under `covered[equipment]` even when the observed byte change landed on a different field entirely -- defeating the controlled-pair evidence tier the whole B5 gate exists to enforce | resolved | Changed to `errors.append(...)`; re-ran `run_gate_b_validation` and confirmed `gate_b_passed=true` still holds (all 9 real PNE02 pairs already had a correctly-matching `expected_field`, so nothing was actually promoted on bad evidence -- this closes the loophole for future pairs). `tests/test_validation_intake.py::test_intake_with_compare_report_rejects_wrong_expected_field` added |
+| 2026-09-06 | analysis | normal | `stack/levels.py::_L_EXPLICIT` regex (`L[\s._-]*(\d...)`) had no token boundary before `L`, so it matched an `L`/`l` preceded by *any* other letter -- e.g. "Cell01" → spurious `l0`, "Model3350" → spurious `l3`. Confirmed on the real 102-file corpus: `set3_bimodal-30_45도 0.5C cycle.sch` and `bimodal_0.5C cycle.sch` both got a wrong filename-based L-level guess from the trailing "l" in "bimodal". It could also let a false match earlier in the name shadow a real explicit L-level later in the same name (`re.search` returns the leftmost match) | resolved | Added a negative lookbehind (`(?<![A-Za-z])L...`) requiring the character before `L` not be a letter. Viewer/analysis-only per L7 (writer path never uses filename inference), so this never affected binary output -- only the viewer's displayed L-level/C-rate guess. `tests/test_stack_levels.py` parametrized regression tests added |
+| 2026-09-06 | F | **blocking (process integrity)** | `.github/workflows/ci.yml` has existed and been active since 2026-09-02 (commit `be373a8`), but ROADMAP.md §6.1/§6.7 claimed hosted CI was "not started" -- meanwhile the workflow had actually been **failing for 12 consecutive commits** (`0aa9b6f` through `64dddd8`, all of Gate C's work) on the `access_parser` collection bug. Neither the failure nor the workflow's existence was ever reflected in ROADMAP.md | open (fix committed locally, not pushed) | `access_parser` fix (see the earlier `A` row above) resolves the pytest failure once pushed; §6.1/§6.7/L13 corrected to state CI's real status. **Action needed: push to `origin/master` to actually turn GitHub green** -- local fix alone does not resolve the hosted CI status. Also add a real Actions badge to README (currently a static hand-set shields.io badge) so this can't silently recur |
 | | | | *(add new rows here)* | | |

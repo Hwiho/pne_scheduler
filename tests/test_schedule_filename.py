@@ -101,7 +101,6 @@ def test_classify_schedule_uses_signature_labels(tmp_path: Path) -> None:
 
     sig_path = tmp_path / "sig.json"
     save_signature_labels({"CC_CHG-END": "rate_test"}, sig_path)
-    fake_sch = bytes(3000)  # too small - need real sch bytes
 
     # Use minimal valid-ish bytes from a fixture instead
     fixture = Path(__file__).resolve().parents[1] / "example" / "fixtures" / "capacheck_zip"
