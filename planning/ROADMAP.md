@@ -18,6 +18,7 @@
 | 2026-09-06 | Code audit pass: `write_sch` no longer discards `compile_step_warnings()` (CLI `build` now prints/records DCR, `goto_step_id`, and the newly-added `end_capacity_fraction`/`fEndC` warnings), fixed a dead label-check in `insitu_cycle`, and fixed a dataclass-field type-resolution bug in `bulk_edit` that silently turned negative int params into floats |
 | 2026-09-06 | Second audit pass (background agent + manual verification): fixed a Gate B5 evidence-integrity bug where a controlled pair's `expected_field` mismatch was only a warning, not an error, letting the wrong offset be counted as controlled-pair evidence; fixed an overly-permissive `_L_EXPLICIT` regex in `stack/levels.py` that mistook ordinary letter+digit filename fragments (e.g. "Cell01", "bimodal-30") for explicit L-level markers, confirmed against 2 real corpus fixtures |
 | 2026-09-06 | Roadmap-process audit: discovered hosted CI (`.github/workflows/ci.yml`, live since 2026-09-02) has been red for 12 consecutive commits despite ROADMAP claiming F6 "not started"; corrected §6.1/§6.7/L13. Corrected two now-false "scheduled for deletion" notes in `PROJECT_STRUCTURE.md` (`io/reader.py`, `validate/roundtrip.py` are both load-bearing). Synced `planning/README.md`'s index (10 missing files). Added `ruff` as a lint dev-dependency, wired into CI |
+| 2026-09-06 | Pushed the fix (`d60ea3b`); hosted CI green again (run #33). Deleted 3 confirmed-dead code paths (2 tools scripts, 1 3.7MB vendor archive); README now shows a live GitHub Actions badge instead of a static count. Re-split Gate D/E/F by per-task equipment dependency (only C5, E3/E3.1, F1–F4 actually need a PNE PC) and unblocked the rest for parallel work per user authorization. Found 6 unmerged `cursor/*` branches from earlier Cursor Cloud runs — 3 touch UI (theming, module recipes, schedule explanation) and look salvageable as design reference, not junk; see §6.6.1 and `UI_UX_NOTES.md` |
 
 ---
 
@@ -451,24 +452,32 @@ not be marked done.
 
 ## 6. Implementation Roadmap
 
-Work proceeds **Gate A → B → C → D → E → F** in order. Do not start a later Gate until the
-current Gate’s exit criteria are met (or an explicit waiver is recorded in §11).
+Work proceeds **Gate A → B → C → D → E → F** in order for anything that reads on
+an equipment-readiness claim. That said, most of D/E/F's *individual tasks* have
+no equipment dependency at all — only C5, E3/E3.1, and F1–F4 actually need a
+PNE PC. **2026-09-06: user authorized starting equipment-independent D/E/F work
+in parallel with the C5 wait** instead of waiting for C5 to close Gate C first.
+Do not start a later Gate's *equipment-dependent* tasks until the current gate's
+exit criteria are met (or an explicit waiver is recorded in §11) — the ordering
+rule is about claims and equipment-facing work, not about every line item.
 
 ```
 Gate A  개발 기반          ✅ complete (local)
   ↓
 Gate B  바이너리 스키마    ✅ complete
   ↓
-Gate C  호환 SCH writer    🔄 lab-blocked on C5  ← current focus
+Gate C  호환 SCH writer    🔄 lab-blocked on C5  ← still the only equipment gate
+  ↓                         (parallel track below can run now, per-task)
+Gate D  모듈 픽스처 검증   🔄 unblocked 2026-09-06, all tasks software-only
   ↓
-Gate D  모듈 픽스처 검증   ⏳ deferred
+Gate E  모듈형 스케줄 UX   🔄 E0–E2.4 unblocked (authoring UI); E3+/export stays behind C5
   ↓
-Gate E  모듈형 스케줄 UX   ⏳ (partial tools; Nova+LabVIEW feel)
-  ↓
-Gate F  운영 릴리스 / 추적성
+Gate F  운영 릴리스 / 추적성  F5/F6 unblocked; F1–F4 stay behind C5
 ```
 
-Before claiming any gate exit, run the §5.6 checklist.
+Before claiming any gate **exit**, run the §5.6 checklist — this still applies in
+full; only the "when can I start the next gate's software-only tasks" question
+changed.
 
 ### 6.0 Gate maintenance rules
 
@@ -643,23 +652,25 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 | | |
 |---|---|
-| **Status** | ⏳ **Not started** (module `expand` prototypes exist) |
-| **Depends on** | Gate C exit (C2, C3 minimum) |
+| **Status** | 🔄 **Unblocked, not yet started** (module `expand` prototypes exist) |
+| **Depends on** | Gate C2 + C3 (both done) — **not** C5. Nothing in Gate D touches equipment; it is entirely `validate → expand → compile → parse → semantic compare` against files already on disk |
 | **Exit criteria** | Every P0 module passes `validate → expand → compile → parse → semantic compare` in one integration test |
 | **Next gate** | Gate E |
 
-| Priority | Module / harness | Status | Validation fixture / criteria |
-|----------|------------------|--------|-------------------------------|
-| P0 | Integration harness | ⏳ | End-to-end pipeline without external parser |
-| P0 | Capacity model contract | ⏳ | Same Q_nom/current in viewer inference and writer compile |
-| P0 | Formation, Cycle Life, Rest | ⏳ | Topology, I/V, loop vs representative originals |
-| P0 | RPT, DC-IR | ⏳ | SOC reference, DCR window, goto semantics |
-| P1 | HPPC | ⏳ | SOC staircase + pulses in `HPPC_Full range.sch` |
-| P1 | capacheck, QPEED, in-situ | ⏳ | Golden topology for 8-file bimodal archive |
+Previously marked "do not start until asked" per L10 (pause non-support software while C5-blocked). **User authorized starting C5-independent work 2026-09-06** — Gate D qualifies in full: every row below is software-only.
+
+| Priority | Module / harness | Status | Validation fixture / criteria | Needs equipment? |
+|----------|------------------|--------|-------------------------------|:---:|
+| P0 | Integration harness | ⏳ | End-to-end pipeline without external parser | No |
+| P0 | Capacity model contract | ⏳ | Same Q_nom/current in viewer inference and writer compile | No |
+| P0 | Formation, Cycle Life, Rest | ⏳ | Topology, I/V, loop vs representative originals | No |
+| P0 | RPT, DC-IR | ⏳ | SOC reference, DCR window, goto semantics | No — but DCR *packing* stays IR-only regardless (L3) |
+| P1 | HPPC | ⏳ | SOC staircase + pulses in `HPPC_Full range.sch` | No |
+| P1 | capacheck, QPEED, in-situ | ⏳ | Golden topology for 8-file bimodal archive | No |
 
 **Recommended order inside Gate D:** harness → capacity contract → Formation/Rest → Cycle Life → RPT/DC-IR → HPPC → capacheck/QPEED.
 
-**Planning check:** §5.6 (especially L3 DCR evidence, L7 capacity contract, L4 honest exit depth). DCR packing stays blocked until controlled evidence exists.
+**Planning check:** §5.6 (especially L3 DCR evidence, L7 capacity contract, L4 honest exit depth). DCR packing stays blocked until controlled evidence exists — Gate D can verify *topology and packed fields* against real fixtures without ever packing DCR bytes.
 
 ---
 
@@ -668,35 +679,59 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | | |
 |---|---|
 | **Status** | 🔄 **Partial** (viewer/flow spike exist; polished module workspace ⏳) |
-| **Depends on** | Gate C exit (semantic export requires trusted writer); Gate D strongly recommended before module palette claims |
+| **Depends on** | Split by task — see the "Needs equipment?" column. **Only** E3+ (semantic export) needs Gate C exit; E0–E2.4 are pure authoring UI and can proceed now |
 | **Exit criteria** | Schedule authoring feels like **module + procedure** composition (Nova/LabVIEW-like); unsafe export blocked; library + Cell setup; optional `.sch` → IR import |
 | **Next gate** | Gate F |
 | **UX intent** | §1.1 — design *feel* for making schedules with modules; **not** Autolab instrument control |
 
-| # | Task | Status | Completion criteria | UX cue |
-|---|------|--------|---------------------|--------|
-| E0 | UX contract & IA | ⏳ | Screens: Setup / Procedure / Modules / Library / Validate / Export; map to `ui/` | Clean authoring layout |
-| E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage | Review existing schedules |
-| E2 | **Procedure editor** (ordered steps) | 🔄 | Insert/reorder/delete primitives; property pane; C-rate ↔ mA preview | Nova-like step list |
-| E2.1 | Primitive palette | ⏳ | REST, CC, CCCV, CV, LOOP, END, OCV… with validated forms | Command blocks |
-| E2.2 | **Module palette** | ⏳ | Formation, Cycle Life, RPT, HPPC, DC-IR expand into steps | LabVIEW-like modules |
-| E2.3 | Method / project library | ⏳ | Save/load versioned procedures & modules per equipment profile | Reusable methods |
-| E2.4 | Cell / equipment setup pane | ⏳ | Explicit 1C mA, V limits, PNE unit/range, layout target; blocks export if missing | Setup before edit |
-| E3 | Pre-export validation UX | ⏳ | Block invalid loops, missing END, V/I violations | Readiness before export |
-| E3.1 | Export path choice | ⏳ | Default **patch-sch** onto approved template; optional experimental `build` | PNE safety |
-| E4 | `.sch` → IR import (read-only) | ⏳ | Reverse-parse for review/clone before editable round-trip | Open existing schedule |
-| E5 | Advanced: 0x00010007/EIS, fingerprint | ⏳ | Deferred until explicit schema evidence | Later |
-| E6 | pne_studio2 integration | ⏳ | Shared cell profile and export workflow | Host embedding |
-| E7 | Campaign canvas (optional) | ⏳ | Free-form multi-module graph **only if** E2–E2.2 is insufficient | Extra LabVIEW canvas |
+Previous framing said Gate E "depends on Gate C exit," which over-blocked the authoring-UI tasks (E0–E2.4) — none of them write or export a `.sch` file, so none need a trusted writer. Only tasks that actually produce or gate an export (E3, E3.1) genuinely need Gate C exit; E4 (read-only import) needs neither Gate C exit nor equipment, only the already-done reader.
+
+| # | Task | Status | Completion criteria | UX cue | Needs equipment? |
+|---|------|--------|---------------------|--------|:---:|
+| E0 | UX contract & IA | ⏳ | Screens: Setup / Procedure / Modules / Library / Validate / Export; map to `ui/` | Clean authoring layout | No |
+| E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage | Review existing schedules | No |
+| E2 | **Procedure editor** (ordered steps) | 🔄 | Insert/reorder/delete primitives; property pane; C-rate ↔ mA preview | Nova-like step list | No |
+| E2.1 | Primitive palette | ⏳ | REST, CC, CCCV, CV, LOOP, END, OCV… with validated forms | Command blocks | No |
+| E2.2 | **Module palette** | ⏳ | Formation, Cycle Life, RPT, HPPC, DC-IR expand into steps | LabVIEW-like modules | No |
+| E2.3 | Method / project library | ⏳ | Save/load versioned procedures & modules per equipment profile | Reusable methods | No |
+| E2.4 | Cell / equipment setup pane | ⏳ | Explicit 1C mA, V limits, PNE unit/range, layout target; blocks export if missing | Setup before edit | No (the pane itself; it just *displays* a profile that later needs equipment-verified export) |
+| E3 | Pre-export validation UX | ⏳ | Block invalid loops, missing END, V/I violations | Readiness before export | **Needs Gate C exit** (validates against a writer users will actually export from) |
+| E3.1 | Export path choice | ⏳ | Default **patch-sch** onto approved template; optional experimental `build` | PNE safety | **Needs Gate C exit** |
+| E4 | `.sch` → IR import (read-only) | ⏳ | Reverse-parse for review/clone before editable round-trip | Open existing schedule | No — `io/reader.py`/`io/sch_parser.py` already exist and are read-only |
+| E5 | Advanced: 0x00010007/EIS, fingerprint | ⏳ | Deferred until explicit schema evidence | Later | No (blocked on schema evidence, not equipment) |
+| E6 | pne_studio2 integration | ⏳ | Shared cell profile and export workflow | Host embedding | Partial — integration itself is No; the export half inherits E3's block |
+| E7 | Campaign canvas (optional) | ⏳ | Free-form multi-module graph **only if** E2–E2.2 is insufficient | Extra LabVIEW canvas | No |
 
 **Progress record**
 - `pne_scheduler flow` / `run_pne_scheduler_flow.py`: linear graph, `.schproj` load/save, Cell Profile, step preview — **seed** for E2/E2.2
 - Remaining for the intended feel: module palette prominence, richer property forms, library, validation/export UX, undo/redo
+- 2026-09-06: found 3 abandoned Cursor Cloud branches with substantial unmerged UI work directly relevant to E2/E2.2/E2.3 (theming, recipe editing, schedule explanation) — see the new §6.6.1 below before starting any of E0–E2.4 from scratch, to avoid re-doing work that already exists unmerged
 
 **Rules**
-- Do not prioritize E3 semantic export until Gate C is complete
+- Do not prioritize E3/E3.1 semantic export until Gate C is complete — this is the **only** real equipment dependency in this gate
 - “Nova/LabVIEW-like” means **authoring interaction**, not feature parity with those products
 - Apply §5.6 checklist on every E-task completion claim
+
+#### 6.6.1 Prior art to check before building E0–E2.4 (found 2026-09-06)
+
+Six unmerged `cursor/*` remote branches exist (Cursor Cloud background-agent runs,
+never merged, diverged from master by up to 53 commits). Three touch the UI
+directly and should be reviewed **before** starting fresh implementation of the
+authoring UI, to avoid redoing work that already exists in some form:
+
+| Branch | Touches | Relevance |
+|--------|---------|-----------|
+| `cursor/update-roadmap-5ac9` | `ui/flow_theme.py` (new, doesn't exist on master), heavy `ui/flow_editor.py` rework | Direct prior attempt at LabVIEW-style visual theming + wire/port interaction — exactly E2.2's "LabVIEW-like modules" cue |
+| `cursor/module-recipes-presets-5ac9` | `ui/flow_editor.py`, `ui/flow_model.py`, `validate/roundtrip.py` | "Recipe" concept for charge/discharge/rest presets + a "pattern overview" — overlaps E2.1 (primitive palette) and E2.3 (library) |
+| `cursor/explain-schedules-5ac9` | `ui/schedule_viewer.py`, `protocol/infer.py` | Plain-language schedule explanation — a plausible E3/Validate-screen feature once Gate C exits |
+
+All three are **stale relative to current master** (diverged well before this
+session's bug fixes and the C5 probe work) — treat them as design reference /
+cherry-pick candidates, not as branches to merge wholesale. See
+[`UI_UX_NOTES.md`](UI_UX_NOTES.md) for the extracted patterns and concrete
+recommendations. The other 3 branches (`cursor/create-gate-b-baseline-dfb2`,
+`cursor/gate-c-safety-manifest-eccb`, `cursor/mine-internal-dataset-dfb2`) touch
+Gate B/C validation tooling, not UI — lower priority to review, listed in §11.
 
 ---
 
@@ -704,21 +739,21 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 | | |
 |---|---|
-| **Status** | ⏳ **Not started** |
-| **Depends on** | Gate C minimum (C5); full product sign-off needs Gate D |
+| **Status** | ⏳ **Not started on F1–F4** (genuinely equipment-blocked); **F6 done, F5 can start now** |
+| **Depends on** | F1–F4 need Gate C exit (C5); F5/F6 do not — see per-row column below |
 | **Exit criteria** | Equipment-verified artifact with immutable hash, documented profile, hosted CI |
 | **Next gate** | — (maintenance / version bumps) |
 
-| # | Task | Status | Completion criteria |
-|---|------|--------|---------------------|
-| F1 | Target equipment compatibility report | ⏳ | PNE unit/range, CTSPro version, layout, open assumptions |
-| F2 | Reopen approval record | ⏳ | Exact SHA-256 opens in CTSPro; operator result logged |
-| F3 | Equipment smoke-test protocol | ⏳ | Dummy-cell procedure, abort criteria, signed result |
-| F4 | Artifact immutability | ⏳ | Released hash == smoke-tested hash; reapproval on change |
-| F5 | Release status labels | ⏳ | `analysis-only` / `CTSPro-reopen-verified` / `equipment-verified` in CLI/UI |
-| F6 | Hosted CI | 🔄 **exists, green, now self-reporting** | `.github/workflows/ci.yml` runs Ruff + pytest + `tools/compare_pne_units.py` on push/PR since 2026-09-02; was red for 12 commits on the `access_parser` collection bug, fixed and pushed 2026-09-06 (`d60ea3b`, [run #33](https://github.com/Hwiho/pne_scheduler/actions/runs/34037824999) success). README now shows the workflow's own live status badge instead of a static hand-set count, so a future red run is visible on the repo front page. Remaining F6 scope: packaging checks, schema-invariant checks, doc checks on every PR |
+| # | Task | Status | Completion criteria | Needs equipment? |
+|---|------|--------|---------------------|:---:|
+| F1 | Target equipment compatibility report | ⏳ | PNE unit/range, CTSPro version, layout, open assumptions | **Yes** |
+| F2 | Reopen approval record | ⏳ | Exact SHA-256 opens in CTSPro; operator result logged | **Yes** |
+| F3 | Equipment smoke-test protocol | ⏳ | Dummy-cell procedure, abort criteria, signed result | **Yes** |
+| F4 | Artifact immutability | ⏳ | Released hash == smoke-tested hash; reapproval on change | **Yes** |
+| F5 | Release status labels | ⏳ | `analysis-only` / `CTSPro-reopen-verified` / `equipment-verified` in CLI/UI | No — the label enum/plumbing can be built now; only *applying* `equipment-verified` needs F1–F4 |
+| F6 | Hosted CI | 🔄 **exists, green, now self-reporting** | `.github/workflows/ci.yml` runs Ruff + pytest + `tools/compare_pne_units.py` on push/PR since 2026-09-02; was red for 12 commits on the `access_parser` collection bug, fixed and pushed 2026-09-06 (`d60ea3b`, [run #33](https://github.com/Hwiho/pne_scheduler/actions/runs/34037824999) success). README now shows the workflow's own live status badge instead of a static hand-set count, so a future red run is visible on the repo front page. Remaining F6 scope: packaging checks, schema-invariant checks, doc checks on every PR | No |
 
-**Rule:** No “equipment-ready” label until F1–F4 pass for the **exact** artifact and target profile.
+**Rule:** No “equipment-ready” label until F1–F4 pass for the **exact** artifact and target profile. (F5's *label mechanism* can exist before that — it just can't have anything genuinely earn the top label yet.)
 
 ---
 
@@ -867,4 +902,5 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 | 2026-09-06 | B | **blocking (evidence integrity)** | `validate/intake.py::validate_intake_with_compare_report` recorded an `expected_field` vs. actual-changed-field mismatch as a **warning**, not an error. `IntakeValidationResult.valid = not errors` ignores warnings, so `tools/run_gate_b_validation.py`'s `_controlled_pair_evidence()` (`pair_clean = combined.valid`) could mark a pair `evidence_complete` and register the **wrong** offset under `covered[equipment]` even when the observed byte change landed on a different field entirely -- defeating the controlled-pair evidence tier the whole B5 gate exists to enforce | resolved | Changed to `errors.append(...)`; re-ran `run_gate_b_validation` and confirmed `gate_b_passed=true` still holds (all 9 real PNE02 pairs already had a correctly-matching `expected_field`, so nothing was actually promoted on bad evidence -- this closes the loophole for future pairs). `tests/test_validation_intake.py::test_intake_with_compare_report_rejects_wrong_expected_field` added |
 | 2026-09-06 | analysis | normal | `stack/levels.py::_L_EXPLICIT` regex (`L[\s._-]*(\d...)`) had no token boundary before `L`, so it matched an `L`/`l` preceded by *any* other letter -- e.g. "Cell01" → spurious `l0`, "Model3350" → spurious `l3`. Confirmed on the real 102-file corpus: `set3_bimodal-30_45도 0.5C cycle.sch` and `bimodal_0.5C cycle.sch` both got a wrong filename-based L-level guess from the trailing "l" in "bimodal". It could also let a false match earlier in the name shadow a real explicit L-level later in the same name (`re.search` returns the leftmost match) | resolved | Added a negative lookbehind (`(?<![A-Za-z])L...`) requiring the character before `L` not be a letter. Viewer/analysis-only per L7 (writer path never uses filename inference), so this never affected binary output -- only the viewer's displayed L-level/C-rate guess. `tests/test_stack_levels.py` parametrized regression tests added |
 | 2026-09-06 | F | **resolved (process integrity)** | `.github/workflows/ci.yml` had existed and been active since 2026-09-02 (commit `be373a8`), but ROADMAP.md §6.1/§6.7 claimed hosted CI was "not started" -- meanwhile the workflow had actually been **failing for 12 consecutive commits** (`0aa9b6f` through `64dddd8`, all of Gate C's work) on the `access_parser` collection bug. Neither the failure nor the workflow's existence was ever reflected in ROADMAP.md | resolved | Fix pushed as commit `d60ea3b`; [run #33](https://github.com/Hwiho/pne_scheduler/actions/runs/34037824999) completed **success** (Ruff, Pytest, corpus-smoke all green) -- hosted CI restored after 12 consecutive red runs. Remaining optional follow-up: replace the static hand-set shields.io test badge in README with a real Actions status badge so silent red CI can't recur unnoticed (not done yet, low priority) |
+| 2026-09-06 | E | normal | 6 unmerged `cursor/*` remote branches discovered (abandoned Cursor Cloud agent runs, diverged up to 53 commits from master) | open — needs human review | 3 touch UI (`cursor/update-roadmap-5ac9` theming/wiring, `cursor/module-recipes-presets-5ac9` recipe editing, `cursor/explain-schedules-5ac9` schedule explanation) — patterns extracted to `UI_UX_NOTES.md`, too stale to merge wholesale. 3 touch Gate B/C validation tooling (`cursor/create-gate-b-baseline-dfb2`, `cursor/gate-c-safety-manifest-eccb`, `cursor/mine-internal-dataset-dfb2`) — not reviewed in depth, may contain unmerged evidence/tooling work worth checking before deleting the branches |
 | | | | *(add new rows here)* | | |

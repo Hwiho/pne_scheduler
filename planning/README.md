@@ -54,6 +54,12 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 | [`GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md) | C5 PNE PC reopen checklist (optimized combinatorial probe) |
 | [`GATE_C5_EVIDENCE_COVERAGE.md`](GATE_C5_EVIDENCE_COVERAGE.md) | Per-field evidence audit backing the optimized C5 probe |
 
+## Gate E
+
+| Document | Purpose |
+|----------|---------|
+| [`UI_UX_NOTES.md`](UI_UX_NOTES.md) | Prior-art review of unmerged UI branches + Nova/LabVIEW pattern recommendations |
+
 ## User & technical docs (`docs/`)
 
 | Document | Purpose |
