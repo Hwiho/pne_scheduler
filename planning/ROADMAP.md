@@ -515,7 +515,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | # | Task | Status | Completion criteria |
 |---|------|--------|---------------------|
 | A1 | Fix `pyproject.toml` package discovery/source layout | ✅ | `import pne_scheduler` succeeds after editable install in a clean environment |
-| A2 | Establish the test command and CI baseline | ✅ local | `python -m pytest tests/ -q` passes; README badge matches count |
+| A2 | Establish the test command and CI baseline | ✅ | `python -m pytest tests/ -q` passes; README shows a live GitHub Actions status badge (2026-09-06, replacing a static hand-set count that could go stale) |
 | A3 | Add fixture inventory tests | ✅ | ZIP counts (8, 93) + HPPC presence verified automatically |
 
 **Notes:** A hosted CI workflow already exists (`.github/workflows/ci.yml`, since 2026-09-02) — "hosted CI" is not a Gate A/F gap in the sense of "not built," only in the sense of "not currently green" (see §6.1, §11). Full CI maturity (F6: packaging, schema-invariant checks, doc checks on every PR) remains future work. Local pass count is not equipment-compatibility evidence regardless of CI color.
@@ -716,7 +716,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | F3 | Equipment smoke-test protocol | ⏳ | Dummy-cell procedure, abort criteria, signed result |
 | F4 | Artifact immutability | ⏳ | Released hash == smoke-tested hash; reapproval on change |
 | F5 | Release status labels | ⏳ | `analysis-only` / `CTSPro-reopen-verified` / `equipment-verified` in CLI/UI |
-| F6 | Hosted CI | 🔄 **exists, green again** | `.github/workflows/ci.yml` runs Ruff + pytest + `tools/compare_pne_units.py` on push/PR since 2026-09-02; was red for 12 commits on the `access_parser` collection bug, fixed and pushed 2026-09-06 (`d60ea3b`, [run #33](https://github.com/Hwiho/pne_scheduler/actions/runs/34037824999) success). Remaining F6 scope: packaging checks, schema-invariant checks, doc checks on every PR, and a real status badge (README still shows a static hardcoded shields.io badge, not the workflow's own) |
+| F6 | Hosted CI | 🔄 **exists, green, now self-reporting** | `.github/workflows/ci.yml` runs Ruff + pytest + `tools/compare_pne_units.py` on push/PR since 2026-09-02; was red for 12 commits on the `access_parser` collection bug, fixed and pushed 2026-09-06 (`d60ea3b`, [run #33](https://github.com/Hwiho/pne_scheduler/actions/runs/34037824999) success). README now shows the workflow's own live status badge instead of a static hand-set count, so a future red run is visible on the repo front page. Remaining F6 scope: packaging checks, schema-invariant checks, doc checks on every PR |
 
 **Rule:** No “equipment-ready” label until F1–F4 pass for the **exact** artifact and target profile.
 

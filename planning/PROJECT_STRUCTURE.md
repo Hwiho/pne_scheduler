@@ -226,7 +226,7 @@ pne_scheduler/
 | `rescale_sch_current.py` | CLI 전류 리스케일 |
 | `export_sch_schema_xlsx.py` | 스키마 xlsx export |
 
-`_` 접두·`analyze_pne_zip_corpus.py` 등은 **삭제 예정** (0 import; 2026-09-06 재확인 — 여전히 정확함, 삭제는 사용자 확인 후 진행).
+`_parse_sch_struct.py`, `analyze_pne_zip_corpus.py` — **삭제 완료** (2026-09-06, 0 import 재확인 후 사용자 승인 받아 제거).
 
 ### `planning/` — 정책·증거·리포트 (코드 아님)
 
@@ -245,7 +245,7 @@ pne_scheduler/
 
 - **`assb_sch/`** — ASSB SCH 파서 (diff·parity 검증용).
 - **`ensol_sch_maker_ref/`** — Ensol zip 참조. **`battery_scheduler/`** 만 active 참조.
-- **`project_archive/`** — 삭제 예정 (0 import, 3.7MB; 2026-09-06 재확인 — 여전히 정확함, 삭제는 사용자 확인 후 진행).
+- ~~`project_archive/`~~ — **삭제 완료** (2026-09-06, 0 import 재확인 후 사용자 승인 받아 제거, 3.7MB 절감).
 
 vendor 코드는 **가져오기(copy-in) 후 in-tree에서 수정**한다. vendor를 runtime에서 직접 import 하지 않는다 (ASSB parser 예외는 `io/reader` 경유로 축소 중).
 

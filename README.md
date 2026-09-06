@@ -4,7 +4,7 @@ Python tools for reading, analyzing, editing, and resuming PNE cycler `.sch` sch
 The package also supports ASSB lab protocol classification (FM, capacheck, cycle, RPT,
 QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 
-[![Tests](https://img.shields.io/badge/tests-264%20passed-brightgreen)](#tests)
+[![CI](https://github.com/Hwiho/pne_scheduler/actions/workflows/ci.yml/badge.svg)](https://github.com/Hwiho/pne_scheduler/actions/workflows/ci.yml)
 
 > [!WARNING]
 > The from-scratch SCH writer now emits a full `0x00010003`/1760-byte header, but
