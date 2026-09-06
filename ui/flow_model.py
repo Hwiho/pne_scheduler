@@ -5,9 +5,14 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, is_dataclass
 from typing import Any
 
+from ..engine.duration import (
+    DurationEstimate,
+    combine_duration_estimates,
+    estimate_steps_duration,
+)
 from ..ir.project import ModuleConnection, ModuleNode, ScheduleProject
 from ..ir.step_intent import StepIntent
-from ..modules.base import get_module_class, list_module_types
+from ..modules.base import expand_module, get_module_class, list_module_types
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,6 +23,20 @@ class FlowValidation:
     @property
     def is_valid(self) -> bool:
         return not self.errors
+
+
+@dataclass(frozen=True, slots=True)
+class ModuleDurationEstimate:
+    module_id: str
+    module_type: str
+    estimate: DurationEstimate
+
+
+@dataclass(frozen=True, slots=True)
+class FlowDurationEstimate:
+    total: DurationEstimate
+    modules: tuple[ModuleDurationEstimate, ...]
+    warnings: tuple[str, ...] = ()
 
 
 class FlowProjectModel:
@@ -100,6 +119,36 @@ class FlowProjectModel:
         ]
         if len(self.project.connections) == original:
             raise ValueError(f"Connection does not exist: {source_id} -> {target_id}")
+
+    def rewire(self, source_id: str, target_id: str) -> tuple[str, ...]:
+        """Attach source → target, replacing any existing linear wires on those ports."""
+        if source_id == target_id:
+            raise ValueError("A module cannot connect to itself")
+        self.get_module(source_id)
+        self.get_module(target_id)
+        original = list(self.project.connections)
+        notes: list[str] = []
+        try:
+            for edge in original:
+                if edge.source_id == source_id and edge.target_id != target_id:
+                    self.disconnect(edge.source_id, edge.target_id)
+                    notes.append(f"Detached {edge.source_id} → {edge.target_id}")
+                elif edge.target_id == target_id and edge.source_id != source_id:
+                    self.disconnect(edge.source_id, edge.target_id)
+                    notes.append(f"Detached {edge.source_id} → {edge.target_id}")
+            already = ModuleConnection(source_id, target_id) in self.project.connections
+            if not already:
+                self.connect(source_id, target_id)
+                notes.append(f"Attached {source_id} → {target_id}")
+        except ValueError:
+            self.project.connections[:] = original
+            raise
+        return tuple(notes)
+
+    def ordered_modules(self) -> list[ModuleNode]:
+        if self.validate().errors:
+            return list(self.project.modules)
+        return self._ordered_modules()
 
     def auto_connect(self) -> None:
         self.project.connections[:] = [
@@ -186,6 +235,53 @@ class FlowProjectModel:
         if len(end_positions) > 1:
             warnings.append("The expanded flow contains multiple END steps.")
         return steps, tuple(warnings)
+
+    def estimate_duration(self) -> FlowDurationEstimate:
+        validation = self.validate()
+        if validation.errors:
+            raise ValueError("; ".join(validation.errors))
+        modules: list[ModuleDurationEstimate] = []
+        warnings = list(validation.warnings)
+        for node in self.ordered_modules():
+            estimate = estimate_steps_duration(
+                expand_module(node, self.project.cell_profile)
+            )
+            modules.append(
+                ModuleDurationEstimate(node.id, node.module_type, estimate)
+            )
+            warnings.extend(
+                f"{node.id}: {warning}" for warning in estimate.warnings
+            )
+        total = combine_duration_estimates(
+            [module.estimate for module in modules]
+        )
+        return FlowDurationEstimate(
+            total=total,
+            modules=tuple(modules),
+            warnings=tuple(dict.fromkeys(warnings)),
+        )
+
+    def _ordered_modules(self) -> list[ModuleNode]:
+        if not self.project.connections:
+            return list(self.project.modules)
+        by_id = {node.id: node for node in self.project.modules}
+        incoming = {node.id: 0 for node in self.project.modules}
+        adjacency = {node.id: [] for node in self.project.modules}
+        for edge in self.project.connections:
+            adjacency[edge.source_id].append(edge.target_id)
+            incoming[edge.target_id] += 1
+        queue = [
+            node.id for node in self.project.modules if incoming[node.id] == 0
+        ]
+        ordered: list[ModuleNode] = []
+        while queue:
+            current = queue.pop(0)
+            ordered.append(by_id[current])
+            for target in adjacency[current]:
+                incoming[target] -= 1
+                if incoming[target] == 0:
+                    queue.append(target)
+        return ordered
 
     def _next_id(self, module_type: str) -> str:
         existing = {node.id for node in self.project.modules}

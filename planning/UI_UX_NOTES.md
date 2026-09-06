@@ -168,8 +168,15 @@ pre-optimize for that now.
 
 ## 4. Suggested sequencing
 
-1. Port `ui/flow_theme.py` + attach/detach wiring from `update-roadmap-5ac9`
-   (E2.2, lowest risk, highest visual payoff).
+1. ~~Port `ui/flow_theme.py` + attach/detach wiring from `update-roadmap-5ac9`~~
+   **Done 2026-09-06.** Also pulled in `engine/duration.py` (schedule duration
+   estimate) since `flow_editor.py`'s port depended on it. Added
+   `ModuleStyle` entries for `smoke_rest_cc_end`/`smoke_writer_probe` (added
+   to this project after the branch was written). 273 tests pass; GUI
+   construction and the new `rewire()`/duration-estimate calls were smoke
+   -tested non-interactively — a human should still open
+   `python -m pne_scheduler flow` once to confirm the visual result, since
+   this environment cannot render/screenshot a Tk window.
 2. Port `modules/recipe.py`/`presets.py` + the Setup/Repeat/After notebook UI
    from `module-recipes-presets-5ac9`, rewriting the export path against
    master's current `engine/compiler.py`/`io/writer.py` rather than copying

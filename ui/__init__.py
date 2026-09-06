@@ -1,6 +1,11 @@
 """UI package — visual schedule builder."""
 
-from .flow_model import FlowProjectModel, FlowValidation
+from .flow_model import (
+    FlowDurationEstimate,
+    FlowProjectModel,
+    FlowValidation,
+    ModuleDurationEstimate,
+)
 
 
 def launch_flow_editor(*args, **kwargs):
@@ -29,7 +34,9 @@ def launch_schedule_viewer(*args, **kwargs):
 __all__ = [
     "launch_flow_editor",
     "FlowProjectModel",
+    "FlowDurationEstimate",
     "FlowValidation",
+    "ModuleDurationEstimate",
     "launch_project_editor",
     "launch_resume_wizard",
     "launch_schedule_viewer",

@@ -692,7 +692,7 @@ Previous framing said Gate E "depends on Gate C exit," which over-blocked the au
 | E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage | Review existing schedules | No |
 | E2 | **Procedure editor** (ordered steps) | 🔄 | Insert/reorder/delete primitives; property pane; C-rate ↔ mA preview | Nova-like step list | No |
 | E2.1 | Primitive palette | ⏳ | REST, CC, CCCV, CV, LOOP, END, OCV… with validated forms | Command blocks | No |
-| E2.2 | **Module palette** | ⏳ | Formation, Cycle Life, RPT, HPPC, DC-IR expand into steps | LabVIEW-like modules | No |
+| E2.2 | **Module palette** | 🔄 | Formation, Cycle Life, RPT, HPPC, DC-IR expand into steps | LabVIEW-like modules | No |
 | E2.3 | Method / project library | ⏳ | Save/load versioned procedures & modules per equipment profile | Reusable methods | No |
 | E2.4 | Cell / equipment setup pane | ⏳ | Explicit 1C mA, V limits, PNE unit/range, layout target; blocks export if missing | Setup before edit | No (the pane itself; it just *displays* a profile that later needs equipment-verified export) |
 | E3 | Pre-export validation UX | ⏳ | Block invalid loops, missing END, V/I violations | Readiness before export | **Needs Gate C exit** (validates against a writer users will actually export from) |
@@ -704,8 +704,9 @@ Previous framing said Gate E "depends on Gate C exit," which over-blocked the au
 
 **Progress record**
 - `pne_scheduler flow` / `run_pne_scheduler_flow.py`: linear graph, `.schproj` load/save, Cell Profile, step preview — **seed** for E2/E2.2
-- Remaining for the intended feel: module palette prominence, richer property forms, library, validation/export UX, undo/redo
-- 2026-09-06: found 3 abandoned Cursor Cloud branches with substantial unmerged UI work directly relevant to E2/E2.2/E2.3 (theming, recipe editing, schedule explanation) — see the new §6.6.1 below before starting any of E0–E2.4 from scratch, to avoid re-doing work that already exists unmerged
+- 2026-09-06: found 3 abandoned Cursor Cloud branches with substantial unmerged UI work directly relevant to E2/E2.2/E2.3 (theming, recipe editing, schedule explanation) — see §6.6.1
+- 2026-09-06: **ported the `cursor/update-roadmap-5ac9` theming + attach/detach work** (§6.6.1's first recommendation) — `ui/flow_theme.py` (per-module-type card colors/icons, rounded-card Tk Canvas rendering), `engine/duration.py` (schedule duration estimate with loop/CV-taper caveats surfaced as warnings, not silently dropped), and `FlowProjectModel.rewire()` (LabVIEW-style click-port-then-click-port attach/detach, reusing existing cycle validation). Added `ModuleStyle` entries for `smoke_rest_cc_end`/`smoke_writer_probe` (module types that didn't exist when the branch was written). 273 tests pass (was 264); GUI construction + rewire + duration estimate smoke-tested non-interactively (`tk.Tk()` + `withdraw()`, no visible window in this environment — a human should still open it once to confirm the visual result)
+- Remaining for the intended feel: module palette prominence (E2.2), richer property forms (E2.1, still raw JSON), library (E2.3, `cursor/module-recipes-presets-5ac9`'s recipe concept is the recommended next port per `UI_UX_NOTES.md`), validation/export UX (E3, blocked on Gate C exit), full undo/redo (the new `rewire()`'s returned notes are a natural logging seam for this, not yet wired to an undo stack)
 
 **Rules**
 - Do not prioritize E3/E3.1 semantic export until Gate C is complete — this is the **only** real equipment dependency in this gate
