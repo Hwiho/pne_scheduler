@@ -66,6 +66,7 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 
 | Document | Purpose |
 |----------|---------|
+| [`GATE_E_PLAN.md`](GATE_E_PLAN.md) | **실행 계획** — 격차 분석, 단계별 종료 기준, 자체 검토 반영 이력 |
 | [`UI_UX_NOTES.md`](UI_UX_NOTES.md) | Prior-art review of unmerged UI branches + Nova/LabVIEW pattern recommendations |
 
 ## User & technical docs (`docs/`)
