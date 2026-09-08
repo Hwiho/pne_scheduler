@@ -23,7 +23,6 @@ from ..schema.ensol_v612 import (
     HOFF_NAME,
     HOFF_SAFETY,
 )
-from ..validate.preflight import validate_project
 from .header import safety_limits_from_cell
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -57,6 +56,11 @@ def build_pne02_reopen_candidate(
     encoded_timestamp = timestamp.encode("ascii")
     if len(encoded_timestamp) > 63:
         raise ValueError("timestamp must fit the 63-byte CTS header field")
+
+    # Imported here, not at module scope: validate/ sits above io/ in the layering
+    # (validate.assb_parser_diff reads io.sch_parser), so a module-level import
+    # closes a cycle that breaks `import pne_scheduler.classify` outright.
+    from ..validate.preflight import validate_project
 
     preflight = validate_project(project, purpose="experimental_build")
     if preflight.errors:
