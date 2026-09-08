@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
+from .primitive import PRIMITIVE_KINDS
+
 TrustStatus = Literal[
     "prototype",
     "software-checked",
@@ -71,6 +73,16 @@ MODULE_CATALOG: dict[str, ModuleSpec] = {
         "qc", "QC charge", "fast-charge", "QC cycle, 1N1Q, and 1-charge candidates.",
         "software-checked", variants=("cycle", "1n1q", "1_charge"),
         limitations=("Set-specific voltage/time values require user reopen review.",),
+    ),
+    "primitive": ModuleSpec(
+        "primitive", "단일 스텝", "primitive",
+        "휴지·CC·CCCV·CV·OCV 를 한 스텝씩 놓습니다. 반복 횟수를 주면 그 스텝만 반복합니다.",
+        "software-checked",
+        variants=tuple(PRIMITIVE_KINDS),
+        limitations=(
+            "END 는 composer 가 소유하므로 팔레트에 없습니다.",
+            "LOOP 은 자기 스텝을 반복하는 형태로만 제공됩니다 (모듈 밖을 가리킬 수 없습니다).",
+        ),
     ),
     "custom_steps": ModuleSpec(
         "custom_steps", "직접 편집한 스텝", "advanced",

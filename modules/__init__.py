@@ -7,6 +7,7 @@ from .formation import FormationModule
 from .insitu_cycle import InsituCycleModule
 from .hppc import HppcModule
 from .rest import RestModule
+from .primitive import PrimitiveModule
 from .qpeed import QpeedModule
 from .qc import QcModule
 from .smoke_rest_cc_end import SmokeRestCcEndModule
@@ -30,6 +31,7 @@ __all__ = [
     "SmokeWriterProbeModule",
     "expand_module",
     "get_module_spec",
+    "PrimitiveModule",
     "register_module",
     "visible_module_types",
 ]
