@@ -18,12 +18,13 @@ Or regenerate:
 python -m pne_scheduler.tools.rebuild_smoke_sch_from_lab_header example/smoke_writer_probe.schproj
 ```
 
-Expected: **cycle marker → CCCV charge (8 mA @ 4.2 V) → rest → CC discharge
-(8 mA, cutoff 2.5 V) → rest → LOOP x2 → END**, 7 steps. This single file combines
-every field that already has controlled-pair or corpus evidence (charge, discharge,
-CV cutoff, LOOP, per-step sampling) so one reopen replaces what would otherwise be
-several separate physical checks — see the evidence-coverage doc for the full
-field-by-field justification.
+Expected: **CCCV charge (8 mA @ 4.2 V) → rest → CC discharge
+(8 mA, cutoff 2.5 V) → rest → LOOP x2 (goto step 1) → END**, 6 steps.
+No Cycle marker (CTS requires Cycle…Loop pairing; PNE02 loop pairs omit Cycle).
+This single file combines every field that already has controlled-pair or corpus
+evidence (charge, discharge, CV cutoff, LOOP, per-step sampling) so one reopen
+replaces what would otherwise be several separate physical checks — see the
+evidence-coverage doc for the full field-by-field justification.
 
 ### On the PNE PC
 

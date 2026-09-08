@@ -21,13 +21,14 @@ what its cited tier supports.
 | `fIref`/time_or_rest_s @20 | corpus_inferred, writer_ready | `pne02-rest-duration` pair (reopen-verified) | Yes — 50 s and 35 s (two distinct rests) | None on the value |
 | `fEndV`/voltage_cutoff @28 | corpus_inferred, writer_ready | `pne02-end-voltage` pair (reopen-verified); 5/5 golden fixtures = 2500 mV | Yes — discharge cutoff 2.500 V | None |
 | `fEndI`/cv_cutoff @32 | corpus_inferred, writer_ready | `pne02-cv-cutoff` pair (reopen-verified) | Yes — 4.00 mA | None |
-| `loop_target` @48 | corpus_inferred, writer_ready | `pne02-loop-goto` pair (reopen-verified) | Yes — goto step 2 | **This is the one genuinely new axis**: prior pairs verified loop fields via `patch-sch` on an existing template, never inside a from-scratch-built header |
+| `loop_target` @48 | corpus_inferred, writer_ready | `pne02-loop-goto` pair (reopen-verified) | Yes — goto step 1 | **This is the one genuinely new axis**: prior pairs verified loop fields via `patch-sch` on an existing template, never inside a from-scratch-built header |
+
 | `loop_count` @52 | corpus_inferred, writer_ready | `pne02-loop-count` pair (reopen-verified) | Yes — count 2 | Same as above |
 | `record_time_s` @340 | corpus_inferred, writer_ready | `pne02-sampling-interval` **and** `pne02-sampling-interval-discharge` pairs (both reopen-verified, independently, for charge vs. discharge) | Yes — 30/25/15/10 s, four distinct values across four steps | None on the value; probe additionally checks the field is read per-step, not defaulted |
 | `record_dV_mV` @332 | corpus_inferred | 79 near-pairs; golden capacheck fixture = 10 mV | Yes — 20 mV charge, 5 mV discharge (both non-default) | Low |
 | `dod_percent` @384 | corpus_inferred (not yet writer_ready) | 554/856 filename-SOC matches; supersedes legacy `fSocRate`@392 per `GATE_B_CORPUS_EVIDENCE.json` | Yes — 40.0 (bonus/observational; not required for pass/fail) | Optional — recording what CTSEditorPro shows here is new evidence toward promoting it to writer_ready |
 | `cap_mode` @496 | corpus_inferred | Golden capacheck fixture + 658 near-pairs; auto-set by the compiler on every active step | Yes — 1 on charge/rest/discharge | None |
-| Whole-header framing (magic, version, name, timestamps, CTS common-safety @0x458/capacity @0x464, step hint @0x484) | Framing corpus-matched, never physically reopened as a **from-scratch** assembly | `SCH_696_TAIL_ANALYSIS.md`, `docs/GATE_B.md` | Yes — this is the actual thing C5 tests | **This is the real remaining unknown.** See §3. |
+| Whole-header framing (magic, version, name, timestamps, CTS common-safety @0x458 as Vmax/Vmin/Imax/Imin/Cap/Temp, step hint @0x484) | Framing corpus-matched, never physically reopened as a **from-scratch** assembly | `SCH_696_TAIL_ANALYSIS.md`, `docs/GATE_B.md` | Yes — this is the actual thing C5 tests | **This is the real remaining unknown.** See §3. |
 
 Fields intentionally **not** packed anywhere in the writer, because 100% of the
 23,275-file mined corpus and all 102 checked-in fixtures leave them zero (a
@@ -42,22 +43,25 @@ for them without new controlled-pair evidence (`ROADMAP.md` L3).
 
 `example/smoke_writer_probe.schproj` / `.sch` (module `smoke_writer_probe`, see
 `modules/smoke_writer_probe.py`) packs every writer-ready and high-confidence
-corpus-inferred field above into **one** 7-step file, each with a distinct numeric
+corpus-inferred field above into **one** 6-step file, each with a distinct numeric
 value so a single visual pass can attribute every displayed number to exactly one
 field:
 
 ```
-1. cycle marker
-2. CCCV charge   -> 8.00 mA, 4.200 V, cutoff 4.00 mA, sample 30 s / 20 mV
-3. rest          -> 50 s, sample 25 s
-4. CC discharge  -> 8.00 mA, cutoff 2.500 V, sample 15 s / 5 mV, DOD 40% (bonus)
-5. rest          -> 35 s, sample 10 s
-6. loop          -> goto step 2, count 2
-7. end
+1. CCCV charge   -> 8.00 mA, 4.200 V, cutoff 4.00 mA, sample 30 s / 20 mV
+2. rest          -> 50 s, sample 25 s
+3. CC discharge  -> 8.00 mA, cutoff 2.500 V, sample 15 s / 5 mV, DOD 40% (bonus)
+4. rest          -> 35 s, sample 10 s
+5. loop          -> goto step 1, count 2
+6. end
 ```
 
-This step shape is identical to `CycleLifeModule.expand()` (`modules/cycle_life.py`),
-so a clean reopen also substantially de-risks Gate D's future Cycle Life fixture —
+No leading Cycle marker: CTSEditorPro requires Cycle…Loop pairing, and PNE02
+reopen-verified loop pairs omit Cycle (body→Loop→End). An earlier probe that
+inserted Cycle failed save with "Loop 종료 없이 새로운 Cycle".
+
+This step shape matches the **body** of `CycleLifeModule.expand()` without the
+Cycle wrapper CTS rejects when unpaired —
 noted as risk reduction only, **not** claimed as a Gate D pass (Gate D still
 requires its own `validate -> expand -> compile -> parse -> semantic compare`
 integration test per `ROADMAP.md` §6.5).
