@@ -23,6 +23,7 @@
 | 2026-09-08 | Gate D software slice completed: capacity contract tests; Formation/Rest/Cycle Life + RPT/DC-IR + HPPC/capacheck/QPEED/in-situ harness; golden family topology compares (`validate/topology.py`) |
 | 2026-09-08 | Gate D verification method + audit remediations: `GATE_D_VERIFICATION.md`, harness charge-V/loop checks, `run_gate_d_verification` → `GATE_D_VALIDATION_REPORT.json` (`gate_d_passed=true`, 49 checks) |
 | 2026-09-08 | Post-C5 status sweep (L5): cleared stale "behind C5" wording from the gate diagram, Gate E `Depends on`/Rules/E3/E3.1 rows, and Gate F F1–F4 — the C5 pass satisfied those dependencies. Added [`GUARDRAILS.md`](GUARDRAILS.md), a topic-grouped reading view of §5.6/§8/§11 |
+| 2026-09-08 | Gate D mutation backtest found and fixed two verification holes (V6 never compared module expansions; skips did not block `gate_d_passed`) — see §11. Archived closed-gate evidence and consumed analysis outputs to [`../legacy/`](../legacy/README.md); only files with zero `.py` references were moved, and the C5 signed record stays cited from Gate F2 |
 
 ---
 
@@ -638,10 +639,10 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 **Progress record**
 - C0 / C0.1 / C0.2 / C1 / C2 / C3 / C4: implemented 2026-09-03 (see git history `dbf7fed`…`1eeceb3`)
-- C5: checklist [`GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md); smoke assets `example/smoke_rest_cc_end.*` (kept as a fallback)
+- C5: checklist [`GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](../legacy/planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md); smoke assets `example/smoke_rest_cc_end.*` (kept as a fallback)
 - C5 (2026-09-06): field-by-field evidence audit against `schema/fields.py`,
   `GATE_B_CORPUS_EVIDENCE.json`, `GOLDEN_SEMANTIC_EXPECTATIONS.json`, and all 9
-  reopen-verified PNE02 pairs — see [`GATE_C5_EVIDENCE_COVERAGE.md`](GATE_C5_EVIDENCE_COVERAGE.md).
+  reopen-verified PNE02 pairs — see [`GATE_C5_EVIDENCE_COVERAGE.md`](../legacy/planning/GATE_C5_EVIDENCE_COVERAGE.md).
   Conclusion: every writer-ready/high-confidence field was already individually
   reopen- or corpus-verified; the only genuinely untested axis was a from-scratch
   build combining charge+discharge+LOOP+per-step sampling in one header. Added a
@@ -653,7 +654,7 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 - **C5 (2026-09-08):** PNE02 CTSEditorPro smoke **passed** on `smoke_writer_probe.sch`
   (open/save, capacity 800 mAh, charge/discharge/LOOP/END, optional channel run).
   DOD/SOC 40% not shown in UI (optional). Common-safety Cap confirmed at `+12`.
-- C6: [`SCH_696_TAIL_ANALYSIS.md`](SCH_696_TAIL_ANALYSIS.md) — 92 catalog fixtures / 2056 steps, zero nonzero tails
+- C6: [`SCH_696_TAIL_ANALYSIS.md`](../legacy/planning/SCH_696_TAIL_ANALYSIS.md) — 92 catalog fixtures / 2056 steps, zero nonzero tails
 - Extended types: [`STEP_TYPES_EXTENDED.md`](STEP_TYPES_EXTENDED.md)
 - User action list: [`USER_ACTION_ITEMS.md`](USER_ACTION_ITEMS.md)
 
@@ -773,7 +774,7 @@ Gate B/C validation tooling, not UI — lower priority to review, listed in §11
 | # | Task | Status | Completion criteria | Needs equipment? |
 |---|------|--------|---------------------|:---:|
 | F1 | Target equipment compatibility report | ⏳ | PNE unit/range, CTSPro version, layout, open assumptions | No — write-up of what C5 already established (PNE02, `0x3D8+12`/`0x458+12` capacity slot, 612/1760 layout) |
-| F2 | Reopen approval record | ⏳ | Exact SHA-256 opens in CTSPro; operator result logged | No — C5 checklist is signed; needs the **exact probe SHA-256** recorded against it |
+| F2 | Reopen approval record | ⏳ | Exact SHA-256 opens in CTSPro; operator result logged | No — the signed C5 checklist is the source record, archived at [`legacy/planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](../legacy/planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md); F2 still needs the **exact probe SHA-256** recorded against it |
 | F3 | Equipment smoke-test protocol | ⏳ | Dummy-cell procedure, abort criteria, signed result | Partly — the C5 reopen is done; a *run* protocol (dummy cell, abort criteria) still needs a lab session if execution is to be claimed |
 | F4 | Artifact immutability | ⏳ | Released hash == smoke-tested hash; reapproval on change | No — pin the C5-verified `smoke_writer_probe.sch` hash and gate re-release on change |
 | F5 | Release status labels | ⏳ | `analysis-only` / `CTSPro-reopen-verified` / `equipment-verified` in CLI/UI | No — the label enum/plumbing can be built now; only *applying* `equipment-verified` needs F1–F4 |
@@ -919,7 +920,7 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 | 2026-09-01 | B | normal | fEndV unit mismatch (fixture mV vs compiler V) | resolved | Ensol adoption; `tests/test_unit_contract.py` |
 | 2026-09-01 | B/D | normal | Golden fixtures locked from user intake (7 selected, PNE02+PNE16) | done | `planning/GOLDEN_FIXTURES_LOCKED.json` |
 | 2026-09-03 | E | normal | UX intent clarified: Nova + LabVIEW *feel* for modular schedule authoring (not live Autolab control) | accepted | §1.1 rewritten; Gate E retitled; E8 removed as false target |
-| 2026-09-06 | C | normal | C5 required a physical reopen per field/module shape; most of that risk was already closed by existing PNE02 pairs and corpus mining but never consolidated | resolved | [`GATE_C5_EVIDENCE_COVERAGE.md`](GATE_C5_EVIDENCE_COVERAGE.md) audits every step field; `smoke_writer_probe` module/fixture combines charge+discharge+LOOP+per-step sampling into one from-scratch build so a single reopen replaces several |
+| 2026-09-06 | C | normal | C5 required a physical reopen per field/module shape; most of that risk was already closed by existing PNE02 pairs and corpus mining but never consolidated | resolved | [`GATE_C5_EVIDENCE_COVERAGE.md`](../legacy/planning/GATE_C5_EVIDENCE_COVERAGE.md) audits every step field; `smoke_writer_probe` module/fixture combines charge+discharge+LOOP+per-step sampling into one from-scratch build so a single reopen replaces several |
 | 2026-09-06 | C | normal | `build_sch_header()` (CLI `build` path) leaves 54/1760 header bytes at zero where a real lab-authored header has non-zero content (concentrated ~0x2D8-0x361, past `HOFF_NAME`'s window — plausibly the second `FILE_TEST_INFORMATION` name/description block from §2.3) | open, no action needed yet | Not packed — no controlled-pair/corpus evidence for their meaning (L3). `tools/rebuild_smoke_sch_from_lab_header.py` sidesteps this by cloning a real header instead of using `build_sch_header()`; a clean C5 on `smoke_writer_probe.sch` does **not** clear this for the plain CLI `build` path specifically. Revisit only if `build_sch_header()`'s output needs to go to equipment directly |
 | 2026-09-06 | D | normal | `dcir`/`hppc`/`rpt`/`qpeed` modules SOC-target via `end_capacity_fraction`, which packs `fEndC`@36 -- a field `schema/fields.py` marks `semantic_unverified` with **no nonzero example in the corpus** (weaker evidence than DCR, which at least gets a warning). `compile_step_warnings()` already warns for DCR and `goto_step_id` but silently skipped this one | resolved | Added the missing warning in `engine/compiler.py::compile_step_warnings`; also fixed `io/writer.py::write_sch` discarding `compile_step_warnings()`'s result (`_ = ...`) instead of returning it, so the CLI `build` path had **zero** visibility into any of these warnings even though the compiler always computed them. `build` now prints `WARN:` lines and the manifest's `warnings` include them |
 | 2026-09-06 | D | normal | `modules/insitu_cycle.py::expand()` checked `steps[0].label is None` to decide whether to relabel the inherited cycle marker, but `StepIntent.label` defaults to `""` (never `None`) and `CycleLifeModule` always sets a real label -- the condition could never be true, so in-situ projects always kept the generic "cycle marker" label instead of "in-situ cycle marker (no RPT)" | resolved | Condition changed to `steps[0].step_type == "cycle"`; `tests/test_insitu_cycle.py` added |

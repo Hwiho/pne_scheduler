@@ -8,7 +8,7 @@ Software focus is now **Gate E** (modular UX). Below is only optional lab work.
 
 ## 1. Gate C5 — ✅ done
 
-Checklist: [`GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md)
+Checklist: [`GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](../legacy/planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md)
 
 ---
 

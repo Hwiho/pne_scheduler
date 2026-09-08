@@ -5,7 +5,7 @@ prepared to run without these files, but Gate B cannot exit until valid, reopen-
 pairs are present.
 
 **500 mA vs 20 A:** same step layout and offsets; separate pair directories by tier for
-writer evidence. See [`planning/SCH_LAYOUT_TIER_SHARING.md`](../../planning/SCH_LAYOUT_TIER_SHARING.md).
+writer evidence. See [`planning/SCH_LAYOUT_TIER_SHARING.md`](../../legacy/planning/SCH_LAYOUT_TIER_SHARING.md).
 
 Use one directory per pair:
 

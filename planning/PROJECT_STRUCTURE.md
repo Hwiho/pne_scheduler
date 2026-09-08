@@ -241,6 +241,20 @@ pne_scheduler/
 
 코퍼스 리포트 JSON은 **도구 출력물**이다. 수동 편집하지 않고 도구를 재실행한다.
 
+### `legacy/` — 검증 완료 자료 보관 (2026-09-08 신설)
+
+종료된 게이트 증거와 결론이 정책으로 흡수된 일회성 분석물을 보관한다.
+`legacy/planning/`, `legacy/reports/` 두 갈래이며 색인은
+[`../legacy/README.md`](../legacy/README.md).
+
+**이동 규칙:** `.py`가 런타임에 로드하는 파일은 옮기지 않는다. `planning/*.json`
+다수는 `schema/equipment*.py`·`tests/golden_fixtures.py`·Gate B/D 검증기가
+경로로 읽으므로 제자리에 둔다. 옮기기 전 `.py` 참조 0건을 확인하고, 옮긴 뒤
+전체 테스트와 게이트 검증을 재실행한다.
+
+**주의:** `legacy/`는 "무효"가 아니라 "결론이 난" 자료다. 특히 C5 서명
+체크리스트는 Gate F2 리오픈 승인 기록의 원자료로 계속 인용된다.
+
 ### `vendor/`
 
 - **`assb_sch/`** — ASSB SCH 파서 (diff·parity 검증용).

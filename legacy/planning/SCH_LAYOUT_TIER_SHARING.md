@@ -43,7 +43,7 @@ Payload differs in **13 bytes** (mostly `@16` / `@32` values); header differs in
 Both **PNE02.zip (500 mA)** and **PNE12.zip (20 A)** are dominated by **`0x00010003` / 612 B** with varying step counts and file sizes.  
 Current tier does **not** imply a different step-size table.
 
-Layout selection remains **`(nFileVersion, payload_offset, step_size)`** — eventually **`(pne_unit, ctspro_build, nFileVersion)`** per [`LAB_DATA_POLICY.md`](LAB_DATA_POLICY.md).
+Layout selection remains **`(nFileVersion, payload_offset, step_size)`** — eventually **`(pne_unit, ctspro_build, nFileVersion)`** per [`LAB_DATA_POLICY.md`](../../planning/LAB_DATA_POLICY.md).
 
 ---
 
@@ -71,6 +71,6 @@ Layout selection remains **`(nFileVersion, payload_offset, step_size)`** — eve
 
 ## References
 
-- [`example/gate_b_pairs/README.md`](../example/gate_b_pairs/README.md) — imported pairs
-- [`planning/EQUIPMENT_CURRENT_RATINGS.json`](EQUIPMENT_CURRENT_RATINGS.json) — official tiers
-- [`docs/GATE_B.md`](../docs/GATE_B.md) — evidence promotion ladder
+- [`example/gate_b_pairs/README.md`](../../example/gate_b_pairs/README.md) — imported pairs
+- [`planning/EQUIPMENT_CURRENT_RATINGS.json`](../../planning/EQUIPMENT_CURRENT_RATINGS.json) — official tiers
+- [`docs/GATE_B.md`](../../docs/GATE_B.md) — evidence promotion ladder
