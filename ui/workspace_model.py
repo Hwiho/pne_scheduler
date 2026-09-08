@@ -7,6 +7,7 @@ without a display.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -30,6 +31,7 @@ from ..ir.project import ModuleNode, ScheduleProject
 from ..modules.base import get_module_class
 from ..modules.catalog import get_module_spec, palette_module_types
 from ..protocol.campaign import CampaignPlan, build_cycle_rpt_campaign
+from ..protocol.qc_fast_charge import FastChargePlan, fast_charge_for_rates
 from ..protocol.recipes import ExperimentGoal, get_goal, search_goals
 from ..release import ReleaseState, evaluate_release
 from ..report.summary import ProjectSummary, summarize_project
@@ -375,6 +377,46 @@ class WorkspaceModel:
                     break
 
         self.document.apply(f"{module_id}.{key} 변경", mutate)
+        return diff_projects(before, self.project)
+
+    def plan_qc_fast_charge(
+        self, module_id: str, new_rates_c: Sequence[float]
+    ) -> FastChargePlan:
+        """Work out the voltage and time lists that go with these QC rates.
+
+        Nothing is changed: the plan carries the derived values, what moved, and
+        what the derivation does not model, so the caller can show all three
+        before anyone commits to them.
+        """
+        node = self._node(module_id)
+        if node.module_type != "qc":
+            raise ValueError(f"QC 모듈이 아닙니다: {module_id}")
+        params = resolve_params(node.module_type, dict(node.params))
+        return fast_charge_for_rates(
+            new_rates_c,
+            rates_c=params["fast_rates_c"],
+            voltages_v=params["fast_voltages_v"],
+            times_s=params["fast_times_s"],
+        )
+
+    def apply_qc_fast_charge(self, module_id: str, plan: FastChargePlan) -> StepDiff:
+        """Commit a fast-charge plan — all three lists together, in one step."""
+        if plan.errors:
+            raise ValueError("; ".join(plan.errors))
+        node = self._node(module_id)
+        if node.module_type != "qc":
+            raise ValueError(f"QC 모듈이 아닙니다: {module_id}")
+        params = resolve_params(node.module_type, {**node.params, **plan.as_params()})
+        before = self.project.copy()
+
+        def mutate(project: ScheduleProject) -> None:
+            for candidate in project.modules:
+                if candidate.id == module_id:
+                    candidate.params = params
+                    break
+
+        rates = " · ".join(f"{rate:g}C" for rate in plan.rates_c)
+        self.document.apply(f"{module_id} 급속충전 {rates}", mutate)
         return diff_projects(before, self.project)
 
     def modules_of_type(self, module_type: str) -> tuple[str, ...]:

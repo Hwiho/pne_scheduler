@@ -539,15 +539,18 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
             "fast_voltages_v", "급속충전 단계별 전압", "voltage_list", G_CHARGE, "fast_voltages_v",
             default=[3.918, 4.008, 4.006], minimum=2.0, maximum=5.0,
             help="각 급속충전 단계의 전압 한계입니다.",
-            basis="Set2 코퍼스 관측값",
+            basis="Set2 코퍼스 관측값. 전류를 바꿔도 이 값은 재측정된 것이 아니므로 "
+                  "CTSPro 재열기 확인 전에는 검증되지 않은 값입니다.",
             affects="급속충전 스텝의 전압 한계",
             risk="critical", verification="software-checked",
         ),
         ParameterSpec(
             "fast_times_s", "급속충전 단계별 시간", "duration_list", G_CHARGE, "fast_times_s",
             default=[534.0, 524.0, 290.0], minimum=0.0, maximum=86400.0,
-            help="각 급속충전 단계의 시간 종료 조건입니다.",
-            basis="Set2 코퍼스 관측값",
+            help="각 급속충전 단계의 시간 종료 조건입니다. 전류를 바꾸면 이 값도 함께 "
+                 "바꿔야 같은 전하량이 들어갑니다 (C × t 일정).",
+            basis="Set2 코퍼스 관측값. 전류를 바꿔 다시 계산한 값은 정전류 구간 근사이며 "
+                  "CV 감쇠 구간은 반영되지 않습니다.",
             affects="급속충전 스텝의 시간 종료 조건",
             risk="caution", verification="software-checked",
         ),
