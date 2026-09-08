@@ -10,6 +10,7 @@ from tkinter import filedialog, messagebox, simpledialog, ttk
 from ..engine.duration import format_duration
 from ..ir.cell_profile import CellProfile
 from ..ir.project import ScheduleProject
+from ..modules.catalog import get_module_spec
 from .flow_model import FlowDurationEstimate, FlowProjectModel
 from .flow_theme import (
     CARD_GAP_X,
@@ -756,14 +757,11 @@ class FlowEditorApp:
                 font=("TkDefaultFont", 8),
                 tags=(f"module:{node.id}",),
             )
-            repeat_value = node.params.get(
-                "loop_count",
-                node.params.get("cycle_count"),
-            )
+            spec = get_module_spec(node.module_type)
             badge_text = (
-                f"cycle × {repeat_value}"
-                if repeat_value is not None
-                else "single pass"
+                spec.trust_status.replace("-", " ")
+                if spec is not None
+                else "uncataloged"
             )
             badge_bg = self._draw_rounded(
                 x + 18,
@@ -847,7 +845,11 @@ class FlowEditorApp:
             self.selected_label.configure(text="No module selected")
             return
         style = module_style(node.module_type)
-        self.selected_label.configure(text=f"{style.icon}  {style.title}  ·  {node.id}")
+        spec = get_module_spec(node.module_type)
+        trust = f" · {spec.trust_status}" if spec is not None else ""
+        self.selected_label.configure(
+            text=f"{style.icon}  {style.title}  ·  {node.id}{trust}"
+        )
         self.params_text.insert(
             tk.END,
             json.dumps(node.params, indent=2, ensure_ascii=False),

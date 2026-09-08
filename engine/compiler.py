@@ -154,6 +154,11 @@ def _pack_sampling(record: bytearray, intent: StepIntent) -> None:
 
 
 def _compile_one_step(step_no: int, intent: StepIntent, cell: CellProfile) -> bytes:
+    if intent.loop_target_ref is not None:
+        raise ValueError(
+            f"Step {step_no}: unresolved loop_target_ref {intent.loop_target_ref!r}; "
+            "compose the schedule before compiling"
+        )
     record = bytearray(STEP_RECORD_SIZE)
     step_type = _resolve_step_type_code(intent)
     struct.pack_into("<i", record, 0, step_no)
@@ -173,8 +178,20 @@ def _compile_one_step(step_no: int, intent: StepIntent, cell: CellProfile) -> by
         elif intent.cv_cutoff_c_rate is not None:
             cutoff = current_mA_from_c_rate(intent.cv_cutoff_c_rate, cell)
             struct.pack_into("<f", record, OFF_CV_CUTOFF_MA, float(cutoff))
+        if intent.end_voltage_v is not None:
+            struct.pack_into(
+                "<f",
+                record,
+                OFF_VOLTAGE_CUTOFF_MV,
+                float(intent.end_voltage_v) * 1000.0,
+            )
     elif intent.step_type == "discharge":
-        struct.pack_into("<f", record, OFF_VOLT_OR_VLIM_MV, float(CCDI_VLIM_DEFAULT_MV))
+        discharge_vlim_mV = (
+            float(intent.voltage_v) * 1000.0
+            if intent.voltage_v is not None
+            else float(CCDI_VLIM_DEFAULT_MV)
+        )
+        struct.pack_into("<f", record, OFF_VOLT_OR_VLIM_MV, discharge_vlim_mV)
         _pack_current_mA(record, intent, cell)
         if intent.end_voltage_v is not None:
             struct.pack_into(

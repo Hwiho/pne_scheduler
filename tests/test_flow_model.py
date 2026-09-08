@@ -40,9 +40,10 @@ def test_flow_model_add_connect_preview_and_round_trip(tmp_path: Path) -> None:
     loaded = ScheduleProject.load(project_path)
 
     assert validation.is_valid
-    assert validation.warnings == ()
-    assert len(steps) == 5
-    assert warnings == ()
+    assert any("MODULE_TRUST" in warning for warning in validation.warnings)
+    assert len(steps) == 6
+    assert steps[-1].step_type == "end"
+    assert warnings == validation.warnings
     assert duration.total.estimated_seconds == pytest.approx(72_240.0)
     assert [item.module_id for item in duration.modules] == [
         formation.id,

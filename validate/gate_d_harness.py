@@ -10,10 +10,10 @@ from typing import Any
 from ..engine.compiler import compile_step_warnings, compile_steps
 from ..ir.cell_profile import CellProfile
 from ..ir.project import ModuleNode, ScheduleProject
-from ..ir.step_intent import StepIntent
 from ..io.sch_binary import read_sch_binary
 from ..io.sch_parser import parse_schedule_file
-from ..modules.base import expand_module, get_module_class
+from ..ir.composer import compose_module_steps
+from ..modules.base import get_module_class
 from ..schema.ensol_v612 import (
     OFF_CURRENT_MA,
     OFF_LOOP_COUNT,
@@ -71,7 +71,7 @@ def run_module_pipeline(
 
     node = ModuleNode(id=f"{module_type}_1", module_type=module_type, params=dict(params or {}))
     try:
-        intents = list(expand_module(node, cell))
+        intents = compose_module_steps([node], cell)
     except ValueError as exc:
         return GateDModuleReport(
             module_type=module_type,
@@ -81,9 +81,6 @@ def run_module_pipeline(
             mismatches=(str(exc),),
             warnings=(),
         )
-
-    if not intents or intents[-1].step_type != "end":
-        intents = [*intents, StepIntent(step_type="end")]
 
     topology = tuple(intent.step_type for intent in intents)
     warnings = list(compile_step_warnings(intents))

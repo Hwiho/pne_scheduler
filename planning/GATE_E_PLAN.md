@@ -1,184 +1,273 @@
 # Gate E 실행 계획 — 모듈형 스케줄 UX
 
-작성 2026-09-08. 근거: 현재 `ui/` 코드 실측 + `UI_UX_NOTES.md` 선행연구 조사
-+ `io/template_writer.py` 내보내기 경로 분석.
+개정: 2026-09-08
+근거: 현재 `ui/`, `ir/`, `modules/`, `io/template_writer.py`, Gate D 검증 코드 실측,
+[`UI_UX_NOTES.md`](UI_UX_NOTES.md),
+[`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md).
 
 ---
 
-## 1. 현재 상태 (실측)
+## 1. 결론
 
-| 파일 | 줄 수 | 실제로 하는 일 |
-|------|------|----------------|
-| `ui/flow_editor.py` | 876 | 모듈 그래프 캔버스, 카드 테마, 포트 attach/detach, JSON 파라미터 편집, 스텝 미리보기, 검증 텍스트, 소요시간 추정 |
-| `ui/schedule_viewer.py` | 252 | `.sch` 열기 → 요약 + 스텝 테이블 (읽기 전용) |
-| `ui/project_editor.py` | 287 | `.schproj` 모듈 파라미터 일괄 편집 |
-| `ui/resume_wizard.py` | 216 | `.sch` + CSV → 재개 스케줄 **내보내기까지 동작** |
-| `ui/flow_model.py` | 308 | 그래프 규칙, `rewire`, 검증, 스텝 확장, 소요시간 |
-| `ui/flow_theme.py` | 189 | 모듈 타입별 색/아이콘, 라운드 카드 |
+Gate E는 바로 진행해도 된다. 다만 기존 계획처럼 **내보내기 모델부터 크게 만든 뒤
+UI를 붙이는 순서**는 수정한다. 먼저 다음 두 계약을 고정해야 한다.
 
-**중요:** 네 개 앱이 서로 독립 실행되며 공유 셸이 없다. `flow_editor`에는
-**내보내기 기능이 전혀 없다** (경고 라벨만 있음). 파라미터·셀 프로파일 편집은
-전부 raw JSON 텍스트박스다.
+1. 여러 모듈을 한 절차로 합칠 때의 `END`/LOOP/step 번호 규칙
+2. 모듈·패턴이 `prototype`인지, CTSPro reopen까지 검증됐는지 보여 주는 신뢰도 규칙
 
-## 2. Gate E 과제 대비 격차
+권장 제품 형태는 **하나의 데스크톱 셸 + 선형 Procedure가 기본 화면**이다.
+LabVIEW식 그래프는 모듈 간 순서를 보는 보조 뷰로 유지한다. 현재 스케줄은 선형 실행이
+핵심이므로 자유 그래프를 기본 저작 화면으로 삼으면 연결 UX가 실제 실행 모델보다 앞서간다.
 
-| # | 과제 | 실제 | 격차 |
-|---|------|------|------|
-| E0 | UX 계약·IA | 없음 | 앱 4개가 분리 실행. 통합 화면 구조 미정의 |
-| E1 | 뷰어/재개/일괄편집 회귀 | 부분 | `test_flow_model.py`·`test_flow_theme.py`가 모델·테마 레이어를 덮음. **위젯/상호작용 레이어는 테스트 0** (창을 띄우는 코드 경로 미검증) |
-| E2 | 절차 편집기 | 부분 | 모듈 단위만. **스텝 단위 삽입/이동/삭제 불가** |
-| E2.1 | 프리미티브 팔레트 | 없음 | JSON 직접 입력 |
-| E2.2 | 모듈 팔레트 | 부분 | 카드 시각화는 완료, 팔레트 드래그는 아님(드롭다운+버튼) |
-| E2.3 | 메서드 라이브러리 | 없음 | `.schproj` 열기/저장만 |
-| E2.4 | 셀·장비 설정 패널 | 부분 | 셀은 JSON. **장비 프로파일 개념이 UI에 부재** |
-| E3 | 내보내기 전 검증 UX | 부분 | 검증 텍스트는 있으나 내보내기와 **연결 안 됨** |
-| E3.1 | 내보내기 경로 선택 | **없음** | 버튼 자체가 없음 |
-| E4 | `.sch` → IR 임포트 | 부분 | 뷰어로 보기는 되나 **IR로 가져와 편집 불가** |
+패턴 검증과 Gate E는 병행할 수 있지만 경계는 명확하다.
 
-## 3. 먼저 풀어야 할 설계 문제 (UI보다 앞섬)
+- Setup, Procedure, Inspector, 저장/복구 UX: 패턴 검증 전에도 진행
+- 기본 Module palette에 패턴을 `verified`로 노출: 해당 패턴 승인 후
+- from-scratch export를 안전한 경로로 노출: 일괄 패턴 reopen 검증 후
+- `equipment-ready` 표시: Gate F의 정확한 파일 hash + 대상 장비 승인 후
 
-**`patch-sch`는 저작 결과물을 그대로 받을 수 없다.**
+---
 
-`io/template_writer.py`의 입력은 `(템플릿 SHA-256, expected_version,
-target_profile, [(step_no, field, value)...])`이다. 즉:
+## 2. 현재 상태와 확인된 격차
 
-- 변경 가능한 필드는 **writer_ready 7개뿐** (`fVref`, `fIref`, `fEndV`,
-  `fEndI`, `loop_target`, `loop_count`, `record_time_s`)
-- **토폴로지를 못 바꾼다** — 스텝 추가/삭제/순서변경 불가
-- 따라서 저작한 그래프는 **구조가 일치하는 승인된 템플릿이 있을 때만**
-  `patch-sch`로 내보낼 수 있다
+| 영역 | 현재 구현 | 추가로 필요한 것 |
+|------|-----------|------------------|
+| 앱 구조 | viewer, flow, bulk editor, resume가 별도 창/진입점 | 단일 셸, 공통 문서 상태와 메뉴 |
+| Procedure | 모듈 그래프와 확장 preview | primitive/module 혼합 순서, 삽입·이동·삭제 |
+| 파라미터 | raw JSON 편집 | 단위·범위·설명·근거가 있는 필드 메타데이터와 폼 |
+| Module palette | 등록된 모든 모듈을 동일 취급 | 사용자 노출 여부, 패턴 variant, 검증 등급 |
+| 검증 | 그래프 연결 + 일부 module `validate()` | step/mode 필수값, V/I/시간, LOOP, END, 증거수준 통합 검증 |
+| Import | `.sch` viewer만 존재 | 원본 hash/바이트를 보존하는 import session |
+| Export | flow editor에는 없음; CLI build/patch는 분리 | preflight 결과와 patch/build 경로를 UI에서 안전하게 연결 |
+| 데스크톱 기본기 | load/save는 있으나 앱별 구현 | dirty 표시, undo/redo, autosave/recovery, 최근 파일, 종료 확인 |
+| UI 테스트 | flow model/theme 위주 | controller/widget smoke, 사용자 시나리오 회귀, 큰 파일 반응성 |
 
-(코드 확인: `_IDENTITY_FIELDS = {"step_no", "step_type_word"}`가 보호되고,
-패치는 기존 `step_no` 인덱스로만 접근한다 — 스텝 삽입·삭제·재정렬 경로 없음.)
+2026-09-09 구현 후 기준 상태: 로컬 전체 테스트 `330 passed, 1 skipped`;
+Gate D report `49 pass / 0 fail / 0 skip`.
+이 수치는 소프트웨어 구조 검증 결과이며 각 패턴의 실험 절차 충실도나 장비 실행 승인을
+의미하지 않는다.
 
-`.schproj` → patch plan 브릿지는 **존재하지 않으며**, 일반적으로는 만들 수도
-없다. E3.1을 "버튼 하나"로 보면 뒤에 아무것도 없는 버튼이 된다.
+---
 
-### 3.1 여기서 따라오는 결론 — 저작 흐름과 안전한 내보내기 흐름은 서로 다르다
+## 3. UI보다 먼저 고칠 P0 도메인 계약
 
-| 흐름 | 경로 | 내보내기 | 용도 |
-|------|------|----------|------|
-| **(A) 임포트 후 편집** | 승인된 `.sch` → IR → writer_ready 필드 수정 → 같은 파일을 템플릿으로 `patch-sch` | **실사용 가능** (L9 권장 경로) | 실제 랩 편집 |
-| **(B) 처음부터 저작** | 모듈 그래프 → `build` | **실험적** (장비 사용 불가) | 설계·미리보기·분석 |
+### 3.1 모듈 합성 규칙
 
-Gate E의 비전(§1.1 모듈 조합 저작)은 (B)인데, **안전한 내보내기는 (A)에만 있다.**
-두 흐름을 하나의 "내보내기" 버튼으로 뭉뚱그리면 사용자가 (B) 결과를 장비에
-쓰려 하게 된다 — 이 프로젝트가 L6/L9로 가장 경계하는 실패 유형이다.
+현재 일부 모듈(`cycle_life`, `capacheck`, `qpeed:soc_setting`)은 자체 `END`를
+내보내고, LOOP 대상은 모듈 내부 기준 숫자를 그대로 가진다. 이 상태로 앞뒤에 다른
+모듈을 붙이면 다음 문제가 생길 수 있다.
 
-→ **결론 1:** E3.1 이전에 "템플릿 매칭 + 필드 diff" 도메인 모델이 필요하다.
-→ **결론 2:** **E4(임포트)를 뒤가 아니라 앞으로 당겨야 한다.** 임포트가 없으면
-(A) 흐름 자체가 성립하지 않아, 실사용 가능한 내보내기가 영영 안 생긴다.
+- 중간 `END` 뒤에 스텝이 이어짐
+- 두 번째 이후 모듈의 LOOP가 자기 시작점이 아니라 전체 schedule의 엉뚱한 step으로 감
+- 값 없는 LOOP(`goto`/`count` 미지정)가 구조 테스트를 통과함
 
-## 4. 단계 계획 (자체 검토 반영본 — 개정 이력은 §6)
+MVP 계약은 다음으로 고정한다.
 
-각 단계는 GUI를 눈으로 보지 않고도 검증 가능한 종료 기준을 갖는다. 원칙:
-**판단 로직을 위젯에서 분리해 순수 함수로 두고, 그 함수를 테스트한다.**
-위젯 자체는 단계마다 사람이 한 번 실행해 확인한다 (이 환경은 Tk 창을
-렌더링·캡처할 수 없음).
+- 모듈은 **schedule fragment**를 반환하고 최종 `END` 소유권은 composer가 가진다.
+- LOOP 대상은 raw 절대 번호가 아니라 fragment 내부 label/reference로 표현한 뒤 합성 시
+  절대 step 번호로 resolve한다.
+- LOOP에는 유효한 target과 count가 모두 있어야 한다.
+- 최종 결과에는 정확히 한 개의 마지막 `END`만 허용한다.
+- 모듈에서 확장된 step은 기본적으로 읽기 전용이다. 사용자가 개별 step을 바꾸려면
+  모듈 파라미터를 수정하거나 명시적으로 **Detach to primitives** 한다.
 
-### Phase 0 — 화면 구조 결정 (E0, 문서 한 장)
+종료 기준: 두 개 이상의 loop 모듈을 앞뒤로 합친 회귀 테스트에서 모든 target이 해당
+fragment 안을 가리키고, non-final/multiple END가 오류로 차단된다.
 
-착수 전 30분짜리 결정. 지금 진입점이 5개(`run_pne_scheduler{,_editor,_flow,
-_resume,_viewer}.py`)로 흩어져 있어, 어디에 무엇을 붙일지 정하지 않으면
-Phase 2~4가 서로 다른 앱에 기능을 흩뿌리게 된다.
+### 3.2 패턴 카탈로그와 신뢰도
 
-정할 것: (1) `flow_editor`를 단일 셸로 승격할지, 아니면 앱 4개 유지 + 공유
-패널만 추출할지 (2) `project_editor`(일괄편집)의 거취 (3) Setup/Procedure/
-Modules/Library/Validate/Export 6화면을 어느 앱에 매핑할지.
+Python dataclass 자동 introspection만으로는 제품용 폼을 만들기 부족하다. 각 primitive /
+module / preset에 다음 metadata가 필요하다.
 
-종료 기준: `UI_UX_NOTES.md`에 IA 절 추가. 코드 변경 없음.
+- 표시명, 설명, 카테고리, variant
+- 파라미터 타입, 단위, 최소/최대, 기본값, 도움말
+- 지원 layout/PNE profile
+- `prototype` / `software-checked` / `CTSPro-reopen-verified` /
+  `equipment-run-verified` 상태
+- 알려진 제한(`fEndC`, DCR, 696, header convention 등)
+- `internal_only` 플래그 (`smoke_*`는 일반 palette에서 숨김)
 
-### Phase 1 — 내보내기 도메인 모델 (UI 없음, 선행 필수)
+종료 기준: UI와 검증 runner가 같은 catalog를 읽으며, 근거가 없는 패턴은 숨겨지거나
+명확한 badge와 차단 사유를 표시한다.
 
-`export/` 신설:
+### 3.3 통합 preflight validator
 
-- `plan_from_template(project, template_path)` → 템플릿과 저작 결과를 비교해
-  **writer_ready 필드 차이만** patch plan으로 변환
-- 토폴로지 불일치(스텝 수·타입 순서)면 patch 불가 사유를 구조적으로 반환
-- writer_ready 아닌 필드 차이는 "이 경로로는 반영 불가" 목록으로 분리
-- `target_profile` 필수화 — 장비 미지정 시 거부 (GUARDRAILS §B, L1)
+검증 로직을 Tk widget 밖의 순수 도메인 코드로 둔다. 최소 차단 항목:
 
-종료 기준: 동일 구조 → 유효 plan, 구조 상이 → 명확한 거부 사유,
-생성한 plan이 `patch-sch` CLI로 실제 적용되는 테스트.
+- cell/equipment profile 누락, 비정상/비유한 수치
+- step type/mode별 필수 파라미터 누락
+- Vmin/Vmax 및 장비 최대 전류 위반
+- 0 이하 C-rate/시간, CV cutoff 역전
+- LOOP target/count 오류, dangling reference
+- END 누락/중복/non-final END
+- 지원하지 않는 layout/step type
+- writer-ready가 아닌 필드를 production 경로에서 사용
 
-### Phase 2 — `.sch` 임포트 (E4) ← **자체 검토로 앞당김**
+경고와 오류는 문자열만 반환하지 않고 `code`, `severity`, `object_id`, `field`,
+`evidence`, `remediation`을 가진 구조체로 반환한다. 그래야 Validate 목록 클릭 시 해당
+카드/필드로 이동할 수 있다.
 
-`.sch` → IR 읽기 전용 임포트. §3.1의 (A) 흐름을 성립시키는 전제이며,
-이것이 없으면 Phase 1 모델이 실제로 쓰일 입력이 없다.
+---
 
-- 파서는 이미 있음(`io/sch_parser.py`) — 없는 것은 **IR 매핑과 UI 진입점**
-- 임포트한 파일은 자동으로 "이 파일이 템플릿"으로 고정 (SHA-256 함께 보관)
-- `cursor/explain-schedules-5ac9`의 근거 태깅 설명 기능을 여기 붙이면
-  "이 스케줄이 무엇인지"를 편집 전에 보여줄 수 있음
+## 4. 권장 IA와 핵심 사용자 흐름
 
-종료 기준: 골든 픽스처를 임포트 → 편집 없이 다시 patch-sch → 바이트 동일
-(round-trip 무변경 증명).
+### 4.1 단일 셸
 
-### Phase 3 — 셀·장비 설정 패널 (E2.4)
+왼쪽 navigation: **Setup / Procedure / Library / Validate / Export**
+Procedure 내부: 왼쪽 palette, 가운데 선형 procedure, 오른쪽 inspector,
+아래 preview/문제 목록.
 
-- JSON 텍스트박스를 **검증된 폼**으로 교체: 1C mA, Vmax/Vmin, PNE 유닛,
-  채널 레인지, CTSPro 빌드, 대상 레이아웃
-- PNE 유닛 목록은 `schema/equipment_registry.py`에서 읽어 채움
-- 미입력 시 내보내기 **차단**(경고 아님). 헤더 안전블록이 PNE02 관례로
-  고정돼 있으므로(§11, `SAFETY_BLOCK_CONVENTION`) 장비 명시는 안전 요건이다
+기존 graph canvas는 Procedure의 `Flow view` 탭으로 유지한다. 별도의 주 실행 앱으로
+키우지 않는다.
 
-종료 기준: 폼 검증을 순수 함수로 분리해 테스트. 장비 미지정 프로젝트가
-Phase 1 모델에서 거부되는지 확인.
+### 4.2 문서 종류를 혼합하지 않는다
 
-### Phase 4 — 스텝 편집 + 팔레트 (E2, E2.1, E2.2)
+| 문서/세션 | 목적 | 허용 편집 | 내보내기 |
+|-----------|------|-----------|------------|
+| **Authored project** | primitive + module로 새 절차 설계 | 전체 저작 | experimental build, 승인 후 단계적 승격 |
+| **Imported patch session** | 기존 CTS 파일의 안전한 값 수정 | writer-ready field만 | 원본 hash에 묶인 `patch-sch` |
+| **Review session** | 기존 `.sch` 설명/비교 | 없음 | 없음 |
+| **Resume session** | 중단 스케줄 재개 | checkpoint/loop 조정 | 기존 resume 경로 |
 
-- `UI_UX_NOTES.md` 권장대로 `cursor/module-recipes-presets-5ac9`의
-  **레시피 개념**(Setup/Repeat/After + 유닛 편집 다이얼로그) 이식
-- 바이너리 내보내기 연결부는 **재작성** (그 브랜치 컴파일러는 현재와 상이)
-- raw JSON은 "고급" 탭으로 남기되 기본 경로에서 제거
+임의의 `.sch`를 완전한 module graph로 역변환할 수 있다고 가정하지 않는다. import는
+원본 raw step/unknown bytes/template hash를 가진 별도 세션이며, `Clone as draft`는 손실
+가능성을 경고하는 명시적 작업으로 둔다.
 
-종료 기준: 레시피 → `StepIntent` 변환 헤드리스 테스트, 기존 모듈 확장
-결과와 동등성 확인.
+### 4.3 대표 작업의 acceptance scenario
 
-### Phase 5 — 검증·내보내기 UX (E3, E3.1)
+1. 장비와 Cell Profile을 먼저 고른다.
+2. palette에서 Cycle 또는 HPPC module을 넣고 폼으로 값을 바꾼다.
+3. 확장 step, C-rate↔mA, 예상 시간, pattern 신뢰도/제약을 즉시 본다.
+4. 오류 항목을 누르면 해당 필드/step으로 이동한다.
+5. 저장 후 재실행해도 동일하게 복원된다.
+6. Export에서 patch와 experimental build의 차이를 이해할 수 있다.
+7. 산출물 hash, target profile, 경고, 검증 상태가 manifest와 일치한다.
 
-- Phase 1 모델을 UI에 연결: 내보내기 전 차단 목록 표시
-- **두 흐름을 UI에서 명시적으로 분리** (§3.1): 임포트 기반 편집은
-  "patch 내보내기", 처음부터 저작한 그래프는 "실험적 build (장비 사용 불가)"로
-  라벨과 경로를 분리. 같은 버튼에 묶지 않는다
-- 위반 사항을 **해당 카드/와이어 위에** 표시 (LabVIEW 끊어진 와이어 관례)
+---
 
-종료 기준: 잘못된 루프/END 누락/V·I 위반 프로젝트가 차단되는 테스트.
+## 5. 실행 순서
 
-### Phase 6 — 라이브러리 (E2.3)
+### Phase E0 — UX·안전 계약과 IA (XS)
 
-장비 프로파일별 메서드 저장/불러오기.
+- §4의 단일 셸과 네 문서 모드를 결정 기록
+- 핵심 사용자 시나리오, 용어, 상태 badge, 차단/경고 기준 확정
+- 와이어 중심 graph가 아니라 선형 Procedure를 기본 뷰로 확정
 
-## 5. 규모 감각
+종료 기준: 이 문서의 IA와 acceptance scenario를 구현 기준으로 승인.
 
-| Phase | 성격 | 상대 크기 |
-|-------|------|-----------|
-| 0 IA 결정 | 문서 | XS |
-| 1 내보내기 모델 | 도메인 로직 + 테스트 | **L** (가장 큼, 신규 개념) |
-| 2 임포트 | 기존 파서 재사용 + 매핑 | M |
-| 3 설정 폼 | UI + 검증 함수 | M |
-| 4 스텝 편집/팔레트 | UI 대공사 + 이식 | **L** |
-| 5 검증·내보내기 UX | UI 연결 | M |
-| 6 라이브러리 | 저장/불러오기 | S |
+### Phase E0.5 — Composer + catalog + validator 기반 (L, P0)
 
-## 6. 자체 검토에서 고친 것
+- §3.1의 fragment/END/LOOP reference 계약 구현
+- primitive/module metadata catalog 구현
+- 구조화된 preflight issue 모델 구현
+- `.schproj` schema version/migration 전략 추가
 
-초안을 코드로 재검증한 결과 다음을 수정했다.
+종료 기준: 다중 loop module 합성, invalid parameter, unsupported evidence가 모두
+헤드리스 테스트에서 의도대로 pass/block 된다.
 
-| # | 지적 | 조치 |
-|---|------|------|
-| 1 | **순서가 거꾸로였다.** 초안은 임포트(E4)를 마지막 Phase에 뒀는데, `patch-sch`는 템플릿 기반이라 임포트 없이는 안전한 내보내기 흐름 자체가 성립하지 않는다 | E4를 Phase 2로 앞당기고 §3.1에 두 흐름을 명시 |
-| 2 | **E0가 격차표에만 있고 계획에 없었다** — 앱 5개 진입점 정리 없이 Phase를 진행하면 기능이 흩어진다 | Phase 0으로 신설 |
-| 3 | **사실 오류**: "GUI 레이어 테스트 0"이라고 썼으나 `test_flow_model.py`·`test_flow_theme.py`가 존재 | "위젯/상호작용 레이어 미검증"으로 정정 |
-| 4 | 규모 감각이 없어 일정 판단 불가 | §5 추가 |
-| 5 | "헤드리스 테스트"가 추상적 | 각 Phase 종료 기준을 구체적 산출물로 재작성 |
-| 6 | 두 내보내기 흐름을 한 버튼으로 뭉뚱그릴 위험(L6/L9) | Phase 5에 경로 분리를 명시적 요구사항으로 |
+**2026-09-09 결과:** 위 기반은 구현 완료. `ir/composer.py`, `modules/catalog.py`,
+`validate/preflight.py` 및 회귀 테스트가 들어갔다. HPPC 62-step, QPEED 167/11-step,
+QC 3종도 catalog/pack에 연결했다. UI의 완전한 단위/범위 metadata form과
+`.schproj` migration은 각각 E2/E2.3 범위로 남긴다.
 
-## 5. 위험
+### Phase E1 — 단일 셸과 문서 controller (M)
 
-| 위험 | 대응 |
-|------|------|
-| GUI를 시각 확인 없이 개발 | 로직을 UI에서 분리해 헤드리스 테스트, 단계마다 사람이 한 번 실행 |
-| 레시피 브랜치 이식 시 컴파일러 충돌 | 내보내기 연결부는 이식이 아니라 재작성 |
-| 내보내기 UX가 실제로 못 쓰는 버튼이 됨 | Phase 0을 선행 필수로 고정 |
-| 장비 관례 암묵 가정 (PNE02) | E2.4에서 장비 명시를 강제 |
+- 기존 viewer/flow/bulk/resume 기능을 한 셸에서 진입
+- dirty 상태, Save/Save As, 종료 확인, undo/redo command stack
+- autosave/recovery와 최근 파일
+- 기존 앱 진입점은 당분간 호환 wrapper로 유지
+
+종료 기준: 새 프로젝트 작성→저장→재열기, unsaved 종료 차단, undo/redo 시나리오 테스트.
+
+### Phase E2 — Setup + Procedure + Inspector (L)
+
+- Cell/equipment JSON을 검증 폼으로 교체
+- primitive 삽입/이동/삭제, module 삽입/재정렬
+- C-rate↔mA, 전압·전류 limit, 예상 시간 즉시 preview
+- module step은 read-only expansion; `Detach to primitives` 제공
+- raw JSON은 Advanced/debug 경로로만 유지
+
+종료 기준: 키보드만으로도 대표 Cycle을 만들 수 있고 저장 round-trip이 유지된다.
+
+### Phase E2.2 — 검증 등급이 있는 Module/Pattern palette (M)
+
+- [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md)의 패턴 catalog 연결
+- Formation, capacheck/derating, Cycle, QC variants, RPT/DCIR, HPPC,
+  QPEED full/SOC-setting을 variant별로 분리
+- 미검증 패턴은 기본값으로 실행 가능하게 보이지 않도록 badge/필터/차단 적용
+
+종료 기준: 사용자 palette와 검증 pack이 같은 recipe/version을 참조한다.
+
+### Phase E4 — Import/patch session (L)
+
+- `.sch` 원본 hash, layout, raw bytes, parsed steps를 보존하는 import model
+- writer-ready field만 편집 가능한 property form
+- project graph와 억지로 동일 모델로 변환하지 않음
+- template diff → patch plan → `patch-sch` → declared-range-only 검증
+
+종료 기준: 무변경 import/export는 byte-identical, 허용 field 변경은 선언 범위만 바뀌고,
+topology/unknown field 편집은 차단된다.
+
+### Phase E3 — Validate/Export UX (M)
+
+- 구조화된 issue 목록, inline badge, 문제 위치 이동
+- `Patch existing`와 `Experimental build`를 별도 카드/버튼으로 분리
+- target equipment/profile 필수, hash와 release status 표시
+- `analysis-only` / `CTSPro-reopen-candidate` / `CTSPro-reopen-verified` /
+  `equipment-run-verified` 라벨을 manifest와 동일하게 사용
+
+종료 기준: invalid loop, END, V/I, unverified field가 production 경로를 차단하며
+UI 표시와 manifest 상태가 일치한다.
+
+### Phase E2.3 — Library와 migration (M)
+
+- versioned method/module preset 저장·불러오기
+- equipment profile과 pattern recipe version을 함께 고정
+- 오래된 `.schproj`/preset migration과 unknown field 보존
+
+종료 기준: 구버전 fixture migration + 최신 저장 + 재열기 회귀 테스트.
+
+### Phase E-H — UX hardening과 사용자 검수 (M)
+
+- controller/widget construction smoke + 대표 상호작용 테스트
+- 큰 100–200 step schedule의 스크롤/선택/preview 반응성
+- 키보드 순서, focus, 단위 표기, resize/DPI, 오류 메시지
+- 사용자 검수 스크립트: 새 Cycle 작성, 기존 SCH patch, 패턴 pack 열기
+
+종료 기준: 자동 시나리오 green + 사용자의 실제 화면 검수 결과 반영.
+
+---
+
+## 6. 자체 재점검 피드백과 반영 내용
+
+초안 계획을 코드와 실제 패턴 상태에 다시 대조해 다음을 수정했다.
+
+| 자체 피드백 | 반영 |
+|-------------|------|
+| export domain을 가장 먼저 만들면 저작 UX보다 큰 내부 작업에 묶인다 | composer/catalog/validator를 먼저, patch/export는 UI 골격 뒤로 이동 |
+| `.sch → IR`을 하나의 변환으로 보면 unknown bytes와 module 의미가 손실된다 | authored project와 imported patch session을 분리 |
+| 모듈을 이어 붙일 때 END와 LOOP 주소 계약이 없다 | Phase E0.5를 P0로 신설, fragment reference와 composer 소유 END 규정 |
+| Gate D green을 패턴 충실도로 오해할 수 있다 | pattern 등급과 별도 acceptance plan/pack 추가 |
+| QPEED/QC 등 variant가 catalog에 명확하지 않다 | QPEED full/SOC-setting, QC 3종을 별도 recipe로 취급 |
+| 자동 등록된 smoke module이 사용자 palette에 보일 수 있다 | `internal_only` metadata 요구 |
+| 생성 step을 직접 편집했을 때 module과의 관계가 모호하다 | 기본 read-only + 명시적 Detach to primitives |
+| 저장 안정성·undo·복구·migration이 누락됐다 | E1/E2.3/E-H에 desktop 기본기와 schema migration 추가 |
+| 테스트가 pure model에 치우쳤다 | controller/widget smoke, 사용자 시나리오, 큰 schedule 반응성 추가 |
+
+---
+
+## 7. Gate E 완료 기준
+
+Gate E는 화면이 예뻐졌다는 이유로 끝내지 않는다. 다음이 모두 필요하다.
+
+- 대표 사용자가 JSON을 직접 쓰지 않고 Setup→Procedure→Validate를 완료
+- 여러 module 합성의 END/LOOP/step 번호가 안전
+- 모듈/preset의 variant·단위·지원 장비·검증 등급이 보임
+- imported patch와 new build가 데이터 모델과 UI에서 분리됨
+- unsafe export가 차단되고 manifest와 UI 상태가 동일
+- save/reopen, undo/redo, recovery, migration 회귀가 존재
+- [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md)의 reopen 결과가
+  palette 상태에 반영됨
+
+From-scratch 패턴 전체가 장비 실행 승인되지 않아도 Gate E의 저작 UX는 완성할 수 있다.
+다만 그런 패턴을 `verified` 또는 `equipment-ready`로 표시할 수는 없다.

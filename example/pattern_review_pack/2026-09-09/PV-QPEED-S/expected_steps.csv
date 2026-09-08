@@ -1,0 +1,12 @@
+step_no,type,mode,label,c_rate,current_mA,voltage_v,end_voltage_v,end_time_s,cv_cutoff_c_rate,dod_percent,end_capacity_fraction,loop_target,loop_count,cap_ref_step
+1,rest,,QPEED conditioning start,,,,,600.0,,,,,,
+2,discharge,CC,QPEED conditioning discharge,1.0,24.0,,2.5,21600.0,,,,,,
+3,rest,,,,,,,1800.0,,,,,,
+4,charge,CCCV,QPEED conditioning full charge,1.0,24.0,4.2,,21600.0,0.3,,,,,
+5,rest,,,,,,,1800.0,,,,,,
+6,discharge,CC,,1.0,24.0,,2.5,21600.0,,,,,,
+7,rest,,,,,,,1800.0,,,,,,
+8,charge,CC,QPEED SOC voltage setting,1.0,24.0,4.2,3.318,21600.0,,10.0,,,,7
+9,rest,,,,,,,1800.0,,,,,,
+10,loop,,QPEED conditioning loop,,,,,,,,,1,1,
+11,end,,schedule end,,,,,,,,,,,

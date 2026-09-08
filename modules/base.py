@@ -56,6 +56,7 @@ from . import (  # noqa: E402,F401
     hppc,
     insitu_cycle,
     qpeed,
+    qc,
     rest,
     rpt,
     smoke_rest_cc_end,

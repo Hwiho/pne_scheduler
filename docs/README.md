@@ -29,6 +29,7 @@ pip install -e ".[dev]"
 | `python -m pne_scheduler patch-sch template.sch plan.json -o out.sch` | Apply an evidence-gated, template-preserving patch |
 | `python -m pne_scheduler build ... --allow-experimental-output` | Produce offline-only experimental output |
 | `python -m pne_scheduler bulk-edit ...` | Edit compatible module parameters in bulk |
+| `python -m pne_scheduler pattern-review-pack DIR` | Generate deterministic PNE02 reopen-only pattern review files |
 | `python -m pne_scheduler resume sch data.csv -o resumed.sch` | Build a resume schedule |
 
 ## Launcher scripts

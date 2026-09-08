@@ -1,0 +1,87 @@
+{
+  "schema": "pne_scheduler.sch_validation_manifest/v1",
+  "writer": "pne02_lab_header_reopen_candidate",
+  "status": "CTSPro-reopen-candidate",
+  "equipment_executable": false,
+  "source_project": {
+    "path": "PV-QPEED-S/source.schproj",
+    "sha256": "618f62b02c96cc0d63edcc8c6f3131f0178d6f2c022b5ee55c1154eea71781ff"
+  },
+  "template": {
+    "path": "example/fixtures/capacheck_zip/9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
+    "sha256": "5321449813b21162cee9faaa80782646ba2dabf50eccb465f948f6451461683e",
+    "size": 10940,
+    "usage": "header bytes 0..1759 only"
+  },
+  "target_profile": {
+    "status": "review_target",
+    "equipment": "PNE02",
+    "channel_profile": "max 500 mA; reopen only",
+    "ctspro_version": "user to record",
+    "sch_version": "0x00010003",
+    "step_size": 612,
+    "cell_profile": {
+      "nominal_capacity_mAh": 24.0,
+      "v_max": 4.2,
+      "v_min": 2.5,
+      "max_current_mA": 500.0,
+      "formation_capacity_mAh": null
+    }
+  },
+  "output": {
+    "path": "PV-QPEED-S/candidate_REOPEN_ONLY_DO_NOT_RUN.sch",
+    "sha256": "0ac551b64613ea0e8a475824f66dca73f7a87b4203942ac30ee97659c7970225",
+    "size": 8492
+  },
+  "changed_fields": [
+    {
+      "scope": "header",
+      "fields": [
+        "timestamps",
+        "name",
+        "PNE02 safety blocks"
+      ]
+    },
+    {
+      "scope": "payload",
+      "range": [
+        1760,
+        8492
+      ],
+      "source": "compiled StepIntent list"
+    }
+  ],
+  "evidence": [
+    "planning/PATTERN_VALIDATION_PLAN.md",
+    "PNE02 locked 11-step golden",
+    "PNE02 v3/612 corpus and Gate D structural harness"
+  ],
+  "validation": {
+    "all_passed": true,
+    "checks": [
+      {
+        "name": "layout_v3_612",
+        "passed": true
+      },
+      {
+        "name": "step_count_matches",
+        "passed": true
+      },
+      {
+        "name": "final_end",
+        "passed": true
+      }
+    ],
+    "structural_reread": "passed",
+    "equipment_smoke_test": "not_run"
+  },
+  "warnings": [
+    "MODULE_TRUST: QPEED status is software-checked",
+    "MODULE_LIMITATION: DOD/SOC semantics still need CTSPro controlled-pair verification.",
+    "DOD_UNVERIFIED: DOD/SOC cutoff @384 is not controlled-pair verified",
+    "DOD/SOC semantics still need CTSPro controlled-pair verification.",
+    "REOPEN ONLY. DO NOT START OR RUN THIS SCHEDULE ON EQUIPMENT.",
+    "Only the 1760-byte header came from a CTSPro-authored PNE02 file; the step payload was software-generated.",
+    "The exact output hash must pass CTSPro reopen/display/save-as review before promotion."
+  ]
+}

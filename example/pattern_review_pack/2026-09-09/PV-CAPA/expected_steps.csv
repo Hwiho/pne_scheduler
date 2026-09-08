@@ -1,0 +1,13 @@
+step_no,type,mode,label,c_rate,current_mA,voltage_v,end_voltage_v,end_time_s,cv_cutoff_c_rate,dod_percent,end_capacity_fraction,loop_target,loop_count,cap_ref_step
+1,cycle,,capacheck cycle marker,,,,,,,,,,,
+2,rest,,capacheck initial rest,,,,,600.0,,,,,,
+3,charge,CCCV,capacheck 0.1C charge,0.1,2.4000000000000004,4.2,,,0.05,,,,,
+4,rest,,capacheck rest after 0.1C charge,,,,,1800.0,,,,,,
+5,discharge,CC,capacheck 0.1C discharge,0.1,2.4000000000000004,,2.5,,,,,,,
+6,rest,,capacheck rest after 0.1C discharge,,,,,1800.0,,,,,,
+7,charge,CCCV,capacheck C/3 charge 1,0.3333333333333333,8.0,4.2,,,0.05,,,,,
+8,rest,,capacheck rest after C/3 charge 1,,,,,1800.0,,,,,,
+9,discharge,CC,capacheck C/3 discharge 1,0.3333333333333333,8.0,,2.5,,,,,,,
+10,rest,,capacheck rest after C/3 discharge 1,,,,,1800.0,,,,,,
+11,loop,,,,,,,,,,,2,1,
+12,end,,schedule end,,,,,,,,,,,

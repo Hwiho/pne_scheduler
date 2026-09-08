@@ -1,0 +1,20 @@
+{
+  "schema": "pne_scheduler.schproj/v1",
+  "name": "REOPEN_ONLY_PV_CAPA",
+  "sch_version": 65539,
+  "cell_profile": {
+    "nominal_capacity_mAh": 24.0,
+    "v_max": 4.2,
+    "v_min": 2.5,
+    "max_current_mA": 500.0,
+    "formation_capacity_mAh": null
+  },
+  "modules": [
+    {
+      "id": "pattern",
+      "module_type": "capacheck",
+      "params": {}
+    }
+  ],
+  "connections": []
+}

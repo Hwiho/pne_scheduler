@@ -54,6 +54,7 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 | [`GATE_D_VERIFICATION.md`](GATE_D_VERIFICATION.md) | **Canonical verification method** (V1–V8) |
 | [`GATE_D_VERIFICATION_AUDIT.md`](GATE_D_VERIFICATION_AUDIT.md) | Audit findings + remediation status |
 | [`GATE_D_VALIDATION_REPORT.json`](GATE_D_VALIDATION_REPORT.json) | Latest machine exit report (`gate_d_passed`) |
+| [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md) | **패턴 승인 계획** — HPPC/QPEED/QC/Cycle canonical recipe, SOC pair, 일괄 reopen pack |
 | `validate/gate_d_harness.py` | Module validate→expand→compile→parse harness |
 | `validate/gate_d_verification.py` | Matrix-driven V1–V8 suite |
 | `validate/topology.py` | Step-type family compare vs golden fixtures |
@@ -68,6 +69,8 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 |----------|---------|
 | [`GATE_E_PLAN.md`](GATE_E_PLAN.md) | **실행 계획** — 격차 분석, 단계별 종료 기준, 자체 검토 반영 이력 |
 | [`UI_UX_NOTES.md`](UI_UX_NOTES.md) | Prior-art review of unmerged UI branches + Nova/LabVIEW pattern recommendations |
+| [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md) | Gate E palette/export와 연동되는 pattern 신뢰도 및 사용자 batch 검증 |
+| [`PNE02 pattern review pack`](../example/pattern_review_pack/2026-09-09/INDEX.md) | **REOPEN ONLY / DO NOT RUN** — 10개 후보, 예상 step CSV, hash, 결과 기록표 |
 
 ## User & technical docs (`docs/`)
 

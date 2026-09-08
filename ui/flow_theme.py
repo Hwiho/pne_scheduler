@@ -108,6 +108,15 @@ MODULE_STYLES: dict[str, ModuleStyle] = {
         "#33470d",
         "#5d7340",
     ),
+    "qc": ModuleStyle(
+        "QC charge",
+        "🧭",
+        "#d8f3f1",
+        "#e9fbfa",
+        "#258f89",
+        "#174a47",
+        "#4d7774",
+    ),
     "rest": ModuleStyle(
         "Rest",
         "💤",

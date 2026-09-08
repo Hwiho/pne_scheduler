@@ -1,0 +1,8 @@
+step_no,type,mode,label,c_rate,current_mA,voltage_v,end_voltage_v,end_time_s,cv_cutoff_c_rate,dod_percent,end_capacity_fraction,loop_target,loop_count,cap_ref_step
+1,cycle,,cycle marker,,,,,,,,,,,
+2,charge,CCCV,,0.5,12.0,4.2,,,0.05,,,,,
+3,rest,,,,,,,300.0,,,,,,
+4,discharge,CC,,0.5,12.0,,2.5,,,,,,,
+5,rest,,,,,,,300.0,,,,,,
+6,loop,,,,,,,,,,,2,3,
+7,end,,schedule end,,,,,,,,,,,

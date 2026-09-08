@@ -1,0 +1,98 @@
+{
+  "schema": "pne_scheduler.pattern_review_pack/v1",
+  "created_for": "PNE02 CTSPro batch reopen review",
+  "equipment_executable": false,
+  "pattern_count": 10,
+  "patterns": [
+    {
+      "pattern_id": "PV-FM",
+      "title": "Formation",
+      "module": "formation",
+      "trust": "software-checked",
+      "steps": 5,
+      "sha256": "2c5585c071060736c57b0af9bc2f04fd1987464765da373008196559db15633f",
+      "candidate": "PV-FM/candidate_REOPEN_ONLY_DO_NOT_RUN.sch"
+    },
+    {
+      "pattern_id": "PV-CAPA",
+      "title": "Capacity check",
+      "module": "capacheck",
+      "trust": "software-checked",
+      "steps": 12,
+      "sha256": "f21ddba39769bd6c4c267ae2ccf1756d45afd9d230339c1f6e2cea758e42ef97",
+      "candidate": "PV-CAPA/candidate_REOPEN_ONLY_DO_NOT_RUN.sch"
+    },
+    {
+      "pattern_id": "PV-CYCLE",
+      "title": "Cycle life",
+      "module": "cycle_life",
+      "trust": "software-checked",
+      "steps": 7,
+      "sha256": "24f750a9f74bc01a914a355e5fd8784f84ae327a866c216c421c7bd7af803b2d",
+      "candidate": "PV-CYCLE/candidate_REOPEN_ONLY_DO_NOT_RUN.sch"
+    },
+    {
+      "pattern_id": "PV-HPPC",
+      "title": "HPPC full range",
+      "module": "hppc",
+      "trust": "software-checked",
+      "steps": 62,
+      "sha256": "8b97e0275c0ef4b5c02aee2c76c924fb025eef04912eb22c5c890beca3532909",
+      "candidate": "PV-HPPC/candidate_REOPEN_ONLY_DO_NOT_RUN.sch"
+    },
+    {
+      "pattern_id": "PV-QPEED-F",
+      "title": "QPEED full",
+      "module": "qpeed",
+      "trust": "software-checked",
+      "steps": 167,
+      "sha256": "90ccc42fc617de8ec0baafeb5b03354527b2195c4663b16012ea363ef0c40e43",
+      "candidate": "PV-QPEED-F/candidate_REOPEN_ONLY_DO_NOT_RUN.sch"
+    },
+    {
+      "pattern_id": "PV-QPEED-S",
+      "title": "QPEED SOC setting",
+      "module": "qpeed",
+      "trust": "software-checked",
+      "steps": 11,
+      "sha256": "0ac551b64613ea0e8a475824f66dca73f7a87b4203942ac30ee97659c7970225",
+      "candidate": "PV-QPEED-S/candidate_REOPEN_ONLY_DO_NOT_RUN.sch"
+    },
+    {
+      "pattern_id": "PV-QC-CYCLE",
+      "title": "QC cycle",
+      "module": "qc",
+      "trust": "software-checked",
+      "steps": 17,
+      "sha256": "8161fcd5d7024a52b6736869643413059381c2b2270d10f633f68f25ee859d99",
+      "candidate": "PV-QC-CYCLE/candidate_REOPEN_ONLY_DO_NOT_RUN.sch"
+    },
+    {
+      "pattern_id": "PV-QC-NQ",
+      "title": "QC 1N1Q",
+      "module": "qc",
+      "trust": "software-checked",
+      "steps": 17,
+      "sha256": "abf9ed13effd3c0b71819fd3842b0ee08ec243b9624e2245416e1c0f6d02232e",
+      "candidate": "PV-QC-NQ/candidate_REOPEN_ONLY_DO_NOT_RUN.sch"
+    },
+    {
+      "pattern_id": "PV-QC-C",
+      "title": "QC 1 charge",
+      "module": "qc",
+      "trust": "software-checked",
+      "steps": 25,
+      "sha256": "c8d5d4ee966834570ce58cd1aa65c5e512644187e689c832c1b403c8cb003624",
+      "candidate": "PV-QC-C/candidate_REOPEN_ONLY_DO_NOT_RUN.sch"
+    },
+    {
+      "pattern_id": "PV-RPT",
+      "title": "RPT prototype",
+      "module": "rpt",
+      "trust": "prototype",
+      "steps": 13,
+      "sha256": "fb2f4dd4cd05c2ee01596077a20605f0ce15c631adefcd30ae7b36f767bf85d5",
+      "candidate": "PV-RPT/candidate_REOPEN_ONLY_DO_NOT_RUN.sch"
+    }
+  ]
+}

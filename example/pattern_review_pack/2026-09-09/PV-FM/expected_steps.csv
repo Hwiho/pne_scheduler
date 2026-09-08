@@ -1,0 +1,6 @@
+step_no,type,mode,label,c_rate,current_mA,voltage_v,end_voltage_v,end_time_s,cv_cutoff_c_rate,dod_percent,end_capacity_fraction,loop_target,loop_count,cap_ref_step
+1,charge,CCCV,Formation charge 1,0.1,2.4000000000000004,4.2,,,0.05,,,,,
+2,rest,,Formation rest after charge 1,,,,,600.0,,,,,,
+3,discharge,CC,Formation discharge 1,0.1,2.4000000000000004,,2.5,,,,,,,
+4,rest,,Formation rest after discharge 1,,,,,600.0,,,,,,
+5,end,,schedule end,,,,,,,,,,,

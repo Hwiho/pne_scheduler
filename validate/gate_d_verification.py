@@ -71,12 +71,13 @@ GATE_D_MODULE_MATRIX: tuple[dict[str, Any], ...] = (
         "id": "hppc",
         "module_type": "hppc",
         "params": {
+            "variant": "full",
             "soc_fractions": [0.9, 0.5],
             "rest_between_s": 5.0,
             "pulse_s": 2.0,
         },
-        "required_tokens": ("charge", "discharge", "rest", "end"),
-        "required_warning_substrings": ("fEndC",),
+        "required_tokens": ("cycle", "loop", "charge", "discharge", "rest", "end"),
+        "required_warning_substrings": (),
     },
     {
         "id": "capacheck",
@@ -95,7 +96,7 @@ GATE_D_MODULE_MATRIX: tuple[dict[str, Any], ...] = (
             "pulse_s": 2.0,
         },
         "required_tokens": ("charge", "discharge", "rest", "end"),
-        "required_warning_substrings": ("fEndC",),
+        "required_warning_substrings": (),
     },
     {
         "id": "qpeed_soc_setting",
@@ -106,7 +107,14 @@ GATE_D_MODULE_MATRIX: tuple[dict[str, Any], ...] = (
             "rest_between_s": 5.0,
         },
         "required_tokens": ("discharge", "rest", "loop", "end"),
-        "required_warning_substrings": ("fEndC",),
+        "required_warning_substrings": (),
+    },
+    {
+        "id": "qc_cycle",
+        "module_type": "qc",
+        "params": {"variant": "cycle"},
+        "required_tokens": ("cycle", "loop", "charge", "discharge", "end"),
+        "required_warning_substrings": (),
     },
     {
         "id": "insitu_cycle",

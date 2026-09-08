@@ -57,6 +57,12 @@ python run_pne_scheduler.py build example/example.schproj -o output.sch --allow-
 | `build ... --allow-experimental-output` | Produce offline-only experimental writer output |
 | `bulk-edit ...` | Edit compatible module parameters in bulk |
 | `resume sch data.csv -o resumed.sch` | Build a template-preserving resume schedule |
+| `pattern-review-pack DIR` | Generate PNE02 reopen-only candidates, expectations, hashes, and review sheet |
+
+The committed batch at
+[`example/pattern_review_pack/2026-09-09/INDEX.md`](example/pattern_review_pack/2026-09-09/INDEX.md)
+contains QPEED, QC, HPPC, Cycle, Formation, capacheck, and RPT candidates. These files are
+for CTSPro display/Save-As review only and must not be started or run.
 
 ## Schedule viewer
 

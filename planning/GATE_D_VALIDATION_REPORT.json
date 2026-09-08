@@ -89,6 +89,12 @@
       "detail": "qpeed"
     },
     {
+      "id": "v7_class_qc_cycle",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "qc"
+    },
+    {
       "id": "v7_class_insitu_cycle",
       "layer": "V7",
       "status": "pass",
@@ -182,19 +188,13 @@
       "id": "v2_pipeline_hppc",
       "layer": "V2/V3/V4",
       "status": "pass",
-      "detail": "steps=13"
+      "detail": "steps=62"
     },
     {
       "id": "v2_topology_hppc",
       "layer": "V2",
       "status": "pass",
       "detail": "tokens ok"
-    },
-    {
-      "id": "v5_warn_hppc_fEndC",
-      "layer": "V5",
-      "status": "pass",
-      "detail": "expected warning containing 'fEndC'"
     },
     {
       "id": "v2_pipeline_capacheck",
@@ -212,7 +212,7 @@
       "id": "v2_pipeline_qpeed_full",
       "layer": "V2/V3/V4",
       "status": "pass",
-      "detail": "steps=7"
+      "detail": "steps=167"
     },
     {
       "id": "v2_topology_qpeed_full",
@@ -221,16 +221,10 @@
       "detail": "tokens ok"
     },
     {
-      "id": "v5_warn_qpeed_full_fEndC",
-      "layer": "V5",
-      "status": "pass",
-      "detail": "expected warning containing 'fEndC'"
-    },
-    {
       "id": "v2_pipeline_qpeed_soc_setting",
       "layer": "V2/V3/V4",
       "status": "pass",
-      "detail": "steps=4"
+      "detail": "steps=11"
     },
     {
       "id": "v2_topology_qpeed_soc_setting",
@@ -239,10 +233,16 @@
       "detail": "tokens ok"
     },
     {
-      "id": "v5_warn_qpeed_soc_setting_fEndC",
-      "layer": "V5",
+      "id": "v2_pipeline_qc_cycle",
+      "layer": "V2/V3/V4",
       "status": "pass",
-      "detail": "expected warning containing 'fEndC'"
+      "detail": "steps=17"
+    },
+    {
+      "id": "v2_topology_qc_cycle",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "tokens ok"
     },
     {
       "id": "v2_pipeline_insitu_cycle",
@@ -278,7 +278,7 @@
       "id": "family_hppc",
       "layer": "V6",
       "status": "pass",
-      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']; module=['charge', 'discharge', 'rest']"
+      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']; module=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']"
     },
     {
       "id": "family_capacheck",

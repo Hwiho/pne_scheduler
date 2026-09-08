@@ -19,78 +19,26 @@ import struct
 from datetime import datetime
 from pathlib import Path
 
-from pne_scheduler.engine.compiler import compile_steps
-from pne_scheduler.io.header import safety_limits_from_cell
+from pne_scheduler.io.lab_header_writer import (
+    PNE02_LAB_HEADER_TEMPLATE,
+    build_pne02_reopen_candidate,
+)
 from pne_scheduler.ir.project import ScheduleProject
 from pne_scheduler.schema.ensol_v612 import (
-    HEADER_SIZE_V3,
     HOFF_CTS_COMMON_SAFETY,
     HOFF_CTS_STEP_HINT,
-    HOFF_CTS_TIMESTAMP,
-    HOFF_NAME,
     HOFF_SAFETY,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-LAB_TEMPLATE = (
-    ROOT
-    / "example"
-    / "fixtures"
-    / "capacheck_zip"
-    / "9)Bimodal_SJ1300_6040_NCN_capacheck.sch"
-)
+LAB_TEMPLATE = PNE02_LAB_HEADER_TEMPLATE
 DEFAULT_PROJECT = ROOT / "example" / "smoke_rest_cc_end.schproj"
 
 
 def build_from_lab_header(project_path: Path) -> bytes:
     project = ScheduleProject.load(project_path)
-    cell = project.cell_profile
-
-    header = bytearray(LAB_TEMPLATE.read_bytes()[:HEADER_SIZE_V3])
-    stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.000").encode("ascii")
-    header[0x08 : 0x08 + 63] = b"\x00" * 63
-    header[0x08 : 0x08 + len(stamp)] = stamp
-    header[HOFF_CTS_TIMESTAMP : HOFF_CTS_TIMESTAMP + 63] = b"\x00" * 63
-    header[HOFF_CTS_TIMESTAMP : HOFF_CTS_TIMESTAMP + len(stamp)] = stamp
-
-    name = f"{project.name}.sch".encode("ascii", errors="replace")[:100]
-    header[HOFF_NAME : HOFF_NAME + 100] = b"\x00" * 100
-    header[HOFF_NAME : HOFF_NAME + len(name)] = name
-
-    limits = safety_limits_from_cell(
-        v_max=cell.v_max,
-        v_min=cell.v_min,
-        nominal_capacity_mAh=cell.nominal_capacity_mAh,
-        max_current_mA=cell.max_current_mA,
-    )
-    max_capacity = float(limits["max_capacity_mAh"])
-    # PNE02: capacity at +12 on both safety blocks (see io/header.py notes).
-    ensol_values = (
-        limits["max_voltage_mV"],
-        limits["min_voltage_mV"],
-        limits["max_current_mA"],
-        max_capacity,
-        0.0,
-        limits["max_temp_C"],
-    )
-    for index, value in enumerate(ensol_values):
-        struct.pack_into("<f", header, HOFF_SAFETY + index * 4, float(value))
-
-    cts_common = (
-        limits["max_voltage_mV"],
-        limits["min_voltage_mV"],
-        0.0,
-        max_capacity,
-        0.0,
-        limits["max_temp_C"],
-    )
-    for index, value in enumerate(cts_common):
-        struct.pack_into("<f", header, HOFF_CTS_COMMON_SAFETY + index * 4, float(value))
-
-    struct.pack_into("<i", header, HOFF_CTS_STEP_HINT, 7)
-
-    step_records = compile_steps(project.expand_steps(), cell)
-    return bytes(header) + b"".join(step_records)
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.000")
+    return build_pne02_reopen_candidate(project, timestamp=timestamp).data
 
 
 def main() -> None:

@@ -47,10 +47,11 @@ Equipment reopen is **out of scope** for Gate D (already closed by C5 for the sm
 | `cycle_life` | `loop_count=2`, `rest_s=30` | cycle, charge, discharge, loop, end | — |
 | `rpt` | 2 SOCs, short rests/pulses | discharge, rest | DCR + fEndC |
 | `dcir` | 1 SOC, short rests/pulses | discharge, rest, end | DCR + fEndC |
-| `hppc` | 2 SOCs, short rests/pulses | charge, discharge, rest | fEndC (SOC adjust) |
+| `hppc` (`full`) | locked 62-step full-range | cycle, loop, charge, discharge, rest, end | — (DOD/mode limits are preflight-gated) |
 | `capacheck` | `measurement_cycles=1`, short rest | cycle, loop, charge, discharge, end | — |
-| `qpeed` (`full`) | SOC `[0.5]`, short pulses | charge, discharge, rest | fEndC |
-| `qpeed` (`soc_setting`) | SOC `[0.5]` | discharge, rest, loop, end | fEndC |
+| `qpeed` (`full`) | 12 high-rate blocks | charge, discharge, rest, cycle, loop, end | — (DOD is preflight-gated separately) |
+| `qpeed` (`soc_setting`) | 11-step conditioning | discharge, charge, rest, loop, end | — (DOD is preflight-gated separately) |
+| `qc` (`cycle`) | Set2 default | cycle, loop, charge, discharge, end | — |
 | `insitu_cycle` | `loop_count=2` | cycle…loop…end; label contains `in-situ` | — |
 
 ---

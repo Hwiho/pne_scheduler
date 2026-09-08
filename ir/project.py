@@ -82,14 +82,11 @@ class ScheduleProject:
         return cls.from_dict(json.loads(path.read_text(encoding="utf-8")))
 
     def expand_steps(self) -> list[StepIntent]:
-        """Expand module graph to flat step intents (linear connections only for now)."""
-        from ..modules import expand_module
+        """Compose the module graph into a safe, terminal schedule."""
+        from .composer import compose_module_steps
 
         ordered = _topological_module_order(self.modules, self.connections)
-        steps: list[StepIntent] = []
-        for node in ordered:
-            steps.extend(expand_module(node, self.cell_profile))
-        return steps
+        return compose_module_steps(ordered, self.cell_profile)
 
 
 def _topological_module_order(

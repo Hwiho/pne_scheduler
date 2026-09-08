@@ -106,6 +106,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Allow offline patching of fields that are not writer-ready",
     )
 
+    review_pack = sub.add_parser(
+        "pattern-review-pack",
+        help="Generate deterministic PNE02 reopen-only pattern candidates",
+    )
+    review_pack.add_argument("output", type=Path, help="Output pack directory")
+
     return parser
 
 
@@ -136,12 +142,25 @@ def main(argv: list[str] | None = None) -> int:
                 file=sys.stderr,
             )
             return 2
+        from .validate.preflight import validate_project
+
         project = ScheduleProject.load(args.project)
         manifest_path = args.manifest or default_manifest_path(args.output)
         output_existed = args.output.exists()
         manifest_existed = manifest_path.exists()
         try:
-            compile_warnings = write_sch(project, args.output)
+            preflight = validate_project(project, purpose="experimental_build")
+            if preflight.errors:
+                details = "; ".join(
+                    f"{issue.code}: {issue.message}" for issue in preflight.errors
+                )
+                raise ValueError(f"Preflight failed: {details}")
+            preflight_warnings = [
+                f"{issue.code}: {issue.message}" for issue in preflight.warnings
+            ]
+            compile_warnings = list(
+                dict.fromkeys([*preflight_warnings, *write_sch(project, args.output)])
+            )
             manifest = experimental_build_manifest(
                 args.project,
                 args.output,
@@ -287,6 +306,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Wrote analysis-only SCH clone to {result.output_path}")
         print(f"Wrote validation manifest to {manifest_path}")
         print("WARNING: Do not execute this file on PNE equipment.")
+        return 0
+
+    if args.command == "pattern-review-pack":
+        from .tools.pattern_review_pack import build_pattern_review_pack
+
+        try:
+            result = build_pattern_review_pack(args.output)
+        except (OSError, TypeError, ValueError) as exc:
+            print(f"Pattern review pack failed: {exc}", file=sys.stderr)
+            return 2
+        print(f"Wrote {result.pattern_count} reopen-only candidates to {result.output_dir}")
+        print("WARNING: Open for display review only. Do not start or run these schedules.")
         return 0
 
     return 1

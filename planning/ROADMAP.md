@@ -21,9 +21,10 @@
 | 2026-09-06 | Pushed the fix (`d60ea3b`); hosted CI green again (run #33). Deleted 3 confirmed-dead code paths (2 tools scripts, 1 3.7MB vendor archive); README now shows a live GitHub Actions badge instead of a static count. Re-split Gate D/E/F by per-task equipment dependency (only C5, E3/E3.1, F1–F4 actually need a PNE PC) and unblocked the rest for parallel work per user authorization. Found 6 unmerged `cursor/*` branches from earlier Cursor Cloud runs — 3 touch UI (theming, module recipes, schedule explanation) and look salvageable as design reference, not junk; see §6.6.1 and `UI_UX_NOTES.md` |
 | 2026-09-08 | **C5 passed on PNE02** (`smoke_writer_probe.sch`); Gate C exited with documented gaps (DCR IR-only; 696 tail unused; CLI `build_sch_header` 54-byte gap open). OCV/Impedance/Pattern/Balance IR+compiler stubs + offset registry (`STEP_TYPES_EXTENDED.md`); Gate D P0 harness started (`validate/gate_d_harness.py`) |
 | 2026-09-08 | Gate D software slice completed: capacity contract tests; Formation/Rest/Cycle Life + RPT/DC-IR + HPPC/capacheck/QPEED/in-situ harness; golden family topology compares (`validate/topology.py`) |
-| 2026-09-08 | Gate D verification method + audit remediations: `GATE_D_VERIFICATION.md`, harness charge-V/loop checks, `run_gate_d_verification` → `GATE_D_VALIDATION_REPORT.json` (`gate_d_passed=true`, 49 checks) |
+| 2026-09-08 | Gate D verification method + audit remediations: `GATE_D_VERIFICATION.md`, harness charge-V/loop checks, `run_gate_d_verification` → `GATE_D_VALIDATION_REPORT.json` (`gate_d_passed=true`; current matrix 49 pass) |
 | 2026-09-08 | Post-C5 status sweep (L5): cleared stale "behind C5" wording from the gate diagram, Gate E `Depends on`/Rules/E3/E3.1 rows, and Gate F F1–F4 — the C5 pass satisfied those dependencies. Added [`GUARDRAILS.md`](GUARDRAILS.md), a topic-grouped reading view of §5.6/§8/§11 |
 | 2026-09-08 | Gate D mutation backtest found and fixed two verification holes (V6 never compared module expansions; skips did not block `gate_d_passed`) — see §11. Archived closed-gate evidence and consumed analysis outputs to [`../legacy/`](../legacy/README.md); only files with zero `.py` references were moved, and the C5 signed record stays cited from Gate F2 |
+| 2026-09-08 | Gate E/pattern re-audit: added the missing module-composition contract (single final END, rebased LOOP references), separated imported patch sessions from authored projects, added pattern trust/catalog and desktop UX requirements, and established [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md). DOD@384 and module SOC cutoff (`fEndC@36`) now require separate controlled pairs before SOC-dependent pattern approval |
 
 ---
 
@@ -463,9 +464,11 @@ not be marked done.
 
 Work proceeds **Gate A → B → C → D → E → F** in order for anything that reads on
 an equipment-readiness claim. That said, most of D/E/F's *individual tasks* have
-no equipment dependency at all — only C5, E3/E3.1, and F1–F4 actually need a
-PNE PC. **2026-09-06: user authorized starting equipment-independent D/E/F work
-in parallel with the C5 wait** instead of waiting for C5 to close Gate C first.
+no equipment dependency at all. The remaining physical checkpoints are pattern PV1/PV4
+(controlled pairs and CTSPro batch reopen), optional PV6/F3 execution, and any new exact-artifact
+release approval. E3/E3.1 **UI implementation itself** is software-only; applying a verified label
+inherits the pattern/F-gate evidence. **2026-09-06: user authorized starting
+equipment-independent D/E/F work in parallel with the C5 wait** instead of waiting for C5 to close Gate C first.
 Do not start a later Gate's *equipment-dependent* tasks until the current gate's
 exit criteria are met (or an explicit waiver is recorded in §11) — the ordering
 rule is about claims and equipment-facing work, not about every line item.
@@ -690,6 +693,10 @@ Gate D is software-only. Module expands are **protocol templates**; golden compa
 - `fEndC@36` packs but stays `semantic_unverified` (warnings expected on RPT/DCIR/HPPC)
 - DCR window never packed without controlled pairs
 - Capacheck module order is CYCLE→LOOP; some goldens differ — family match only
+- HPPC full, QPEED full/SOC-setting topology와 QC 3종은 2026-09-09 구현되어 각각
+  62, 167/11 및 17/18/24–26 step shape를 검사한다. 다만 기존 family-template의
+  exact recipe, DOD/fEndC/CC mode-limit 의미와 CTSPro 표시 검증은 pattern acceptance에 남는다 — see
+  [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md).
 
 ---
 
@@ -699,7 +706,7 @@ Gate D is software-only. Module expands are **protocol templates**; golden compa
 |---|---|
 | **Status** | 🔄 **Partial** (viewer/flow spike exist; polished module workspace ⏳) |
 | **Depends on** | **Nothing blocking as of 2026-09-08** — E0–E2.4 never needed a trusted writer, and E3/E3.1's Gate C exit dependency was satisfied by the C5 PNE02 pass. Export UX is now gated by *evidence discipline* (§5.6 L6/L9), not by an unmet gate |
-| **Exit criteria** | Schedule authoring feels like **module + procedure** composition (Nova/LabVIEW-like); unsafe export blocked; library + Cell setup; optional `.sch` → IR import |
+| **Exit criteria** | Schedule authoring feels like **module + procedure** composition (Nova/LabVIEW-like); multi-module END/LOOP composition is safe; pattern trust is visible; unsafe export blocked; library + Cell setup; byte-preserving imported patch session |
 | **Next gate** | Gate F |
 | **UX intent** | §1.1 — design *feel* for making schedules with modules; **not** Autolab instrument control |
 
@@ -714,21 +721,29 @@ a reopen record for that exact artifact (L6, §6.7 F1–F4).
 
 | # | Task | Status | Completion criteria | UX cue | Needs equipment? |
 |---|------|--------|---------------------|--------|:---:|
-| E0 | UX contract & IA | ⏳ | Screens: Setup / Procedure / Modules / Library / Validate / Export; map to `ui/` | Clean authoring layout | No |
+| E0 | UX contract & IA | ✅ | Screens: Setup / Procedure / Modules / Library / Validate / Export; map to `ui/` | Clean authoring layout | No |
+| E0.5 | Composer / catalog / validator contract | ✅ | One final END; module-local LOOP refs rebased; structured issues; pattern metadata/trust | Safe foundation | No |
 | E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage | Review existing schedules | No |
 | E2 | **Procedure editor** (ordered steps) | 🔄 | Insert/reorder/delete primitives; property pane; C-rate ↔ mA preview | Nova-like step list | No |
 | E2.1 | Primitive palette | ⏳ | REST, CC, CCCV, CV, LOOP, END, OCV… with validated forms | Command blocks | No |
-| E2.2 | **Module palette** | 🔄 | Formation, Cycle Life, RPT, HPPC, DC-IR expand into steps | LabVIEW-like modules | No |
+| E2.2 | **Module/pattern palette** | 🔄 | Variant + units + evidence status; only accepted Formation/Cycle/QC/RPT/HPPC/QPEED recipes promoted | LabVIEW-like modules | No |
 | E2.3 | Method / project library | ⏳ | Save/load versioned procedures & modules per equipment profile | Reusable methods | No |
 | E2.4 | Cell / equipment setup pane | ⏳ | Explicit 1C mA, V limits, PNE unit/range, layout target; blocks export if missing | Setup before edit | No (the pane itself; it just *displays* a profile that later needs equipment-verified export) |
 | E3 | Pre-export validation UX | ⏳ | Block invalid loops, missing END, V/I violations | Readiness before export | No — **unblocked by the 2026-09-08 C5 pass** |
 | E3.1 | Export path choice | ⏳ | Default **patch-sch** onto approved template; optional experimental `build` | PNE safety | No — unblocked, but keep `patch-sch` as the default path per L9 |
-| E4 | `.sch` → IR import (read-only) | ⏳ | Reverse-parse for review/clone before editable round-trip | Open existing schedule | No — `io/reader.py`/`io/sch_parser.py` already exist and are read-only |
+| E4 | `.sch` imported patch session | ⏳ | Preserve source hash/raw bytes; writer-ready edits only; lossy `Clone as draft` separate | Open existing schedule | No — parser exists; safe session model does not |
 | E5 | Advanced: 0x00010007/EIS, fingerprint | ⏳ | Deferred until explicit schema evidence | Later | No (blocked on schema evidence, not equipment) |
 | E6 | pne_studio2 integration | ⏳ | Shared cell profile and export workflow | Host embedding | Partial — integration itself is No; the export half inherits E3's block |
 | E7 | Campaign canvas (optional) | ⏳ | Free-form multi-module graph **only if** E2–E2.2 is insufficient | Extra LabVIEW canvas | No |
 
 **Progress record**
+- Detailed re-audited execution order and acceptance criteria:
+  [`GATE_E_PLAN.md`](GATE_E_PLAN.md). Pattern implementation/reopen is a linked track:
+  [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md).
+- 2026-09-09: E0.5 composer/catalog/preflight complete; HPPC 62-step, QPEED 167/11-step and QC 3종
+  candidates implemented. Deterministic 10-pattern PNE02 batch is at
+  [`../example/pattern_review_pack/2026-09-09/INDEX.md`](../example/pattern_review_pack/2026-09-09/INDEX.md).
+  Every manifest remains `equipment_executable=false`; user PV4 reopen is still required.
 - `pne_scheduler flow` / `run_pne_scheduler_flow.py`: linear graph, `.schproj` load/save, Cell Profile, step preview — **seed** for E2/E2.2
 - 2026-09-06: found 3 abandoned Cursor Cloud branches with substantial unmerged UI work directly relevant to E2/E2.2/E2.3 (theming, recipe editing, schedule explanation) — see §6.6.1
 - 2026-09-06: **ported the `cursor/update-roadmap-5ac9` theming + attach/detach work** (§6.6.1's first recommendation) — `ui/flow_theme.py` (per-module-type card colors/icons, rounded-card Tk Canvas rendering), `engine/duration.py` (schedule duration estimate with loop/CV-taper caveats surfaced as warnings, not silently dropped), and `FlowProjectModel.rewire()` (LabVIEW-style click-port-then-click-port attach/detach, reusing existing cycle validation). Added `ModuleStyle` entries for `smoke_rest_cc_end`/`smoke_writer_probe` (module types that didn't exist when the branch was written). 273 tests pass (was 264); GUI construction + rewire + duration estimate smoke-tested non-interactively (`tk.Tk()` + `withdraw()`, no visible window in this environment — a human should still open it once to confirm the visual result)
@@ -736,6 +751,8 @@ a reopen record for that exact artifact (L6, §6.7 F1–F4).
 
 **Rules**
 - E3/E3.1 semantic export is **unblocked** (C5 passed 2026-09-08), but keep `patch-sch` the default export path and `build` explicitly experimental until the CLI header's 54-byte unexplained region is understood (L9, §11)
+- Do not treat Gate D family-level green as protocol-pattern approval. SOC-dependent patterns
+  also require separate DOD@384 and `fEndC@36` evidence as specified in the pattern plan.
 - “Nova/LabVIEW-like” means **authoring interaction**, not feature parity with those products
 - Apply §5.6 checklist on every E-task completion claim
 
@@ -766,21 +783,24 @@ Gate B/C validation tooling, not UI — lower priority to review, listed in §11
 
 | | |
 |---|---|
-| **Status** | ⏳ **Not started on F1–F5**; **F6 done**. No longer gate-blocked — the 2026-09-08 C5 pass supplies the reopen evidence F1–F4 were waiting on |
-| **Depends on** | Nothing pending. F1–F4's Gate C exit dependency was satisfied 2026-09-08; what remains is release-record work (writing the compatibility report, capturing the signed reopen record, pinning the released hash), not further equipment access |
+| **Status** | ⏳ **Not started on F1–F5**; **F6 done**. The C5 probe artifact can enter release-record work. A product release containing HPPC/QPEED/QC/Cycle presets still depends on the selected pattern pack's acceptance evidence |
+| **Depends on** | For the exact C5 smoke artifact: record/hash work only. For authored pattern output: [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md) PV4–PV5, plus PV6 if `equipment-run-verified` is claimed |
 | **Exit criteria** | Equipment-verified artifact with immutable hash, documented profile, hosted CI |
 | **Next gate** | — (maintenance / version bumps) |
 
 | # | Task | Status | Completion criteria | Needs equipment? |
 |---|------|--------|---------------------|:---:|
-| F1 | Target equipment compatibility report | ⏳ | PNE unit/range, CTSPro version, layout, open assumptions | No — write-up of what C5 already established (PNE02, `0x3D8+12`/`0x458+12` capacity slot, 612/1760 layout) |
-| F2 | Reopen approval record | ⏳ | Exact SHA-256 opens in CTSPro; operator result logged | No — the signed C5 checklist is the source record, archived at [`legacy/planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](../legacy/planning/GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md); F2 still needs the **exact probe SHA-256** recorded against it |
+| F1 | Target equipment compatibility report | ⏳ | PNE unit/range, CTSPro version, layout, pattern/release scope, open assumptions | No for the C5 probe write-up; pattern scope waits on PV4–PV5 records |
+| F2 | Reopen approval record | ⏳ | Exact SHA-256 opens in CTSPro; operator result logged | C5 source record exists for the smoke probe; every released pattern candidate needs its own hash/result in the batch pack |
 | F3 | Equipment smoke-test protocol | ⏳ | Dummy-cell procedure, abort criteria, signed result | Partly — the C5 reopen is done; a *run* protocol (dummy cell, abort criteria) still needs a lab session if execution is to be claimed |
 | F4 | Artifact immutability | ⏳ | Released hash == smoke-tested hash; reapproval on change | No — pin the C5-verified `smoke_writer_probe.sch` hash and gate re-release on change |
 | F5 | Release status labels | ⏳ | `analysis-only` / `CTSPro-reopen-verified` / `equipment-verified` in CLI/UI | No — the label enum/plumbing can be built now; only *applying* `equipment-verified` needs F1–F4 |
 | F6 | Hosted CI | 🔄 **exists, green, now self-reporting** | `.github/workflows/ci.yml` runs Ruff + pytest + `tools/compare_pne_units.py` on push/PR since 2026-09-02; was red for 12 commits on the `access_parser` collection bug, fixed and pushed 2026-09-06 (`d60ea3b`, [run #33](https://github.com/Hwiho/pne_scheduler/actions/runs/34037824999) success). README now shows the workflow's own live status badge instead of a static hand-set count, so a future red run is visible on the repo front page. Remaining F6 scope: packaging checks, schema-invariant checks, doc checks on every PR | No |
 
-**Rule:** No “equipment-ready” label until F1–F4 pass for the **exact** artifact and target profile. (F5's *label mechanism* can exist before that — it just can't have anything genuinely earn the top label yet.)
+**Rule:** No “equipment-ready” label until F1–F4 pass for the **exact** artifact, recipe
+version, and target profile. The C5 combinatorial probe proves shared writer assembly; it does not
+automatically approve a different HPPC/QPEED/QC/Cycle topology. F5's label mechanism can exist
+before that — it just cannot promote an unapproved pattern.
 
 ---
 
@@ -865,17 +885,21 @@ tests to be skipped.
 
 ## 9. Current focus (active gate)
 
-**Active gate: E — modular schedule UX (Nova + LabVIEW feel).**  
+**Active gate: E — modular schedule UX (Nova + LabVIEW feel).**
 Gate C exited 2026-09-08 (C5). Gate D software exit 2026-09-08 (P0/P1 harness +
-capacity contract + golden families). Remaining lab-optional: OCV/Imp/Balance pairs.
+capacity contract + golden families). Pattern acceptance now runs as a linked track; the first
+lab checkpoint is separate DOD@384 and `fEndC@36` controlled pairs.
 
 | Step | Gate | Action |
 |------|------|--------|
 | 1 | C5 | ✅ Passed — `GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` |
 | 2 | C exit | ✅ Gaps: DCR IR-only; 696 tail unused; CLI header 54-byte region |
 | 3 | D | ✅ Software P0/P1 complete; see §6.5 honest gaps |
-| 4 | **E** | Module workspace / procedure composition (E0–E2.4); export stays evidence-gated |
-| 5 | F | Release gates later |
+| 4 | **E foundation** | E0/E0.5: IA + composer END/LOOP + catalog + validator |
+| 5 | **Pattern PV0–PV3** | Canonical HPPC/QPEED/QC/Cycle recipes + reopen candidate pack |
+| 6 | **E workspace** | Setup / Procedure / Inspector / import-patch / Validate / Export |
+| 7 | **User PV4** | Batch CTSPro reopen + save-as files; run은 별도 PV6 |
+| 8 | F | Exact pattern hash/profile 범위로 release |
 
 Completed: Gate A; Gate B (`gate_b_passed`); Gate C (C5 signed); Gate D (software).
 
@@ -935,5 +959,7 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 | 2026-09-08 | D | **blocking (verification integrity)** | Gate D mutation backtest: `_check_v6_families()` read only the static golden fixture and never the module's expansion, so every `family_*` check passed even when modules were broken to emit a single `rest` step. The method doc claimed the module comparison the code never did (L4) | resolved | V6 now compares required families against **both** golden and live module expansion (`module_ref` rows in `GATE_D_FAMILY_CHECKS`); `tests/test_gate_d_verification_sensitivity.py` pins the sensitivity |
 | 2026-09-08 | D | **blocking (verification integrity)** | `gate_d_passed` was `all(status != "fail")`, so skips did not block it — deleting every golden fixture still produced `gate_d_passed=true` with **zero** golden comparisons executed (L4) | resolved | Skips now block the exit claim and V8 names the checks that never ran; report still distinguishes skip from mismatch |
 | 2026-09-08 | C | normal | Header safety-block layout is PNE02-specific (capacity `0x3D8+12`/`0x458+12`; PNE16 reads `+16` as 최소 전류) but `build_sch_header()` takes no unit and the build manifest recorded `equipment: null` — the conflict lived only in source comments (L1: document conflicts, don't silently pick one) | resolved | `SAFETY_BLOCK_CONVENTION` exported from `io/header.py`; build manifest now records `target_profile.safety_block_convention` and carries the PNE02-only caveat in `warnings`. No PNE16 offsets invented (L3) |
-| 2026-09-08 | D | normal | C5에서 `dod_percent`@384(프로브 40%)가 **CTSEditorPro UI에 표시되지 않음**("확인 못함"). Gate C는 선택 항목으로 통과했으나, 이후 어느 백로그·액션아이템에도 승계되지 않아 후속 검증이 사라져 있었음 (L5 — 기록은 남았는데 추적이 끊김) | open | 필드는 `corpus_inferred`(554/856 파일명 SOC 일치)로 유지, **writer_ready 아님**. 현재 이 필드를 세팅하는 것은 `smoke_writer_probe` 뿐이고 실제 모듈(dcir/hppc/rpt/qpeed)은 `fEndC`를 씀. 해소 경로: ① UI 미표시가 "그 스텝 타입에 DOD 칸이 없어서"인지 "오프셋이 틀려서"인지 구분하려면 **CTSEditorPro에서 SOC/DOD를 직접 입력한 스케줄을 저장→바이트 비교**하는 controlled pair 필요(§3 OCV/Imp/Balance 랩 세션과 함께 처리 가능) ② 그 전까지 `dod_percent`는 승격 금지, 컴파일러 경고 추가 검토 |
+| 2026-09-08 | D/PV1 | normal→pattern-blocking | C5에서 `dod_percent`@384(프로브 40%)가 **CTSEditorPro UI에 표시되지 않음**("확인 못함"). 현재 HPPC full/QPEED는 이 DOD 경로를, dcir/hppc:legacy/rpt는 별도 `fEndC`@36 경로를 사용하므로 한 번의 확인으로 두 의미를 함께 승인할 수 없음 | open, timing assigned | Pattern acceptance 첫 lab checkpoint에서 두 value-only controlled pair 수행: **A)** DOD/SOC percent `30→40%`로 @384 확인, **B)** capacity cutoff `24→32 mAh`(80 mAh 기준; 또는 UI percent 30→40)로 `fEndC`@36과 단위 확인. off/on은 enable/cap-ref flag용 보조 pair. 그 전까지 각각 `corpus_inferred`/`semantic_unverified`, 관련 SOC-dependent pattern의 reopen 승격 금지. [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md) §4 |
+| 2026-09-08 | E | high | 모듈 합성 계약 부재: 일부 모듈이 자체 END를 내보내고 LOOP target을 모듈-local raw 번호로 저장해, 여러 모듈 연결 시 non-final END나 잘못된 goto가 생길 수 있음. `qpeed:soc_setting` LOOP는 target/count도 없음 | resolved 2026-09-09 | Composer가 단일 최종 END 소유; fragment-local reference와 legacy local target을 절대 step으로 resolve; invalid LOOP 차단; 다중 loop-module 회귀 추가. [`GATE_E_PLAN.md`](GATE_E_PLAN.md) §3.1/§5 |
+| 2026-09-08 | D/E | high | Gate D family-level green과 실제 protocol-pattern 충실도가 분리되지 않음: QPEED full은 짧은 HPPC 상속 구현이었고 golden은 167 step, HPPC golden은 62 step, QC module은 없었음 | partial 2026-09-09 | HPPC 62-step, QPEED 167/11-step 및 QC 3종 구현, trust catalog/preflight와 10-pattern reopen pack 생성 완료. 기존 family-template exact recipe와 PV1/PV4는 open. [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md) |
 | | | | *(add new rows here)* | | |

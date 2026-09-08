@@ -12,7 +12,9 @@ from ..engine.duration import (
 )
 from ..ir.project import ModuleConnection, ModuleNode, ScheduleProject
 from ..ir.step_intent import StepIntent
-from ..modules.base import expand_module, get_module_class, list_module_types
+from ..modules.base import expand_module, get_module_class
+from ..modules.catalog import visible_module_types
+from ..validate.preflight import validate_project
 
 
 @dataclass(frozen=True, slots=True)
@@ -47,7 +49,7 @@ class FlowProjectModel:
 
     @property
     def module_types(self) -> tuple[str, ...]:
-        return list_module_types()
+        return visible_module_types()
 
     def add_module(
         self,
@@ -219,7 +221,15 @@ class FlowProjectModel:
                 errors.append(
                     f"Module {node.id} has unknown type {node.module_type!r}"
                 )
-        return FlowValidation(tuple(errors), tuple(warnings))
+        if not errors:
+            preflight = validate_project(self.project, purpose="preview")
+            errors.extend(
+                f"[{issue.code}] {issue.message}" for issue in preflight.errors
+            )
+            warnings.extend(
+                f"[{issue.code}] {issue.message}" for issue in preflight.warnings
+            )
+        return FlowValidation(tuple(errors), tuple(dict.fromkeys(warnings)))
 
     def preview_steps(self) -> tuple[list[StepIntent], tuple[str, ...]]:
         validation = self.validate()

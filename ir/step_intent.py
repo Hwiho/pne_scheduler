@@ -25,6 +25,9 @@ class StepIntent:
     step_type: StepKind
     mode: StepModeName | None = None
     label: str = ""
+    # Stable, fragment-local identity used by the schedule composer.  Binary
+    # step numbers are resolved only after every module has been ordered.
+    ref_id: str | None = None
     c_rate: float | None = None
     cv_cutoff_c_rate: float | None = None
     # Absolute overrides (preferred over C-rate when both are set).
@@ -41,6 +44,7 @@ class StepIntent:
     record_dV_mV: float | None = None
     # LOOP (Gate B: loop_target@48 + loop_count@52; Ensol also writes @564).
     loop_goto_step: int | None = None
+    loop_target_ref: str | None = None
     loop_count: int | None = None
     loop_reset_capacity: bool = False
     # Legacy ASSB SOC reference step (offset unresolved vs Ensol map).
