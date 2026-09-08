@@ -259,12 +259,13 @@
       },
       "max_current_mA_seen": 37763.375,
       "categories": {
-        "rate_test": 1546,
+        "rate_capability": 1450,
         "unknown": 845,
         "cycle_life": 258,
         "formation": 182,
         "charge": 145,
         "capacheck": 114,
+        "rate_test": 96,
         "qpeed": 90,
         "hppc": 84,
         "rpt": 54,
@@ -344,10 +345,10 @@
         ">6A": 1
       },
       "samples_by_category": {
-        "rate_test": [
+        "rate_capability": [
           {
             "file": "0.05C+11.1mAh rate.sch",
-            "classify_rule": "rate_test_keyword",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -367,7 +368,7 @@
           },
           {
             "file": "0.05C+54.6mAh rate.sch",
-            "classify_rule": "rate_test_keyword",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -890,6 +891,48 @@
             }
           }
         ],
+        "rate_test": [
+          {
+            "file": "00215570_230704_set5_REF_step_2C.sch",
+            "classify_rule": "rate_test_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 5432,
+              "step_count": 6,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 1,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 37.64,
+              "current_mA_p50": 37.64
+            }
+          },
+          {
+            "file": "07000872_250421_JHY_║╨╝«_L1_L4_SOC08_0.33C.sch",
+            "classify_rule": "rate_test_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 7880,
+              "step_count": 10,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 2,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 19.31,
+              "current_mA_p50": 5.85
+            }
+          }
+        ],
         "ocv": [
           {
             "file": "00217475_260210_▒Φ┴ñ╟÷_60dC OCV.sch",
@@ -1216,10 +1259,11 @@
       "categories": {
         "unknown": 536,
         "cycle_life": 232,
-        "rate_test": 213,
         "formation": 209,
+        "rate_test": 134,
         "hppc": 114,
         "rpt": 102,
+        "rate_capability": 79,
         "capacheck": 51,
         "discharge": 25,
         "eis": 13,
@@ -1628,6 +1672,48 @@
               },
               "current_mA_max": 321.4,
               "current_mA_p50": 321.4
+            }
+          }
+        ],
+        "rate_capability": [
+          {
+            "file": "00215540_241112_FC_c-rate_test_after_dura.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 23792,
+              "step_count": 36,
+              "loop_steps": 6,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 6,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 480.0,
+              "current_mA_p50": 66.0
+            }
+          },
+          {
+            "file": "00215540_241209_Cbi_60oC_1C_05C_cycle_after_chg_capability.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 23792,
+              "step_count": 36,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 6,
+                "both": 1,
+                "neither": 0
+              },
+              "current_mA_max": 188.1,
+              "current_mA_p50": 94.0
             }
           }
         ],
@@ -2040,11 +2126,12 @@
       "max_current_mA_seen": 8153.0,
       "categories": {
         "unknown": 2141,
-        "rate_test": 496,
+        "rate_capability": 470,
         "hppc": 351,
         "cycle_life": 143,
         "formation": 64,
         "discharge": 30,
+        "rate_test": 26,
         "charge": 16,
         "dcir": 11,
         "storage": 7,
@@ -2157,10 +2244,10 @@
             }
           }
         ],
-        "rate_test": [
+        "rate_capability": [
           {
             "file": "0.05C Healing RC.sch",
-            "classify_rule": "standalone_c_rate_keyword",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -2180,7 +2267,7 @@
           },
           {
             "file": "0.1C For-RPT.sch",
-            "classify_rule": "standalone_c_rate_keyword",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -2196,6 +2283,48 @@
               },
               "current_mA_max": 102.45,
               "current_mA_p50": 6.83
+            }
+          }
+        ],
+        "rate_test": [
+          {
+            "file": "0.1C charge.sch",
+            "classify_rule": "standalone_c_rate_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 6044,
+              "step_count": 7,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 2,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 1.872,
+              "current_mA_p50": 1.872
+            }
+          },
+          {
+            "file": "0.5C CYC.sch",
+            "classify_rule": "standalone_c_rate_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 5432,
+              "step_count": 6,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 1,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 31.82,
+              "current_mA_p50": 31.82
             }
           }
         ],
@@ -2672,7 +2801,7 @@
       "max_current_mA_seen": 499.0,
       "categories": {
         "unknown": 612,
-        "rate_test": 572,
+        "rate_capability": 568,
         "hppc": 233,
         "cycle_life": 197,
         "formation": 145,
@@ -2680,6 +2809,7 @@
         "rpt": 25,
         "charge": 10,
         "capacheck": 4,
+        "rate_test": 4,
         "doe": 3,
         "rest": 1,
         "ocv": 1,
@@ -2744,10 +2874,10 @@
       ],
       "current_threshold_hits": {},
       "samples_by_category": {
-        "rate_test": [
+        "rate_capability": [
           {
             "file": "00209060_240404_Ref_TK.sch",
-            "classify_rule": "verified_label",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -2767,7 +2897,7 @@
           },
           {
             "file": "00209060_240404_Ref_TK_Aqu.sch",
-            "classify_rule": "verified_label",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -3164,6 +3294,48 @@
             }
           }
         ],
+        "rate_test": [
+          {
+            "file": "07005869_260309_60activation(ChDchCh)_RTtest_cell_1.sch",
+            "classify_rule": "verified_label",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 9104,
+              "step_count": 12,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 3,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 7.135,
+              "current_mA_p50": 7.135
+            }
+          },
+          {
+            "file": "07005869_260309_60activation(ChDchCh)_RTtest_cell_2.sch",
+            "classify_rule": "verified_label",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 9104,
+              "step_count": 12,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 3,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 7.496,
+              "current_mA_p50": 7.496
+            }
+          }
+        ],
         "rest": [
           {
             "file": "250806_░φ┐┬└·└σ_4┴╓ short rest.sch",
@@ -3261,7 +3433,7 @@
       "max_current_mA_seen": 374.88,
       "categories": {
         "unknown": 419,
-        "rate_test": 354,
+        "rate_capability": 354,
         "cycle_life": 266,
         "hppc": 18,
         "storage": 13,
@@ -3326,10 +3498,10 @@
       ],
       "current_threshold_hits": {},
       "samples_by_category": {
-        "rate_test": [
+        "rate_capability": [
           {
             "file": "00214700_240222_[╜┬╡┐]_ABC.sch",
-            "classify_rule": "verified_label",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -3349,7 +3521,7 @@
           },
           {
             "file": "00214700_240322_[╜┬╡┐]_ABC2┬≈_set1_└⌐╡╡┐∞└ⁿ╗τ.sch",
-            "classify_rule": "verified_label",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -3630,12 +3802,13 @@
       },
       "max_current_mA_seen": 499.0,
       "categories": {
-        "rate_test": 808,
+        "rate_capability": 800,
         "unknown": 390,
         "hppc": 112,
         "qpeed": 69,
         "formation": 43,
         "cycle_life": 32,
+        "rate_test": 8,
         "rpt": 3,
         "charge": 2
       },
@@ -3698,10 +3871,10 @@
       ],
       "current_threshold_hits": {},
       "samples_by_category": {
-        "rate_test": [
+        "rate_capability": [
           {
             "file": "00214645_250214_░╟╜─AgC_3350_set01_Armor.sch",
-            "classify_rule": "verified_label",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -3721,7 +3894,7 @@
           },
           {
             "file": "00214645_250214_░╟╜─AgC_3350_set02_BGN_AP5T3.sch",
-            "classify_rule": "verified_label",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -4033,6 +4206,48 @@
               "current_mA_p50": 21.21
             }
           }
+        ],
+        "rate_test": [
+          {
+            "file": "251208_Set1_251226 DSC SOC50%╞≥░í_1_ReRe.sch",
+            "classify_rule": "verified_label",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 8492,
+              "step_count": 11,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 2,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 70.64,
+              "current_mA_p50": 70.64
+            }
+          },
+          {
+            "file": "251208_Set1_251226 DSC SOC50%╞≥░í_1_ReReRe.sch",
+            "classify_rule": "verified_label",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 8492,
+              "step_count": 11,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 2,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 70.64,
+              "current_mA_p50": 70.64
+            }
+          }
         ]
       },
       "rating_hint": {
@@ -4065,11 +4280,12 @@
       "max_current_mA_seen": 174076.0,
       "categories": {
         "unknown": 916,
-        "rate_test": 369,
         "cycle_life": 293,
+        "rate_capability": 284,
         "formation": 281,
         "rpt": 158,
         "hppc": 87,
+        "rate_test": 85,
         "qpeed": 44,
         "charge": 20,
         "ocv": 17,
@@ -4307,6 +4523,48 @@
               },
               "current_mA_max": 16.746,
               "current_mA_p50": 5.582
+            }
+          }
+        ],
+        "rate_capability": [
+          {
+            "file": "0.5C cycle.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 17672,
+              "step_count": 26,
+              "loop_steps": 4,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 3,
+                "both": 1,
+                "neither": 0
+              },
+              "current_mA_max": 62.56,
+              "current_mA_p50": 6.256
+            }
+          },
+          {
+            "file": "00207961_240524_LDJ-5080_L64-1-2.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 235.93,
+              "current_mA_p50": 23.593
             }
           }
         ],
@@ -4783,8 +5041,9 @@
       "max_current_mA_seen": 174227.0,
       "categories": {
         "unknown": 764,
-        "rate_test": 555,
+        "rate_capability": 400,
         "hppc": 182,
+        "rate_test": 155,
         "cycle_life": 127,
         "formation": 116,
         "qpeed": 116,
@@ -4988,6 +5247,48 @@
               },
               "current_mA_max": 7.535,
               "current_mA_p50": 7.535
+            }
+          }
+        ],
+        "rate_capability": [
+          {
+            "file": "00209060_240614_HDK_1_Ref.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 18.6,
+              "current_mA_p50": 1.859
+            }
+          },
+          {
+            "file": "00209060_240614_HDK_3_MgF2.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 18.011,
+              "current_mA_p50": 1.801
             }
           }
         ],
@@ -5631,12 +5932,13 @@
       },
       "max_current_mA_seen": 496.0,
       "categories": {
-        "rate_test": 554,
+        "rate_capability": 500,
         "unknown": 452,
         "cycle_life": 250,
         "hppc": 202,
         "qpeed": 153,
         "formation": 127,
+        "rate_test": 54,
         "charge": 35,
         "rest": 13,
         "discharge": 11,
@@ -5872,6 +6174,48 @@
               },
               "current_mA_max": 19.2,
               "current_mA_p50": 1.92
+            }
+          }
+        ],
+        "rate_capability": [
+          {
+            "file": "00215365_240201_DS40_01.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 16.274,
+              "current_mA_p50": 1.627
+            }
+          },
+          {
+            "file": "00215365_240201_DS40_02.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 16.124,
+              "current_mA_p50": 1.612
             }
           }
         ],
@@ -6394,7 +6738,8 @@
         "qpeed": 332,
         "formation": 188,
         "cycle_life": 155,
-        "rate_test": 109,
+        "rate_capability": 96,
+        "rate_test": 13,
         "discharge": 8,
         "qc": 8,
         "rpt": 4,
@@ -6465,10 +6810,10 @@
       ],
       "current_threshold_hits": {},
       "samples_by_category": {
-        "rate_test": [
+        "rate_capability": [
           {
             "file": "0.05C+62.92mAh rate.sch",
-            "classify_rule": "rate_test_keyword",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -6488,7 +6833,7 @@
           },
           {
             "file": "07000323_250109_[LJE]_3.72_4.82_7.28MPa.sch",
-            "classify_rule": "verified_label",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -6672,6 +7017,48 @@
               },
               "current_mA_max": 54.44,
               "current_mA_p50": 5.444
+            }
+          }
+        ],
+        "rate_test": [
+          {
+            "file": "07000323_250120_[LJE]_3.72_4.82_7.28MPa_cyc_0.5C.sch",
+            "classify_rule": "rate_test_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 7268,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 2,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 30.53,
+              "current_mA_p50": 30.53
+            }
+          },
+          {
+            "file": "251029_[┴÷┼Σ]_set01_0.1 NiCuNi_GS73_SJ900A_100wt_cyc║╬┼═.sch",
+            "classify_rule": "verified_label",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 13388,
+              "step_count": 19,
+              "loop_steps": 4,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 4,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 33.1,
+              "current_mA_p50": 6.62
             }
           }
         ],
@@ -7087,9 +7474,10 @@
         "rpt": 50,
         "unknown": 48,
         "hppc": 20,
-        "rate_test": 18,
         "ocv": 15,
+        "rate_test": 12,
         "formation": 7,
+        "rate_capability": 6,
         "capacheck": 6,
         "discharge": 5,
         "rest": 1
@@ -7220,8 +7608,30 @@
             }
           },
           {
+            "file": "00209609_250530_KHS_minusOCV.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 3596,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 1,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 200.0,
+              "current_mA_p50": 200.0
+            }
+          }
+        ],
+        "rate_capability": [
+          {
             "file": "00209609_101295_5M2U_100th RPT_45'C_2ea.sch",
-            "classify_rule": "rate_test_keyword",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -7237,6 +7647,26 @@
               },
               "current_mA_max": 18740.0,
               "current_mA_p50": 6250.0
+            }
+          },
+          {
+            "file": "101295_3M3U_0.33C_RPT_1C pulse.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 29300,
+              "step_count": 45,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 16200.001,
+              "current_mA_p50": 5400.0
             }
           }
         ],
@@ -7589,11 +8019,12 @@
         "unknown": 233,
         "hppc": 32,
         "ocv": 26,
-        "rate_test": 24,
         "formation": 24,
         "cycle_life": 23,
         "rpt": 21,
+        "rate_capability": 12,
         "discharge": 12,
+        "rate_test": 12,
         "rest": 8,
         "charge": 5,
         "soc_setting": 3,
@@ -7704,10 +8135,10 @@
             }
           }
         ],
-        "rate_test": [
+        "rate_capability": [
           {
             "file": "0.907Ah rate cyc.sch",
-            "classify_rule": "rate_test_keyword",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -7727,7 +8158,7 @@
           },
           {
             "file": "00215540_250415_1.22Ah_L4ms_10stack_DCH CPCK_3m19d_1.sch",
-            "classify_rule": "signature_label",
+            "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
@@ -8082,6 +8513,48 @@
             }
           }
         ],
+        "rate_test": [
+          {
+            "file": "00217552_250324_70150_CBC_1stack_Rate cyc.sch",
+            "classify_rule": "rate_test_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 9716,
+              "step_count": 13,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 2,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 304.0,
+              "current_mA_p50": 201.0
+            }
+          },
+          {
+            "file": "26_╜║┼├_3 stack 0.1C(2) 0.33C.sch",
+            "classify_rule": "rate_test_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 10940,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 3,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 163.35,
+              "current_mA_p50": 163.35
+            }
+          }
+        ],
         "storage": [
           {
             "file": "00224973_250508_1.20Ah_L4ms_10stack_Aging_SOC95_RPT after aging.sch",
@@ -8219,13 +8692,14 @@
       "max_current_mA_seen": 86250.0,
       "categories": {
         "unknown": 123,
-        "rate_test": 64,
+        "rate_test": 58,
         "cycle_life": 25,
         "rpt": 15,
         "hppc": 14,
         "formation": 9,
         "discharge": 7,
         "capacheck": 6,
+        "rate_capability": 6,
         "ocv": 6,
         "storage": 5,
         "rest": 3
@@ -8630,6 +9104,48 @@
             }
           }
         ],
+        "rate_capability": [
+          {
+            "file": "00229713_251028_70295 SiC5 2stk_set2_form rate R_60oC.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 45212,
+              "step_count": 71,
+              "loop_steps": 14,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 14,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 2437.0,
+              "current_mA_p50": 244.0
+            }
+          },
+          {
+            "file": "101295_3M3U_0.33C_RPT_1C pulse.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 29300,
+              "step_count": 45,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 16200.001,
+              "current_mA_p50": 5400.0
+            }
+          }
+        ],
         "ocv": [
           {
             "file": "07000403_260305_Gr_Spring_FP101295_9M1U_0.2C Form_SOC59.5_OCV tracking.sch",
@@ -8786,8 +9302,9 @@
       },
       "max_current_mA_seen": 82300.0,
       "categories": {
-        "rate_test": 598,
         "unknown": 523,
+        "rate_capability": 436,
+        "rate_test": 162,
         "formation": 127,
         "rpt": 106,
         "cycle_life": 96,
@@ -9072,6 +9589,48 @@
               },
               "current_mA_max": 74.99,
               "current_mA_p50": 24.997
+            }
+          }
+        ],
+        "rate_capability": [
+          {
+            "file": "00214700_230117_[└τ▒µ]_set4-1_4'35V.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 17.77,
+              "current_mA_p50": 1.777
+            }
+          },
+          {
+            "file": "00214700_230117_[└τ▒µ]_set4-2'3_4'35V.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 18.51,
+              "current_mA_p50": 1.851
             }
           }
         ],
@@ -9557,11 +10116,12 @@
     "unknown_pct": 36.9,
     "categories_all_units": {
       "unknown": 8587,
-      "rate_test": 6280,
+      "rate_capability": 5461,
       "cycle_life": 2149,
       "hppc": 1961,
       "formation": 1523,
       "qpeed": 824,
+      "rate_test": 819,
       "rpt": 602,
       "charge": 285,
       "capacheck": 243,
@@ -9574,8 +10134,7 @@
       "soc_setting": 40,
       "gitt": 37,
       "qc": 29,
-      "doe": 13,
-      "plating": 11
+      "doe": 13
     },
     "versions_all_units": {
       "0x00010003": 22661,

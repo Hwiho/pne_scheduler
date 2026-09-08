@@ -194,7 +194,7 @@
       "unknown_pct": 56.7,
       "categories_top": {
         "unknown": 1957,
-        "rate_test": 516,
+        "rate_test": 512,
         "cycle_life": 246,
         "formation": 181,
         "charge": 124,
@@ -210,7 +210,7 @@
         "qc": 5
       },
       "category_share": {
-        "rate_test": 15.0,
+        "rate_test": 14.8,
         "cycle_life": 7.1,
         "formation": 5.2,
         "charge": 3.6,
@@ -379,7 +379,7 @@
         "1": 46904
       },
       "safety_header_top": [],
-      "distinct_protocols": 19
+      "distinct_protocols": 20
     },
     "PNE03": {
       "unit": "PNE03",
@@ -1413,23 +1413,23 @@
       ],
       "sch_count": 2221,
       "parse_errors": 0,
-      "unknown_pct": 59.3,
+      "unknown_pct": 58.9,
       "categories_top": {
-        "unknown": 1316,
+        "unknown": 1308,
         "formation": 237,
-        "rate_test": 192,
+        "rate_test": 190,
         "rpt": 158,
         "cycle_life": 133,
         "hppc": 78,
         "qpeed": 44,
         "charge": 20,
         "ocv": 17,
+        "rate_capability": 10,
         "capacheck": 8,
         "discharge": 6,
         "storage": 5,
         "gitt": 3,
-        "eis": 3,
-        "rest": 1
+        "eis": 3
       },
       "category_share": {
         "formation": 10.7,
@@ -1440,7 +1440,7 @@
         "qpeed": 2.0,
         "charge": 0.9,
         "ocv": 0.8,
-        "capacheck": 0.4
+        "rate_capability": 0.5
       },
       "versions": {
         "0x00010003": 2173,
@@ -1625,7 +1625,7 @@
           "count": 1
         }
       ],
-      "distinct_protocols": 14
+      "distinct_protocols": 15
     },
     "PNE09": {
       "unit": "PNE09",
@@ -1894,7 +1894,7 @@
       "unknown_pct": 54.7,
       "categories_top": {
         "unknown": 1003,
-        "rate_test": 259,
+        "rate_test": 257,
         "hppc": 174,
         "qpeed": 129,
         "cycle_life": 127,
@@ -1910,7 +1910,7 @@
         "qc": 3
       },
       "category_share": {
-        "rate_test": 14.1,
+        "rate_test": 14.0,
         "hppc": 9.5,
         "qpeed": 7.0,
         "cycle_life": 6.9,
@@ -2074,7 +2074,7 @@
         "1": 42985
       },
       "safety_header_top": [],
-      "distinct_protocols": 15
+      "distinct_protocols": 16
     },
     "PNE11": {
       "unit": "PNE11",
@@ -2295,7 +2295,20 @@
       "unit": "PNE12",
       "zip": "PNE12.zip",
       "ctspro_build": null,
-      "sch_layouts_observed": [],
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
       "sch_count": 222,
       "parse_errors": 2,
       "unknown_pct": 23.4,
@@ -2482,7 +2495,20 @@
       "unit": "PNE13",
       "zip": "PNE13.zip",
       "ctspro_build": null,
-      "sch_layouts_observed": [],
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
       "sch_count": 414,
       "parse_errors": 1,
       "unknown_pct": 60.1,
@@ -2672,7 +2698,26 @@
       "unit": "PNE14",
       "zip": "PNE14.zip",
       "ctspro_build": null,
-      "sch_layouts_observed": [],
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        },
+        {
+          "file_version": "0x00010004",
+          "payload_offset": 1844,
+          "step_size": 696,
+          "dominant": false
+        }
+      ],
       "sch_count": 277,
       "parse_errors": 1,
       "unknown_pct": 57.0,
@@ -3137,7 +3182,7 @@
       "category": "rate_test",
       "unit_share_pct": 19.4,
       "corpus_share_pct": 9.1,
-      "delta_pp": 10.2
+      "delta_pp": 10.3
     },
     {
       "unit": "PNE11",
@@ -3158,7 +3203,7 @@
       "category": "rate_test",
       "unit_share_pct": 1.7,
       "corpus_share_pct": 9.1,
-      "delta_pp": -7.5
+      "delta_pp": -7.4
     },
     {
       "unit": "PNE03",
@@ -3175,17 +3220,17 @@
       "delta_pp": -7.0
     },
     {
-      "unit": "PNE07",
-      "category": "rate_test",
-      "unit_share_pct": 2.7,
-      "corpus_share_pct": 9.1,
-      "delta_pp": -6.5
-    },
-    {
       "unit": "PNE06",
       "category": "hppc",
       "unit_share_pct": 0.4,
       "corpus_share_pct": 6.8,
+      "delta_pp": -6.4
+    },
+    {
+      "unit": "PNE07",
+      "category": "rate_test",
+      "unit_share_pct": 2.7,
+      "corpus_share_pct": 9.1,
       "delta_pp": -6.4
     },
     {
@@ -3203,18 +3248,18 @@
       "delta_pp": 6.2
     },
     {
-      "unit": "PNE02",
-      "category": "rate_test",
-      "unit_share_pct": 15.0,
-      "corpus_share_pct": 9.1,
-      "delta_pp": 5.8
-    },
-    {
       "unit": "PNE13",
       "category": "ocv",
       "unit_share_pct": 6.3,
       "corpus_share_pct": 0.5,
       "delta_pp": 5.8
+    },
+    {
+      "unit": "PNE02",
+      "category": "rate_test",
+      "unit_share_pct": 14.8,
+      "corpus_share_pct": 9.1,
+      "delta_pp": 5.7
     },
     {
       "unit": "PNE06",
@@ -3238,17 +3283,17 @@
       "delta_pp": -5.1
     },
     {
-      "unit": "PNE10",
-      "category": "rate_test",
-      "unit_share_pct": 14.1,
-      "corpus_share_pct": 9.1,
-      "delta_pp": 5.0
-    },
-    {
       "unit": "PNE08",
       "category": "formation",
       "unit_share_pct": 10.7,
       "corpus_share_pct": 5.8,
+      "delta_pp": 4.9
+    },
+    {
+      "unit": "PNE10",
+      "category": "rate_test",
+      "unit_share_pct": 14.0,
+      "corpus_share_pct": 9.1,
       "delta_pp": 4.9
     },
     {
@@ -3270,7 +3315,7 @@
       "category": "rate_test",
       "unit_share_pct": 4.6,
       "corpus_share_pct": 9.1,
-      "delta_pp": -4.6
+      "delta_pp": -4.5
     },
     {
       "unit": "PNE02",
@@ -3390,7 +3435,7 @@
       "unit": "PNE02",
       "files": 3449,
       "unknown_pct": 56.7,
-      "protocols": 19,
+      "protocols": 20,
       "median_mA": 6.632,
       "max_mA": 37763.375,
       "step_696": 2,
@@ -3455,8 +3500,8 @@
     {
       "unit": "PNE08",
       "files": 2221,
-      "unknown_pct": 59.3,
-      "protocols": 14,
+      "unknown_pct": 58.9,
+      "protocols": 15,
       "median_mA": 9.12,
       "max_mA": 174076.0,
       "step_696": 0,
@@ -3478,7 +3523,7 @@
       "unit": "PNE10",
       "files": 1832,
       "unknown_pct": 54.7,
-      "protocols": 15,
+      "protocols": 16,
       "median_mA": 8.0,
       "max_mA": 496.0,
       "step_696": 0,
