@@ -7,10 +7,16 @@ Item {
     id: page
     property var phases: []
     property var steps: []
+    property var budget: ({ ok: false, notes: [], errors: [] })
 
     function reload() {
         phases = workspace.phases()
         steps = workspace.stepRows()
+    }
+
+    function solveBudget() {
+        budget = workspace.cyclesWithin(parseFloat(budgetDaysField.text) || 0,
+                                        parseInt(budgetStepField.text) || 1)
     }
 
     Connections {
@@ -27,6 +33,59 @@ Item {
             text: "실제 실행 순서입니다. 위/아래 버튼으로 옮길 수 있고, 각 구간이 몇 번 스텝인지 함께 표시됩니다."
             color: Theme.muted
             font.pixelSize: 12
+        }
+
+        // Cycle counts are chosen backwards: the cell has to come off the
+        // cycler by a date, and the question is what fits. This asks the same
+        // estimator the summary uses, so RPT blocks and rests are counted.
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 6
+
+            Text {
+                text: "기간으로 정하기"
+                color: Theme.ink
+                font.pixelSize: 12
+                font.bold: true
+            }
+            TextField {
+                id: budgetDaysField
+                Layout.preferredWidth: 60
+                text: "14"
+                selectByMouse: true
+                onEditingFinished: page.solveBudget()
+            }
+            Text { text: "일 안에"; color: Theme.muted; font.pixelSize: 11 }
+            TextField {
+                id: budgetStepField
+                Layout.preferredWidth: 50
+                text: "50"
+                selectByMouse: true
+                onEditingFinished: page.solveBudget()
+            }
+            Text { text: "사이클 단위로"; color: Theme.muted; font.pixelSize: 11 }
+            Button {
+                text: "계산"
+                onClicked: page.solveBudget()
+            }
+            Button {
+                text: page.budget.ok ? page.budget.totalCycles + " 사이클로 맞추기" : "맞추기"
+                enabled: page.budget.ok === true
+                onClicked: {
+                    workspace.applyCycleCount(page.budget.totalCycles)
+                    page.budget = ({ ok: false, notes: [], errors: [] })
+                }
+            }
+            Text {
+                Layout.fillWidth: true
+                text: page.budget.errors && page.budget.errors.length
+                      ? page.budget.errors.join(" ")
+                      : (page.budget.text || "")
+                color: (page.budget.errors && page.budget.errors.length)
+                       ? Theme.danger : Theme.muted
+                font.pixelSize: 11
+                elide: Text.ElideRight
+            }
         }
 
         RowLayout {

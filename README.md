@@ -109,6 +109,14 @@ Design rules the workspace follows:
   ("스텝 167 → 50 · 117개 삭제") before it is committed anywhere.
 - **Presets stay presets.** To edit an individual step of a locked pattern, detach it
   explicitly; the module then carries its steps verbatim and is marked user-edited.
+- **One answer, not twelve entries.** A cycle campaign is described as a rhythm —
+  "200 cycles, RPT every 50, DC-IR at 1C/1.5C/2C" — and laid out as ordinary modules
+  you can still edit one by one. Cycle counts can be solved backwards from a deadline
+  ("14 days, in steps of 50") against the same estimator the summary uses.
+- **Linked values move together.** QC carries rate, voltage limit and time as three
+  lists of equal length; changing only the rates leaves times measured at the old ones,
+  so the rates get a control that recomputes the companions by charge conservation and
+  states what that derivation does not model.
 
 The flow canvas is still available under **고급 도구**, but it is no longer the default
 view: a PNE schedule is linear, so the procedure timeline is.

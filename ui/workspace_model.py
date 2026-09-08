@@ -31,6 +31,8 @@ from ..ir.project import ModuleNode, ScheduleProject
 from ..modules.base import get_module_class
 from ..modules.catalog import get_module_spec, palette_module_types
 from ..protocol.campaign import CampaignPlan, build_cycle_rpt_campaign
+from ..protocol.planning import CycleBudget, cycles_within
+from ..protocol.presets import CRatePreset, presets_within
 from ..protocol.qc_fast_charge import FastChargePlan, fast_charge_for_rates
 from ..protocol.recipes import ExperimentGoal, get_goal, search_goals
 from ..release import ReleaseState, evaluate_release
@@ -458,6 +460,60 @@ class WorkspaceModel:
         )
 
     # ---------------------------------------------------------- procedure
+
+    def c_rate_presets(self) -> tuple[CRatePreset, ...]:
+        """One-tap C-rates, filtered to what this equipment can deliver."""
+        limit_mA = self.current_limit_mA
+        capacity = self.project.cell_profile.nominal_capacity_mAh
+        max_c_rate = limit_mA / capacity if limit_mA and capacity else None
+        return presets_within(max_c_rate)
+
+    def cycles_within(
+        self,
+        budget_seconds: float,
+        module_id: str | None = None,
+        *,
+        step: int = 1,
+    ) -> CycleBudget:
+        """How many cycles fit in a time budget, asked of the real estimator.
+
+        The count is varied on a copy and the whole schedule re-estimated each
+        time, so RPT blocks, rests and CV tapers are counted rather than assumed
+        proportional to the cycle count.
+        """
+        target = module_id or next(
+            (
+                node.id
+                for node in self.project.modules
+                if node.module_type in {"cycle_life", "insitu_cycle"}
+            ),
+            None,
+        )
+        if target is None:
+            return CycleBudget(
+                budget_seconds=max(budget_seconds, 0.0),
+                errors=("사이클 구간이 없어 기간을 역산할 수 없습니다.",),
+            )
+        node = self._node(target)
+        if "loop_count" not in resolve_params(node.module_type, dict(node.params)):
+            return CycleBudget(
+                budget_seconds=max(budget_seconds, 0.0),
+                errors=(f"{target} 에는 사이클 수가 없습니다.",),
+            )
+
+        def estimate(count: int) -> float | None:
+            probe = self.project.copy()
+            for candidate in probe.modules:
+                if candidate.id == target:
+                    candidate.params = {**candidate.params, "loop_count": count}
+                    break
+            return build_procedure(probe).duration_seconds
+
+        return cycles_within(budget_seconds, estimate, step=step)
+
+    def set_cycle_count(self, module_id: str, count: int) -> StepDiff:
+        """Commit a cycle count, typically one that :meth:`cycles_within` found."""
+        return self.set_param(module_id, "loop_count", count)
 
     def procedure(self) -> ProcedureView:
         return build_procedure(self.project)

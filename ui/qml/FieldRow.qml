@@ -9,6 +9,7 @@ ColumnLayout {
     property var field: ({})
     property int siblingCount: 1
     property string localError: ""
+    property var presets: []
 
     signal commit(string key, string value)
     signal applyAll(string key, string value)
@@ -60,6 +61,29 @@ ColumnLayout {
             text: "같은 실험 " + row.siblingCount + "개에 적용"
             font.pixelSize: 11
             onClicked: row.applyAll(row.field.key, row.currentValue())
+        }
+    }
+
+    // One-tap C-rates. Free text still works; these only save typing 0.333 for
+    // what the protocol calls C/3, and are hidden when the equipment cannot
+    // deliver the rate — a chip preflight would reject is worse than no chip.
+    Flow {
+        Layout.fillWidth: true
+        Layout.leftMargin: 176
+        spacing: 4
+        visible: row.field.kind === "c_rate" && row.presets.length > 0
+
+        Repeater {
+            model: row.presets
+            delegate: Button {
+                text: modelData.label
+                font.pixelSize: 10
+                padding: 3
+                ToolTip.visible: hovered
+                ToolTip.text: modelData.usage
+                              + (modelData.currentText ? " · " + modelData.currentText : "")
+                onClicked: row.commit(row.field.key, modelData.label)
+            }
         }
     }
 

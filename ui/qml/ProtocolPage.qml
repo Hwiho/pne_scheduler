@@ -11,11 +11,33 @@ Item {
     property string impact: ""
     property string fieldError: ""
     property string erroredKey: ""
+    property var presets: []
+    property var campaignPreview: ({ ok: false, blocks: [], notes: [], errors: [] })
+    property var qcPreview: ({ ok: false, notes: [], errors: [] })
 
     function reload() {
         goalRows = workspace.goals(searchBox.text)
         moduleRows = workspace.moduleRows()
         formData = workspace.form()
+        presets = workspace.cRatePresets()
+    }
+
+    function campaignOptions() {
+        return {
+            totalCycles: parseInt(totalCyclesField.text) || 0,
+            rptEvery: parseInt(rptEveryField.text) || 0,
+            chargeCRate: parseFloat(campaignChargeField.text) || 0,
+            dischargeCRate: parseFloat(campaignDischargeField.text) || 0,
+            dcirRates: dcirRatesField.text.split(",").map(function (part) {
+                return parseFloat(part)
+            }).filter(function (value) { return !isNaN(value) })
+        }
+    }
+
+    function qcRates() {
+        return qcRatesField.text.split(",").map(function (part) {
+            return parseFloat(part)
+        }).filter(function (value) { return !isNaN(value) })
     }
 
     Connections {
@@ -48,6 +70,99 @@ Item {
                 placeholderText: "예: 수명, 급속충전, QPEED"
                 selectByMouse: true
                 onTextChanged: page.goalRows = workspace.goals(text)
+            }
+
+            // A cycle-life campaign is a rhythm — run N, measure, repeat — and
+            // laying it out by hand means adding the same two experiments over
+            // and over while keeping the counts straight.
+            Card {
+                Layout.fillWidth: true
+                title: "사이클 + RPT 캠페인"
+
+                GridLayout {
+                    Layout.fillWidth: true
+                    columns: 2
+                    columnSpacing: 6
+                    rowSpacing: 4
+
+                    Text { text: "총 사이클"; color: Theme.muted; font.pixelSize: 11 }
+                    TextField {
+                        id: totalCyclesField
+                        Layout.fillWidth: true
+                        text: "200"
+                        selectByMouse: true
+                    }
+
+                    Text { text: "RPT 주기"; color: Theme.muted; font.pixelSize: 11 }
+                    TextField {
+                        id: rptEveryField
+                        Layout.fillWidth: true
+                        text: "50"
+                        selectByMouse: true
+                    }
+
+                    Text { text: "충전 / 방전"; color: Theme.muted; font.pixelSize: 11 }
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 4
+                        TextField {
+                            id: campaignChargeField
+                            Layout.fillWidth: true
+                            text: "0.5"
+                            selectByMouse: true
+                        }
+                        TextField {
+                            id: campaignDischargeField
+                            Layout.fillWidth: true
+                            text: "0.5"
+                            selectByMouse: true
+                        }
+                    }
+
+                    Text { text: "DC-IR 전류"; color: Theme.muted; font.pixelSize: 11 }
+                    TextField {
+                        id: dcirRatesField
+                        Layout.fillWidth: true
+                        text: "1, 1.5, 2"
+                        selectByMouse: true
+                    }
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: 6
+                    Button {
+                        text: "미리보기"
+                        onClicked: page.campaignPreview = workspace.planCampaign(page.campaignOptions())
+                    }
+                    Button {
+                        text: "추가"
+                        enabled: page.campaignPreview.ok === true
+                        onClicked: {
+                            workspace.addCampaign(page.campaignOptions())
+                            page.campaignPreview = ({ ok: false, blocks: [], notes: [], errors: [] })
+                        }
+                    }
+                    Item { Layout.fillWidth: true }
+                }
+
+                Text {
+                    Layout.fillWidth: true
+                    visible: text.length > 0
+                    text: {
+                        if (page.campaignPreview.errors && page.campaignPreview.errors.length)
+                            return page.campaignPreview.errors.join("\n")
+                        if (!page.campaignPreview.ok)
+                            return ""
+                        return page.campaignPreview.blocks.map(function (block) {
+                            return "· " + block.title
+                        }).join("\n")
+                    }
+                    color: (page.campaignPreview.errors && page.campaignPreview.errors.length)
+                           ? Theme.danger : Theme.ink
+                    font.pixelSize: 11
+                    wrapMode: Text.WordWrap
+                }
             }
 
             ListView {
@@ -272,6 +387,83 @@ Item {
                         }
                     }
 
+                    // QC carries rate/voltage/time as three lists that must stay
+                    // the same length. Editing rates alone leaves the times at
+                    // the values measured for the old rates, which still
+                    // validates and still runs — so the rates get their own
+                    // control that moves all three together.
+                    Card {
+                        Layout.fillWidth: true
+                        title: "급속충전 전류 (한 번에 계산)"
+                        visible: page.formData.moduleType === "qc"
+
+                        Text {
+                            Layout.fillWidth: true
+                            text: "전류만 입력하면 전압·시간을 함께 맞춥니다. "
+                                + "쉼표로 구분하세요 (예: 4, 3, 2)."
+                            color: Theme.muted
+                            font.pixelSize: 11
+                            wrapMode: Text.WordWrap
+                        }
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 6
+
+                            TextField {
+                                id: qcRatesField
+                                Layout.fillWidth: true
+                                placeholderText: "4, 3, 2"
+                                selectByMouse: true
+                                color: Theme.ink
+                                onEditingFinished: page.qcPreview =
+                                    workspace.planQcFastCharge(page.formData.moduleId, page.qcRates())
+                            }
+                            Button {
+                                text: "미리보기"
+                                onClicked: page.qcPreview =
+                                    workspace.planQcFastCharge(page.formData.moduleId, page.qcRates())
+                            }
+                            Button {
+                                text: "적용"
+                                enabled: page.qcPreview.ok === true
+                                onClicked: {
+                                    workspace.applyQcFastCharge(page.formData.moduleId, page.qcRates())
+                                    page.qcPreview = ({ ok: false, notes: [], errors: [] })
+                                    qcRatesField.text = ""
+                                }
+                            }
+                        }
+
+                        Text {
+                            Layout.fillWidth: true
+                            visible: text.length > 0
+                            text: {
+                                if (page.qcPreview.errors && page.qcPreview.errors.length)
+                                    return page.qcPreview.errors.join("\n")
+                                if (!page.qcPreview.ok)
+                                    return ""
+                                var lines = page.qcPreview.notes.slice()
+                                lines.push("시간: " + page.qcPreview.times.join(" · ") + " 초")
+                                lines.push("전압: " + page.qcPreview.voltages.join(" · ") + " V")
+                                return lines.join("\n")
+                            }
+                            color: (page.qcPreview.errors && page.qcPreview.errors.length)
+                                   ? Theme.danger : Theme.ink
+                            font.pixelSize: 11
+                            wrapMode: Text.WordWrap
+                        }
+
+                        Text {
+                            Layout.fillWidth: true
+                            visible: page.qcPreview.ok === true
+                            text: page.qcPreview.warnings ? page.qcPreview.warnings.join("\n\n") : ""
+                            color: Theme.warn
+                            font.pixelSize: 10
+                            wrapMode: Text.WordWrap
+                        }
+                    }
+
                     Repeater {
                         model: page.formData.sections
 
@@ -287,6 +479,7 @@ Item {
                                     required property var modelData
                                     field: modelData
                                     siblingCount: page.formData.siblingCount
+                                    presets: page.presets
                                     localError: page.erroredKey === modelData.key ? page.fieldError : ""
                                     onCommit: function (key, value) { page.commitField(key, value) }
                                     onApplyAll: function (key, value) { page.applyAll(key, value) }

@@ -70,3 +70,74 @@ def test_qml_files_ship_with_the_package():
     for screen in ("SetupPage", "ProtocolPage", "ProcedurePage", "ValidatePage", "ExportPage"):
         assert screen in text, f"{screen} is not referenced by Workspace.qml"
         assert (workspace_qt.QML_DIR / f"{screen}.qml").exists()
+
+
+# --- the slots the new controls call ---------------------------------------
+
+
+def test_c_rate_preset_chips_carry_a_current(app):
+    _engine, bridge, _warnings = _build(EXAMPLE)
+    presets = bridge.cRatePresets()
+    assert presets, "the form offers no C-rate chips"
+    assert {"label", "value", "usage", "currentText"} <= set(presets[0])
+    assert all(preset["currentText"] for preset in presets), "capacity is known here"
+
+
+def test_campaign_preview_does_not_touch_the_project(app):
+    _engine, bridge, _warnings = _build(EXAMPLE)
+    before = len(bridge.model.project.modules)
+    result = bridge.planCampaign(
+        {
+            "totalCycles": 150,
+            "rptEvery": 50,
+            "chargeCRate": 0.5,
+            "dischargeCRate": 0.5,
+            "dcirRates": [1.0, 1.5, 2.0],
+        }
+    )
+    assert result["ok"] and len(result["blocks"]) == 7
+    assert len(bridge.model.project.modules) == before
+
+
+def test_adding_a_campaign_appends_the_blocks(app):
+    _engine, bridge, _warnings = _build(EXAMPLE)
+    before = len(bridge.model.project.modules)
+    result = bridge.addCampaign(
+        {"totalCycles": 100, "rptEvery": 50, "chargeCRate": 0.5, "dischargeCRate": 0.5}
+    )
+    assert result["ok"]
+    assert len(bridge.model.project.modules) == before + 5
+
+
+def test_a_campaign_with_bad_numbers_is_refused_not_applied(app):
+    _engine, bridge, _warnings = _build(EXAMPLE)
+    before = len(bridge.model.project.modules)
+    result = bridge.addCampaign({"totalCycles": 0, "chargeCRate": 0.5, "dischargeCRate": 0.5})
+    assert not result["ok"]
+    assert len(bridge.model.project.modules) == before
+
+
+def test_qc_fast_charge_needs_a_qc_module_selected(app):
+    _engine, bridge, _warnings = _build(EXAMPLE)
+    result = bridge.planQcFastCharge("cycle_life_1", [3.0, 2.0])
+    assert not result["ok"] and result["errors"]
+
+
+def test_qc_fast_charge_moves_all_three_lists(app):
+    _engine, bridge, _warnings = _build(None)
+    module_id = bridge.model.add_module("qc")
+    assert bridge.planQcFastCharge(module_id, [3.0, 2.0, 1.5])["ok"]
+    assert bridge.applyQcFastCharge(module_id, [3.0, 2.0, 1.5])["ok"]
+    params = bridge.model.project.modules[-1].params
+    assert params["fast_rates_c"] == [3.0, 2.0, 1.5]
+    assert len(params["fast_times_s"]) == len(params["fast_voltages_v"]) == 3
+
+
+def test_the_budget_solver_reaches_the_real_estimator(app):
+    _engine, bridge, _warnings = _build(EXAMPLE)
+    result = bridge.cyclesWithin(14.0, 50)
+    assert result["ok"] or result["errors"] or result["notes"]
+    if result["ok"]:
+        assert result["totalCycles"] % 50 == 0
+        assert bridge.applyCycleCount(result["totalCycles"])["ok"]
+

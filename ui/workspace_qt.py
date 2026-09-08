@@ -20,6 +20,7 @@ from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 
 from ..edit.diff import StepDiff
+from ..protocol.campaign import build_cycle_rpt_campaign
 from ..spec import units
 from .document import ProjectDocument
 from .workspace_model import TRUST_LABELS_KO, WorkspaceModel
@@ -353,6 +354,139 @@ class WorkspaceBridge(QObject):
                     "warn",
                 )
         return {"ok": True, "message": ""}
+
+    @Slot(result="QVariantList")
+    def cRatePresets(self) -> list[dict[str, Any]]:
+        """One-tap C-rates, already priced in mA for this cell."""
+        capacity = self.model.project.cell_profile.nominal_capacity_mAh
+        return [
+            {
+                "label": preset.label,
+                "value": preset.value,
+                "usage": preset.usage,
+                "currentText": (
+                    units.format_current_mA(preset.current_mA(capacity))
+                    if capacity
+                    else ""
+                ),
+            }
+            for preset in self.model.c_rate_presets()
+        ]
+
+    @Slot(float, int, result="QVariantMap")
+    def cyclesWithin(self, days: float, step: int) -> dict[str, Any]:
+        budget = self.model.cycles_within(days * 86400.0, step=max(1, step))
+        return {
+            "ok": budget.ok,
+            "totalCycles": budget.total_cycles,
+            "text": budget.as_text(),
+            "notes": list(budget.notes),
+            "warnings": list(budget.warnings),
+            "errors": list(budget.errors),
+        }
+
+    @Slot(int, result="QVariantMap")
+    def applyCycleCount(self, count: int) -> dict[str, Any]:
+        target = next(
+            (
+                node.id
+                for node in self.model.project.modules
+                if node.module_type in {"cycle_life", "insitu_cycle"}
+            ),
+            None,
+        )
+        if target is None:
+            return {"ok": False, "message": "사이클 구간이 없습니다."}
+        self.model.set_cycle_count(target, count)
+        self._emit(f"{target} 를 {count} 사이클로 맞췄습니다.")
+        return {"ok": True, "message": target}
+
+    def _campaign_plan(self, options: dict[str, Any]):
+        return build_cycle_rpt_campaign(
+            total_cycles=int(options.get("totalCycles", 0) or 0),
+            rpt_every=int(options.get("rptEvery", 50) or 50),
+            charge_c_rate=float(options.get("chargeCRate", 0.5) or 0.0),
+            discharge_c_rate=float(options.get("dischargeCRate", 0.5) or 0.0),
+            dcir_pulse_c_rates=[
+                float(rate) for rate in options.get("dcirRates", [1.0, 1.5, 2.0])
+            ],
+            baseline_rpt=bool(options.get("baselineRpt", True)),
+        )
+
+    @Slot("QVariantMap", result="QVariantMap")
+    def planCampaign(self, options: dict[str, Any]) -> dict[str, Any]:
+        """Preview a cycle/RPT campaign; the project is not touched."""
+        plan = self._campaign_plan(options)
+        return {
+            "ok": plan.ok,
+            "blocks": [
+                {"moduleType": block.module_type, "title": block.title}
+                for block in plan.blocks
+            ],
+            "totalCycles": plan.total_cycles,
+            "rptCount": plan.rpt_count,
+            "notes": list(plan.notes),
+            "warnings": list(plan.warnings),
+            "errors": list(plan.errors),
+        }
+
+    @Slot("QVariantMap", result="QVariantMap")
+    def addCampaign(self, options: dict[str, Any]) -> dict[str, Any]:
+        plan = self._campaign_plan(options)
+        if not plan.ok:
+            return {"ok": False, "message": " ".join(plan.errors)}
+        ids = self.model.add_campaign(plan)
+        self._selected = ids[0]
+        self.selectionChanged.emit()
+        self._emit(
+            f"사이클 {plan.total_cycles}회 · RPT {plan.rpt_count}회를 추가했습니다."
+        )
+        self.notified.emit(
+            "캠페인을 추가했습니다",
+            "\n\n".join([*plan.notes, *plan.warnings]),
+            "warn",
+        )
+        return {"ok": True, "message": ids[0]}
+
+    @Slot(str, "QVariantList", result="QVariantMap")
+    def planQcFastCharge(self, module_id: str, rates: list[Any]) -> dict[str, Any]:
+        """Derive the voltage and time lists that go with these QC rates."""
+        node = next(
+            (n for n in self.model.project.modules if n.id == module_id), None
+        )
+        if node is None or node.module_type != "qc":
+            return {"ok": False, "errors": ["QC 구간을 먼저 선택하세요."]}
+        try:
+            values = [float(rate) for rate in rates]
+        except (TypeError, ValueError):
+            return {"ok": False, "errors": ["전류 값을 숫자로 입력하세요."]}
+        plan = self.model.plan_qc_fast_charge(module_id, values)
+        return {
+            "ok": plan.ok,
+            "rates": list(plan.rates_c),
+            "voltages": list(plan.voltages_v),
+            "times": list(plan.times_s),
+            "notes": list(plan.notes),
+            "warnings": list(plan.warnings),
+            "errors": list(plan.errors),
+        }
+
+    @Slot(str, "QVariantList", result="QVariantMap")
+    def applyQcFastCharge(self, module_id: str, rates: list[Any]) -> dict[str, Any]:
+        preview = self.planQcFastCharge(module_id, rates)
+        if not preview.get("ok"):
+            return {"ok": False, "message": " ".join(preview.get("errors", []))}
+        plan = self.model.plan_qc_fast_charge(
+            module_id, [float(rate) for rate in rates]
+        )
+        self.model.apply_qc_fast_charge(module_id, plan)
+        self._emit("급속충전 전류에 맞춰 전압·시간을 함께 바꿨습니다.")
+        self.notified.emit(
+            "급속충전 값을 다시 계산했습니다",
+            "\n\n".join([*plan.notes, *plan.warnings]),
+            "warn",
+        )
+        return {"ok": True, "message": module_id}
 
     @Slot(str, result="QVariantMap")
     def addGoal(self, goal_id: str) -> dict[str, Any]:
