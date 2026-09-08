@@ -9,6 +9,7 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 | Document | Purpose |
 |----------|---------|
 | [`USER_ACTION_ITEMS.md`](USER_ACTION_ITEMS.md) | **What you still need to do in the lab** |
+| [`GUARDRAILS.md`](GUARDRAILS.md) | **경계 항목 한눈에 보기** — 증거 규율·쓰기 안전·상태 정직성·열린 항목 (ROADMAP 정본으로 연결) |
 | [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md) | Directory map, code rules, cleanup workflow |
 | [`LAB_DATA_POLICY.md`](LAB_DATA_POLICY.md) | PNE##.zip only, per-unit layout, CTS build |
 | [`SCH_LAYOUT_TIER_SHARING.md`](SCH_LAYOUT_TIER_SHARING.md) | 500 mA vs 20 A — shared offsets, separate evidence |
