@@ -23,6 +23,9 @@ class ModuleSpec:
     variants: tuple[str, ...] = ()
     limitations: tuple[str, ...] = ()
     internal_only: bool = False
+    # Real, selectable modules that are hidden from the "add an experiment"
+    # palette because they are only produced by an explicit user action.
+    advanced_only: bool = False
 
 
 MODULE_CATALOG: dict[str, ModuleSpec] = {
@@ -69,6 +72,15 @@ MODULE_CATALOG: dict[str, ModuleSpec] = {
         "software-checked", variants=("cycle", "1n1q", "1_charge"),
         limitations=("Set-specific voltage/time values require user reopen review.",),
     ),
+    "custom_steps": ModuleSpec(
+        "custom_steps", "직접 편집한 스텝", "advanced",
+        "프리셋에서 분리해 개별 스텝을 직접 들고 있는 모듈.",
+        "prototype", advanced_only=True,
+        limitations=(
+            "사용자가 직접 편집한 스텝이므로 골든 토폴로지 보장이 없습니다.",
+            "장비 내보내기 전에 CTSPro 재검토가 반드시 필요합니다.",
+        ),
+    ),
     "smoke_rest_cc_end": ModuleSpec(
         "smoke_rest_cc_end", "Smoke test", "internal", "Gate C writer smoke fixture.",
         "software-checked", internal_only=True,
@@ -82,6 +94,15 @@ MODULE_CATALOG: dict[str, ModuleSpec] = {
 
 def get_module_spec(module_type: str) -> ModuleSpec | None:
     return MODULE_CATALOG.get(module_type)
+
+
+def palette_module_types() -> tuple[str, ...]:
+    """Types offered when adding an experiment (no internal or detached-only)."""
+    return tuple(
+        module_type
+        for module_type, spec in MODULE_CATALOG.items()
+        if not spec.internal_only and not spec.advanced_only
+    )
 
 
 def visible_module_types() -> tuple[str, ...]:

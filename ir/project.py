@@ -9,9 +9,13 @@ from typing import Any
 
 from ..schema import DEFAULT_SCH_VERSION
 from .cell_profile import CellProfile
+from .equipment_profile import EquipmentProfile
 from .step_intent import StepIntent
 
-SCHPROJ_SCHEMA = "pne_scheduler.schproj/v1"
+SCHPROJ_SCHEMA_V1 = "pne_scheduler.schproj/v1"
+SCHPROJ_SCHEMA_V2 = "pne_scheduler.schproj/v2"
+SCHPROJ_SCHEMA = SCHPROJ_SCHEMA_V2
+SUPPORTED_SCHPROJ_SCHEMAS = (SCHPROJ_SCHEMA_V1, SCHPROJ_SCHEMA_V2)
 
 
 @dataclass
@@ -42,6 +46,32 @@ class ModuleNode:
 
 
 @dataclass
+class ReviewState:
+    """Where this schedule sits on the draft → equipment-approved ladder.
+
+    Only a person can move these flags: the software can prove a file is
+    self-consistent, never that CTSPro opened it or that the lab signed off.
+    """
+
+    ctspro_reviewed: bool = False
+    ctspro_reviewer: str = ""
+    ctspro_reviewed_at: str = ""
+    reviewed_sha256: str = ""
+    equipment_approved: bool = False
+    equipment_approved_by: str = ""
+    equipment_approved_at: str = ""
+    notes: str = ""
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> ReviewState:
+        known = {key: data[key] for key in cls.__dataclass_fields__ if key in data}
+        return cls(**known)
+
+
+@dataclass
 class ScheduleProject:
     name: str
     cell_profile: CellProfile
@@ -49,29 +79,41 @@ class ScheduleProject:
     modules: list[ModuleNode] = field(default_factory=list)
     connections: list[ModuleConnection] = field(default_factory=list)
     schema: str = SCHPROJ_SCHEMA
+    equipment: EquipmentProfile | None = None
+    review: ReviewState = field(default_factory=ReviewState)
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "schema": self.schema,
+            "schema": SCHPROJ_SCHEMA_V2,
             "name": self.name,
             "sch_version": self.sch_version,
             "cell_profile": self.cell_profile.to_dict(),
+            "equipment": self.equipment.to_dict() if self.equipment else None,
             "modules": [m.to_dict() for m in self.modules],
             "connections": [c.to_dict() for c in self.connections],
+            "review": self.review.to_dict(),
         }
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> ScheduleProject:
+        equipment = data.get("equipment")
+        review = data.get("review")
         return cls(
             name=data["name"],
             sch_version=int(data.get("sch_version", DEFAULT_SCH_VERSION)),
             cell_profile=CellProfile.from_dict(data["cell_profile"]),
             modules=[ModuleNode.from_dict(m) for m in data.get("modules", [])],
             connections=[ModuleConnection.from_dict(c) for c in data.get("connections", [])],
-            schema=data.get("schema", SCHPROJ_SCHEMA),
+            schema=SCHPROJ_SCHEMA_V2,
+            equipment=EquipmentProfile.from_dict(equipment) if equipment else None,
+            review=ReviewState.from_dict(review) if review else ReviewState(),
         )
 
+    def copy(self) -> ScheduleProject:
+        return ScheduleProject.from_dict(self.to_dict())
+
     def save(self, path: Path) -> None:
+        """Write the project. Always allowed — export is what safety gates."""
         path.write_text(
             json.dumps(self.to_dict(), indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",

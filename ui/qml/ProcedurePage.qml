@@ -1,0 +1,257 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+// 3. 절차 — the run order as a timeline, plus the read-only expanded steps.
+Item {
+    id: page
+    property var phases: []
+    property var steps: []
+
+    function reload() {
+        phases = workspace.phases()
+        steps = workspace.stepRows()
+    }
+
+    Connections {
+        target: workspace
+        function onChanged() { page.reload() }
+    }
+    Component.onCompleted: reload()
+
+    ColumnLayout {
+        anchors.fill: parent
+        spacing: 8
+
+        Text {
+            text: "실제 실행 순서입니다. 위/아래 버튼으로 옮길 수 있고, 각 구간이 몇 번 스텝인지 함께 표시됩니다."
+            color: Theme.muted
+            font.pixelSize: 12
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.preferredHeight: Math.max(200, page.height * 0.42)
+            spacing: 8
+
+            ListView {
+                id: phaseList
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+                model: page.phases
+                spacing: 4
+                ScrollBar.vertical: ScrollBar {}
+
+                delegate: Rectangle {
+                    required property var modelData
+                    width: phaseList.width
+                    height: 62
+                    radius: Theme.radius
+                    color: modelData.moduleId === workspace.selectedModule ? Theme.accentSoft : Theme.panel
+                    border.color: modelData.error ? Theme.danger
+                                : modelData.moduleId === workspace.selectedModule ? Theme.accent : Theme.line
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        spacing: 12
+
+                        Rectangle {
+                            Layout.preferredWidth: 30
+                            Layout.preferredHeight: 30
+                            radius: 15
+                            color: Theme.accent
+                            Text {
+                                anchors.centerIn: parent
+                                text: modelData.position
+                                color: "#ffffff"
+                                font.pixelSize: 13
+                                font.bold: true
+                            }
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 1
+                            Text {
+                                text: modelData.title
+                                color: Theme.ink
+                                font.pixelSize: 13
+                                font.bold: true
+                                Layout.fillWidth: true
+                                elide: Text.ElideRight
+                            }
+                            Text {
+                                text: modelData.error ? "⚠ " + modelData.error : modelData.subtitle
+                                color: modelData.error ? Theme.danger : Theme.muted
+                                font.pixelSize: 11
+                                Layout.fillWidth: true
+                                elide: Text.ElideRight
+                            }
+                        }
+
+                        Text {
+                            Layout.preferredWidth: 110
+                            text: modelData.range + " 스텝"
+                            color: Theme.ink
+                            font.pixelSize: 12
+                        }
+                        Text {
+                            Layout.preferredWidth: 120
+                            text: modelData.duration
+                            color: Theme.ink
+                            font.pixelSize: 12
+                        }
+                        Text {
+                            Layout.preferredWidth: 140
+                            text: modelData.trust
+                            color: Theme.muted
+                            font.pixelSize: 11
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: workspace.selectModule(modelData.moduleId)
+                    }
+                }
+            }
+
+            ColumnLayout {
+                Layout.preferredWidth: 200
+                Layout.alignment: Qt.AlignTop
+                spacing: 6
+
+                Button {
+                    Layout.fillWidth: true
+                    text: "▲ 위로"
+                    enabled: workspace.selectedModule.length > 0
+                    onClicked: workspace.moveSelected(-1)
+                }
+                Button {
+                    Layout.fillWidth: true
+                    text: "▼ 아래로"
+                    enabled: workspace.selectedModule.length > 0
+                    onClicked: workspace.moveSelected(1)
+                }
+                Button {
+                    Layout.fillWidth: true
+                    text: "개별 스텝으로 분리"
+                    enabled: workspace.selectedModule.length > 0
+                    onClicked: appWindow.confirm(
+                        "개별 스텝으로 분리",
+                        "이 구간을 지금 값 그대로 펼쳐서 개별 스텝으로 바꿉니다.\n" +
+                        "이후에는 프리셋 검증 상태가 아니라 '직접 편집' 상태가 됩니다. 계속할까요?",
+                        function () { workspace.detachSelected() })
+                }
+                Text {
+                    Layout.fillWidth: true
+                    text: "분리하면 프리셋 보장이 사라지고 직접 편집한 스텝이 됩니다."
+                    color: Theme.muted
+                    font.pixelSize: 11
+                    wrapMode: Text.WordWrap
+                }
+            }
+        }
+
+        Text {
+            text: "장비 상세 보기 (읽기 전용) · " + page.steps.length + " 스텝"
+            color: Theme.ink
+            font.pixelSize: 13
+            font.bold: true
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            color: Theme.panel
+            radius: Theme.radius
+            border.color: Theme.line
+
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 1
+                spacing: 0
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 28
+                    color: Theme.panelAlt
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 10
+                        spacing: 6
+                        Repeater {
+                            model: [
+                                { label: "번호", width: 50 },
+                                { label: "구간", width: 150 },
+                                { label: "종류", width: 90 },
+                                { label: "모드", width: 60 },
+                                { label: "전류", width: 150 },
+                                { label: "전압", width: 200 },
+                                { label: "종료 조건", width: 190 },
+                                { label: "LOOP", width: 110 }
+                            ]
+                            Text {
+                                required property var modelData
+                                Layout.preferredWidth: modelData.width
+                                text: modelData.label
+                                color: Theme.muted
+                                font.pixelSize: 11
+                                font.bold: true
+                            }
+                        }
+                        Item { Layout.fillWidth: true }
+                    }
+                }
+
+                ListView {
+                    id: stepList
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    clip: true
+                    model: page.steps
+                    ScrollBar.vertical: ScrollBar {}
+
+                    delegate: Rectangle {
+                        required property var modelData
+                        required property int index
+                        width: stepList.width
+                        height: 24
+                        color: index % 2 === 0 ? Theme.panel : Theme.bg
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.leftMargin: 10
+                            anchors.rightMargin: 10
+                            spacing: 6
+                            Repeater {
+                                model: [
+                                    { value: modelData.number, width: 50 },
+                                    { value: modelData.phase, width: 150 },
+                                    { value: modelData.type, width: 90 },
+                                    { value: modelData.mode, width: 60 },
+                                    { value: modelData.current, width: 150 },
+                                    { value: modelData.voltage, width: 200 },
+                                    { value: modelData.end, width: 190 },
+                                    { value: modelData.loop, width: 110 }
+                                ]
+                                Text {
+                                    required property var modelData
+                                    Layout.preferredWidth: modelData.width
+                                    text: modelData.value
+                                    color: Theme.ink
+                                    font.pixelSize: 11
+                                    elide: Text.ElideRight
+                                }
+                            }
+                            Item { Layout.fillWidth: true }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

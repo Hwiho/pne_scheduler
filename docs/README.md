@@ -21,6 +21,8 @@ pip install -e ".[dev]"
 
 | Command | Description |
 |------|------|
+| `python -m pne_scheduler workspace [file.schproj]` | Open the unified workspace |
+| `python -m pne_scheduler summary file.schproj` | Print a Korean summary and export gate status |
 | `python -m pne_scheduler view [file.sch]` | Open the schedule viewer |
 | `python -m pne_scheduler edit [file.schproj]` | Open the project bulk editor |
 | `python -m pne_scheduler flow [file.schproj]` | Open the module connection editor |
@@ -35,11 +37,72 @@ pip install -e ".[dev]"
 ## Launcher scripts
 
 ```powershell
+python run_pne_scheduler_workspace.py
 python run_pne_scheduler_viewer.py
 python run_pne_scheduler_editor.py
 python run_pne_scheduler_flow.py
 python run_pne_scheduler_resume.py
 ```
+
+## Workspace and the input contract
+
+The workspace is the primary entry point. It has two drawing layers over one shared brain:
+
+- `ui/workspace_qt.py` + `ui/qml/` — the default, a PySide6/QML shell whose bridge only
+  converts model state into the lists and maps QML understands.
+- `ui/workspace.py` — the Tk build of the same five screens, used where PySide6 is not
+  installed. `ui/__init__.py:launch_workspace()` picks between them.
+
+Neither holds any decision. Both drive two testable pieces:
+
+- `ui/workspace_model.py` — every action the UI can perform, with no Qt and no Tk import,
+  so the behaviour is covered by `tests/test_workspace_model.py` rather than by clicking.
+- `ui/document.py` — the editing session: snapshot undo/redo with named entries, dirty
+  tracking, atomic autosave to `~/.pne_scheduler/recovery`, and crash recovery.
+
+`tests/test_workspace_qt.py` builds the real QML engine offscreen and fails on any QML
+warning, so a renamed bridge property cannot reach a user as a blank panel. It skips where
+PySide6 is absent, as `tests/test_workspace_ui.py` skips without a display.
+
+### ParameterSpec
+
+`spec/module_params.py` declares every editable parameter of every user-visible module:
+
+| Field | Meaning |
+|------|------|
+| `label` / `label_en` | Korean display name and the internal key |
+| `kind` | `c_rate`, `voltage_v`, `duration_s`, `percent`, `count`, `choice`, list variants |
+| `minimum` / `maximum` | Hard allowed range (an error outside it) |
+| `recommended_min` / `recommended_max` | Soft range (a warning outside it) |
+| `visible_when` | Sibling-value condition, e.g. only shown for `variant == "full"` |
+| `help` / `basis` | What it does, and where the default value comes from |
+| `affects` | Which steps move when it changes |
+| `risk` | `normal` / `caution` / `critical` |
+| `verification` | `software-checked`, `CTSPro-reopen-verified`, `unverified`, … |
+
+`tests/test_parameter_specs.py` asserts the table covers every dataclass field of every
+visible module and that declared defaults match the module dataclass, so a new parameter
+cannot reach the UI as an undocumented JSON key.
+
+Input parsing accepts what lab users type — `C/3`, `1.5C`, `30분`, `1시간 30분`, `1h30m`,
+`4.2 V` — and every value is displayed with its derived counterpart (C-rate ↔ mA, seconds
+↔ Korean duration, capacity fraction ↔ SOC).
+
+### Procedure
+
+`ir/procedure.py` presents the module list as a linear procedure. The module list order is
+authoritative; `linearize()` rewrites the wiring to match it, and `adopt_connection_order()`
+does the reverse once, at load time, so graph-editor projects normalize cleanly.
+`detach_module()` freezes a preset into a `custom_steps` module whose expansion is
+byte-identical to the preset's until the user edits it.
+
+### Release ladder
+
+`release.py` computes the current stage (초안 → 소프트웨어 검증 → CTSPro 확인 대기 →
+CTSPro 확인 완료 → 장비 실행 승인) and, for each output path, whether it is allowed and
+exactly what is blocking it. `exporting.py` holds the writers and re-checks the gate, so
+calling a writer directly cannot bypass it. CTSPro review and equipment approval are
+recorded in the project's `review` block — only a person can set them.
 
 ## Template-preserving writer
 

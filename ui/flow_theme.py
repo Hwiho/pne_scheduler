@@ -126,6 +126,15 @@ MODULE_STYLES: dict[str, ModuleStyle] = {
         "#24344c",
         "#5b6c82",
     ),
+    "custom_steps": ModuleStyle(
+        "Custom steps",
+        "✎",
+        "#f1e7d6",
+        "#faf3e7",
+        "#a8823f",
+        "#3f3117",
+        "#7d6435",
+    ),
     "smoke_rest_cc_end": ModuleStyle(
         "Smoke test",
         "🧪",

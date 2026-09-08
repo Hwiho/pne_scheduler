@@ -1,12 +1,26 @@
 {
-  "schema": "pne_scheduler.schproj/v1",
+  "schema": "pne_scheduler.schproj/v2",
   "name": "Example formation + cycle life",
   "sch_version": 65539,
   "cell_profile": {
     "nominal_capacity_mAh": 80.0,
     "v_max": 4.2,
     "v_min": 2.5,
-    "max_current_mA": 800.0
+    "max_current_mA": 500.0,
+    "formation_capacity_mAh": null
+  },
+  "equipment": {
+    "unit": "PNE02",
+    "max_current_mA": 500.0,
+    "rating_label": "500mA",
+    "ctspro_build": "CYCC-1004-S01-R004-N01",
+    "ctspro_build_source": "golden_fixture_intake_ppt",
+    "sch_file_version": "0x00010003",
+    "sch_payload_offset": 1760,
+    "sch_step_size": 612,
+    "source": "registry",
+    "layout_confirmed": true,
+    "notes": ""
   },
   "modules": [
     {
@@ -31,6 +45,19 @@
     }
   ],
   "connections": [
-    { "source_id": "formation_1", "target_id": "cycle_life_1" }
-  ]
+    {
+      "source_id": "formation_1",
+      "target_id": "cycle_life_1"
+    }
+  ],
+  "review": {
+    "ctspro_reviewed": false,
+    "ctspro_reviewer": "",
+    "ctspro_reviewed_at": "",
+    "reviewed_sha256": "",
+    "equipment_approved": false,
+    "equipment_approved_by": "",
+    "equipment_approved_at": "",
+    "notes": ""
+  }
 }

@@ -33,6 +33,17 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Validation manifest path (default: <output>.manifest.json)",
     )
 
+    workspace = sub.add_parser(
+        "workspace",
+        help="Open the unified workspace (setup, protocol, procedure, validate, export)",
+    )
+    workspace.add_argument("project", type=Path, nargs="?", help="Optional .schproj to open")
+
+    summary = sub.add_parser(
+        "summary", help="Print a plain-language Korean summary of a project"
+    )
+    summary.add_argument("project", type=Path, help="Input .schproj path")
+
     info = sub.add_parser("info", help="Show project summary")
     info.add_argument("project", type=Path, help="Input .schproj path")
 
@@ -117,6 +128,33 @@ def _build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = _build_parser().parse_args(argv)
+
+    if args.command == "workspace":
+        from .ui import launch_workspace
+
+        return launch_workspace(args.project)
+
+    if args.command == "summary":
+        from .ir.loader import ProjectLoadError, load_project_lenient
+        from .release import evaluate_release
+        from .report.summary import summarize_project
+
+        try:
+            load = load_project_lenient(args.project)
+        except ProjectLoadError as exc:
+            print(f"프로젝트를 열 수 없습니다: {exc}", file=sys.stderr)
+            return 2
+        for repair in load.repairs:
+            print(f"수정됨: {repair}", file=sys.stderr)
+        print(summarize_project(load.project).as_text())
+        state = evaluate_release(load.project)
+        print()
+        print(f"진행 상태: {state.stage_label}")
+        for option in state.options:
+            print(f"  [{option.status_text}] {option.title}")
+            for blocker in option.blockers:
+                print(f"        · {blocker}")
+        return 0
 
     if args.command == "info":
         project = ScheduleProject.load(args.project)

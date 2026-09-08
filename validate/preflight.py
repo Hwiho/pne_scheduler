@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from ..engine.c_rate import current_mA_from_c_rate
+from ..ir.equipment_profile import effective_current_limit_mA
 from ..ir.project import ScheduleProject
 from ..modules.catalog import get_module_spec
 
@@ -49,6 +50,17 @@ def validate_project(
 ) -> PreflightResult:
     issues: list[PreflightIssue] = []
     cell = project.cell_profile
+    # The binding current limit is the smaller of the cell's own limit and the
+    # target cycler's rating, so naming an under-rated unit is caught here and
+    # not only at export time.
+    current_limit_mA = effective_current_limit_mA(cell.max_current_mA, project.equipment)
+    limit_source = "cell"
+    if (
+        project.equipment is not None
+        and project.equipment.max_current_mA is not None
+        and current_limit_mA == project.equipment.max_current_mA
+    ):
+        limit_source = project.equipment.unit
     for field_name, value in (
         ("nominal_capacity_mAh", cell.nominal_capacity_mAh),
         ("v_min", cell.v_min),
@@ -166,7 +178,7 @@ def validate_project(
             )
             issues.append(PreflightIssue("VOLTAGE_HEADROOM", severity, "Charge voltage limit exceeds cell v_max", object_id, "voltage_v"))
         if (
-            cell.max_current_mA is not None
+            current_limit_mA is not None
             and step.step_type in {"charge", "discharge"}
             and (step.current_mA is not None or step.c_rate is not None)
         ):
@@ -175,8 +187,16 @@ def validate_project(
                 if step.current_mA is not None
                 else abs(current_mA_from_c_rate(step.c_rate, cell))
             )
-            if current > cell.max_current_mA + 1e-6:
-                issues.append(_error("CURRENT_LIMIT", f"{current:g} mA exceeds cell/equipment limit {cell.max_current_mA:g} mA", object_id=object_id, field="current_mA"))
+            if current > current_limit_mA + 1e-6:
+                issues.append(
+                    _error(
+                        "CURRENT_LIMIT",
+                        f"{current:g} mA exceeds the {limit_source} limit "
+                        f"{current_limit_mA:g} mA",
+                        object_id=object_id,
+                        field="current_mA",
+                    )
+                )
         if step.step_type == "loop":
             if step.loop_goto_step is None or step.loop_count is None:
                 issues.append(_error("LOOP_REQUIRED", "LOOP requires target and count", object_id=object_id))

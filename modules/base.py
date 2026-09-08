@@ -50,6 +50,7 @@ def get_module_class(module_type: str) -> type | None:
 
 from . import (  # noqa: E402,F401
     capacheck,
+    custom_steps,
     cycle_life,
     dcir,
     formation,

@@ -22,6 +22,10 @@ pip install -e ".[dev]"
 ## Quick start
 
 ```powershell
+# Unified workspace (start here)
+python run_pne_scheduler_workspace.py
+python -m pne_scheduler workspace example/example.schproj
+
 # Schedule viewer
 python run_pne_scheduler_viewer.py
 
@@ -48,6 +52,8 @@ python run_pne_scheduler.py build example/example.schproj -o output.sch --allow-
 
 | Command | Description |
 |------|------|
+| `workspace [file.schproj]` | Open the unified workspace (setup → protocol → procedure → validate → export) |
+| `summary file.schproj` | Print a Korean plain-language summary and the export gate status |
 | `view [file.sch]` | Show the step table and inferred FP/L/C-rate/protocol |
 | `edit [file.schproj]` | Open the project bulk editor |
 | `flow [file.schproj]` | Arrange, connect, validate, and preview experiment modules |
@@ -63,6 +69,79 @@ The committed batch at
 [`example/pattern_review_pack/2026-09-09/INDEX.md`](example/pattern_review_pack/2026-09-09/INDEX.md)
 contains QPEED, QC, HPPC, Cycle, Formation, capacheck, and RPT candidates. These files are
 for CTSPro display/Save-As review only and must not be started or run.
+
+## Workspace
+
+```powershell
+pip install -e ".[gui]"   # PySide6, for the Qt workspace
+python run_pne_scheduler_workspace.py
+# or
+python -m pne_scheduler workspace path\to\project.schproj
+```
+
+Both entry points open the Qt/QML workspace. PySide6 is an optional dependency: where it
+is missing they fall back to the Tk build of the same screens and say so on stderr, so a
+machine with only the standard library is never left without a workspace. The other tools
+(viewer, flow canvas, bulk editor, resume wizard) remain Tk.
+
+One window with five steps, in the order the work actually happens:
+
+| Tab | What it is for |
+|------|------|
+| **1. 설정** | PNE unit, CTSPro build, SCH layout, cell capacity and voltage window |
+| **2. 프로토콜** | Pick an experiment by purpose ("무엇을 알고 싶은가"), then edit it as a structured form |
+| **3. 절차** | The linear run order as a timeline, with drag reorder and a read-only expanded step table |
+| **4. 검증** | Errors, warnings, and unverified evidence — double-click jumps to the input that caused it |
+| **5. 내보내기** | The draft → software-checked → CTSPro → equipment ladder, with each output path gated separately |
+
+Design rules the workspace follows:
+
+- **Saving is never blocked.** A project with errors still opens and still saves; only
+  export is gated. A file with bad values is repaired on load and every repair is listed,
+  so the thing that is wrong can actually be fixed.
+- **No JSON in the form.** Every parameter is declared once in `spec/module_params.py`
+  with a Korean name, a unit, allowed and recommended ranges, the reason for its default,
+  which steps it moves, and how far it has been verified. Fields that belong to another
+  variant are hidden, not greyed out.
+- **C-rate and current are the same value.** Type either; the other is shown next to it,
+  together with the share of the equipment rating it uses.
+- **Changes are previewed.** Editing a field reports its effect on the expanded step list
+  ("스텝 167 → 50 · 117개 삭제") before it is committed anywhere.
+- **Presets stay presets.** To edit an individual step of a locked pattern, detach it
+  explicitly; the module then carries its steps verbatim and is marked user-edited.
+
+The flow canvas is still available under **고급 도구**, but it is no longer the default
+view: a PNE schedule is linear, so the procedure timeline is.
+
+## Equipment profile
+
+`.schproj` is now `pne_scheduler.schproj/v2` and carries the target cycler:
+
+```json
+"equipment": {
+  "unit": "PNE02",
+  "max_current_mA": 500.0,
+  "ctspro_build": "CYCC-1004-S01-R004-N01",
+  "sch_file_version": "0x00010003",
+  "sch_step_size": 612,
+  "layout_confirmed": true
+}
+```
+
+v1 files load unchanged and are migrated on save; the loader reports that the equipment
+profile is missing so the gap is visible rather than assumed. The binding current limit is
+the smaller of the cell limit and the unit rating, and preflight enforces it — naming an
+under-rated unit is now an error, not a surprise at export time.
+
+## Export gates
+
+| Output | Requires |
+|------|------|
+| 초안 저장 (`.schproj`) | nothing — always available |
+| 미리보기 (steps.csv, summary.txt) | software preflight passes |
+| CTSPro 검토용 SCH | preflight passes + a complete PNE02/0x00010003 profile |
+| 템플릿 패치 | preflight passes + a CTSPro-authored template and its hash |
+| 장비 실행용 | production preflight + recorded CTSPro review + recorded equipment approval |
 
 ## Schedule viewer
 
@@ -183,13 +262,15 @@ pne_scheduler/
 ├── ir/              # Schedule IR (.schproj)
 ├── engine/          # C-rate engine and compiler
 ├── modules/         # Formation, cycle life, RPT, DC-IR, QPEED, and others
-├── protocol/        # Lab protocol defaults and inference
+├── protocol/        # Lab protocol defaults, inference, experiment-goal catalog
+├── spec/            # ParameterSpec, units, structured form model
+├── report/          # Plain-language Korean summaries
 ├── stack/           # FP, L-level, xMyU, and capacity inference
 ├── classify/        # Filename classification
 ├── edit/            # Bulk module editing
 ├── resume/          # Interrupted-experiment resume and splicing
 ├── io/              # reader / writer
-├── ui/              # Viewer, editor, and resume wizard
+├── ui/              # Workspace, document controller, viewer, editors, resume wizard
 ├── tools/           # Batch analysis CLI tools
 ├── example/         # Fixtures and analysis reports
 ├── docs/            # User and validation guides

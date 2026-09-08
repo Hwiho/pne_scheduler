@@ -42,10 +42,15 @@ LabVIEW식 그래프는 모듈 간 순서를 보는 보조 뷰로 유지한다. 
 | 데스크톱 기본기 | load/save는 있으나 앱별 구현 | dirty 표시, undo/redo, autosave/recovery, 최근 파일, 종료 확인 |
 | UI 테스트 | flow model/theme 위주 | controller/widget smoke, 사용자 시나리오 회귀, 큰 파일 반응성 |
 
-2026-09-09 구현 후 기준 상태: 로컬 전체 테스트 `330 passed, 1 skipped`;
+2026-09-09 구현 후 기준 상태: 로컬 전체 테스트 `424 passed, 1 skipped`;
 Gate D report `49 pass / 0 fail / 0 skip`.
 이 수치는 소프트웨어 구조 검증 결과이며 각 패턴의 실험 절차 충실도나 장비 실행 승인을
 의미하지 않는다.
+
+기본 워크스페이스 화면은 **PySide6/QML**(`ui/workspace_qt.py` + `ui/qml/`)이다. Tk 구현
+(`ui/workspace.py`)은 같은 다섯 화면의 대체 경로로 남고, PySide6가 없는 환경에서만
+`ui/__init__.py:launch_workspace()`가 이쪽을 고른다. 두 구현 모두 결정은 갖지 않고
+`ui/workspace_model.py`를 그대로 구동하므로, 화면 계층을 바꿔도 검증 규칙은 한 곳에 있다.
 
 ---
 
