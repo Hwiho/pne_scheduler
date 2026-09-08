@@ -25,6 +25,7 @@
 | 2026-09-08 | Post-C5 status sweep (L5): cleared stale "behind C5" wording from the gate diagram, Gate E `Depends on`/Rules/E3/E3.1 rows, and Gate F F1–F4 — the C5 pass satisfied those dependencies. Added [`GUARDRAILS.md`](GUARDRAILS.md), a topic-grouped reading view of §5.6/§8/§11 |
 | 2026-09-08 | Gate D mutation backtest found and fixed two verification holes (V6 never compared module expansions; skips did not block `gate_d_passed`) — see §11. Archived closed-gate evidence and consumed analysis outputs to [`../legacy/`](../legacy/README.md); only files with zero `.py` references were moved, and the C5 signed record stays cited from Gate F2 |
 | 2026-09-08 | Gate E/pattern re-audit: added the missing module-composition contract (single final END, rebased LOOP references), separated imported patch sessions from authored projects, added pattern trust/catalog and desktop UX requirements, and established [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md). DOD@384 and module SOC cutoff (`fEndC@36`) now require separate controlled pairs before SOC-dependent pattern approval |
+| 2026-09-09 | Gate E workspace shipped: one window (설정 → 프로토콜 → 절차 → 검증 → 내보내기) on a Qt/QML default shell with a Tk fallback, both driving a shell-free `ui/workspace_model.py`. Added `spec/` ParameterSpec, lenient `ir/loader.py`, `ir/procedure.py`, `ir/equipment_profile.py` (schproj v2), staged export gates in `release.py`, and Korean summaries in `report/`. CI now installs the `[gui]` extra so the default UI is actually exercised. E2.4/E3 → ✅ |
 
 ---
 
@@ -482,7 +483,7 @@ Gate C  호환 SCH writer    ✅ exited 2026-09-08 (C5 PNE02)
   ↓                         (parallel track below can run now, per-task)
 Gate D  모듈 픽스처 검증   ✅ software exit 2026-09-08 (P0/P1)
   ↓
-Gate E  모듈형 스케줄 UX   🔄 active — all tasks unblocked (E3/E3.1 released by C5 exit)
+Gate E  모듈형 스케줄 UX   🔄 active — workspace shipped 2026-09-09; E2.1/E2.3/E4 remain
   ↓
 Gate F  운영 릴리스 / 추적성  F5/F6 unblocked; F1–F4 now released by C5, need release-record work
 ```
@@ -704,7 +705,7 @@ Gate D is software-only. Module expands are **protocol templates**; golden compa
 
 | | |
 |---|---|
-| **Status** | 🔄 **Partial** (viewer/flow spike exist; polished module workspace ⏳) |
+| **Status** | 🔄 **Partial** (workspace shipped 2026-09-09: E0/E0.5/E2.4/E3 ✅; E2/E2.2/E3.1 in progress; E2.1/E2.3/E4–E7 ⏳) |
 | **Depends on** | **Nothing blocking as of 2026-09-08** — E0–E2.4 never needed a trusted writer, and E3/E3.1's Gate C exit dependency was satisfied by the C5 PNE02 pass. Export UX is now gated by *evidence discipline* (§5.6 L6/L9), not by an unmet gate |
 | **Exit criteria** | Schedule authoring feels like **module + procedure** composition (Nova/LabVIEW-like); multi-module END/LOOP composition is safe; pattern trust is visible; unsafe export blocked; library + Cell setup; byte-preserving imported patch session |
 | **Next gate** | Gate F |
@@ -725,18 +726,33 @@ a reopen record for that exact artifact (L6, §6.7 F1–F4).
 | E0.5 | Composer / catalog / validator contract | ✅ | One final END; module-local LOOP refs rebased; structured issues; pattern metadata/trust | Safe foundation | No |
 | E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage | Review existing schedules | No |
 | E2 | **Procedure editor** (ordered steps) | 🔄 | Insert/reorder/delete primitives; property pane; C-rate ↔ mA preview | Nova-like step list | No |
+| | ↳ 2026-09-09: module-level add/duplicate/remove/move/reorder/detach, spec-driven property forms and C-rate ↔ mA preview all shipped in `ui/workspace_model.py`. **Primitive-level** step insert/delete is still absent — `detach()` freezes a preset into `custom_steps` but nothing edits an individual step yet. | | | |
 | E2.1 | Primitive palette | ⏳ | REST, CC, CCCV, CV, LOOP, END, OCV… with validated forms | Command blocks | No |
 | E2.2 | **Module/pattern palette** | 🔄 | Variant + units + evidence status; only accepted Formation/Cycle/QC/RPT/HPPC/QPEED recipes promoted | LabVIEW-like modules | No |
+| | ↳ 2026-09-09: `protocol/recipes.py` gives a purpose-first goal catalog carrying `trust_status`, surfaced in the UI via `TRUST_LABELS_KO`. Promotion stays open: no pattern has a CTSPro reopen record, so everything still shows as `prototype`. | | | |
 | E2.3 | Method / project library | ⏳ | Save/load versioned procedures & modules per equipment profile | Reusable methods | No |
-| E2.4 | Cell / equipment setup pane | ⏳ | Explicit 1C mA, V limits, PNE unit/range, layout target; blocks export if missing | Setup before edit | No (the pane itself; it just *displays* a profile that later needs equipment-verified export) |
-| E3 | Pre-export validation UX | ⏳ | Block invalid loops, missing END, V/I violations | Readiness before export | No — **unblocked by the 2026-09-08 C5 pass** |
-| E3.1 | Export path choice | ⏳ | Default **patch-sch** onto approved template; optional experimental `build` | PNE safety | No — unblocked, but keep `patch-sch` as the default path per L9 |
+| E2.4 | Cell / equipment setup pane | ✅ | Explicit 1C mA, V limits, PNE unit/range, layout target; blocks export if missing | Setup before edit | No (the pane itself; it just *displays* a profile that later needs equipment-verified export) |
+| E3 | Pre-export validation UX | ✅ | Block invalid loops, missing END, V/I violations | Readiness before export | No — **unblocked by the 2026-09-08 C5 pass** |
+| E3.1 | Export path choice | 🔄 | Default **patch-sch** onto approved template; optional experimental `build` | PNE safety | No — unblocked, but keep `patch-sch` as the default path per L9 |
+| | ↳ 2026-09-09: `release.py` ships the full ladder and marks from-scratch output `danger=True` while calling template patch 가장 안전한 경로. Not yet closed: patch is described as the safest path but is not *positioned* as the default action in the export tab. | | | |
 | E4 | `.sch` imported patch session | ⏳ | Preserve source hash/raw bytes; writer-ready edits only; lossy `Clone as draft` separate | Open existing schedule | No — parser exists; safe session model does not |
 | E5 | Advanced: 0x00010007/EIS, fingerprint | ⏳ | Deferred until explicit schema evidence | Later | No (blocked on schema evidence, not equipment) |
 | E6 | pne_studio2 integration | ⏳ | Shared cell profile and export workflow | Host embedding | Partial — integration itself is No; the export half inherits E3's block |
 | E7 | Campaign canvas (optional) | ⏳ | Free-form multi-module graph **only if** E2–E2.2 is insufficient | Extra LabVIEW canvas | No |
 
 **Progress record**
+- 2026-09-09: **the unified workspace shipped** — one window for 설정 → 프로토콜 → 절차 → 검증 →
+  내보내기, with PySide6/QML (`ui/workspace_qt.py` + `ui/qml/`) as the default shell and the Tk
+  build (`ui/workspace.py`) as the fallback where PySide6 is absent. Neither shell decides
+  anything: both drive `ui/workspace_model.py`, which has no Qt and no Tk import and is covered by
+  `tests/test_workspace_model.py`. New supporting contracts: `spec/` (one declaration per
+  parameter — unit, allowed/recommended range, basis, affected steps, verification level),
+  `ir/loader.py` (lenient load that lists every repair), `ir/procedure.py` (module list is
+  authoritative over the wiring), `ir/equipment_profile.py` (schproj v2 carries the target
+  cycler; v1 migrates on save), `release.py`/`exporting.py` (staged export gates) and
+  `report/summary.py` (Korean prose summary). 424 passed, 1 skipped; ruff clean.
+  CI now installs the `[gui]` extra and asserts PySide6 is importable, so the default UI's
+  coverage cannot silently skip — the L13 failure mode applied to a new surface.
 - Detailed re-audited execution order and acceptance criteria:
   [`GATE_E_PLAN.md`](GATE_E_PLAN.md). Pattern implementation/reopen is a linked track:
   [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md).
@@ -838,11 +854,14 @@ pne_scheduler/                   # main package (repo root)
 ├── edit/                        # bulk module editing
 ├── resume/                      # resume interrupted experiments
 ├── ui/
+│   ├── workspace_model.py       # every workspace action; no Qt and no Tk import
+│   ├── document.py              # undo/redo, dirty state, autosave, crash recovery
+│   ├── workspace_qt.py + qml/   # default shell (PySide6/QML), draws only
+│   ├── workspace.py             # Tk shell of the same screens; fallback
 │   ├── schedule_viewer.py
 │   ├── project_editor.py
 │   ├── resume_wizard.py
-│   ├── flow_editor.py           # seed; evolve toward modular procedure+module UX
-│   └── procedure_workspace.py   # planned (Gate E0–E2)
+│   └── flow_editor.py           # secondary graph view under 고급 도구
 ├── tools/                       # batch fixture analysis
 ├── docs/
 └── tests/

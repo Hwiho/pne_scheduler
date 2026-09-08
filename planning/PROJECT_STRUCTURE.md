@@ -69,7 +69,7 @@ rg "corpus|zip.*scan|analyze_pne" pne_scheduler/
 | 용도 | 진입점 |
 |------|--------|
 | 패키지 CLI | `python -m pne_scheduler` → [`__main__.py`](../__main__.py) |
-| GUI 런처 | 루트 `run_pne_scheduler_*.py` (tkinter 창만 열고 `ui/` 호출) |
+| GUI 런처 | 루트 `run_pne_scheduler_*.py` (창만 열고 `ui/` 호출; workspace만 Qt) |
 | 오프라인 분석 | `python -m pne_scheduler.tools.<script>` 또는 `tools/*.py` 직접 실행 |
 | 테스트 | `pytest` → [`tests/`](../tests/) |
 
@@ -106,9 +106,12 @@ pne_scheduler/
 ├── engine/              # StepIntent → 바이너리 스텝 레코드 컴파일
 ├── io/                  # .sch 읽기/쓰기, 레이아웃 감지, 템플릿 패치
 ├── schema/              # 바이너리 오프셋, enum, 장비·코퍼스 메타
+├── spec/                # ParameterSpec — 파라미터 1회 선언 (단위·범위·근거·검증등급)
+├── report/              # 스케줄 → 한국어 평문 요약
+├── release.py           # 내보내기 단계 게이트 (초안 → CTSPro → 장비)
 ├── edit/                # .schproj 벌크 편집 로직
 ├── resume/              # 중단 실험 재개 (checkpoint, splice)
-├── ui/                  # tkinter GUI (viewer, editor, flow, resume wizard)
+├── ui/                  # 워크스페이스(Qt/QML 기본, Tk 대체) + viewer/editor/flow/resume (Tk)
 ├── validate/            # Gate B intake, ASSB 파서 diff, roundtrip
 ├── tools/               # 오프라인 분석·리포트 CLI (코퍼스, compare, fixture)
 ├── vendor/              # 외부 참조 코드 (ASSB parser, Ensol sch_maker) — 수정 최소화
@@ -204,7 +207,8 @@ pne_scheduler/
 
 - **`edit/bulk_edit.py`** — `.schproj` 모듈 파라미터 일괄 변경 (CLI `bulk-edit`).
 - **`resume/checkpoint.py`, `resume/splice.py`** — CSV/StepEnd에서 재개 지점 계산, 템플릿 splice.
-- **`ui/`** — tkinter. 비즈니스 로직은 `ir/`, `resume/`, `io/`에 두고 UI는 호출만.
+- **`ui/`** — 워크스페이스는 PySide6/QML(대체: Tk), 나머지 도구는 tkinter. 비즈니스 로직은
+  `ir/`, `resume/`, `io/`, `ui/workspace_model.py`에 두고 화면 계층은 호출만 한다.
 
 ### `validate/`
 

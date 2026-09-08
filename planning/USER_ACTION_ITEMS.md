@@ -2,8 +2,30 @@
 
 Gate C **exited 2026-09-08** (C5 PNE02). Gate D **software exit 2026-09-08**
 (capacity contract + all P0/P1 module harnesses + golden family compares).
-Software focus is now **Gate E** plus the pattern-acceptance track. Immediate user work is
-not required until the SOC/DOD controlled-pair session or the generated reopen pack is ready.
+Software focus is now **Gate E** plus the pattern-acceptance track. No *lab* work is
+required until the SOC/DOD controlled-pair session or the generated reopen pack is ready —
+but there is now one desk task, below.
+
+---
+
+## 0. Open the new workspace once — 🔎 needs your eyes
+
+```powershell
+pip install -e ".[gui]"
+python run_pne_scheduler_workspace.py example\example.schproj
+```
+
+The workspace shipped 2026-09-09 and was only ever verified headless: tests build the QML
+engine offscreen and fail on any QML warning, which catches a broken binding but **cannot
+see whether the screen is usable**. Nothing here touches equipment, so this is safe to
+click through freely.
+
+Worth reporting back: Korean labels that read wrong for lab use, a tab whose order fights
+how you actually work, and anything in 5. 내보내기 that looks like it would let a file reach
+the cycler without a CTSPro check — the last one is a bug, not a preference.
+
+Without PySide6 the same command opens the Tk build instead and says so; that fallback is
+expected, not a failure.
 
 ---
 
