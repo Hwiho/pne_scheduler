@@ -72,3 +72,22 @@ def test_write_sch_uses_1760_byte_header_not_512_placeholder(tmp_path: Path) -> 
     assert doc.payload_offset == 1760
     assert doc.step_count >= 1
     assert doc.steps[-1].is_end
+
+
+def test_detect_sch_layout_accepts_exact_fit_two_step_file(tmp_path: Path) -> None:
+    """Rest→END only scores 2; magic+version + exact length must still detect."""
+    from pne_scheduler.ir.cell_profile import CellProfile
+    from pne_scheduler.ir.project import ModuleNode
+
+    output = tmp_path / "rest_end.sch"
+    project = ScheduleProject(
+        name="rest_end",
+        cell_profile=CellProfile(nominal_capacity_mAh=80.0, v_max=4.2, v_min=2.5),
+        modules=[ModuleNode(id="r1", module_type="rest", params={"duration_s": 60.0})],
+    )
+    write_sch(project, output)
+    layout = detect_sch_layout(output.read_bytes())
+    assert layout is not None
+    assert layout.payload_offset == 1760
+    assert layout.step_size == 612
+    assert read_sch_binary(output).step_count == 2

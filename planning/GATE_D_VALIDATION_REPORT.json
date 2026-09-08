@@ -1,0 +1,308 @@
+{
+  "schema": "pne_scheduler.gate_d_validation_report/v1",
+  "method_ref": "planning/GATE_D_VERIFICATION.md",
+  "audit_ref": "planning/GATE_D_VERIFICATION_AUDIT.md",
+  "gate_d_passed": true,
+  "summary": {
+    "pass": 49,
+    "fail": 0,
+    "skip": 0,
+    "total": 49
+  },
+  "checks": [
+    {
+      "id": "v1_policy_lock",
+      "layer": "V1",
+      "status": "pass",
+      "detail": "writer.source='cell_profile.nominal_capacity_mAh'"
+    },
+    {
+      "id": "v1_compile_uses_cell_q_nom",
+      "layer": "V1",
+      "status": "pass",
+      "detail": "packed=40.0 expected=40.0"
+    },
+    {
+      "id": "v7_matrix_registered",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "ok"
+    },
+    {
+      "id": "v7_non_matrix_modules_noted",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "non-matrix registered modules: none"
+    },
+    {
+      "id": "v7_class_formation",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "formation"
+    },
+    {
+      "id": "v7_class_rest",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "rest"
+    },
+    {
+      "id": "v7_class_cycle_life",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "cycle_life"
+    },
+    {
+      "id": "v7_class_rpt",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "rpt"
+    },
+    {
+      "id": "v7_class_dcir",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "dcir"
+    },
+    {
+      "id": "v7_class_hppc",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "hppc"
+    },
+    {
+      "id": "v7_class_capacheck",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "capacheck"
+    },
+    {
+      "id": "v7_class_qpeed_full",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "qpeed"
+    },
+    {
+      "id": "v7_class_qpeed_soc_setting",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "qpeed"
+    },
+    {
+      "id": "v7_class_insitu_cycle",
+      "layer": "V7",
+      "status": "pass",
+      "detail": "insitu_cycle"
+    },
+    {
+      "id": "v2_pipeline_formation",
+      "layer": "V2/V3/V4",
+      "status": "pass",
+      "detail": "steps=5"
+    },
+    {
+      "id": "v2_topology_formation",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "tokens ok"
+    },
+    {
+      "id": "v2_pipeline_rest",
+      "layer": "V2/V3/V4",
+      "status": "pass",
+      "detail": "steps=2"
+    },
+    {
+      "id": "v2_topology_rest",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "tokens ok"
+    },
+    {
+      "id": "v2_pipeline_cycle_life",
+      "layer": "V2/V3/V4",
+      "status": "pass",
+      "detail": "steps=7"
+    },
+    {
+      "id": "v2_topology_cycle_life",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "tokens ok"
+    },
+    {
+      "id": "v2_pipeline_rpt",
+      "layer": "V2/V3/V4",
+      "status": "pass",
+      "detail": "steps=9"
+    },
+    {
+      "id": "v2_topology_rpt",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "tokens ok"
+    },
+    {
+      "id": "v5_warn_rpt_dcr_start_s",
+      "layer": "V5",
+      "status": "pass",
+      "detail": "expected warning containing 'dcr_start_s'"
+    },
+    {
+      "id": "v5_warn_rpt_fEndC",
+      "layer": "V5",
+      "status": "pass",
+      "detail": "expected warning containing 'fEndC'"
+    },
+    {
+      "id": "v2_pipeline_dcir",
+      "layer": "V2/V3/V4",
+      "status": "pass",
+      "detail": "steps=5"
+    },
+    {
+      "id": "v2_topology_dcir",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "tokens ok"
+    },
+    {
+      "id": "v5_warn_dcir_dcr_start_s",
+      "layer": "V5",
+      "status": "pass",
+      "detail": "expected warning containing 'dcr_start_s'"
+    },
+    {
+      "id": "v5_warn_dcir_fEndC",
+      "layer": "V5",
+      "status": "pass",
+      "detail": "expected warning containing 'fEndC'"
+    },
+    {
+      "id": "v2_pipeline_hppc",
+      "layer": "V2/V3/V4",
+      "status": "pass",
+      "detail": "steps=13"
+    },
+    {
+      "id": "v2_topology_hppc",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "tokens ok"
+    },
+    {
+      "id": "v5_warn_hppc_fEndC",
+      "layer": "V5",
+      "status": "pass",
+      "detail": "expected warning containing 'fEndC'"
+    },
+    {
+      "id": "v2_pipeline_capacheck",
+      "layer": "V2/V3/V4",
+      "status": "pass",
+      "detail": "steps=12"
+    },
+    {
+      "id": "v2_topology_capacheck",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "tokens ok"
+    },
+    {
+      "id": "v2_pipeline_qpeed_full",
+      "layer": "V2/V3/V4",
+      "status": "pass",
+      "detail": "steps=7"
+    },
+    {
+      "id": "v2_topology_qpeed_full",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "tokens ok"
+    },
+    {
+      "id": "v5_warn_qpeed_full_fEndC",
+      "layer": "V5",
+      "status": "pass",
+      "detail": "expected warning containing 'fEndC'"
+    },
+    {
+      "id": "v2_pipeline_qpeed_soc_setting",
+      "layer": "V2/V3/V4",
+      "status": "pass",
+      "detail": "steps=4"
+    },
+    {
+      "id": "v2_topology_qpeed_soc_setting",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "tokens ok"
+    },
+    {
+      "id": "v5_warn_qpeed_soc_setting_fEndC",
+      "layer": "V5",
+      "status": "pass",
+      "detail": "expected warning containing 'fEndC'"
+    },
+    {
+      "id": "v2_pipeline_insitu_cycle",
+      "layer": "V2/V3/V4",
+      "status": "pass",
+      "detail": "steps=7"
+    },
+    {
+      "id": "v2_topology_insitu_cycle",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "tokens ok"
+    },
+    {
+      "id": "v2_label_insitu_cycle",
+      "layer": "V2",
+      "status": "pass",
+      "detail": "label_substring='in-situ'"
+    },
+    {
+      "id": "family_formation",
+      "layer": "V6",
+      "status": "pass",
+      "detail": "family=['charge', 'cycle', 'end', 'loop', 'rest']"
+    },
+    {
+      "id": "family_cycle",
+      "layer": "V6",
+      "status": "pass",
+      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']"
+    },
+    {
+      "id": "family_hppc",
+      "layer": "V6",
+      "status": "pass",
+      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']"
+    },
+    {
+      "id": "family_capacheck",
+      "layer": "V6",
+      "status": "pass",
+      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']"
+    },
+    {
+      "id": "family_rpt_parseable",
+      "layer": "V6",
+      "status": "pass",
+      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']"
+    },
+    {
+      "id": "family_qpeed_parseable",
+      "layer": "V6",
+      "status": "pass",
+      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']"
+    },
+    {
+      "id": "v8_exit_aggregate",
+      "layer": "V8",
+      "status": "pass",
+      "detail": "all non-skipped checks passed"
+    }
+  ]
+}

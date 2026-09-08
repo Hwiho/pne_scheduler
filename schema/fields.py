@@ -70,7 +70,10 @@ COMMON_STEP_FIELDS: tuple[SchFieldDefinition, ...] = (
         OFFSET_STEP_TYPE,
         "int32",
         FieldConfidence.STRUCTURAL_VERIFIED,
-        "Matches REST, CCCV, CC charge/discharge, LOOP, CYCLE, and END records.",
+        "Matches REST, CCCV, CC charge/discharge, LOOP, CYCLE, and END records in "
+        "corpus. OCV(0x04)/Impedance(0x05)/Pattern(0x09)/Balance(0x0A) codes from "
+        "Excel StepType + CTSEditorPro Type dropdown; no corpus samples yet "
+        "(planning/STEP_TYPES_EXTENDED.md).",
     ),
     SchFieldDefinition(
         "mode_value",

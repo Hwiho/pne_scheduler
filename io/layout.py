@@ -14,7 +14,15 @@ def detect_sch_layout(data: bytes) -> SchLayout | None:
 
     registered = get_sch_layout(version)
     if magic == SCH_FILE_MAGIC and registered is not None:
-        if _score_layout(data, registered.payload_offset, registered.step_size) >= 3:
+        score = _score_layout(data, registered.payload_offset, registered.step_size)
+        rem = len(data) - registered.payload_offset
+        exact_steps = (
+            rem >= 0
+            and rem % registered.step_size == 0
+            and (rem // registered.step_size) == score
+        )
+        # Short valid files (e.g. Rest→END) only score 2; accept exact-fit.
+        if score >= 3 or (exact_steps and score >= 1):
             return registered
 
     best: tuple[int, int, int] | None = None
@@ -31,9 +39,13 @@ def detect_sch_layout(data: bytes) -> SchLayout | None:
             if best is None or score > best[0]:
                 best = (score, payload_offset, step_size)
 
-    if best is None or best[0] < 3:
+    if best is None:
         return None
-    return SchLayout(version=version, payload_offset=best[1], step_size=best[2])
+    rem = len(data) - best[1]
+    exact_steps = rem >= 0 and rem % best[2] == 0 and (rem // best[2]) == best[0]
+    if best[0] >= 3 or (exact_steps and best[0] >= 1):
+        return SchLayout(version=version, payload_offset=best[1], step_size=best[2])
+    return None
 
 
 def _score_layout(data: bytes, payload_offset: int, step_size: int) -> int:

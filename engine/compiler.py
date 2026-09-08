@@ -13,12 +13,16 @@ import struct
 from typing import TYPE_CHECKING
 
 from ..schema import (
+    SCH_STEP_TYPE_BALANCE,
     SCH_STEP_TYPE_CC_CHARGE,
     SCH_STEP_TYPE_CC_DISCHARGE,
     SCH_STEP_TYPE_CCCV,
     SCH_STEP_TYPE_CYCLE_MARKER,
     SCH_STEP_TYPE_END,
+    SCH_STEP_TYPE_IMPEDANCE,
     SCH_STEP_TYPE_LOOP,
+    SCH_STEP_TYPE_OCV,
+    SCH_STEP_TYPE_PATTERN,
     SCH_STEP_TYPE_REST,
     STEP_RECORD_SIZE,
 )
@@ -52,7 +56,13 @@ if TYPE_CHECKING:
 DEFAULT_RECORD_TIME_S = 60.0
 DEFAULT_RECORD_DV_MV = 10.0
 
-_SAMPLING_STEP_TYPES = frozenset({"charge", "discharge", "rest", "ocv", "impedance"})
+_SAMPLING_STEP_TYPES = frozenset(
+    {"charge", "discharge", "rest", "ocv", "impedance", "balance", "pattern"}
+)
+_EXTENDED_STEP_TYPES = frozenset({"ocv", "impedance", "balance", "pattern"})
+_CAP_MODE_STEP_TYPES = frozenset(
+    {"charge", "discharge", "rest", "ocv", "impedance", "balance"}
+)
 
 
 def compile_steps(intents: list[StepIntent], cell: CellProfile) -> list[bytes]:
@@ -84,6 +94,14 @@ def compile_step_warnings(intents: list[StepIntent]) -> list[str]:
                 "schema/fields.py). SOC-targeting via this field is unconfirmed "
                 "pending controlled-pair evidence (Gate D)."
             )
+        if intent.step_type in _EXTENDED_STEP_TYPES:
+            warnings.append(
+                f"Step {index}: {intent.step_type} packs type@8 plus shared Ensol "
+                "prefix fields only (time@20, I@16, V@12, sampling@332/340). "
+                "No OCV/Impedance/Balance/Pattern samples in the secured corpus — "
+                "CTS reopen required before equipment use "
+                "(planning/STEP_TYPES_EXTENDED.md)."
+            )
     return warnings
 
 
@@ -98,9 +116,13 @@ def _resolve_step_type_code(intent: StepIntent) -> int:
     if intent.step_type == "rest":
         return int(SCH_STEP_TYPE_REST)
     if intent.step_type == "ocv":
-        return 0x04
+        return int(SCH_STEP_TYPE_OCV)
     if intent.step_type == "impedance":
-        return 0x05
+        return int(SCH_STEP_TYPE_IMPEDANCE)
+    if intent.step_type == "pattern":
+        return int(SCH_STEP_TYPE_PATTERN)
+    if intent.step_type == "balance":
+        return int(SCH_STEP_TYPE_BALANCE)
     if intent.step_type == "cycle":
         return int(SCH_STEP_TYPE_CYCLE_MARKER)
     if intent.step_type == "loop":
@@ -161,6 +183,13 @@ def _compile_one_step(step_no: int, intent: StepIntent, cell: CellProfile) -> by
                 OFF_VOLTAGE_CUTOFF_MV,
                 float(intent.end_voltage_v) * 1000.0,
             )
+    elif intent.step_type in {"ocv", "impedance", "balance", "pattern"}:
+        # Shared Ensol prefix only — type-specific tails unknown without corpus.
+        _pack_current_mA(record, intent, cell)
+        if intent.voltage_v is not None:
+            struct.pack_into(
+                "<f", record, OFF_VOLT_OR_VLIM_MV, float(intent.voltage_v) * 1000.0
+            )
     elif intent.voltage_v is not None:
         struct.pack_into(
             "<f", record, OFF_VOLT_OR_VLIM_MV, float(intent.voltage_v) * 1000.0
@@ -189,7 +218,7 @@ def _compile_one_step(step_no: int, intent: StepIntent, cell: CellProfile) -> by
 
     _pack_sampling(record, intent)
 
-    if intent.step_type in {"charge", "discharge", "rest"}:
+    if intent.step_type in _CAP_MODE_STEP_TYPES:
         # Ensol default capacity-reference flag on active steps.
         record[OFF_CAP_MODE] = 0x01
         if intent.extra.get("cap_ref_step") is not None:

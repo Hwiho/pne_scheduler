@@ -17,7 +17,10 @@ class CapacheckModule:
     """Initial capacity check / derating — 0.1C then C/3 (optionally C/3 twice).
 
     Reference: `0.1C capa_*.sch`, `*capacheck*.sch`
-  Topology: REST → LOOP → CYCLE → steps → END
+
+    Topology written by this module: ``CYCLE → body → LOOP → END`` (CTS-safe
+    Cycle/Loop pairing). Some lab goldens order REST/LOOP/CYCLE differently;
+    Gate D compares type *families*, not byte-identical order.
     """
 
     initial_c_rate: float = CAPACHECK_INITIAL_C_RATE

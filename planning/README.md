@@ -51,8 +51,24 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 
 | Document | Purpose |
 |----------|---------|
-| [`GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md) | C5 PNE PC reopen checklist (optimized combinatorial probe) |
+| [`GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md`](GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md) | C5 PNE PC reopen checklist — **passed PNE02 2026-09-08** |
 | [`GATE_C5_EVIDENCE_COVERAGE.md`](GATE_C5_EVIDENCE_COVERAGE.md) | Per-field evidence audit backing the optimized C5 probe |
+| [`STEP_TYPES_EXTENDED.md`](STEP_TYPES_EXTENDED.md) | OCV / Impedance / Pattern / Balance type codes + shared offsets |
+
+## Gate D
+
+| Document | Purpose |
+|----------|---------|
+| [`GATE_D_VERIFICATION.md`](GATE_D_VERIFICATION.md) | **Canonical verification method** (V1–V8) |
+| [`GATE_D_VERIFICATION_AUDIT.md`](GATE_D_VERIFICATION_AUDIT.md) | Audit findings + remediation status |
+| [`GATE_D_VALIDATION_REPORT.json`](GATE_D_VALIDATION_REPORT.json) | Latest machine exit report (`gate_d_passed`) |
+| `validate/gate_d_harness.py` | Module validate→expand→compile→parse harness |
+| `validate/gate_d_verification.py` | Matrix-driven V1–V8 suite |
+| `validate/topology.py` | Step-type family compare vs golden fixtures |
+| `tests/test_capacity_contract.py` | Writer Q_nom vs viewer inference (L7) |
+| `tests/test_gate_d_harness.py` | All P0/P1 module pipelines |
+| `tests/test_gate_d_fixture_topology.py` | Golden family topology |
+| `tests/test_gate_d_verification.py` | Runs verification method + audit remediations |
 
 ## Gate E
 

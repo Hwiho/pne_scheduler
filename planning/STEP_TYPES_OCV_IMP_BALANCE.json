@@ -1,0 +1,19 @@
+{
+  "type_counts": {
+    "REST": 891,
+    "CC_DISCHARGE": 492,
+    "LOOP": 429,
+    "CCCV": 363,
+    "CYCLE": 295,
+    "END": 134,
+    "CC_CHARGE": 67
+  },
+  "target_samples": {},
+  "notes": [
+    "Type codes match schema/enums.py StepType (OCV=4, IMPEDANCE=5, PATTERN=9, BALANCE=10).",
+    "Field meaning beyond type code is corpus_inferred until controlled pairs exist.",
+    "Shared Ensol prefix offsets (+12/+16/+20/+28/+32/+332/+340) are reused when nonzero.",
+    "2026-09-08: IR/compiler stubs + parser SCH_STEP_TYPES registration; see STEP_TYPES_EXTENDED.md.",
+    "Zero samples in example/ fixtures and Gate B pairs — lab controlled pairs still required."
+  ]
+}

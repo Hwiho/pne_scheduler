@@ -34,22 +34,30 @@ class StepMode(IntEnum):
 
 # Combined step_type values used by ASSB/Ensol converter layout detection.
 SCH_STEP_TYPE_REST = StepType.REST
+SCH_STEP_TYPE_OCV = StepType.OCV
+SCH_STEP_TYPE_IMPEDANCE = StepType.IMPEDANCE
 SCH_STEP_TYPE_CCCV = StepMode.CCCV
 SCH_STEP_TYPE_CC_CHARGE = StepMode.CC_CHARGE
 SCH_STEP_TYPE_CC_DISCHARGE = StepMode.CC_DISCHARGE
 SCH_STEP_TYPE_END = StepType.END
 SCH_STEP_TYPE_CYCLE_MARKER = StepType.CYCLE
 SCH_STEP_TYPE_LOOP = StepType.LOOP
+SCH_STEP_TYPE_PATTERN = StepType.PATTERN
+SCH_STEP_TYPE_BALANCE = StepType.BALANCE
 
 SCH_STEP_TYPES = frozenset(
     {
         int(SCH_STEP_TYPE_REST),
+        int(SCH_STEP_TYPE_OCV),
+        int(SCH_STEP_TYPE_IMPEDANCE),
         int(SCH_STEP_TYPE_CCCV),
         int(SCH_STEP_TYPE_CC_CHARGE),
         int(SCH_STEP_TYPE_CC_DISCHARGE),
         int(SCH_STEP_TYPE_END),
         int(SCH_STEP_TYPE_CYCLE_MARKER),
         int(SCH_STEP_TYPE_LOOP),
+        int(SCH_STEP_TYPE_PATTERN),
+        int(SCH_STEP_TYPE_BALANCE),
     }
 )
 

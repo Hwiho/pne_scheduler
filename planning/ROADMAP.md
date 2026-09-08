@@ -19,6 +19,9 @@
 | 2026-09-06 | Second audit pass (background agent + manual verification): fixed a Gate B5 evidence-integrity bug where a controlled pair's `expected_field` mismatch was only a warning, not an error, letting the wrong offset be counted as controlled-pair evidence; fixed an overly-permissive `_L_EXPLICIT` regex in `stack/levels.py` that mistook ordinary letter+digit filename fragments (e.g. "Cell01", "bimodal-30") for explicit L-level markers, confirmed against 2 real corpus fixtures |
 | 2026-09-06 | Roadmap-process audit: discovered hosted CI (`.github/workflows/ci.yml`, live since 2026-09-02) has been red for 12 consecutive commits despite ROADMAP claiming F6 "not started"; corrected §6.1/§6.7/L13. Corrected two now-false "scheduled for deletion" notes in `PROJECT_STRUCTURE.md` (`io/reader.py`, `validate/roundtrip.py` are both load-bearing). Synced `planning/README.md`'s index (10 missing files). Added `ruff` as a lint dev-dependency, wired into CI |
 | 2026-09-06 | Pushed the fix (`d60ea3b`); hosted CI green again (run #33). Deleted 3 confirmed-dead code paths (2 tools scripts, 1 3.7MB vendor archive); README now shows a live GitHub Actions badge instead of a static count. Re-split Gate D/E/F by per-task equipment dependency (only C5, E3/E3.1, F1–F4 actually need a PNE PC) and unblocked the rest for parallel work per user authorization. Found 6 unmerged `cursor/*` branches from earlier Cursor Cloud runs — 3 touch UI (theming, module recipes, schedule explanation) and look salvageable as design reference, not junk; see §6.6.1 and `UI_UX_NOTES.md` |
+| 2026-09-08 | **C5 passed on PNE02** (`smoke_writer_probe.sch`); Gate C exited with documented gaps (DCR IR-only; 696 tail unused; CLI `build_sch_header` 54-byte gap open). OCV/Impedance/Pattern/Balance IR+compiler stubs + offset registry (`STEP_TYPES_EXTENDED.md`); Gate D P0 harness started (`validate/gate_d_harness.py`) |
+| 2026-09-08 | Gate D software slice completed: capacity contract tests; Formation/Rest/Cycle Life + RPT/DC-IR + HPPC/capacheck/QPEED/in-situ harness; golden family topology compares (`validate/topology.py`) |
+| 2026-09-08 | Gate D verification method + audit remediations: `GATE_D_VERIFICATION.md`, harness charge-V/loop checks, `run_gate_d_verification` → `GATE_D_VALIDATION_REPORT.json` (`gate_d_passed=true`, 49 checks) |
 
 ---
 
@@ -466,9 +469,9 @@ Gate A  개발 기반          ✅ complete (local)
   ↓
 Gate B  바이너리 스키마    ✅ complete
   ↓
-Gate C  호환 SCH writer    🔄 lab-blocked on C5  ← still the only equipment gate
+Gate C  호환 SCH writer    ✅ exited 2026-09-08 (C5 PNE02)
   ↓                         (parallel track below can run now, per-task)
-Gate D  모듈 픽스처 검증   🔄 unblocked 2026-09-06, all tasks software-only
+Gate D  모듈 픽스처 검증   ✅ software exit 2026-09-08 (P0/P1)
   ↓
 Gate E  모듈형 스케줄 UX   🔄 E0–E2.4 unblocked (authoring UI); E3+/export stays behind C5
   ↓
@@ -580,11 +583,11 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 | | |
 |---|---|
-| **Status** | 🔄 **Lab-blocked on C5** ← **current focus** |
+| **Status** | ✅ **Exited 2026-09-08** (C5 PNE02 smoke passed; gaps documented) |
 | **Depends on** | Gate B exit (`gate_b_passed=true`) |
 | **Exit criteria (original)** | 612 writer round-trips semantically; 696 lab parity; PNE PC smoke test recorded; no placeholder header |
-| **Exit criteria (accepted 2026-09-03)** | See honest assessment below — software slice done; **C5 remaining**; C6 reframed as framing/corpus policy |
-| **Next gate** | Gate D (deferred until requested) |
+| **Exit criteria (accepted 2026-09-03 / closed 2026-09-08)** | Software slice C0–C4 + C6 framing; **C5 signed on PNE02**; remaining gaps: DCR IR-only, 696 tail unused, CLI header 54-byte unexplained region |
+| **Next gate** | Gate D (in progress) |
 
 | # | Task | Status | Completion criteria | Honest note |
 |---|------|--------|---------------------|-------------|
@@ -595,18 +598,18 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 | C2 | Step compiler | ✅ | mode, end, loop/goto, sampling, SOC | **DCR not packed** (Excel≠Ensol); intentional |
 | C3 | Internal round-trip | ✅ | Semantic write→read on Ensol offsets | Covers smoke/intent fields; not every module E2E (that is Gate D) |
 | C4 | ASSB cross-check | ✅ | Layout + step-count + overlapping fields | **Thin**: shared ASSB candidate compare is mostly `fEndC`; currents checked via ASSB helpers. Do not read as full ASSB semantic parity |
-| C5 | PNE PC smoke test | ⏳ **blocking** | CTSEditorPro reopen (+ optional run) recorded | **Only Gate C exit item left** |
+| C5 | PNE PC smoke test | ✅ | CTSEditorPro reopen (+ optional run) recorded | **Passed PNE02 2026-09-08** — checklist filled; DOD/SOC UI optional not shown |
 | C6 | `0x00010004/696` | ✅ *reframed* | Header 1844 + 696 steps (612 prefix + zero tail) | Original “696 lab parity / semantically verified” **not** fully claimed. Secured corpus tails are all-zero; writer matches that. Nonzero-tail mapping deferred until evidence appears |
 
-**Recommended order:** stop new Gate C software work → **run C5** → then decide Gate D.
+**Recommended order:** ~~run C5~~ → Gate D module fidelity → Gate E authoring UX.
 
-#### Gate C honest assessment (2026-09-03)
+#### Gate C honest assessment (2026-09-03; C5 closed 2026-09-08)
 
 **What went right (direction is sound)**
 1. Gate order respected: B evidence → C0 safety → C1 header → C2 compiler → C3/C4 validators before equipment.
 2. Dual writer strategy is correct: `patch-sch` (template-preserving, evidence-gated) is safer for near-term lab use; from-scratch `build` stays experimental until C5.
 3. Refusing to invent DCR / 696-tail semantics without bytes in corpus was the right call.
-4. C5 is correctly the remaining hard gate — software cannot close equipment reopen.
+4. C5 equipment reopen closed Gate C — capacity slot fix (`+12`) and Cycle-free LOOP probe were the last lab lessons.
 
 **Where status was overstated (corrected here)**
 1. **C6** was marked done against a stronger original bar (“696 lab parity / semantically verified”). Accepted bar is now: **framing + corpus-aligned zero-tail policy**. Full 696 semantic parity of complex lab schedules remains future work if tails become nonzero or if module E2E (Gate D) requires it.
@@ -617,15 +620,14 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 **Optimal next moves**
 | Priority | Action | Why |
 |--------:|--------|-----|
-| 1 | **C5 lab smoke** on `example/smoke_rest_cc_end.sch` | Sole remaining Gate C exit criterion |
-| 2 | Prefer `patch-sch` for real schedule edits until C5 signed | Lower risk than from-scratch builds |
-| 3 | Do **not** start Gate D until asked | Per product decision; C2/C3 already satisfy D’s software dependency minimum |
+| 1 | Gate D P0 harness + Formation/Rest/Cycle Life | Software-only module fidelity |
+| 2 | Prefer `patch-sch` for real schedule edits until CLI `build_sch_header` gap is understood | Lower risk than from-scratch builds for production edits |
+| 3 | OCV/Impedance/Balance controlled pairs when lab time allows | Type codes stubbed; field map empty in corpus |
 | 4 | Do **not** invent 696-tail or DCR binary maps | Wait for nonzero evidence / controlled pairs |
-| 5 | After C5 pass: mark Gate C exited with documented gaps (DCR IR-only; 696 tail unused) | Keeps exit criteria honest |
+| 5 | Documented Gate C gaps remain: DCR IR-only; 696 tail unused; 54 header bytes | Keeps exit criteria honest |
 
 **Rules**
-- Until C5 passes, never label CLI `build` output as equipment-executable
-- Do not mark Gate C complete without C5 sign-off
+- Label CLI `build` as equipment-smoke-verified for the probe class only; new type classes (OCV/Imp/…) need their own reopen
 - C6 “complete” means framing/corpus policy only unless upgraded later
 - Apply §5.6 checklist when claiming any further C/D work complete
 
@@ -643,7 +645,11 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
   several separate sessions; checklist rewritten around it. Byte-diffing
   `build_sch_header()` against a real lab header also surfaced 54/1760 unexplained
   header bytes (see §11) — logged, not packed (no evidence for their meaning yet).
+- **C5 (2026-09-08):** PNE02 CTSEditorPro smoke **passed** on `smoke_writer_probe.sch`
+  (open/save, capacity 800 mAh, charge/discharge/LOOP/END, optional channel run).
+  DOD/SOC 40% not shown in UI (optional). Common-safety Cap confirmed at `+12`.
 - C6: [`SCH_696_TAIL_ANALYSIS.md`](SCH_696_TAIL_ANALYSIS.md) — 92 catalog fixtures / 2056 steps, zero nonzero tails
+- Extended types: [`STEP_TYPES_EXTENDED.md`](STEP_TYPES_EXTENDED.md)
 - User action list: [`USER_ACTION_ITEMS.md`](USER_ACTION_ITEMS.md)
 
 ---
@@ -652,25 +658,32 @@ Status labels used below: `✅ done` · `🔄 in progress` · `⏳ not started` 
 
 | | |
 |---|---|
-| **Status** | 🔄 **Unblocked, not yet started** (module `expand` prototypes exist) |
-| **Depends on** | Gate C2 + C3 (both done) — **not** C5. Nothing in Gate D touches equipment; it is entirely `validate → expand → compile → parse → semantic compare` against files already on disk |
+| **Status** | ✅ **P0/P1 software exit 2026-09-08** — re-verified via [`GATE_D_VERIFICATION.md`](GATE_D_VERIFICATION.md) (`gate_d_passed=true`) |
+| **Depends on** | Gate C2 + C3 (both done) — **not** blocked on equipment |
 | **Exit criteria** | Every P0 module passes `validate → expand → compile → parse → semantic compare` in one integration test |
 | **Next gate** | Gate E |
+| **Verification** | Method + audit + runner: [`GATE_D_VERIFICATION.md`](GATE_D_VERIFICATION.md), [`GATE_D_VERIFICATION_AUDIT.md`](GATE_D_VERIFICATION_AUDIT.md), `python -m pne_scheduler.tools.run_gate_d_verification` → [`GATE_D_VALIDATION_REPORT.json`](GATE_D_VALIDATION_REPORT.json) |
 
-Previously marked "do not start until asked" per L10 (pause non-support software while C5-blocked). **User authorized starting C5-independent work 2026-09-06** — Gate D qualifies in full: every row below is software-only.
+Gate D is software-only. Module expands are **protocol templates**; golden compares use step-type *families* (`validate/topology.py`), not byte-identical clones. DCR binary packing stays IR-only (L3).
 
 | Priority | Module / harness | Status | Validation fixture / criteria | Needs equipment? |
 |----------|------------------|--------|-------------------------------|:---:|
-| P0 | Integration harness | ⏳ | End-to-end pipeline without external parser | No |
-| P0 | Capacity model contract | ⏳ | Same Q_nom/current in viewer inference and writer compile | No |
-| P0 | Formation, Cycle Life, Rest | ⏳ | Topology, I/V, loop vs representative originals | No |
-| P0 | RPT, DC-IR | ⏳ | SOC reference, DCR window, goto semantics | No — but DCR *packing* stays IR-only regardless (L3) |
-| P1 | HPPC | ⏳ | SOC staircase + pulses in `HPPC_Full range.sch` | No |
-| P1 | capacheck, QPEED, in-situ | ⏳ | Golden topology for 8-file bimodal archive | No |
+| P0 | Integration harness | ✅ | `validate/gate_d_harness.py` + `tests/test_gate_d_harness.py` | No |
+| P0 | Capacity model contract | ✅ | `tests/test_capacity_contract.py` — writer Q_nom only; viewer may disagree (L7) | No |
+| P0 | Formation, Cycle Life, Rest | ✅ | Harness topology/I/V + golden family (`golden-formation-696`, `golden-cycle-612-long`) | No |
+| P0 | RPT, DC-IR | ✅ | SOC ladder + pulse topology; DCR warnings; Excel DCR offsets remain 0 | No |
+| P1 | HPPC | ✅ | Harness + `HPPC_Full range.sch` family (charge/discharge/rest) | No |
+| P1 | capacheck, QPEED, in-situ | ✅ | Harness + golden families; QPEED `full`/`soc_setting`; in-situ label | No |
 
-**Recommended order inside Gate D:** harness → capacity contract → Formation/Rest → Cycle Life → RPT/DC-IR → HPPC → capacheck/QPEED.
+**Recommended order inside Gate D:** ~~harness → capacity → modules~~ done.
 
-**Planning check:** §5.6 (especially L3 DCR evidence, L7 capacity contract, L4 honest exit depth). DCR packing stays blocked until controlled evidence exists — Gate D can verify *topology and packed fields* against real fixtures without ever packing DCR bytes.
+**Planning check:** §5.6 (especially L3 DCR evidence, L7 capacity contract, L4 honest exit depth). Extended step types (OCV/Imp/Balance) remain stubbed pending lab pairs (`STEP_TYPES_EXTENDED.md`) — outside Gate D module rows.
+
+**Honest gaps remaining after Gate D software exit**
+- Modules ≠ full lab schedule length/order (templates by design)
+- `fEndC@36` packs but stays `semantic_unverified` (warnings expected on RPT/DCIR/HPPC)
+- DCR window never packed without controlled pairs
+- Capacheck module order is CYCLE→LOOP; some goldens differ — family match only
 
 ---
 
@@ -825,7 +838,7 @@ tests to be skipped.
 | Dual capacity models | **Writer path resolved** | Writer uses explicit `cell_capacity_mAh` (= 1C mA); viewer may still infer Q_nom |
 | Internal structure of `FILE_GRADE`, `STRUCT_EIS_SET` | Only names are present in Excel | Defer 0x00010007 to Phase 4 |
 | Recommended Δt/ΔV/ΔQ values | UNKNOWN in cyclediag | Reverse-extract from internal standard sch samples |
-| Writer validation on physical equipment | **Open — C5** | PNE PC reopen/smoke is mandatory; checklist + smoke.sch ready |
+| Writer validation on physical equipment | **Closed — C5** | PNE02 2026-09-08; checklist signed |
 | External ASSB parser availability | Dependency outside the repository | Make the internal parser the default source of truth and optionally cross-validate |
 | Drift between fixture names and test expectations | **Confirmed** | Do not hide with skips; stabilize with manifest-based fixture lookup |
 | Experimental output mistaken for production | **Mitigated, not resolved** | Default-block `build`; require manifest, reopen verification, and exact-hash release gates |
@@ -839,20 +852,19 @@ tests to be skipped.
 
 ## 9. Current focus (active gate)
 
-**Active gate: C — lab-blocked on C5.**  
-Software Gate C work should pause except C5 support. Gate D is deferred. Gate E UX goal is
-**Nova + LabVIEW feel for modular schedule authoring** (§1.1, §6.6) — not instrument control —
-and must not pull semantic export ahead of C exit.
+**Active gate: E — modular schedule UX (Nova + LabVIEW feel).**  
+Gate C exited 2026-09-08 (C5). Gate D software exit 2026-09-08 (P0/P1 harness +
+capacity contract + golden families). Remaining lab-optional: OCV/Imp/Balance pairs.
 
 | Step | Gate | Action |
 |------|------|--------|
-| 1 | **C5** | Open `example/smoke_rest_cc_end.sch` in CTSEditorPro; fill checklist |
-| 2 | C exit | After C5 sign-off, mark Gate C complete with documented gaps (DCR IR-only; 696 tail unused) |
-| 3 | D | Deferred until explicitly requested; apply §5.6 |
-| 4 | E | After C (+ preferably D): procedure + **module** workspace (E0–E3) |
+| 1 | C5 | ✅ Passed — `GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` |
+| 2 | C exit | ✅ Gaps: DCR IR-only; 696 tail unused; CLI header 54-byte region |
+| 3 | D | ✅ Software P0/P1 complete; see §6.5 honest gaps |
+| 4 | **E** | Module workspace / procedure composition (E0–E2.4); export stays evidence-gated |
 | 5 | F | Release gates later |
 
-Completed software prerequisites: Gate A; Gate B (`gate_b_passed`); C0–C4; C6 framing/corpus policy.
+Completed: Gate A; Gate B (`gate_b_passed`); Gate C (C5 signed); Gate D (software).
 
 Process: use §5.6 lessons checklist on every future gate claim.
 
@@ -883,7 +895,7 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 | 2026-08-31 | B | blocking | PNE voltage/L-level encoding (`+12` mode vs `+16` fVref) | **resolved for writer path** | Ensol map + Gate B pairs: `@12` volt/vlim, `@16` current_mA |
 | 2026-08-31 | B | blocking | Dual capacity models (CellProfile vs stack-inferred Q_nom) | resolved | Writer uses explicit `CellProfile.nominal_capacity_mAh`; inferred Q_nom is display-only |
 | 2026-08-31 | B | normal | Controlled-pair metadata incomplete → evidence promotion unsafe | resolved | B5 intake validation + PNE02 pairs; PNE16 waived |
-| 2026-09-03 | C | **blocking** | C5 equipment smoke still required before executable builds | open | `GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` + `example/smoke_rest_cc_end.sch` |
+| 2026-09-03 | C | **blocking** | C5 equipment smoke still required before executable builds | **resolved 2026-09-08** | PNE02 passed `smoke_writer_probe.sch`; see checklist |
 | 2026-09-03 | C | normal | C6 original “696 semantic lab parity” stronger than delivered | **accepted waiver** | Reframed: framing + zero-tail corpus policy; see §6.4 honest assessment |
 | 2026-09-03 | C | normal | C4 ASSB cross-check is thin (layout/steps/`fEndC`) | accepted | Enough as smoke; deepen only if C5 or lab diffs demand it |
 | 2026-09-03 | C | normal | 696-byte tail (612–695) all-zero in secured corpus | resolved | Writer zero-pad matches corpus; `SCH_696_TAIL_ANALYSIS.md` |
@@ -904,5 +916,7 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 | 2026-09-06 | analysis | normal | `stack/levels.py::_L_EXPLICIT` regex (`L[\s._-]*(\d...)`) had no token boundary before `L`, so it matched an `L`/`l` preceded by *any* other letter -- e.g. "Cell01" → spurious `l0`, "Model3350" → spurious `l3`. Confirmed on the real 102-file corpus: `set3_bimodal-30_45도 0.5C cycle.sch` and `bimodal_0.5C cycle.sch` both got a wrong filename-based L-level guess from the trailing "l" in "bimodal". It could also let a false match earlier in the name shadow a real explicit L-level later in the same name (`re.search` returns the leftmost match) | resolved | Added a negative lookbehind (`(?<![A-Za-z])L...`) requiring the character before `L` not be a letter. Viewer/analysis-only per L7 (writer path never uses filename inference), so this never affected binary output -- only the viewer's displayed L-level/C-rate guess. `tests/test_stack_levels.py` parametrized regression tests added |
 | 2026-09-06 | F | **resolved (process integrity)** | `.github/workflows/ci.yml` had existed and been active since 2026-09-02 (commit `be373a8`), but ROADMAP.md §6.1/§6.7 claimed hosted CI was "not started" -- meanwhile the workflow had actually been **failing for 12 consecutive commits** (`0aa9b6f` through `64dddd8`, all of Gate C's work) on the `access_parser` collection bug. Neither the failure nor the workflow's existence was ever reflected in ROADMAP.md | resolved | Fix pushed as commit `d60ea3b`; [run #33](https://github.com/Hwiho/pne_scheduler/actions/runs/34037824999) completed **success** (Ruff, Pytest, corpus-smoke all green) -- hosted CI restored after 12 consecutive red runs. Remaining optional follow-up: replace the static hand-set shields.io test badge in README with a real Actions status badge so silent red CI can't recur unnoticed (not done yet, low priority) |
 | 2026-09-06 | E | normal | 6 unmerged `cursor/*` remote branches discovered (abandoned Cursor Cloud agent runs, diverged up to 53 commits from master) | open — needs human review | 3 touch UI (`cursor/update-roadmap-5ac9` theming/wiring, `cursor/module-recipes-presets-5ac9` recipe editing, `cursor/explain-schedules-5ac9` schedule explanation) — patterns extracted to `UI_UX_NOTES.md`, too stale to merge wholesale. 3 touch Gate B/C validation tooling (`cursor/create-gate-b-baseline-dfb2`, `cursor/gate-c-safety-manifest-eccb`, `cursor/mine-internal-dataset-dfb2`) — not reviewed in depth, may contain unmerged evidence/tooling work worth checking before deleting the branches |
-| 2026-09-08 | C | **blocking→fixing** | CTS “공통 안전조건 용량” offset mis-mapped; PNE16 vs PNE02 UI units/slots differ | fixing | PNE02 screenshot: Imax@0x3D8+8 works, Cap stays .000 if only written at Ensol +16. Gate B PNE02 pairs put Cap at **+12**. Writer now packs Cap at `0x3D8+12` and `0x458+12`. C5 re-test on PNE02 required |
+| 2026-09-08 | C | **blocking→fixing** | CTS “공통 안전조건 용량” offset mis-mapped; PNE16 vs PNE02 UI units/slots differ | **resolved** | Cap at `0x3D8+12` / `0x458+12`; PNE02 C5 showed **800 mAh** |
+| 2026-09-08 | D | normal | OCV/Impedance/Pattern/Balance have CTS UI types but **zero** corpus samples | open (stubs) | Type codes in `SCH_STEP_TYPES`; shared prefix packing + warnings; [`STEP_TYPES_EXTENDED.md`](STEP_TYPES_EXTENDED.md) — need lab controlled pairs |
+| 2026-09-08 | D | normal | Gate D module expands are templates, not full lab schedule clones | accepted | Family topology tests + harness E2E; byte-faithful module cloning deferred |
 | | | | *(add new rows here)* | | |

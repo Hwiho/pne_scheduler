@@ -11,6 +11,8 @@ StepKind = Literal[
     "rest",
     "ocv",
     "impedance",
+    "pattern",
+    "balance",
     "cycle",
     "loop",
     "end",
