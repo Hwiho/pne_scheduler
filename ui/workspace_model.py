@@ -30,6 +30,7 @@ from ..ir.procedure import (
 from ..ir.project import ModuleNode, ScheduleProject
 from ..modules.base import get_module_class
 from ..modules.catalog import get_module_spec, palette_module_types
+from ..library import LoadPlan, MethodLibrary, MethodVersion
 from ..protocol.campaign import CampaignPlan, build_cycle_rpt_campaign
 from ..protocol.planning import CycleBudget, cycles_within
 from ..protocol.presets import CRatePreset, presets_within
@@ -92,8 +93,16 @@ class ValidationRow:
 class WorkspaceModel:
     """Document + derived views + every edit the workspace can perform."""
 
-    def __init__(self, document: ProjectDocument | None = None) -> None:
+    def __init__(
+        self,
+        document: ProjectDocument | None = None,
+        *,
+        library: MethodLibrary | None = None,
+    ) -> None:
         self.document = document or ProjectDocument.new()
+        # Created lazily: a session that never opens the library never touches
+        # the user's home directory.
+        self._library = library
 
     # ------------------------------------------------------------ project
 
@@ -301,6 +310,76 @@ class WorkspaceModel:
         label = f"사이클 {plan.total_cycles}회 · RPT {plan.rpt_count}회 추가"
         self.document.apply(label, mutate)
         return tuple(module_id for module_id, _block in prepared)
+
+    # ------------------------------------------------------------- library
+
+    def library(self) -> MethodLibrary:
+        if self._library is None:
+            self._library = MethodLibrary()
+        return self._library
+
+    def save_method(
+        self, name: str, *, description: str = "", method_id: str | None = None
+    ) -> MethodVersion:
+        """Store the current module list as a new library version."""
+        equipment = self.project.equipment
+        return self.library().save(
+            name=name,
+            description=description,
+            method_id=method_id,
+            modules=[node.to_dict() for node in self.project.modules],
+            equipment_unit=equipment.unit if equipment else "",
+            equipment_layout=(equipment.layout_key or "") if equipment else "",
+        )
+
+    def saved_methods(self) -> tuple[MethodVersion, ...]:
+        return self.library().methods()
+
+    def method_versions(self, method_id: str) -> tuple[MethodVersion, ...]:
+        return self.library().versions(method_id)
+
+    def plan_method_load(self, method: MethodVersion) -> LoadPlan:
+        equipment = self.project.equipment
+        return self.library().plan_load(
+            method,
+            equipment_unit=equipment.unit if equipment else "",
+            equipment_layout=(equipment.layout_key or "") if equipment else "",
+        )
+
+    def load_method(self, plan: LoadPlan, *, replace: bool = False) -> tuple[str, ...]:
+        """Append (or replace with) a saved method's modules, in one undo entry.
+
+        Ids are reassigned rather than reused: a method saved from one project
+        must not collide with a module already in this one.
+        """
+        if plan.errors:
+            raise ValueError("; ".join(plan.errors))
+        if not plan.modules:
+            raise ValueError("불러올 구간이 없습니다.")
+
+        prepared: list[tuple[str, str, dict[str, Any]]] = []
+        taken: set[str] = set()
+        for raw in plan.modules:
+            module_type = str(raw.get("module_type", ""))
+            if get_module_class(module_type) is None:
+                raise ValueError(f"알 수 없는 실험 종류입니다: {module_type}")
+            module_id = self._next_id(module_type, taken)
+            taken.add(module_id)
+            prepared.append(
+                (module_id, module_type, resolve_params(module_type, dict(raw.get("params") or {})))
+            )
+
+        def mutate(project: ScheduleProject) -> None:
+            if replace:
+                project.modules.clear()
+                project.connections.clear()
+            for module_id, module_type, params in prepared:
+                project.modules.append(ModuleNode(module_id, module_type, params))
+            linearize(project)
+
+        verb = "불러오기(교체)" if replace else "불러오기"
+        self.document.apply(f"{plan.method.label} {verb}", mutate)
+        return tuple(module_id for module_id, _type, _params in prepared)
 
     def remove_module(self, module_id: str) -> None:
         def mutate(project: ScheduleProject) -> None:

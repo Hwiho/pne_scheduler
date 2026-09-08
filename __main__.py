@@ -44,6 +44,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     summary.add_argument("project", type=Path, help="Input .schproj path")
 
+    library = sub.add_parser("library", help="List saved methods in the library")
+    library.add_argument("method_id", nargs="?", help="Show every version of one method")
+
     info = sub.add_parser("info", help="Show project summary")
     info.add_argument("project", type=Path, help="Input .schproj path")
 
@@ -159,6 +162,32 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  [{option.status_text}] {option.title}")
             for blocker in option.blockers:
                 print(f"        · {blocker}")
+        return 0
+
+    if args.command == "library":
+        from .library import MethodLibrary
+
+        store = MethodLibrary()
+        if args.method_id:
+            versions = store.versions(args.method_id)
+            if not versions:
+                print(f"저장된 방법이 없습니다: {args.method_id}", file=sys.stderr)
+                return 2
+            for entry in versions:
+                print(
+                    f"v{entry.version:<4} 구간 {entry.module_count:<3} "
+                    f"{entry.equipment_unit or '장비 미지정':<8} {entry.saved_at}"
+                )
+            return 0
+        methods = store.methods()
+        if not methods:
+            print(f"저장된 방법이 없습니다. ({store.root})")
+            return 0
+        for entry in methods:
+            print(
+                f"{entry.method_id:<28} {entry.name:<24} v{entry.version:<4} "
+                f"구간 {entry.module_count:<3} {entry.equipment_unit or '-':<8} {entry.saved_at}"
+            )
         return 0
 
     if args.command == "info":
