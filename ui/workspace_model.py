@@ -29,6 +29,7 @@ from ..ir.procedure import (
 from ..ir.project import ModuleNode, ScheduleProject
 from ..modules.base import get_module_class
 from ..modules.catalog import get_module_spec, palette_module_types
+from ..protocol.campaign import CampaignPlan, build_cycle_rpt_campaign
 from ..protocol.recipes import ExperimentGoal, get_goal, search_goals
 from ..release import ReleaseState, evaluate_release
 from ..report.summary import ProjectSummary, summarize_project
@@ -256,6 +257,46 @@ class WorkspaceModel:
         title = label or (get_module_spec(module_type).title if get_module_spec(module_type) else module_type)
         self.document.apply(f"{title} 추가", mutate)
         return module_id
+
+    def plan_campaign(self, **options: Any) -> CampaignPlan:
+        """Preview a cycle/RPT campaign without touching the project."""
+        return build_cycle_rpt_campaign(**options)
+
+    def add_campaign(self, plan: CampaignPlan) -> tuple[str, ...]:
+        """Append a planned campaign as ordinary modules, in one undo entry.
+
+        The blocks land as normal modules — nothing about them is special
+        afterwards, so any one of them can be edited, moved, or deleted like a
+        hand-added module.
+        """
+        if plan.errors:
+            raise ValueError("; ".join(plan.errors))
+        if not plan.blocks:
+            raise ValueError("추가할 구간이 없습니다.")
+
+        prepared: list[tuple[str, Any]] = []
+        taken: set[str] = set()
+        for block in plan.blocks:
+            if get_module_class(block.module_type) is None:
+                raise ValueError(f"알 수 없는 실험 종류입니다: {block.module_type}")
+            module_id = self._next_id(block.module_type, taken)
+            taken.add(module_id)
+            prepared.append((module_id, block))
+
+        def mutate(project: ScheduleProject) -> None:
+            for module_id, block in prepared:
+                project.modules.append(
+                    ModuleNode(
+                        module_id,
+                        block.module_type,
+                        resolve_params(block.module_type, dict(block.params)),
+                    )
+                )
+            linearize(project)
+
+        label = f"사이클 {plan.total_cycles}회 · RPT {plan.rpt_count}회 추가"
+        self.document.apply(label, mutate)
+        return tuple(module_id for module_id, _block in prepared)
 
     def remove_module(self, module_id: str) -> None:
         def mutate(project: ScheduleProject) -> None:
@@ -573,8 +614,11 @@ class WorkspaceModel:
             raise ValueError(f"알 수 없는 구간입니다: {module_id}")
         return node
 
-    def _next_id(self, module_type: str) -> str:
+    def _next_id(self, module_type: str, reserved: set[str] | None = None) -> str:
+        """Next free id, honouring ids already handed out in the same batch."""
         existing = {node.id for node in self.project.modules}
+        if reserved:
+            existing |= reserved
         index = 1
         while f"{module_type}_{index}" in existing:
             index += 1

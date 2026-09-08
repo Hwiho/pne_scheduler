@@ -12,13 +12,21 @@ from ..protocol.defaults import (
 from .base import register_module
 
 
+def _rate_label(rate: float) -> str:
+    """Render a pulse rate the way the lab writes it: 1C, 1.5C, 2C."""
+    text = f"{rate:.2f}".rstrip("0").rstrip(".")
+    return f"{text}C"
+
+
 @register_module("rpt")
 @dataclass
 class RptModule:
     """Reference performance test — C/3 discharge + DC-IR pulse @ SOC 80/50/20."""
 
     reference_c_rate: float = RPT_DISCHARGE_C_RATE
-    dcir_pulse_c_rate: float = RPT_DCIR_PULSE_C_RATE_DEFAULT
+    dcir_pulse_c_rates: list[float] = field(
+        default_factory=lambda: [RPT_DCIR_PULSE_C_RATE_DEFAULT]
+    )
     dcir_pulse_s: float = 10.0
     rest_s: float = 1800.0
     soc_fractions: list[float] = field(default_factory=lambda: list(RPT_DCIR_SOC_FRACTIONS))
@@ -27,12 +35,22 @@ class RptModule:
     @classmethod
     def from_params(cls, params: dict) -> RptModule:
         known = {k: v for k, v in params.items() if k in cls.__dataclass_fields__}
+        # Projects written before multi-rate DC-IR carry a single `dcir_pulse_c_rate`.
+        # Seed the list from it so an old file keeps producing the same schedule.
+        if "dcir_pulse_c_rates" not in known and "dcir_pulse_c_rate" in params:
+            known["dcir_pulse_c_rates"] = [float(params["dcir_pulse_c_rate"])]
         return cls(**known)
 
     def validate(self, cell: CellProfile) -> list[str]:
+        errors: list[str] = []
         if not self.soc_fractions:
-            return ["soc_fractions must not be empty"]
-        return []
+            errors.append("soc_fractions must not be empty")
+        if self.include_dcir_pulses:
+            if not self.dcir_pulse_c_rates:
+                errors.append("dcir_pulse_c_rates must not be empty when pulses are included")
+            if any(rate <= 0 for rate in self.dcir_pulse_c_rates):
+                errors.append("DC-IR pulse C-rates must be positive")
+        return errors
 
     def expand(self, cell: CellProfile) -> list[StepIntent]:
         steps: list[StepIntent] = []
@@ -58,24 +76,30 @@ class RptModule:
                 )
             )
             if self.include_dcir_pulses:
-                steps.append(
-                    StepIntent(
-                        step_type="discharge",
-                        mode="CC",
-                        label=f"RPT DC-IR pulse @ SOC {soc:.0%}",
-                        c_rate=self.dcir_pulse_c_rate,
-                        end_time_s=self.dcir_pulse_s,
-                        dcr_start_s=1.0,
-                        dcr_end_s=10.0,
+                # Each rate gets its own pulse and its own recovery rest, so the
+                # cell returns to the same SOC before the next rate is applied and
+                # the resistances stay comparable across rates.
+                for rate in self.dcir_pulse_c_rates:
+                    steps.append(
+                        StepIntent(
+                            step_type="discharge",
+                            mode="CC",
+                            label=f"RPT DC-IR pulse {_rate_label(rate)} @ SOC {soc:.0%}",
+                            c_rate=rate,
+                            end_time_s=self.dcir_pulse_s,
+                            dcr_start_s=1.0,
+                            dcr_end_s=10.0,
+                        )
                     )
-                )
-                steps.append(
-                    StepIntent(
-                        step_type="rest",
-                        label=f"RPT rest after DC-IR @ SOC {soc:.0%}",
-                        end_time_s=self.rest_s,
+                    steps.append(
+                        StepIntent(
+                            step_type="rest",
+                            label=(
+                                f"RPT rest after DC-IR {_rate_label(rate)} @ SOC {soc:.0%}"
+                            ),
+                            end_time_s=self.rest_s,
+                        )
                     )
-                )
             previous_soc = soc
 
         return steps

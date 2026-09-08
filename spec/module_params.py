@@ -256,10 +256,16 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
             basis="RPT 표준 C/3 방전", affects="SOC 조정 방전 스텝",
             recommended_max=1.0,
         ),
-        _c_rate(
-            "dcir_pulse_c_rate", "DC-IR 펄스 전류", 1.5, group=G_REFERENCE,
-            basis="랩 표준 1.0–1.5C 펄스", affects="각 SOC 지점의 펄스 스텝",
-            recommended_max=1.5,
+        ParameterSpec(
+            "dcir_pulse_c_rates", "DC-IR 펄스 전류", "c_rate_list", G_REFERENCE,
+            "dcir_pulse_c_rates",
+            default=[1.5], minimum=0.0, maximum=30.0,
+            recommended_min=0.05, recommended_max=2.5,
+            help="SOC 지점마다 이 전류들로 차례로 펄스를 겁니다. "
+                 "여러 개를 넣으면 (예: 1C, 1.5C, 2C) 전류별 저항을 한 번에 얻습니다.",
+            basis="랩 표준 1.0–1.5C 펄스. 여러 rate 는 사용자가 지정합니다.",
+            affects="각 SOC 지점의 펄스 스텝 수 (rate 개수 × 2 스텝)",
+            verification="software-checked",
         ),
         ParameterSpec(
             "dcir_pulse_s", "DC-IR 펄스 길이", "duration_s", G_REFERENCE, "dcir_pulse_s",
