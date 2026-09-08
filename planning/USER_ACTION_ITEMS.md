@@ -24,6 +24,10 @@ Worth reporting back: Korean labels that read wrong for lab use, a tab whose ord
 how you actually work, and anything in 5. 내보내기 that looks like it would let a file reach
 the cycler without a CTSPro check — the last one is a bug, not a preference.
 
+Newer surfaces that have never been seen either: the 사이클 + RPT 캠페인 card and the
+급속충전 전류 control in 2. 프로토콜, the 기간으로 정하기 row in 3. 절차, the C-rate chips
+under every rate field, and the 단일 스텝 entry in the experiment palette.
+
 Without PySide6 the same command opens the Tk build instead and says so; that fallback is
 expected, not a failure.
 

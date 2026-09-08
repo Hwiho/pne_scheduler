@@ -44,6 +44,12 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     summary.add_argument("project", type=Path, help="Input .schproj path")
 
+    import_sch = sub.add_parser(
+        "import-sch",
+        help="Open an existing .sch and report what may be edited in place",
+    )
+    import_sch.add_argument("source", type=Path, help="Existing .sch file")
+
     library = sub.add_parser("library", help="List saved methods in the library")
     library.add_argument("method_id", nargs="?", help="Show every version of one method")
 
@@ -162,6 +168,37 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  [{option.status_text}] {option.title}")
             for blocker in option.blockers:
                 print(f"        · {blocker}")
+        return 0
+
+    if args.command == "import-sch":
+        from .import_session import ImportSession
+
+        try:
+            session = ImportSession.open(args.source)
+        except (OSError, ValueError) as exc:
+            print(f"열 수 없습니다: {exc}", file=sys.stderr)
+            return 2
+        version = session.sch_version
+        print(f"원본: {session.path}")
+        print(f"  SHA-256: {session.sha256}")
+        print(
+            "  버전: "
+            + (f"0x{version:08X}" if version is not None else "알 수 없음")
+            + f" · 스텝 {session.step_count}개"
+        )
+        editable = session.editable_fields()
+        print()
+        if editable:
+            print("원본을 고쳐 쓸 수 있는 필드 (CTSPro 재열기 근거로 승격된 것만):")
+            for item in editable:
+                print(f"  {item.name:<16} @{item.offset:<5} {item.dtype:<8} {item.evidence}")
+        else:
+            print("이 버전에는 근거로 승격된 필드가 없어 원본을 고칠 수 없습니다.")
+        clone = session.propose_clone()
+        print()
+        print("초안으로 복제하면 버려지는 것:")
+        for item in clone.dropped:
+            print(f"  · {item}")
         return 0
 
     if args.command == "library":

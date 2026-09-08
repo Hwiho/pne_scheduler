@@ -26,6 +26,7 @@
 | 2026-09-08 | Gate D mutation backtest found and fixed two verification holes (V6 never compared module expansions; skips did not block `gate_d_passed`) — see §11. Archived closed-gate evidence and consumed analysis outputs to [`../legacy/`](../legacy/README.md); only files with zero `.py` references were moved, and the C5 signed record stays cited from Gate F2 |
 | 2026-09-08 | Gate E/pattern re-audit: added the missing module-composition contract (single final END, rebased LOOP references), separated imported patch sessions from authored projects, added pattern trust/catalog and desktop UX requirements, and established [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md). DOD@384 and module SOC cutoff (`fEndC@36`) now require separate controlled pairs before SOC-dependent pattern approval |
 | 2026-09-09 | Gate E workspace shipped: one window (설정 → 프로토콜 → 절차 → 검증 → 내보내기) on a Qt/QML default shell with a Tk fallback, both driving a shell-free `ui/workspace_model.py`. Added `spec/` ParameterSpec, lenient `ir/loader.py`, `ir/procedure.py`, `ir/equipment_profile.py` (schproj v2), staged export gates in `release.py`, and Korean summaries in `report/`. CI now installs the `[gui]` extra so the default UI is actually exercised. E2.4/E3 → ✅ |
+| 2026-09-09 | Gate E2.1/E2.3/E4 and F5 closed: primitive palette (fragment-local repeat instead of a bare LOOP), append-only method library keyed to equipment, byte-preserving `.sch` import session (2 bytes changed for one field edit; CTSPro header untouched), and release labels bound to a content hash so an approval cannot follow an edited file |
 
 ---
 
@@ -705,7 +706,7 @@ Gate D is software-only. Module expands are **protocol templates**; golden compa
 
 | | |
 |---|---|
-| **Status** | 🔄 **Partial** (workspace shipped 2026-09-09: E0/E0.5/E2.4/E3 ✅; E2/E2.2/E3.1 in progress; E2.1/E2.3/E4–E7 ⏳) |
+| **Status** | 🔄 **Partial** (E0/E0.5/E2.1/E2.3/E2.4/E3/E4 ✅; E1/E2/E2.2/E3.1 in progress; E5–E7 ⏳) |
 | **Depends on** | **Nothing blocking as of 2026-09-08** — E0–E2.4 never needed a trusted writer, and E3/E3.1's Gate C exit dependency was satisfied by the C5 PNE02 pass. Export UX is now gated by *evidence discipline* (§5.6 L6/L9), not by an unmet gate |
 | **Exit criteria** | Schedule authoring feels like **module + procedure** composition (Nova/LabVIEW-like); multi-module END/LOOP composition is safe; pattern trust is visible; unsafe export blocked; library + Cell setup; byte-preserving imported patch session |
 | **Next gate** | Gate F |
@@ -727,15 +728,18 @@ a reopen record for that exact artifact (L6, §6.7 F1–F4).
 | E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage | Review existing schedules | No |
 | E2 | **Procedure editor** (ordered steps) | 🔄 | Insert/reorder/delete primitives; property pane; C-rate ↔ mA preview | Nova-like step list | No |
 | | ↳ 2026-09-09: module-level add/duplicate/remove/move/reorder/detach, spec-driven property forms and C-rate ↔ mA preview all shipped in `ui/workspace_model.py`. **Primitive-level** step insert/delete is still absent — `detach()` freezes a preset into `custom_steps` but nothing edits an individual step yet. | | | |
-| E2.1 | Primitive palette | ⏳ | REST, CC, CCCV, CV, LOOP, END, OCV… with validated forms | Command blocks | No |
+| E2.1 | Primitive palette | ✅ | REST, CC, CCCV, CV, LOOP, END, OCV… with validated forms | Command blocks | No |
+| | ↳ 2026-09-09: `modules/primitive.py` ships REST/OCV/CC/CCCV/CV charge and CC discharge as one-step modules with spec-driven forms. **LOOP and END are deliberately absent** as palette items: the composer owns the final END, and a LOOP target must resolve inside its own fragment (`1 <= target < position`), so repetition is `repeat_count`, which emits the LOOP and its target together. The catalog entry states both exclusions. | | | |
 | E2.2 | **Module/pattern palette** | 🔄 | Variant + units + evidence status; only accepted Formation/Cycle/QC/RPT/HPPC/QPEED recipes promoted | LabVIEW-like modules | No |
 | | ↳ 2026-09-09: `protocol/recipes.py` gives a purpose-first goal catalog carrying `trust_status`, surfaced in the UI via `TRUST_LABELS_KO`. Promotion stays open: no pattern has a CTSPro reopen record, so everything still shows as `prototype`. | | | |
-| E2.3 | Method / project library | ⏳ | Save/load versioned procedures & modules per equipment profile | Reusable methods | No |
+| E2.3 | Method / project library | ✅ | Save/load versioned procedures & modules per equipment profile | Reusable methods | No |
+| | ↳ 2026-09-09: `library.py` stores methods as append-only versions under `~/.pne_scheduler/library`, each recording the unit and SCH layout it was written for. Loading onto a different profile warns rather than blocks, ids are reassigned to avoid collision, and every load states that saved ≠ verified. `pne_scheduler library` lists them. | | | |
 | E2.4 | Cell / equipment setup pane | ✅ | Explicit 1C mA, V limits, PNE unit/range, layout target; blocks export if missing | Setup before edit | No (the pane itself; it just *displays* a profile that later needs equipment-verified export) |
 | E3 | Pre-export validation UX | ✅ | Block invalid loops, missing END, V/I violations | Readiness before export | No — **unblocked by the 2026-09-08 C5 pass** |
 | E3.1 | Export path choice | 🔄 | Default **patch-sch** onto approved template; optional experimental `build` | PNE safety | No — unblocked, but keep `patch-sch` as the default path per L9 |
 | | ↳ 2026-09-09: `release.py` ships the full ladder and marks from-scratch output `danger=True` while calling template patch 가장 안전한 경로. Not yet closed: patch is described as the safest path but is not *positioned* as the default action in the export tab. | | | |
-| E4 | `.sch` imported patch session | ⏳ | Preserve source hash/raw bytes; writer-ready edits only; lossy `Clone as draft` separate | Open existing schedule | No — parser exists; safe session model does not |
+| E4 | `.sch` imported patch session | ✅ | Preserve source hash/raw bytes; writer-ready edits only; lossy `Clone as draft` separate | Open existing schedule | No — parser exists; safe session model does not |
+| | ↳ 2026-09-09: `import_session.py` holds the source bytes and digest, offers only `get_writer_ready_fields()` for in-place editing, and emits an `SchPatchPlan` bound to the digest it read. Measured on a real 0x00010004 lab file: one float edit changes **2 bytes** and the 1760-byte CTSPro header is untouched. `Clone as draft` is a separate exit that names everything it discards. `pne_scheduler import-sch` reports both. | | | |
 | E5 | Advanced: 0x00010007/EIS, fingerprint | ⏳ | Deferred until explicit schema evidence | Later | No (blocked on schema evidence, not equipment) |
 | E6 | pne_studio2 integration | ⏳ | Shared cell profile and export workflow | Host embedding | Partial — integration itself is No; the export half inherits E3's block |
 | E7 | Campaign canvas (optional) | ⏳ | Free-form multi-module graph **only if** E2–E2.2 is insufficient | Extra LabVIEW canvas | No |
@@ -810,7 +814,7 @@ Gate B/C validation tooling, not UI — lower priority to review, listed in §11
 | F2 | Reopen approval record | ⏳ | Exact SHA-256 opens in CTSPro; operator result logged | C5 source record exists for the smoke probe; every released pattern candidate needs its own hash/result in the batch pack |
 | F3 | Equipment smoke-test protocol | ⏳ | Dummy-cell procedure, abort criteria, signed result | Partly — the C5 reopen is done; a *run* protocol (dummy cell, abort criteria) still needs a lab session if execution is to be claimed |
 | F4 | Artifact immutability | ⏳ | Released hash == smoke-tested hash; reapproval on change | No — pin the C5-verified `smoke_writer_probe.sch` hash and gate re-release on change |
-| F5 | Release status labels | ⏳ | `analysis-only` / `CTSPro-reopen-verified` / `equipment-verified` in CLI/UI | No — the label enum/plumbing can be built now; only *applying* `equipment-verified` needs F1–F4 |
+| F5 | Release status labels | ✅ | `analysis-only` / `CTSPro-reopen-verified` / `equipment-verified` in CLI/UI | No — the label enum/plumbing can be built now; only *applying* `equipment-verified` needs F1–F4 |
 | F6 | Hosted CI | 🔄 **exists, green, now self-reporting** | `.github/workflows/ci.yml` runs Ruff + pytest + `tools/compare_pne_units.py` on push/PR since 2026-09-02; was red for 12 commits on the `access_parser` collection bug, fixed and pushed 2026-09-06 (`d60ea3b`, [run #33](https://github.com/Hwiho/pne_scheduler/actions/runs/34037824999) success). README now shows the workflow's own live status badge instead of a static hand-set count, so a future red run is visible on the repo front page. Remaining F6 scope: packaging checks, schema-invariant checks, doc checks on every PR | No |
 
 **Rule:** No “equipment-ready” label until F1–F4 pass for the **exact** artifact, recipe
