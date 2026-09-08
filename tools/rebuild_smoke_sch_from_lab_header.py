@@ -57,22 +57,33 @@ def build_from_lab_header(project_path: Path) -> bytes:
     header[HOFF_NAME : HOFF_NAME + 100] = b"\x00" * 100
     header[HOFF_NAME : HOFF_NAME + len(name)] = name
 
-    # Lab files leave Ensol 0x3D8 empty; CTS UI reads common-safety from 0x458.
-    for index in range(6):
-        struct.pack_into("<f", header, HOFF_SAFETY + index * 4, 0.0)
-
     limits = safety_limits_from_cell(
         v_max=cell.v_max,
         v_min=cell.v_min,
         nominal_capacity_mAh=cell.nominal_capacity_mAh,
         max_current_mA=cell.max_current_mA,
     )
-    cts_common = (
+    # CTSEditorPro "최대 용량" reads Ensol 0x3D8+16 (confirmed via Gate B pairs +
+    # lab screenshot: putting 80 at 0x458+16 showed up as 최소 전류 0.080 A).
+    ensol_values = (
         limits["max_voltage_mV"],
         limits["min_voltage_mV"],
         limits["max_current_mA"],
         limits["min_current_mA"],
-        limits["cell_capacity_mAh"],
+        limits["max_capacity_mAh"],
+        limits["max_temp_C"],
+    )
+    for index, value in enumerate(ensol_values):
+        struct.pack_into("<f", header, HOFF_SAFETY + index * 4, float(value))
+
+    # 0x458 mirrors V/T for the top safety row; leave current/capacity slots zero
+    # so they are not misread as 최소 전류.
+    cts_common = (
+        limits["max_voltage_mV"],
+        limits["min_voltage_mV"],
+        0.0,
+        0.0,
+        0.0,
         limits["max_temp_C"],
     )
     for index, value in enumerate(cts_common):
@@ -109,7 +120,7 @@ def main() -> None:
     print("wrote", output, "size", len(data))
     print("cts@0x458", struct.unpack_from("<6f", data, HOFF_CTS_COMMON_SAFETY))
     print("ensol@0x3d8", struct.unpack_from("<6f", data, HOFF_SAFETY))
-    print("capacity@0x464", struct.unpack_from("<f", data, 0x464)[0])
+    print("capacity@0x3e8", struct.unpack_from("<f", data, HOFF_SAFETY + 16)[0])
     print("hint@0x484", struct.unpack_from("<i", data, HOFF_CTS_STEP_HINT)[0])
 
 

@@ -1,8 +1,10 @@
 """Build CTSPro-compatible SCH file headers (Gate C1).
 
-Framing follows observed 0x00010003 lab corpus files (1760-byte header):
-magic ``0x000B4D71``, version at offset 4, CTS common safety at ``0x458``.
-The Ensol ``0x3D8`` safety block is left empty by default (lab files do the same).
+Framing follows observed 0x00010003 lab / Gate B pair headers (1760-byte header):
+magic ``0x000B4D71``, version at offset 4.
+CTSEditorPro reads **최대 용량 / 최대 전류** from the Ensol safety block at
+``0x3D8`` (capacity at ``+16``). The ``0x458`` block mirrors V/T for the top
+safety row — do not put capacity at ``0x458+16`` (that displays as 최소 전류).
 """
 
 from __future__ import annotations
@@ -117,33 +119,28 @@ def build_sch_header(
     _write_ascii(header, HOFF_CTS_TIMESTAMP, stamp, limit=63)
 
     limits = {**_DEFAULT_SAFETY_MV_MA, **dict(safety or {})}
-    # Lab CTS files leave the Ensol 0x3D8 block empty; CTSEditorPro reads
-    # 시험/공통 안전조건 from HOFF_CTS_COMMON_SAFETY (0x458). Keep writing
-    # Ensol 0x3D8 only when explicitly requested for Ensol-tooling compatibility.
-    write_ensol_safety = bool(limits.get("write_ensol_safety_block", False))
-    if write_ensol_safety:
-        values = (
-            float(limits["max_voltage_mV"]),
-            float(limits["min_voltage_mV"]),
-            float(limits["max_current_mA"]),
-            float(limits["min_current_mA"]),
-            float(limits["max_capacity_mAh"]),
-            float(limits["max_temp_C"]),
-        )
-        for index, value in enumerate(values):
-            struct.pack_into("<f", header, HOFF_SAFETY + index * 4, value)
 
-    # CTSEditorPro 시험 안전조건 field order: Vmax, Vmin, Imax, Imin, Cap, Temp.
-    # (Earlier corpus note put a nonzero at +12; UI capacity is the 5th float.)
-    cell_capacity = float(
-        limits.get("cell_capacity_mAh", limits["max_capacity_mAh"])
-    )
-    cts_common = (
+    # Ensol / CTS "최대 용량" safety lives at 0x3D8+16 (Gate B reopen pairs).
+    # Lab corpus often zeros this block, but CTSEditorPro still reads capacity from here.
+    ensol_values = (
         float(limits["max_voltage_mV"]),
         float(limits["min_voltage_mV"]),
         float(limits["max_current_mA"]),
         float(limits["min_current_mA"]),
-        cell_capacity,
+        float(limits["max_capacity_mAh"]),
+        float(limits["max_temp_C"]),
+    )
+    for index, value in enumerate(ensol_values):
+        struct.pack_into("<f", header, HOFF_SAFETY + index * 4, value)
+
+    # 0x458 also mirrors V/T for the 시험 안전조건 row. Do NOT put capacity at
+    # +16 here — that slot displays as 최소 전류 (mA→A) in CTSEditorPro.
+    cts_common = (
+        float(limits["max_voltage_mV"]),
+        float(limits["min_voltage_mV"]),
+        0.0,
+        0.0,
+        0.0,
         float(limits["max_temp_C"]),
     )
     for index, value in enumerate(cts_common):
