@@ -1,10 +1,11 @@
 """Build CTSPro-compatible SCH file headers (Gate C1).
 
-Framing follows observed 0x00010003 lab / Gate B pair headers (1760-byte header):
-magic ``0x000B4D71``, version at offset 4.
-CTSEditorPro reads **최대 용량 / 최대 전류** from the Ensol safety block at
-``0x3D8`` (capacity at ``+16``). The ``0x458`` block mirrors V/T for the top
-safety row — do not put capacity at ``0x458+16`` (that displays as 최소 전류).
+Framing: 1760-byte ``0x00010003`` header, magic ``0x000B4D71``.
+
+PNE02 CTSEditorPro safety row (confirmed 2026-09-08 lab screenshot):
+capacity is **not** Ensol ``0x3D8+16``. PNE02 reopen pairs and the probe UI
+read 최대 용량 from ``0x3D8+12`` and/or ``0x458+12``. ``0x458+16`` must stay
+zero — on PNE16 that slot displayed as 최소 전류.
 """
 
 from __future__ import annotations
@@ -119,27 +120,36 @@ def build_sch_header(
     _write_ascii(header, HOFF_CTS_TIMESTAMP, stamp, limit=63)
 
     limits = {**_DEFAULT_SAFETY_MV_MA, **dict(safety or {})}
+    cell_capacity = float(
+        limits.get("cell_capacity_mAh", limits["max_capacity_mAh"])
+    )
+    max_capacity = float(limits["max_capacity_mAh"])
 
-    # Ensol / CTS "최대 용량" safety lives at 0x3D8+16 (Gate B reopen pairs).
-    # Lab corpus often zeros this block, but CTSEditorPro still reads capacity from here.
+    # PNE02 CTSEditorPro (CYCC-1004…): 시험 안전조건 mapping confirmed 2026-09-08
+    # against smoke_writer_probe reopen + Gate B pairs:
+    #   0x3D8: Vmax, Vmin, Imax, Cap-or-Imin, Cap-or-Imin, Temp
+    #   0x458: Vmax, Vmin, …, Cap @ +12, …, Temp
+    # PNE02 0x10002 reopen pairs store capacity at 0x3D8+12 (e.g. 5000/90/100).
+    # PNE02 0x10003 baseline2/3 also put capacity-like values at 0x458+12.
+    # Putting capacity only at Ensol +16 left UI Cap=.000 while Imax=800 worked.
     ensol_values = (
         float(limits["max_voltage_mV"]),
         float(limits["min_voltage_mV"]),
         float(limits["max_current_mA"]),
-        float(limits["min_current_mA"]),
-        float(limits["max_capacity_mAh"]),
+        max_capacity,  # PNE02 treats +12 as 최대 용량 (not Ensol's min-current name)
+        0.0,
         float(limits["max_temp_C"]),
     )
     for index, value in enumerate(ensol_values):
         struct.pack_into("<f", header, HOFF_SAFETY + index * 4, value)
 
-    # 0x458 also mirrors V/T for the 시험 안전조건 row. Do NOT put capacity at
-    # +16 here — that slot displays as 최소 전류 (mA→A) in CTSEditorPro.
+    # 0x458: V/T plus capacity at +12 (baseline2/3 pattern). Do not put capacity
+    # at +16 — on PNE16 that slot displayed as 최소 전류 0.080 A.
     cts_common = (
         float(limits["max_voltage_mV"]),
         float(limits["min_voltage_mV"]),
         0.0,
-        0.0,
+        max_capacity if max_capacity > 0 else cell_capacity,
         0.0,
         float(limits["max_temp_C"]),
     )

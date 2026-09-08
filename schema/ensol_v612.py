@@ -43,10 +43,10 @@ HOFF_AUTHOR = 0x150
 HOFF_TIMESTAMP_2 = 0x250
 HOFF_NAME = 0x298
 HOFF_TIMESTAMP_3 = 0x398
-HOFF_SAFETY = 0x3D8  # Ensol-style: max V mV, min V mV, max I mA, min I mA, max cap mAh, max temp C
-# CTS 1760-byte files (lab corpus): timestamp @0x418, common safety @0x458, step hint @0x484
+HOFF_SAFETY = 0x3D8  # PNE02 UI: Vmax, Vmin, Imax, Cap @+12, (pad), Temp — Cap NOT at Ensol +16
+# CTS 1760-byte files: timestamp @0x418, common safety @0x458 (Cap @ +12), step hint @0x484
 HOFF_CTS_TIMESTAMP = 0x418
-# 시험 안전조건: Vmax_mV, Vmin_mV, Imax_mA, Imin_mA, capacity_mAh, temp_C
+# 시험 안전조건 (PNE02): Vmax_mV, Vmin_mV, reserved, capacity_mAh @+12, reserved, temp_C
 HOFF_CTS_COMMON_SAFETY = 0x458
 HOFF_CTS_STEP_HINT = 0x484
 

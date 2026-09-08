@@ -39,12 +39,13 @@ def test_build_sch_header_v00010003_is_full_framed_header() -> None:
     assert struct.unpack_from("<I", header, 0)[0] == SCH_FILE_MAGIC
     assert struct.unpack_from("<I", header, 4)[0] == 0x00010003
     assert header[HOFF_SIGNATURE : HOFF_SIGNATURE + len(FILE_SIGNATURE)] == FILE_SIGNATURE
-    # Capacity/Imax for CTSEditorPro come from Ensol 0x3D8; 0x458 mirrors V/T only.
+    # PNE02: capacity at +12 on Ensol and CTS blocks; Imax at Ensol +8.
     assert struct.unpack_from("<f", header, HOFF_SAFETY)[0] == 4200.0
     assert struct.unpack_from("<f", header, HOFF_SAFETY + 8)[0] == 800.0
-    assert struct.unpack_from("<f", header, HOFF_SAFETY + 16)[0] == 800.0  # max_capacity 10×80
+    assert struct.unpack_from("<f", header, HOFF_SAFETY + 12)[0] == 800.0
+    assert struct.unpack_from("<f", header, HOFF_SAFETY + 16)[0] == 0.0
     assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY)[0] == 4200.0
-    assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 4)[0] == 2500.0
+    assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 12)[0] == 800.0
     assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 16)[0] == 0.0
     assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 20)[0] == 70.0
     assert header[HOFF_CTS_TIMESTAMP : HOFF_CTS_TIMESTAMP + 4].startswith(b"20")
