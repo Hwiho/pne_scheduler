@@ -286,6 +286,21 @@ class WorkspaceBridge(QObject):
     def unverifiedNotes(self) -> list[str]:
         return list(self.model.unverified_notes())
 
+    @Slot(result="QVariantMap")
+    def releaseLabel(self) -> dict[str, Any]:
+        """How far this schedule has been verified, in one word."""
+        decision = self.model.release().label
+        if decision is None:
+            return {"label": "", "labelKo": "", "meaning": "", "reasons": []}
+        return {
+            "label": decision.label,
+            "labelKo": decision.label_ko,
+            "meaning": decision.meaning_ko,
+            "reasons": list(decision.reasons),
+            "equipmentExecutable": decision.equipment_executable,
+            "digestMismatch": decision.digest_mismatch,
+        }
+
     @Slot(result="QVariantList")
     def releaseOptions(self) -> list[dict[str, Any]]:
         return [

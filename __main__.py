@@ -149,6 +149,11 @@ def main(argv: list[str] | None = None) -> int:
         print(summarize_project(load.project).as_text())
         state = evaluate_release(load.project)
         print()
+        if state.label is not None:
+            print(f"릴리스 등급: {state.label.label} ({state.label.label_ko})")
+            print(f"  {state.label.meaning_ko}")
+            for reason in state.label.reasons:
+                print(f"  · {reason}")
         print(f"진행 상태: {state.stage_label}")
         for option in state.options:
             print(f"  [{option.status_text}] {option.title}")

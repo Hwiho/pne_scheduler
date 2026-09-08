@@ -12,6 +12,7 @@ from typing import Literal
 
 from .ir.equipment_profile import effective_current_limit_mA
 from .ir.project import ScheduleProject
+from .release_labels import LabelDecision, label_for
 from .validate.preflight import PreflightIssue, validate_project
 
 Stage = Literal[
@@ -58,6 +59,7 @@ class ReleaseState:
     stage_label: str
     stage_index: int
     options: tuple[OutputOption, ...]
+    label: LabelDecision | None = None
     errors: tuple[PreflightIssue, ...] = ()
     warnings: tuple[PreflightIssue, ...] = ()
 
@@ -193,10 +195,18 @@ def evaluate_release(project: ScheduleProject) -> ReleaseState:
         ),
     ]
 
+    decision = label_for(
+        software_ok=software_ok,
+        ctspro_reviewed=review.ctspro_reviewed,
+        equipment_approved=review.equipment_approved,
+        reviewed_sha256=review.reviewed_sha256,
+    )
+
     return ReleaseState(
         stage=stage,
         stage_label=STAGE_LABELS[stage],
         stage_index=stage_index,
+        label=decision,
         options=tuple(options),
         errors=preview.errors,
         warnings=preview.warnings,

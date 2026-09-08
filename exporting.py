@@ -15,6 +15,7 @@ from datetime import datetime
 from pathlib import Path
 
 from .engine.c_rate import current_mA_from_c_rate
+from .release_labels import label_for
 from .io.validation_manifest import (
     VALIDATION_MANIFEST_SCHEMA,
     write_validation_manifest,
@@ -184,7 +185,15 @@ def export_review_candidate(
             "schema": VALIDATION_MANIFEST_SCHEMA,
             "writer": "pne02_lab_header_reopen_candidate",
             "status": "CTSPro-reopen-candidate",
-            "equipment_executable": False,
+            # Judged against this artifact's own digest, so an approval recorded
+            # for an earlier build cannot ride along on a newly written file.
+            **label_for(
+                software_ok=True,
+                ctspro_reviewed=project.review.ctspro_reviewed,
+                equipment_approved=project.review.equipment_approved,
+                reviewed_sha256=project.review.reviewed_sha256,
+                artifact_sha256=digest,
+            ).as_manifest_fields(),
             "source_project": {
                 "path": "source.schproj",
                 "sha256": hashlib.sha256(project_path.read_bytes()).hexdigest(),
