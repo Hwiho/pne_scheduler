@@ -13,10 +13,11 @@ from ..engine.c_rate import WRITER_Q_NOM_SOURCE, current_mA_from_c_rate
 from ..engine.compiler import compile_steps
 from ..ir.cell_profile import CellProfile
 from ..ir.step_intent import StepIntent
-from ..modules.base import get_module_class, list_module_types
+from ..ir.project import ModuleNode
+from ..modules.base import expand_module, get_module_class, list_module_types
 from ..schema.ensol_v612 import OFF_CURRENT_MA
 from .gate_d_harness import run_module_pipeline
-from .topology import fixture_type_family, load_golden_by_id
+from .topology import fixture_type_family, intent_type_family, load_golden_by_id
 
 ROOT = Path(__file__).resolve().parents[1]
 POLICY_PATH = ROOT / "planning" / "Q_NOM_POLICY.json"
@@ -117,21 +118,27 @@ GATE_D_MODULE_MATRIX: tuple[dict[str, Any], ...] = (
     },
 )
 
+# ``module_ref`` names the GATE_D_MODULE_MATRIX row whose expansion must share
+# the required families with the golden. Rows without it are fixture-parseability
+# checks only (GATE_D_VERIFICATION.md §4 marks rpt/qpeed as "(fixture only)").
 GATE_D_FAMILY_CHECKS: tuple[dict[str, Any], ...] = (
     {
         "id": "family_formation",
         "golden_id": "golden-formation-696",
         "required_shared": frozenset({"charge", "rest"}),
+        "module_ref": "formation",
     },
     {
         "id": "family_cycle",
         "golden_id": "golden-cycle-612-long",
         "required_shared": frozenset({"charge", "discharge", "rest", "loop", "end"}),
+        "module_ref": "cycle_life",
     },
     {
         "id": "family_hppc",
         "golden_id": "golden-hppc-612",
         "required_shared": frozenset({"charge", "discharge", "rest"}),
+        "module_ref": "hppc",
     },
     {
         "id": "family_capacheck",
@@ -139,6 +146,7 @@ GATE_D_FAMILY_CHECKS: tuple[dict[str, Any], ...] = (
         "required_shared": frozenset(
             {"cycle", "loop", "charge", "discharge", "rest", "end"}
         ),
+        "module_ref": "capacheck",
     },
     {
         "id": "family_rpt_parseable",
@@ -219,21 +227,27 @@ def run_gate_d_verification(
         if own_tmpdir is not None:
             own_tmpdir.cleanup()
 
-    # V8: report itself — pass if no failures among executed checks.
+    # V8: report itself. A skipped check is not a pass — a missing golden means
+    # that comparison never ran, so counting it as "not a failure" let
+    # gate_d_passed stay true with zero golden comparisons actually executed
+    # (L4: exit criteria must match delivered depth). Skips therefore block the
+    # exit claim, while staying distinguishable from real mismatches in the report.
     failed = [c for c in checks if c.status == "fail"]
-    checks.append(
-        CheckResult(
-            id="v8_exit_aggregate",
-            layer="V8",
-            status="pass" if not failed else "fail",
-            detail=(
-                "all non-skipped checks passed"
-                if not failed
-                else f"{len(failed)} failed: " + ", ".join(c.id for c in failed[:8])
-            ),
+    skipped = [c for c in checks if c.status == "skip"]
+    if failed:
+        v8_status = "fail"
+        v8_detail = f"{len(failed)} failed: " + ", ".join(c.id for c in failed[:8])
+    elif skipped:
+        v8_status = "fail"
+        v8_detail = (
+            f"{len(skipped)} check(s) never ran, so the exit claim is unproven: "
+            + ", ".join(c.id for c in skipped[:8])
         )
-    )
-    gate_passed = all(c.status != "fail" for c in checks)
+    else:
+        v8_status = "pass"
+        v8_detail = f"all {len(checks)} checks executed and passed"
+    checks.append(CheckResult(id="v8_exit_aggregate", layer="V8", status=v8_status, detail=v8_detail))
+    gate_passed = not failed and not skipped
     return GateDVerificationReport(gate_d_passed=gate_passed, checks=tuple(checks))
 
 
@@ -422,17 +436,53 @@ def _check_v6_families() -> list[CheckResult]:
             continue
         family = fixture_type_family(path)
         required: frozenset[str] = row["required_shared"]
-        missing = sorted(required - family)
+        missing_in_golden = sorted(required - family)
+
+        # The golden alone is a static file that never changes — checking only it
+        # can never catch a module regression, which is what Gate D exists to
+        # verify. Rows naming a module must also compare that module's live
+        # expansion (GATE_D_VERIFICATION.md §4: "share required type families
+        # with module expands").
+        module_ref = row.get("module_ref")
+        missing_in_module: list[str] = []
+        module_detail = ""
+        if module_ref is not None:
+            matrix_row = _module_matrix_row(module_ref)
+            intents = expand_module(
+                ModuleNode(
+                    id="v6",
+                    module_type=matrix_row["module_type"],
+                    params=dict(matrix_row["params"]),
+                ),
+                DEFAULT_CELL,
+            )
+            module_family = intent_type_family(intents)
+            missing_in_module = sorted(required - module_family)
+            module_detail = f"; module={sorted(module_family)}"
+
+        missing = sorted({*missing_in_golden, *missing_in_module})
+        if not missing:
+            detail = f"family={sorted(family)}{module_detail}"
+        else:
+            parts = []
+            if missing_in_golden:
+                parts.append(f"golden missing {missing_in_golden}")
+            if missing_in_module:
+                parts.append(f"module '{module_ref}' missing {missing_in_module}")
+            detail = "; ".join(parts) + f" (golden={sorted(family)}{module_detail})"
         results.append(
             CheckResult(
                 row["id"],
                 "V6",
                 "pass" if not missing else "fail",
-                (
-                    f"family={sorted(family)}"
-                    if not missing
-                    else f"missing {missing} in {sorted(family)}"
-                ),
+                detail,
             )
         )
     return results
+
+
+def _module_matrix_row(module_id: str) -> dict[str, Any]:
+    for row in GATE_D_MODULE_MATRIX:
+        if row["id"] == module_id:
+            return row
+    raise KeyError(f"family check references unknown matrix row: {module_id}")

@@ -51,6 +51,20 @@ _HEADER_SIZE_BY_VERSION = {
     int(SchFileVersion.V0X00010004): HEADER_SIZE_V4,
 }
 
+# The safety-block layout written below is unit-specific: PNE02 reads capacity
+# from ``0x3D8+12`` / ``0x458+12``, while on PNE16 the ``+16`` slot displayed as
+# 최소 전류 instead. Only the PNE02 convention has reopen evidence (C5,
+# 2026-09-08), so it is what the writer emits — but the choice must travel with
+# the artifact rather than living only in source comments (§5.6 L1: document
+# conflicts, do not silently pick one).
+SAFETY_BLOCK_CONVENTION = "PNE02"
+SAFETY_BLOCK_CONVENTION_NOTE = (
+    "Header safety block follows the PNE02 convention (capacity at 0x3D8+12 / "
+    "0x458+12), confirmed by the 2026-09-08 C5 reopen. Other PNE units may read "
+    "these slots differently — PNE16 showed +16 as 최소 전류 — so this header is "
+    "only evidence-backed for PNE02."
+)
+
 
 def build_sch_header_v00010003(
     *,

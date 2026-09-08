@@ -266,25 +266,25 @@
       "id": "family_formation",
       "layer": "V6",
       "status": "pass",
-      "detail": "family=['charge', 'cycle', 'end', 'loop', 'rest']"
+      "detail": "family=['charge', 'cycle', 'end', 'loop', 'rest']; module=['charge', 'discharge', 'rest']"
     },
     {
       "id": "family_cycle",
       "layer": "V6",
       "status": "pass",
-      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']"
+      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']; module=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']"
     },
     {
       "id": "family_hppc",
       "layer": "V6",
       "status": "pass",
-      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']"
+      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']; module=['charge', 'discharge', 'rest']"
     },
     {
       "id": "family_capacheck",
       "layer": "V6",
       "status": "pass",
-      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']"
+      "detail": "family=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']; module=['charge', 'cycle', 'discharge', 'end', 'loop', 'rest']"
     },
     {
       "id": "family_rpt_parseable",
@@ -302,7 +302,7 @@
       "id": "v8_exit_aggregate",
       "layer": "V8",
       "status": "pass",
-      "detail": "all non-skipped checks passed"
+      "detail": "all 48 checks executed and passed"
     }
   ]
 }

@@ -59,6 +59,10 @@ Equipment reopen is **out of scope** for Gate D (already closed by C5 for the sm
 
 Compare **normalized families** (`charge|discharge|rest|cycle|loop|end|…`), never step counts.
 
+Rows with a module reference assert the required families are present in **both**
+the golden fixture **and** that module's live expansion. Rows marked
+"(fixture only)" assert parseability/families of the fixture alone.
+
 | Golden id | Module reference | Required shared family |
 |-----------|------------------|------------------------|
 | `golden-formation-696` | formation | `{charge, rest}` |
@@ -68,7 +72,14 @@ Compare **normalized families** (`charge|discharge|rest|cycle|loop|end|…`), ne
 | `golden-rpt-612` | (fixture only) | parseable; `{charge, discharge, rest, end}` |
 | `golden-qpeed-612` | (fixture only) | parseable; `{charge, discharge, rest, end}` |
 
-Missing fixture files → check **skipped** (not failed).
+Missing fixture files → check **skipped**, and a skip **blocks the exit claim**
+(see §6) because that comparison never ran.
+
+> **Fixed 2026-09-08 (mutation backtest):** until this date the implementation
+> read only the golden file, so a module could be broken arbitrarily and every
+> `family_*` check still passed — the doc claimed a module comparison the code
+> never performed (L4). `tests/test_gate_d_verification_sensitivity.py` now
+> guards the module-regression sensitivity permanently.
 
 ---
 
@@ -87,8 +98,23 @@ Exit report path (default): `planning/GATE_D_VALIDATION_REPORT.json`
 
 ## 6. Pass / fail
 
-- **Pass:** `gate_d_passed == true` and every non-skipped check `status == "pass"`
+- **Pass:** `gate_d_passed == true` — every check **executed** and passed (zero fails, zero skips)
 - **Fail:** any pipeline mismatch, missing required warning, family miss, or matrix orphan
-- **Skip:** golden file absent on disk
+- **Skip:** golden file absent on disk. A skip is **not** a pass: it blocks
+  `gate_d_passed` and V8 reports which checks never ran
+
+> **Changed 2026-09-08:** skips previously did not block `gate_d_passed`, so
+> deleting every golden fixture still produced a green exit claim with zero
+> golden comparisons executed (L4 — exit criteria must match delivered depth).
+> Skips remain distinguishable from real mismatches in the report.
+
+## 7. Verifying the verifier
+
+The suite is itself backtested by mutation: deliberately break the compiler
+(current/time/end-voltage/loop packing), a module's expansion, or the honesty
+warnings, and confirm `gate_d_passed` goes false. As of 2026-09-08, 8/8 injected
+faults are caught. The two sensitivity properties found missing by that
+backtest are pinned in `tests/test_gate_d_verification_sensitivity.py`; extend
+it whenever a new verification layer is added, or that layer is unproven.
 
 Do **not** claim equipment-executable fidelity for OCV/Impedance/Balance (see `STEP_TYPES_EXTENDED.md`).

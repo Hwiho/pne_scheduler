@@ -44,6 +44,8 @@ def experimental_build_manifest(
     extra_warnings: list[str] | None = None,
 ) -> dict[str, Any]:
     """Describe an intentionally non-equipment-ready from-scratch build."""
+    from .header import SAFETY_BLOCK_CONVENTION, SAFETY_BLOCK_CONVENTION_NOTE
+
     project = Path(project_path)
     output = Path(output_path)
     output_size = output.stat().st_size
@@ -67,6 +69,10 @@ def experimental_build_manifest(
             "channel_profile": None,
             "ctspro_version": None,
             "sch_version": f"0x{sch_version:08x}",
+            # The header's safety-block layout is unit-specific and only
+            # evidence-backed for one unit; record which convention this exact
+            # artifact was written with instead of leaving it implicit.
+            "safety_block_convention": SAFETY_BLOCK_CONVENTION,
             "cell_profile": cell_profile,
         },
         "output": {
@@ -86,6 +92,7 @@ def experimental_build_manifest(
             "From-scratch builds use a full 0x00010003/1760 header, but step semantics "
             "and equipment smoke tests are still incomplete (Gate C2–C5).",
             "No target equipment profile was supplied.",
+            SAFETY_BLOCK_CONVENTION_NOTE,
             "Do not load or execute this file on PNE equipment.",
             *(extra_warnings or []),
         ],
