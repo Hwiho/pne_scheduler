@@ -59,8 +59,12 @@ class SmokeWriterProbeModule:
         return errors
 
     def expand(self, cell: CellProfile) -> list[StepIntent]:
+        # CTSEditorPro save rule: Cycle markers must be closed by Loop before the
+        # next Cycle (Cycle1..Loop1 Cycle2..Loop2 End). PNE02 reopen-verified
+        # loop pairs (baseline3 / loop-count) omit Cycle entirely and use
+        # body → Loop(goto=1) → End, which CTS accepts. Do not insert a bare
+        # Cycle here — it caused "Step 2 is a new Cycle without Loop" on save.
         return [
-            StepIntent(step_type="cycle", label="probe cycle marker"),
             StepIntent(
                 step_type="charge",
                 mode="CCCV",
@@ -96,7 +100,7 @@ class SmokeWriterProbeModule:
             StepIntent(
                 step_type="loop",
                 label="probe loop",
-                loop_goto_step=2,
+                loop_goto_step=1,
                 loop_count=self.loop_count,
             ),
             StepIntent(step_type="end", label="probe end"),

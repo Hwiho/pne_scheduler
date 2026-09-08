@@ -70,9 +70,9 @@ def build_from_lab_header(project_path: Path) -> bytes:
     cts_common = (
         limits["max_voltage_mV"],
         limits["min_voltage_mV"],
-        0.0,
+        limits["max_current_mA"],
+        limits["min_current_mA"],
         limits["cell_capacity_mAh"],
-        0.0,
         limits["max_temp_C"],
     )
     for index, value in enumerate(cts_common):

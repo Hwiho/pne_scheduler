@@ -43,7 +43,8 @@ def test_build_sch_header_v00010003_is_full_framed_header() -> None:
     assert struct.unpack_from("<f", header, HOFF_SAFETY)[0] == 0.0
     assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY)[0] == 4200.0
     assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 4)[0] == 2500.0
-    assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 12)[0] == 80.0
+    assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 8)[0] == 800.0
+    assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 16)[0] == 80.0
     assert struct.unpack_from("<f", header, HOFF_CTS_COMMON_SAFETY + 20)[0] == 70.0
     assert header[HOFF_CTS_TIMESTAMP : HOFF_CTS_TIMESTAMP + 4].startswith(b"20")
     assert struct.unpack_from("<i", header, HOFF_CTS_STEP_HINT)[0] == 7

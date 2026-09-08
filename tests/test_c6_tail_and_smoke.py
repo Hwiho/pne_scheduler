@@ -50,14 +50,14 @@ def test_smoke_writer_probe_project_roundtrips(tmp_path: Path) -> None:
     output = tmp_path / "smoke_writer_probe.sch"
     report = roundtrip_project(project, output)
     assert report.passed, report.mismatches
-    assert report.expected_step_count == 7
+    assert report.expected_step_count == 6
     doc = read_sch_binary(output)
+    # No Cycle marker: matches PNE02 loop pairs and CTS Cycle/Loop save rule.
     assert [step.step_type_code for step in doc.steps] == [
-        0x07,  # cycle marker
         0x101,  # CCCV charge
         0x03,  # rest 1
         0x202,  # CC discharge
         0x03,  # rest 2
-        0x08,  # loop
+        0x08,  # loop (goto step 1)
         0x06,  # end
     ]

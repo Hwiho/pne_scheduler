@@ -133,16 +133,17 @@ def build_sch_header(
         for index, value in enumerate(values):
             struct.pack_into("<f", header, HOFF_SAFETY + index * 4, value)
 
-    # CTSEditorPro common-safety UI (capacity warning when this slot is 0).
+    # CTSEditorPro 시험 안전조건 field order: Vmax, Vmin, Imax, Imin, Cap, Temp.
+    # (Earlier corpus note put a nonzero at +12; UI capacity is the 5th float.)
     cell_capacity = float(
         limits.get("cell_capacity_mAh", limits["max_capacity_mAh"])
     )
     cts_common = (
         float(limits["max_voltage_mV"]),
         float(limits["min_voltage_mV"]),
-        0.0,
+        float(limits["max_current_mA"]),
+        float(limits["min_current_mA"]),
         cell_capacity,
-        0.0,
         float(limits["max_temp_C"]),
     )
     for index, value in enumerate(cts_common):
