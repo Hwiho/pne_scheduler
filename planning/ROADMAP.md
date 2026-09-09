@@ -706,7 +706,7 @@ Gate D is software-only. Module expands are **protocol templates**; golden compa
 
 | | |
 |---|---|
-| **Status** | 🔄 **Partial** (E0/E0.5/E2.1/E2.3/E2.4/E3/E3.1/E4 ✅; E1/E2/E2.2 in progress; E5–E7 ⏳) |
+| **Status** | 🔄 **Partial** (E0/E0.5/E2/E2.1/E2.3/E2.4/E3/E3.1/E4 ✅; E1 in progress; E2.2 waiting on CTSPro reopen; E5–E7 ⏳) |
 | **Depends on** | **Nothing blocking as of 2026-09-08** — E0–E2.4 never needed a trusted writer, and E3/E3.1's Gate C exit dependency was satisfied by the C5 PNE02 pass. Export UX is now gated by *evidence discipline* (§5.6 L6/L9), not by an unmet gate |
 | **Exit criteria** | Schedule authoring feels like **module + procedure** composition (Nova/LabVIEW-like); multi-module END/LOOP composition is safe; pattern trust is visible; unsafe export blocked; library + Cell setup; byte-preserving imported patch session |
 | **Next gate** | Gate F |
@@ -726,8 +726,8 @@ a reopen record for that exact artifact (L6, §6.7 F1–F4).
 | E0 | UX contract & IA | ✅ | Screens: Setup / Procedure / Modules / Library / Validate / Export; map to `ui/` | Clean authoring layout | No |
 | E0.5 | Composer / catalog / validator contract | ✅ | One final END; module-local LOOP refs rebased; structured issues; pattern metadata/trust | Safe foundation | No |
 | E1 | Viewer/resume/bulk editor regression | 🔄 | Fixture-based GUI/CLI regression coverage | Review existing schedules | No |
-| E2 | **Procedure editor** (ordered steps) | 🔄 | Insert/reorder/delete primitives; property pane; C-rate ↔ mA preview | Nova-like step list | No |
-| | ↳ 2026-09-09: module level complete. Step level now too, in the model: `edit/steps.py` inserts/removes/moves/retypes the steps of a detached module, each field parsed and shown in its own unit with its derived counterpart, guarding non-empty and END-last. Still open: no UI surface for it yet — the operations are reachable from `WorkspaceModel` but not from a screen. | | | |
+| E2 | **Procedure editor** (ordered steps) | ✅ | Insert/reorder/delete primitives; property pane; C-rate ↔ mA preview | Nova-like step list | No |
+| | ↳ 2026-09-09: module level and step level both complete. `edit/steps.py` inserts/removes/moves/retypes the steps of a detached module — non-empty and END-last enforced there — and the 절차 tab draws them with per-field editors carrying each value's derived counterpart. A preset shows no editor: editing one in place would break the golden-topology claim, so detaching stays the explicit gate. | | | |
 | E2.1 | Primitive palette | ✅ | REST, CC, CCCV, CV, LOOP, END, OCV… with validated forms | Command blocks | No |
 | | ↳ 2026-09-09: `modules/primitive.py` ships REST/OCV/CC/CCCV/CV charge and CC discharge as one-step modules with spec-driven forms. **LOOP and END are deliberately absent** as palette items: the composer owns the final END, and a LOOP target must resolve inside its own fragment (`1 <= target < position`), so repetition is `repeat_count`, which emits the LOOP and its target together. The catalog entry states both exclusions. | | | |
 | E2.2 | **Module/pattern palette** | 🔄 | Variant + units + evidence status; only accepted Formation/Cycle/QC/RPT/HPPC/QPEED recipes promoted | LabVIEW-like modules | No |

@@ -8,10 +8,15 @@ Item {
     property var phases: []
     property var steps: []
     property var budget: ({ ok: false, notes: [], errors: [] })
+    property var stepRows: []
+    property var stepKinds: []
 
     function reload() {
         phases = workspace.phases()
         steps = workspace.stepRows()
+        stepRows = workspace.customStepRows()
+        if (stepKinds.length === 0)
+            stepKinds = workspace.stepKindChoices()
     }
 
     function solveBudget() {
@@ -22,6 +27,7 @@ Item {
     Connections {
         target: workspace
         function onChanged() { page.reload() }
+        function onSelectionChanged() { page.stepRows = workspace.customStepRows() }
     }
     Component.onCompleted: reload()
 
@@ -206,10 +212,139 @@ Item {
                 }
                 Text {
                     Layout.fillWidth: true
-                    text: "분리하면 프리셋 보장이 사라지고 직접 편집한 스텝이 됩니다."
+                    text: workspace.canEditSteps()
+                          ? "이 구간은 직접 편집 상태입니다. 아래에서 스텝을 고칠 수 있습니다."
+                          : "분리하면 프리셋 보장이 사라지고 직접 편집한 스텝이 됩니다."
                     color: Theme.muted
                     font.pixelSize: 11
                     wrapMode: Text.WordWrap
+                }
+            }
+        }
+
+        // Only a detached module exposes its steps; a preset shows nothing here
+        // because editing one in place would break the golden-topology claim.
+        Card {
+            Layout.fillWidth: true
+            visible: page.stepRows.length > 0
+            title: "개별 스텝 편집 · " + page.stepRows.length + "개"
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 6
+                ComboBox {
+                    id: newStepKind
+                    Layout.preferredWidth: 200
+                    textRole: "title"
+                    valueRole: "kind"
+                    model: page.stepKinds
+                }
+                Button {
+                    text: "맨 뒤에 추가"
+                    onClicked: workspace.insertStep(page.stepRows.length,
+                                                    newStepKind.currentValue)
+                }
+                Item { Layout.fillWidth: true }
+                Text {
+                    text: "END 는 항상 마지막이며 구간을 비울 수 없습니다."
+                    color: Theme.muted
+                    font.pixelSize: 10
+                }
+            }
+
+            Repeater {
+                model: page.stepRows
+
+                Rectangle {
+                    id: stepCard
+                    required property var modelData
+                    // The inner Repeater's delegate shadows `modelData`, so the
+                    // step's own index is held here where the fields can reach it.
+                    readonly property int stepIndex: modelData.index
+                    Layout.fillWidth: true
+                    implicitHeight: stepBody.implicitHeight + 12
+                    radius: 6
+                    color: Theme.panelAlt
+                    border.color: Theme.line
+
+                    ColumnLayout {
+                        id: stepBody
+                        x: 8
+                        y: 6
+                        width: parent.width - 16
+                        spacing: 4
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 6
+                            Text {
+                                text: stepCard.modelData.number + ". " + stepCard.modelData.stepType
+                                      + (stepCard.modelData.mode ? " · " + stepCard.modelData.mode : "")
+                                color: Theme.ink
+                                font.pixelSize: 12
+                                font.bold: true
+                            }
+                            Text {
+                                Layout.fillWidth: true
+                                text: stepCard.modelData.label
+                                color: Theme.muted
+                                font.pixelSize: 11
+                                elide: Text.ElideRight
+                            }
+                            Button {
+                                text: "▲"
+                                onClicked: workspace.moveStep(stepCard.stepIndex, -1)
+                            }
+                            Button {
+                                text: "▼"
+                                onClicked: workspace.moveStep(stepCard.stepIndex, 1)
+                            }
+                            Button {
+                                text: "＋"
+                                onClicked: workspace.insertStep(stepCard.stepIndex + 1,
+                                                                newStepKind.currentValue)
+                            }
+                            Button {
+                                text: "삭제"
+                                onClicked: workspace.removeStep(stepCard.stepIndex)
+                            }
+                        }
+
+                        Flow {
+                            Layout.fillWidth: true
+                            spacing: 8
+
+                            Repeater {
+                                model: stepCard.modelData.fields
+
+                                RowLayout {
+                                    id: fieldRow
+                                    required property var modelData
+                                    spacing: 4
+                                    Text {
+                                        text: fieldRow.modelData.label
+                                        color: Theme.muted
+                                        font.pixelSize: 10
+                                    }
+                                    TextField {
+                                        Layout.preferredWidth: 96
+                                        text: fieldRow.modelData.text
+                                        font.pixelSize: 11
+                                        selectByMouse: true
+                                        onEditingFinished: if (text !== fieldRow.modelData.text)
+                                            workspace.setStepField(stepCard.stepIndex,
+                                                                   fieldRow.modelData.key, text)
+                                    }
+                                    Text {
+                                        visible: fieldRow.modelData.detail.length > 0
+                                        text: fieldRow.modelData.detail
+                                        color: Theme.muted
+                                        font.pixelSize: 10
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

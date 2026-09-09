@@ -141,3 +141,50 @@ def test_the_budget_solver_reaches_the_real_estimator(app):
         assert result["totalCycles"] % 50 == 0
         assert bridge.applyCycleCount(result["totalCycles"])["ok"]
 
+
+
+# --- E2: step editing on a detached module ----------------------------------
+
+
+def test_a_preset_offers_no_step_editor(app):
+    _engine, bridge, _warnings = _build(EXAMPLE)
+    assert not bridge.canEditSteps()
+    assert bridge.customStepRows() == []
+
+
+def test_a_detached_module_exposes_its_steps(app):
+    _engine, bridge, _warnings = _build(EXAMPLE)
+    bridge.model.detach(bridge.model.project.modules[0].id)
+    bridge._selected = bridge.model.project.modules[0].id
+
+    assert bridge.canEditSteps()
+    rows = bridge.customStepRows()
+    assert rows and rows[0]["number"] == 1
+    assert all("fields" in row for row in rows)
+
+
+def test_the_bridge_edits_steps_and_reports_the_impossible(app):
+    _engine, bridge, _warnings = _build(EXAMPLE)
+    bridge.model.detach(bridge.model.project.modules[0].id)
+    bridge._selected = bridge.model.project.modules[0].id
+    before = len(bridge.customStepRows())
+
+    assert bridge.insertStep(before, "rest")["ok"]
+    assert len(bridge.customStepRows()) == before + 1
+    assert bridge.moveStep(0, 1)["ok"]
+    assert bridge.removeStep(0)["ok"]
+    assert len(bridge.customStepRows()) == before
+
+    # An out-of-range index must come back as a message, never as an exception
+    # crossing into QML where nothing would catch it.
+    result = bridge.removeStep(999)
+    assert not result["ok"] and result["message"]
+
+
+def test_the_step_kind_choices_match_the_palette(app):
+    from pne_scheduler.modules.primitive import PRIMITIVE_KINDS
+
+    _engine, bridge, _warnings = _build(None)
+    kinds = {row["kind"] for row in bridge.stepKindChoices()}
+    assert kinds == set(PRIMITIVE_KINDS)
+    assert all(row["title"] for row in bridge.stepKindChoices())

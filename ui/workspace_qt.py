@@ -20,6 +20,7 @@ from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
 
 from ..edit.diff import StepDiff
+from ..edit.steps import PRIMITIVE_STEP_CHOICES, StepEditError
 from ..protocol.campaign import build_cycle_rpt_campaign
 from ..spec import units
 from .document import ProjectDocument
@@ -300,6 +301,69 @@ class WorkspaceBridge(QObject):
             "equipmentExecutable": decision.equipment_executable,
             "digestMismatch": decision.digest_mismatch,
         }
+
+    @Slot(result="QVariantList")
+    def stepKindChoices(self) -> list[dict[str, str]]:
+        return [{"kind": kind, "title": title} for kind, title in PRIMITIVE_STEP_CHOICES]
+
+    @Slot(result=bool)
+    def canEditSteps(self) -> bool:
+        if not self._selected:
+            return False
+        return self.model.can_edit_steps(self._selected)
+
+    @Slot(result="QVariantList")
+    def customStepRows(self) -> list[dict[str, Any]]:
+        """The steps of the selected detached module, ready to draw."""
+        if not self._selected or not self.model.can_edit_steps(self._selected):
+            return []
+        return [
+            {
+                "index": row["index"],
+                "number": row["number"],
+                "stepType": row["stepType"],
+                "mode": row["mode"],
+                "label": row["label"],
+                "fields": [
+                    {
+                        "key": view.key,
+                        "label": view.label,
+                        "kind": view.kind,
+                        "text": view.text,
+                        "detail": view.detail,
+                    }
+                    for view in row["fields"]
+                ],
+            }
+            for row in self.model.custom_step_rows(self._selected)
+        ]
+
+    def _step_edit(self, action, *args) -> dict[str, Any]:
+        if not self._selected:
+            return {"ok": False, "message": "구간을 먼저 선택하세요."}
+        try:
+            action(self._selected, *args)
+        except StepEditError as exc:
+            self.notified.emit("스텝을 바꿀 수 없습니다", str(exc), "error")
+            return {"ok": False, "message": str(exc)}
+        self._emit("스텝을 바꿨습니다.")
+        return {"ok": True, "message": ""}
+
+    @Slot(int, str, result="QVariantMap")
+    def insertStep(self, index: int, kind: str) -> dict[str, Any]:
+        return self._step_edit(self.model.insert_step, index, kind)
+
+    @Slot(int, result="QVariantMap")
+    def removeStep(self, index: int) -> dict[str, Any]:
+        return self._step_edit(self.model.remove_step, index)
+
+    @Slot(int, int, result="QVariantMap")
+    def moveStep(self, index: int, delta: int) -> dict[str, Any]:
+        return self._step_edit(self.model.move_step, index, delta)
+
+    @Slot(int, str, str, result="QVariantMap")
+    def setStepField(self, index: int, key: str, text: str) -> dict[str, Any]:
+        return self._step_edit(self.model.set_step_field, index, key, text)
 
     @Slot(result="QVariantList")
     def releaseOptions(self) -> list[dict[str, Any]]:

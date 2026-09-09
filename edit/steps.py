@@ -55,6 +55,12 @@ STEP_FIELD_LABELS_KO: dict[str, str] = {
 }
 
 
+# What the "add a step" control offers, in the order it offers them.
+PRIMITIVE_STEP_CHOICES: tuple[tuple[str, str], ...] = tuple(
+    (kind, title) for kind, (_type, _mode, title) in PRIMITIVE_KINDS.items()
+)
+
+
 class StepEditError(ValueError):
     """A step edit that would leave the module in a state it must never hold."""
 
@@ -217,6 +223,7 @@ def _detail(kind: str, value: Any, capacity: float) -> str:
 
 
 __all__ = [
+    "PRIMITIVE_STEP_CHOICES",
     "STEP_FIELD_KINDS",
     "STEP_FIELD_LABELS_KO",
     "StepEditError",
