@@ -15,6 +15,7 @@ dependencies = []
 [project.optional-dependencies]
 dev = ["pytest>=7.0", "ruff>=0.6"]
 gui = ["PySide6>=6.5"]
+web = ["flask>=3.0"]
 mdb = ["access_parser"]
 
 [project.scripts]
@@ -23,6 +24,7 @@ pne-scheduler = "pne_scheduler.__main__:main"
 [tool.setuptools]
 packages = [
     "pne_scheduler",
+    "pne_scheduler.api",
     "pne_scheduler.classify",
     "pne_scheduler.edit",
     "pne_scheduler.engine",
