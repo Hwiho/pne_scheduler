@@ -70,6 +70,34 @@ class SchPatchPlan:
             ),
         )
 
+    def to_dict(self) -> dict[str, Any]:
+        """The JSON form `from_dict` reads back.
+
+        Without this an `ImportSession` could describe a patch but never hand it
+        to `patch-sch`, which only accepts a plan from a file — so an edit could
+        be proposed and never completed.
+        """
+        data: dict[str, Any] = {
+            "schema": self.schema,
+            "template_sha256": self.template_sha256,
+            "patches": [
+                {"step_no": patch.step_no, "field": patch.field, "value": patch.value}
+                for patch in self.patches
+            ],
+        }
+        if self.expected_version is not None:
+            data["expected_version"] = f"0x{self.expected_version:08X}"
+        if self.target_profile is not None:
+            data["target_profile"] = dict(self.target_profile)
+        return data
+
+    def save(self, path: str | Path) -> Path:
+        destination = Path(path)
+        destination.write_text(
+            json.dumps(self.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        return destination
+
     @classmethod
     def load(cls, path: str | Path) -> SchPatchPlan:
         return cls.from_dict(json.loads(Path(path).read_text(encoding="utf-8")))

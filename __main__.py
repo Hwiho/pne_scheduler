@@ -49,9 +49,27 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Open an existing .sch and report what may be edited in place",
     )
     import_sch.add_argument("source", type=Path, help="Existing .sch file")
+    import_sch.add_argument(
+        "--set",
+        action="append",
+        default=[],
+        metavar="STEP:FIELD=VALUE",
+        help="Stage an edit, e.g. --set 3:fVref=25.0 (repeatable)",
+    )
+    import_sch.add_argument(
+        "--plan-out", type=Path, help="Write the resulting patch plan as JSON"
+    )
 
-    library = sub.add_parser("library", help="List saved methods in the library")
+    library = sub.add_parser("library", help="List or save methods in the library")
     library.add_argument("method_id", nargs="?", help="Show every version of one method")
+    library.add_argument(
+        "--save",
+        type=Path,
+        metavar="PROJECT",
+        help="Save a .schproj's module list as a new method version",
+    )
+    library.add_argument("--name", help="Method name to save under (with --save)")
+    library.add_argument("--description", default="", help="Optional description")
 
     info = sub.add_parser("info", help="Show project summary")
     info.add_argument("project", type=Path, help="Input .schproj path")
@@ -195,6 +213,44 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"  {item.name:<16} @{item.offset:<5} {item.dtype:<8} {item.evidence}")
         else:
             print("이 버전에는 근거로 승격된 필드가 없어 원본을 고칠 수 없습니다.")
+        for raw in args.set:
+            try:
+                location, value = raw.split("=", 1)
+                step_text, field_name = location.split(":", 1)
+                session.stage(int(step_text), field_name, float(value))
+            except ValueError:
+                print(
+                    f"편집 형식이 잘못되었습니다: {raw} (예: 3:fVref=25.0)",
+                    file=sys.stderr,
+                )
+                return 2
+
+        if args.set:
+            proposal = session.propose_patch()
+            print()
+            for note in proposal.notes:
+                print(f"  {note}")
+            for item in proposal.rejected:
+                print(f"  거부 스텝 {item.step_no} {item.field}: {item.reason}")
+            for warning in proposal.warnings:
+                print(f"  경고: {warning}")
+            if not proposal.ok:
+                print("적용할 수 있는 편집이 없습니다.", file=sys.stderr)
+                return 2
+            if args.plan_out:
+                proposal.plan.save(args.plan_out)
+                print()
+                print(f"패치 계획을 저장했습니다: {args.plan_out}")
+                print(
+                    "적용: pne_scheduler patch-sch "
+                    f'"{session.path}" "{args.plan_out}" -o <출력.sch> '
+                    "--allow-analysis-output"
+                )
+            else:
+                print()
+                print("--plan-out 으로 계획을 저장한 뒤 patch-sch 로 적용하십시오.")
+            return 0
+
         clone = session.propose_clone()
         print()
         print("초안으로 복제하면 버려지는 것:")
@@ -206,6 +262,34 @@ def main(argv: list[str] | None = None) -> int:
         from .library import MethodLibrary
 
         store = MethodLibrary()
+        if args.save:
+            if not args.name:
+                print("--save 에는 --name 이 필요합니다.", file=sys.stderr)
+                return 2
+            from .ir.loader import ProjectLoadError, load_project_lenient
+
+            try:
+                load = load_project_lenient(args.save)
+            except ProjectLoadError as exc:
+                print(f"프로젝트를 열 수 없습니다: {exc}", file=sys.stderr)
+                return 2
+            for repair in load.repairs:
+                print(f"수정됨: {repair}", file=sys.stderr)
+            equipment = load.project.equipment
+            try:
+                entry = store.save(
+                    name=args.name,
+                    description=args.description,
+                    modules=[node.to_dict() for node in load.project.modules],
+                    equipment_unit=equipment.unit if equipment else "",
+                    equipment_layout=(equipment.layout_key or "") if equipment else "",
+                )
+            except ValueError as exc:
+                print(f"저장할 수 없습니다: {exc}", file=sys.stderr)
+                return 2
+            print(f"저장했습니다: {entry.label} · 구간 {entry.module_count}개")
+            print(f"  {entry.path}")
+            return 0
         if args.method_id:
             versions = store.versions(args.method_id)
             if not versions:

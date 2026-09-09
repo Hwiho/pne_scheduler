@@ -73,12 +73,19 @@ class ProjectDocument:
         path: Path | None = None,
         autosave_dir: Path | None = None,
         load_repairs: tuple[str, ...] = (),
+        record_history: bool = True,
     ) -> None:
         self.project = project
         self.path = Path(path) if path else None
         self.autosave_dir = Path(autosave_dir) if autosave_dir else default_autosave_dir()
         self.load_repairs = load_repairs
         self.session_id = uuid.uuid4().hex[:12]
+        # A stateless caller — the web API — reconstructs the document per request
+        # and keeps history on its own side, so accumulating snapshots here would
+        # be pure waste. The label of the last applied edit is still reported, since
+        # that is what such a caller names its own history entry with.
+        self.record_history = record_history
+        self.last_label: str = ""
         self._undo: list[UndoEntry] = []
         self._redo: list[UndoEntry] = []
         self._saved_snapshot = project.to_dict()
@@ -89,6 +96,16 @@ class ProjectDocument:
     @classmethod
     def new(cls, *, autosave_dir: Path | None = None) -> ProjectDocument:
         return cls(new_project(), autosave_dir=autosave_dir)
+
+    @classmethod
+    def detached(cls, data: dict[str, Any]) -> ProjectDocument:
+        """A document built from a project dict, keeping no history of its own.
+
+        This is the shape a stateless request needs: the client sends the whole
+        project, the server edits it once and hands it back. Nothing is written to
+        disk, so no autosave directory is touched either.
+        """
+        return cls(ScheduleProject.from_dict(data), record_history=False)
 
     @classmethod
     def open(cls, path: Path, *, autosave_dir: Path | None = None) -> ProjectDocument:
@@ -149,7 +166,9 @@ class ProjectDocument:
             raise
         after = self.project.to_dict()
         if after != before:
-            self._push_undo(UndoEntry(label, before))
+            self.last_label = label
+            if self.record_history:
+                self._push_undo(UndoEntry(label, before))
         return result
 
     @contextmanager
@@ -162,7 +181,9 @@ class ProjectDocument:
             self._restore(before)
             raise
         if self.project.to_dict() != before:
-            self._push_undo(UndoEntry(label, before))
+            self.last_label = label
+            if self.record_history:
+                self._push_undo(UndoEntry(label, before))
 
     def undo(self) -> str | None:
         if not self._undo:
@@ -212,6 +233,11 @@ class ProjectDocument:
 
     def autosave(self, *, force: bool = False) -> Path | None:
         """Write a recovery copy when there is something new to recover."""
+        if not self.record_history:
+            # A detached document is one request's scratch space; there is no
+            # session to recover, and writing one would litter the recovery
+            # directory with a file per API call.
+            return None
         snapshot = self.project.to_dict()
         if not force and not self.dirty:
             return None
