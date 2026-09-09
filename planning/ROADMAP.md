@@ -28,6 +28,7 @@
 | 2026-09-09 | Gate E workspace shipped: one window (설정 → 프로토콜 → 절차 → 검증 → 내보내기) on a Qt/QML default shell with a Tk fallback, both driving a shell-free `ui/workspace_model.py`. Added `spec/` ParameterSpec, lenient `ir/loader.py`, `ir/procedure.py`, `ir/equipment_profile.py` (schproj v2), staged export gates in `release.py`, and Korean summaries in `report/`. CI now installs the `[gui]` extra so the default UI is actually exercised. E2.4/E3 → ✅ |
 | 2026-09-09 | Gate E2.1/E2.3/E4 and F5 closed: primitive palette (fragment-local repeat instead of a bare LOOP), append-only method library keyed to equipment, byte-preserving `.sch` import session (2 bytes changed for one field edit; CTSPro header untouched), and release labels bound to a content hash so an approval cannot follow an edited file |
 | 2026-09-09 | Web port boundary settled ahead of a Next.js UI: [`WEB_PORT_PLAN.md`](WEB_PORT_PLAN.md). Server stays on the lab PC, core API is stateless (the project is the document and undo is a client-side stack of snapshots), and the line is drawn at whether an operation touches equipment-facing bytes. Same audit corrected E2.3 and E4 from ✅ to 🔄 — both are model-complete but have no user-reachable path |
+| 2026-09-09 | Web port promoted to **Gate G** (§6.8) with G0–G5 tasks, exit criteria and rules, rather than living in a side document outside the gate structure. G is parallel to F, not downstream of it. G0 absorbs what E2.3/E4 left unreachable |
 
 ---
 
@@ -465,8 +466,8 @@ not be marked done.
 
 ## 6. Implementation Roadmap
 
-Work proceeds **Gate A → B → C → D → E → F** in order for anything that reads on
-an equipment-readiness claim. That said, most of D/E/F's *individual tasks* have
+Work proceeds **Gate A → B → C → D → E** in order for anything that reads on
+an equipment-readiness claim; **F and G then run in parallel** (see the diagram below). That said, most of D/E/F's *individual tasks* have
 no equipment dependency at all. The remaining physical checkpoints are pattern PV1/PV4
 (controlled pairs and CTSPro batch reopen), optional PV6/F3 execution, and any new exact-artifact
 release approval. E3/E3.1 **UI implementation itself** is software-only; applying a verified label
@@ -485,10 +486,14 @@ Gate C  호환 SCH writer    ✅ exited 2026-09-08 (C5 PNE02)
   ↓                         (parallel track below can run now, per-task)
 Gate D  모듈 픽스처 검증   ✅ software exit 2026-09-08 (P0/P1)
   ↓
-Gate E  모듈형 스케줄 UX   🔄 active — workspace shipped 2026-09-09; E2.1/E2.3/E4 remain
+Gate E  모듈형 스케줄 UX   🔄 active — desktop workspace shipped 2026-09-09
   ↓
-Gate F  운영 릴리스 / 추적성  F5/F6 unblocked; F1–F4 now released by C5, need release-record work
+  ├─ Gate F  운영 릴리스 / 추적성  F5/F6 unblocked; F1–F4 need release-record work
+  └─ Gate G  웹 UI (Next.js)      ⏳ boundary settled 2026-09-09; G0 also closes E2.3/E4
 ```
+
+Gate G is **not** downstream of Gate F. They touch different things — F records what an
+artifact is, G changes what draws the screen — and neither blocks the other.
 
 Before claiming any gate **exit**, run the §5.6 checklist — this still applies in
 full; only the "when can I start the next gate's software-only tasks" question
@@ -826,6 +831,51 @@ before that — it just cannot promote an unapproved pattern.
 
 ---
 
+### 6.8 Gate G — Web UI (Next.js)
+
+| | |
+|---|---|
+| **Status** | ⏳ **Not started**; boundary settled 2026-09-09 in [`WEB_PORT_PLAN.md`](WEB_PORT_PLAN.md) |
+| **Depends on** | **Nothing blocking.** G0 also closes what E2.3/E4 left unreachable. Does *not* depend on Gate F — release-record work and the UI re-platform are independent |
+| **Exit criteria** | The web UI is the default entry point; `release.py` still owns every gate; the API never lets a client compute `equipment_executable`; the Tk and Qt shells are removed rather than maintained in parallel |
+| **Next gate** | — (Gate F runs alongside, not after) |
+| **Boundary** | Split by whether an operation touches equipment-facing bytes — not by layer. Server stays on the lab PC; the core API is stateless |
+
+The port is affordable because `ui/workspace_model.py` never imported Qt or Tk, and
+`ScheduleProject` already round-trips through `to_dict`/`from_dict` (`copy()` is built on
+it). An undo entry is already a project snapshot, so the undo stack belongs in the client
+and the server holds no session. Measured split: 5,691 lines of UI that gets discarded
+against 6,561 lines of shell-free logic that carries over.
+
+| # | Task | Status | Completion criteria | Needs equipment? |
+|---|------|--------|---------------------|:---:|
+| G0 | Unblock the stateless path | ⏳ | `WorkspaceModel` usable without pushing undo; `SchPatchPlan.to_dict()`; a user-reachable way to save a method. **Closes E2.3 and E4** | No |
+| G1 | Python API — derive / transform / plan | ⏳ | `POST /api/views`, `/api/edit/{action}`, `/api/plan/{action}`; no filesystem access in this group; existing 591 tests stand as the contract | No |
+| G2 | Next.js screens | ⏳ | 설정 / 프로토콜 / 절차 / 검증 / 내보내기; forms rendered from `spec/` metadata rather than hand-written; undo/redo and autosave in the browser | No |
+| G3 | Local-resource API | ⏳ | `/api/library`, `/api/import/*`, `/api/export/*` — the only group touching the filesystem, and the line to hold if anything is ever centralised | No |
+| G4 | Retire the desktop shells | ⏳ | `ui/workspace.py` and `ui/workspace_qt.py` + `qml/` removed; launchers point at the web app; `[gui]` extra dropped | No |
+| G5 | Lab-PC deployment | ⏳ | One script starts both processes on localhost; documented in README with the same PowerShell examples as the current tools | No |
+
+**Rules**
+
+- **Gates stay in `release.py`.** The API reports a decision; it never asks the client to
+  make one. The moment a browser computes `equipment_executable`, the safety model is gone.
+- **No central server that can emit equipment files** — §3.1 of the plan. Only the method
+  library is worth centralising later, and it writes no equipment file.
+- **Do not back-port features to Tk.** It is a reduced fallback scheduled for removal in G4;
+  eight features added 2026-09-09 are Qt-only and stay that way.
+- **No web dependency in `ui/workspace_model.py`.** Keeping Qt and Tk out of it is what made
+  this port cheap; the same rule applies to whatever replaces the web UI later.
+
+**Progress record**
+- 2026-09-09: boundary and API shape settled — [`WEB_PORT_PLAN.md`](WEB_PORT_PLAN.md).
+  The model's 50 public methods fall into exactly four groups (derive / transform / plan /
+  local resource), and that split *is* the endpoint design. Keeping plan separate from
+  transform preserves the preview-then-apply step that carries warnings such as the DC-IR
+  resistance window never reaching the equipment file.
+
+---
+
 ## 7. Proposed Package Layout
 
 ```
@@ -875,6 +925,15 @@ pne_scheduler/                   # main package (repo root)
 run_pne_scheduler.py             # root launcher
 ```
 
+Gate G adds two directories beside the package and removes `ui/workspace*.py` + `ui/qml/`:
+
+```
+api/                             # FastAPI (or equivalent) over ui/workspace_model.py
+│                                #   derive / transform / plan  — no filesystem
+│                                #   local resource            — library, import, export
+web/                             # Next.js app; forms rendered from spec/ metadata
+```
+
 **Validation dependency principle:** Basic read/write/round-trip functionality must work
 with the repository alone. Use `assb_analyzer.io.pne_converter.parse_sch_cycle_map_bytes`
 as an optional cross-validator; the absence of the external package must not cause basic
@@ -910,10 +969,17 @@ tests to be skipped.
 
 ## 9. Current focus (active gate)
 
-**Active gate: E — modular schedule UX (Nova + LabVIEW feel).**
-Gate C exited 2026-09-08 (C5). Gate D software exit 2026-09-08 (P0/P1 harness +
-capacity contract + golden families). Pattern acceptance now runs as a linked track; the first
-lab checkpoint is separate DOD@384 and `fEndC@36` controlled pairs.
+**Active: Gate G — web UI**, with Gate E's remaining items folded into G0 and the pattern
+acceptance track waiting on the lab.
+
+The desktop workspace shipped 2026-09-09 and Gate E is substantially closed, but the UI is
+being re-platformed to Next.js, so no further work goes into the Tk or Qt shells. What is
+left of E2.3/E4 — a way to save a method, a serializer so an import session's plan can reach
+`patch-sch` — is G0, because those live in the model and carry over.
+
+Everything that would make the tool *usable for real experiments* is now blocked on people,
+not code: pattern acceptance needs a CTSEditorPro batch reopen (PV4), and F1–F4 need the
+matching records.
 
 | Step | Gate | Action |
 |------|------|--------|
@@ -922,9 +988,11 @@ lab checkpoint is separate DOD@384 and `fEndC@36` controlled pairs.
 | 3 | D | ✅ Software P0/P1 complete; see §6.5 honest gaps |
 | 4 | **E foundation** | E0/E0.5: IA + composer END/LOOP + catalog + validator |
 | 5 | **Pattern PV0–PV3** | Canonical HPPC/QPEED/QC/Cycle recipes + reopen candidate pack |
-| 6 | **E workspace** | Setup / Procedure / Inspector / import-patch / Validate / Export |
-| 7 | **User PV4** | Batch CTSPro reopen + save-as files; run은 별도 PV6 |
-| 8 | F | Exact pattern hash/profile 범위로 release |
+| 6 | **E workspace** | ✅ Shipped 2026-09-09 (Qt/QML default, Tk fallback) |
+| 7 | **User PV4** | ⏳ Batch CTSPro reopen + save-as files; run은 별도 PV6 |
+| 8 | **G0** | Stateless path + `SchPatchPlan.to_dict()` + method save — closes E2.3/E4 |
+| 9 | **G1–G5** | Web API → Next.js screens → local-resource API → retire desktop shells |
+| 10 | F | Exact pattern hash/profile 범위로 release (G와 병렬) |
 
 Completed: Gate A; Gate B (`gate_b_passed`); Gate C (C5 signed); Gate D (software).
 
