@@ -276,6 +276,12 @@ def validate_value(
         return tuple(issues)
     if spec.kind == "bool":
         return ()
+    if spec.kind == "text":
+        # Free text has no numeric range to check. Without this it fell through
+        # to float(), so every text parameter reported NOT_NUMBER — and since
+        # errors gate export, a detached module became unexportable for a
+        # parameter that only records where it came from.
+        return ()
 
     items = list(value or []) if spec.is_list else [value]
     if spec.is_list and not items:

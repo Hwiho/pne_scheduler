@@ -13,6 +13,15 @@ from pathlib import Path
 from typing import Any
 
 from ..edit.diff import StepDiff, diff_projects, preview_module_change
+from ..edit.steps import (
+    StepEditError,
+    StepFieldView,
+    insert_step,
+    move_step,
+    remove_step,
+    set_step_field,
+    step_fields,
+)
 from ..ir.equipment_profile import (
     EquipmentProfile,
     effective_current_limit_mA,
@@ -663,6 +672,88 @@ class WorkspaceModel:
             detach_module(project, module_id)
 
         self.document.apply(f"{module_id} 개별 스텝으로 분리", mutate)
+
+    # ------------------------------------------------------- step editing
+
+    def _custom_steps(self, module_id: str) -> list[dict[str, Any]]:
+        node = self._node(module_id)
+        if node.module_type != "custom_steps":
+            raise StepEditError(
+                f"{module_id} 는 프리셋입니다. 개별 스텝을 고치려면 먼저 분리하세요."
+            )
+        return list(node.params.get("steps") or [])
+
+    def can_edit_steps(self, module_id: str) -> bool:
+        return self._node(module_id).module_type == "custom_steps"
+
+    def custom_step_rows(self, module_id: str) -> tuple[dict[str, Any], ...]:
+        """The steps of a detached module, with each field in its own unit."""
+        capacity = self.project.cell_profile.nominal_capacity_mAh
+        rows: list[dict[str, Any]] = []
+        for index, raw in enumerate(self._custom_steps(module_id)):
+            fields = step_fields(raw, nominal_capacity_mAh=capacity)
+            rows.append(
+                {
+                    "index": index,
+                    "number": index + 1,
+                    "stepType": str(raw.get("step_type", "")),
+                    "mode": str(raw.get("mode") or ""),
+                    "label": str(raw.get("label") or ""),
+                    "fields": fields,
+                }
+            )
+        return tuple(rows)
+
+    def step_field_views(self, module_id: str, index: int) -> tuple[StepFieldView, ...]:
+        steps = self._custom_steps(module_id)
+        if not 0 <= index < len(steps):
+            raise StepEditError(f"스텝 번호가 범위를 벗어납니다 (1–{len(steps)}).")
+        return step_fields(
+            steps[index],
+            nominal_capacity_mAh=self.project.cell_profile.nominal_capacity_mAh,
+        )
+
+    def _apply_steps(
+        self, module_id: str, steps: list[dict[str, Any]], label: str
+    ) -> StepDiff:
+        before = self.project.copy()
+
+        def mutate(project: ScheduleProject) -> None:
+            for candidate in project.modules:
+                if candidate.id == module_id:
+                    candidate.params = {**candidate.params, "steps": steps}
+                    break
+
+        self.document.apply(label, mutate)
+        return diff_projects(before, self.project)
+
+    def insert_step(self, module_id: str, index: int, kind: str) -> StepDiff:
+        steps = insert_step(self._custom_steps(module_id), index, kind)
+        return self._apply_steps(module_id, steps, f"{module_id} 스텝 {index + 1} 추가")
+
+    def remove_step(self, module_id: str, index: int) -> StepDiff:
+        steps = remove_step(self._custom_steps(module_id), index)
+        return self._apply_steps(module_id, steps, f"{module_id} 스텝 {index + 1} 삭제")
+
+    def move_step(self, module_id: str, index: int, delta: int) -> StepDiff:
+        steps = move_step(self._custom_steps(module_id), index, delta)
+        return self._apply_steps(module_id, steps, f"{module_id} 스텝 {index + 1} 이동")
+
+    def set_step_field(
+        self, module_id: str, index: int, key: str, text: Any
+    ) -> StepDiff:
+        steps = set_step_field(self._custom_steps(module_id), index, key, text)
+        return self._apply_steps(
+            module_id, steps, f"{module_id} 스텝 {index + 1}.{key} 변경"
+        )
+
+    def preview_step_field(
+        self, module_id: str, index: int, key: str, text: Any
+    ) -> StepDiff:
+        """What retyping this field would do, without committing it."""
+        steps = set_step_field(self._custom_steps(module_id), index, key, text)
+        params = {**self._node(module_id).params, "steps": steps}
+        return preview_module_change(self.project, module_id, params)
 
     # ----------------------------------------------------------- validate
 

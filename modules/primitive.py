@@ -89,7 +89,13 @@ class PrimitiveModule:
             errors.append("discharge_end_voltage_v must be within the cell voltage window")
         return errors
 
-    def _step(self) -> StepIntent:
+    def build_step(self) -> StepIntent:
+        """The single step this primitive stands for.
+
+        Public because the step editor inserts steps through it: a step added
+        inside a detached module and one added as its own module must be the
+        same thing, and sharing this is how that stays true.
+        """
         step_type, mode, title = PRIMITIVE_KINDS[self.kind]
         step = StepIntent(step_type=step_type, mode=mode, label=title)
         if self.kind in _USES_C_RATE:
@@ -107,7 +113,7 @@ class PrimitiveModule:
         return step
 
     def expand(self, cell: CellProfile) -> list[StepIntent]:
-        step = self._step()
+        step = self.build_step()
         if self.repeat_count <= 1:
             return [step]
         # The LOOP and the step it returns to live in the same fragment, so the

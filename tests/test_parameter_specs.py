@@ -92,3 +92,30 @@ def test_choice_fields_round_trip_through_their_korean_label() -> None:
     updated = apply_field_edit("hppc", {"variant": "full"}, "variant", field.view.text)
 
     assert updated["variant"] == "full"
+
+
+def test_a_text_parameter_is_not_validated_as_a_number():
+    """`text` fell through to float(), so every text field reported NOT_NUMBER —
+    and because errors gate export, a detached module became unexportable over a
+    parameter that only records where it came from."""
+    from pne_scheduler.spec.parameter import ParameterSpec, validate_value
+
+    spec = ParameterSpec(
+        "source_module_type", "원본 모듈", "text", "method", "source_module_type",
+        default="",
+    )
+    assert validate_value(spec, "formation") == ()
+    assert validate_value(spec, "") == ()
+
+
+def test_a_detached_module_reports_no_errors_of_its_own(tmp_path):
+    """The end-to-end shape of the same bug."""
+    from pne_scheduler.ui.document import ProjectDocument
+    from pne_scheduler.ui.workspace_model import WorkspaceModel
+
+    model = WorkspaceModel(ProjectDocument.new(autosave_dir=tmp_path / "recovery"))
+    module_id = model.add_module("formation", {"cycle_count": 1})
+    assert not [row for row in model.validation_rows() if row.severity == "error"]
+
+    model.detach(module_id)
+    assert not [row for row in model.validation_rows() if row.severity == "error"]
