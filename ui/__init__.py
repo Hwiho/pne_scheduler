@@ -9,27 +9,24 @@ from .flow_model import (
 
 
 def launch_workspace(initial_path=None) -> int:
-    """Open the unified workspace, preferring the Qt/QML build.
+    """Point the user at the web workspace.
 
-    PySide6 is an optional dependency, so a machine that only has the standard
-    library still gets a working workspace: the Tk build is the fallback, not a
-    second product.  Both drive the same :mod:`ui.workspace_model`.
+    The Tk and Qt shells were removed in Gate G4: maintaining two of them was
+    already producing features that existed in only one. The workspace is now
+    `web/` over `api/`, which is two processes rather than one import, so this
+    says how to start them instead of pretending it can.
     """
-    try:
-        from .workspace_qt import launch_workspace as launch_qt
-    except ImportError:
-        import sys
+    import sys
 
-        print(
-            "PySide6가 없어 기본(Tk) 워크스페이스로 엽니다. "
-            'Qt 화면을 쓰려면 pip install "pne-scheduler[gui]"를 실행하세요.',
-            file=sys.stderr,
-        )
-        from .workspace import launch_workspace as launch_tk
-
-        launch_tk(initial_path)
-        return 0
-    return launch_qt(initial_path)
+    print(
+        "워크스페이스는 웹으로 옮겨졌습니다.\n"
+        "  1) python run_pne_scheduler_api.py\n"
+        "  2) cd web && npm run dev   → http://localhost:3000",
+        file=sys.stderr,
+    )
+    if initial_path is not None:
+        print(f"열려던 파일: {initial_path}", file=sys.stderr)
+    return 2
 
 
 def launch_flow_editor(*args, **kwargs):

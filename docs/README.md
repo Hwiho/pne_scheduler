@@ -46,26 +46,21 @@ python run_pne_scheduler_resume.py
 
 ## Workspace and the input contract
 
-The workspace is the primary entry point. It has two drawing layers over one shared brain:
+The workspace is a Next.js app (`web/`) over a Flask API (`api/`), both on the lab PC.
+Neither holds a rule:
 
-- `ui/workspace_qt.py` + `ui/qml/` — the default, a PySide6/QML shell whose bridge only
-  converts model state into the lists and maps QML understands.
-- `ui/workspace.py` — a reduced Tk build, used where PySide6 is not installed.
-  `ui/__init__.py:launch_workspace()` picks between them. It carries the original five
-  screens only: the campaign builder, QC fast-charge control, deadline solver, C-rate chips
-  and step editor were added to the Qt shell and deliberately not back-ported, since the Tk
-  workspace is scheduled for removal when the web UI lands.
+- `api/` — routes grouped by what an operation is: derive, transform, plan, local
+  resource. The first three are stateless; the caller sends the whole project and the
+  server builds a detached document per request.
+- `ui/workspace_model.py` — every action the UI can perform, with no web, Qt or Tk
+  import, covered by `tests/test_workspace_model.py` rather than by clicking.
+- `ui/document.py` — the editing session. `ProjectDocument.detached()` is the stateless
+  mode: no undo stack, no autosave, but it still reports the label of the edit so a
+  client can name its own history entry.
 
-Neither holds any decision. Both drive two testable pieces:
-
-- `ui/workspace_model.py` — every action the UI can perform, with no Qt and no Tk import,
-  so the behaviour is covered by `tests/test_workspace_model.py` rather than by clicking.
-- `ui/document.py` — the editing session: snapshot undo/redo with named entries, dirty
-  tracking, atomic autosave to `~/.pne_scheduler/recovery`, and crash recovery.
-
-`tests/test_workspace_qt.py` builds the real QML engine offscreen and fails on any QML
-warning, so a renamed bridge property cannot reach a user as a blank panel. It skips where
-PySide6 is absent, as `tests/test_workspace_ui.py` skips without a display.
+Undo, redo and autosave live in the browser, because an undo entry is just a past
+project. `tests/test_api.py` covers the HTTP surface, including that a bad value still
+saves while every export gate closes.
 
 ### ParameterSpec
 

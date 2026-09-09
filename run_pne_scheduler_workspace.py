@@ -1,4 +1,8 @@
-"""PNE Scheduler workspace launcher (setup → protocol → procedure → validate → export)."""
+"""PNE Scheduler workspace launcher — now the web app.
+
+Kept as a signpost rather than deleted: someone who learned this filename should
+be told where the workspace went, not met with "no such file".
+"""
 
 import sys
 from pathlib import Path

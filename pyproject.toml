@@ -14,7 +14,6 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = ["pytest>=7.0", "ruff>=0.6"]
-gui = ["PySide6>=6.5"]
 web = ["flask>=3.0"]
 mdb = ["access_parser"]
 
@@ -46,12 +45,6 @@ packages = [
 
 [tool.setuptools.package-dir]
 "pne_scheduler" = "."
-
-# The QML files are loaded from disk at runtime by ui/workspace_qt.py, so they
-# have to ship with the package -- without this an installed copy finds the
-# Python bridge but no screens to draw.
-[tool.setuptools.package-data]
-"pne_scheduler.ui" = ["qml/*.qml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

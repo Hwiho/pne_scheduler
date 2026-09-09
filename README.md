@@ -73,56 +73,45 @@ for CTSPro display/Save-As review only and must not be started or run.
 ## Workspace
 
 ```powershell
-pip install -e ".[gui]"   # PySide6, for the Qt workspace
-python run_pne_scheduler_workspace.py
-# or
-python -m pne_scheduler workspace path\to\project.schproj
+# 1) API — lab PC, localhost only
+python run_pne_scheduler_api.py
+
+# 2) screens
+cd web
+npm install
+npm run dev            # http://localhost:3000
 ```
 
-Both entry points open the Qt/QML workspace. PySide6 is an optional dependency: where it
-is missing they fall back to a **reduced** Tk build and say so on stderr, so a machine with
-only the standard library still has a usable workspace — but the Tk build has the original
-five screens only. The campaign builder, QC fast-charge control, deadline solver, C-rate
-chips and step editor are Qt-only, and the Tk workspace is scheduled for removal when the
-web UI lands ([`planning/WEB_PORT_PLAN.md`](planning/WEB_PORT_PLAN.md)). The other tools
-(viewer, flow canvas, bulk editor, resume wizard) remain Tk.
-
-One window with five steps, in the order the work actually happens:
+One page with five steps, in the order the work actually happens:
 
 | Tab | What it is for |
 |------|------|
 | **1. 설정** | PNE unit, CTSPro build, SCH layout, cell capacity and voltage window |
-| **2. 프로토콜** | Pick an experiment by purpose ("무엇을 알고 싶은가"), then edit it as a structured form |
-| **3. 절차** | The linear run order as a timeline, with drag reorder and a read-only expanded step table |
-| **4. 검증** | Errors, warnings, and unverified evidence — double-click jumps to the input that caused it |
-| **5. 내보내기** | The draft → software-checked → CTSPro → equipment ladder, with each output path gated separately |
+| **2. 프로토콜** | Pick an experiment by purpose, build a cycle+RPT campaign, edit as a structured form |
+| **3. 절차** | The run order, a deadline solver, per-step editing of detached modules |
+| **4. 검증** | Errors, warnings, and unverified evidence |
+| **5. 내보내기** | The draft → software-checked → CTSPro → equipment ladder, each path gated separately |
 
 Design rules the workspace follows:
 
 - **Saving is never blocked.** A project with errors still opens and still saves; only
-  export is gated. A file with bad values is repaired on load and every repair is listed,
-  so the thing that is wrong can actually be fixed.
+  export is gated. A file with bad values is repaired on load and every repair is listed.
+- **The screens hold no rules.** Every gate is computed by `release.py` and arrives as
+  data with its blockers attached; nothing in the browser recomputes one.
 - **No JSON in the form.** Every parameter is declared once in `spec/module_params.py`
   with a Korean name, a unit, allowed and recommended ranges, the reason for its default,
-  which steps it moves, and how far it has been verified. Fields that belong to another
-  variant are hidden, not greyed out.
-- **C-rate and current are the same value.** Type either; the other is shown next to it,
-  together with the share of the equipment rating it uses.
-- **Changes are previewed.** Editing a field reports its effect on the expanded step list
-  ("스텝 167 → 50 · 117개 삭제") before it is committed anywhere.
+  which steps it moves, and how far it has been verified — and the form renders from that.
+- **C-rate and current are the same value.** Type either; the other is shown next to it.
+- **Changes are previewed.** A plan is a separate request from applying it, so the
+  warnings that must be read first arrive before anything is committed.
 - **Presets stay presets.** To edit an individual step of a locked pattern, detach it
   explicitly; the module then carries its steps verbatim and is marked user-edited.
-- **One answer, not twelve entries.** A cycle campaign is described as a rhythm —
-  "200 cycles, RPT every 50, DC-IR at 1C/1.5C/2C" — and laid out as ordinary modules
-  you can still edit one by one. Cycle counts can be solved backwards from a deadline
-  ("14 days, in steps of 50") against the same estimator the summary uses.
-- **Linked values move together.** QC carries rate, voltage limit and time as three
-  lists of equal length; changing only the rates leaves times measured at the old ones,
-  so the rates get a control that recomputes the companions by charge conservation and
-  states what that derivation does not model.
+- **One answer, not twelve entries.** A cycle campaign is described as a rhythm and laid
+  out as ordinary modules; cycle counts can be solved backwards from a deadline.
 
-The flow canvas is still available under **고급 도구**, but it is no longer the default
-view: a PNE schedule is linear, so the procedure timeline is.
+The desktop Tk and Qt workspaces were removed in Gate G4 — see
+[`planning/WEB_PORT_PLAN.md`](planning/WEB_PORT_PLAN.md). The other tools (viewer, flow
+canvas, bulk editor, resume wizard) remain Tk.
 
 ## Equipment profile
 

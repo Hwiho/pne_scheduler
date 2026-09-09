@@ -853,7 +853,7 @@ against 6,561 lines of shell-free logic that carries over.
 | G1 | Python API — derive / transform / plan | ✅ | `POST /api/views`, `/api/edit/{action}`, `/api/plan/{action}`; no filesystem access in this group; existing 591 tests stand as the contract | No |
 | G2 | Next.js screens | ✅ | 설정 / 프로토콜 / 절차 / 검증 / 내보내기; forms rendered from `spec/` metadata rather than hand-written; undo/redo and autosave in the browser | No |
 | G3 | Local-resource API | ✅ | `/api/library`, `/api/import/*`, `/api/export/*` — the only group touching the filesystem, and the line to hold if anything is ever centralised | No |
-| G4 | Retire the desktop shells | ⏳ | `ui/workspace.py` and `ui/workspace_qt.py` + `qml/` removed; launchers point at the web app; `[gui]` extra dropped | No |
+| G4 | Retire the desktop shells | ✅ | `ui/workspace.py` and `ui/workspace_qt.py` + `qml/` removed; launchers point at the web app; `[gui]` extra dropped | No |
 | G5 | Lab-PC deployment | ⏳ | One script starts both processes on localhost; documented in README with the same PowerShell examples as the current tools | No |
 
 **Rules**
