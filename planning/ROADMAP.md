@@ -29,6 +29,7 @@
 | 2026-09-09 | Gate E2.1/E2.3/E4 and F5 closed: primitive palette (fragment-local repeat instead of a bare LOOP), append-only method library keyed to equipment, byte-preserving `.sch` import session (2 bytes changed for one field edit; CTSPro header untouched), and release labels bound to a content hash so an approval cannot follow an edited file |
 | 2026-09-09 | Web port boundary settled ahead of a Next.js UI: [`WEB_PORT_PLAN.md`](WEB_PORT_PLAN.md). Server stays on the lab PC, core API is stateless (the project is the document and undo is a client-side stack of snapshots), and the line is drawn at whether an operation touches equipment-facing bytes. Same audit corrected E2.3 and E4 from ✅ to 🔄 — both are model-complete but have no user-reachable path |
 | 2026-09-09 | Web port promoted to **Gate G** (§6.8) with G0–G5 tasks, exit criteria and rules, rather than living in a side document outside the gate structure. G is parallel to F, not downstream of it. G0 absorbs what E2.3/E4 left unreachable |
+| 2026-09-09 | **Gate G complete** (G0–G5): stateless-path unblocking that also closed E2.3/E4, a Flask API grouped as derive/transform/plan/local-resource, a Next.js workspace rendering forms from `spec/` metadata with undo and autosave in the browser, a gated export route, deletion of the Tk and Qt shells (4,058 lines), and a one-command lab-PC launcher. The safety model is tested across the browser path: a bad value still saves while every export gate closes |
 
 ---
 
@@ -489,7 +490,7 @@ Gate D  모듈 픽스처 검증   ✅ software exit 2026-09-08 (P0/P1)
 Gate E  모듈형 스케줄 UX   🔄 active — desktop workspace shipped 2026-09-09
   ↓
   ├─ Gate F  운영 릴리스 / 추적성  F5/F6 unblocked; F1–F4 need release-record work
-  └─ Gate G  웹 UI (Next.js)      ⏳ boundary settled 2026-09-09; G0 also closes E2.3/E4
+  └─ Gate G  웹 UI (Next.js)      ✅ complete 2026-09-09 — desktop shells removed
 ```
 
 Gate G is **not** downstream of Gate F. They touch different things — F records what an
@@ -835,7 +836,7 @@ before that — it just cannot promote an unapproved pattern.
 
 | | |
 |---|---|
-| **Status** | ⏳ **Not started**; boundary settled 2026-09-09 in [`WEB_PORT_PLAN.md`](WEB_PORT_PLAN.md) |
+| **Status** | ✅ **Complete 2026-09-09** — G0–G5 done. The web app is the workspace; the Tk and Qt shells are deleted |
 | **Depends on** | **Nothing blocking.** G0 also closes what E2.3/E4 left unreachable. Does *not* depend on Gate F — release-record work and the UI re-platform are independent |
 | **Exit criteria** | The web UI is the default entry point; `release.py` still owns every gate; the API never lets a client compute `equipment_executable`; the Tk and Qt shells are removed rather than maintained in parallel |
 | **Next gate** | — (Gate F runs alongside, not after) |
@@ -854,7 +855,7 @@ against 6,561 lines of shell-free logic that carries over.
 | G2 | Next.js screens | ✅ | 설정 / 프로토콜 / 절차 / 검증 / 내보내기; forms rendered from `spec/` metadata rather than hand-written; undo/redo and autosave in the browser | No |
 | G3 | Local-resource API | ✅ | `/api/library`, `/api/import/*`, `/api/export/*` — the only group touching the filesystem, and the line to hold if anything is ever centralised | No |
 | G4 | Retire the desktop shells | ✅ | `ui/workspace.py` and `ui/workspace_qt.py` + `qml/` removed; launchers point at the web app; `[gui]` extra dropped | No |
-| G5 | Lab-PC deployment | ⏳ | One script starts both processes on localhost; documented in README with the same PowerShell examples as the current tools | No |
+| G5 | Lab-PC deployment | ✅ | One script starts both processes on localhost; documented in README with the same PowerShell examples as the current tools | No |
 
 **Rules**
 
@@ -969,8 +970,8 @@ tests to be skipped.
 
 ## 9. Current focus (active gate)
 
-**Active: Gate G — web UI**, with Gate E's remaining items folded into G0 and the pattern
-acceptance track waiting on the lab.
+**Active: Gate F — operational release.** Gate G completed 2026-09-09; Gate E is closed
+except E2.2, which waits on the lab.
 
 The desktop workspace shipped 2026-09-09 and Gate E is substantially closed, but the UI is
 being re-platformed to Next.js, so no further work goes into the Tk or Qt shells. What is

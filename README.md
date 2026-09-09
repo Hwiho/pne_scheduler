@@ -52,7 +52,8 @@ python run_pne_scheduler.py build example/example.schproj -o output.sch --allow-
 
 | Command | Description |
 |------|------|
-| `workspace [file.schproj]` | Open the unified workspace (setup → protocol → procedure → validate → export) |
+| `library [--save file.schproj --name NAME]` | List or save reusable methods |
+| `import-sch file.sch [--set 3:fVref=25.0 --plan-out plan.json]` | Open an existing schedule and stage writer-ready edits |
 | `summary file.schproj` | Print a Korean plain-language summary and the export gate status |
 | `view [file.sch]` | Show the step table and inferred FP/L/C-rate/protocol |
 | `edit [file.schproj]` | Open the project bulk editor |
@@ -73,13 +74,15 @@ for CTSPro display/Save-As review only and must not be started or run.
 ## Workspace
 
 ```powershell
-# 1) API — lab PC, localhost only
-python run_pne_scheduler_api.py
+# One command: starts the API and the screens, both on localhost
+python run_pne_scheduler_web.py     # → http://localhost:3000
+```
 
-# 2) screens
-cd web
-npm install
-npm run dev            # http://localhost:3000
+Or start the two halves yourself:
+
+```powershell
+python run_pne_scheduler_api.py     # API, 127.0.0.1:8000
+cd web; npm run dev                 # screens, localhost:3000
 ```
 
 One page with five steps, in the order the work actually happens:
