@@ -50,8 +50,11 @@ The workspace is the primary entry point. It has two drawing layers over one sha
 
 - `ui/workspace_qt.py` + `ui/qml/` — the default, a PySide6/QML shell whose bridge only
   converts model state into the lists and maps QML understands.
-- `ui/workspace.py` — the Tk build of the same five screens, used where PySide6 is not
-  installed. `ui/__init__.py:launch_workspace()` picks between them.
+- `ui/workspace.py` — a reduced Tk build, used where PySide6 is not installed.
+  `ui/__init__.py:launch_workspace()` picks between them. It carries the original five
+  screens only: the campaign builder, QC fast-charge control, deadline solver, C-rate chips
+  and step editor were added to the Qt shell and deliberately not back-ported, since the Tk
+  workspace is scheduled for removal when the web UI lands.
 
 Neither holds any decision. Both drive two testable pieces:
 

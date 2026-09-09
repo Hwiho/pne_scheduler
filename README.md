@@ -80,8 +80,11 @@ python -m pne_scheduler workspace path\to\project.schproj
 ```
 
 Both entry points open the Qt/QML workspace. PySide6 is an optional dependency: where it
-is missing they fall back to the Tk build of the same screens and say so on stderr, so a
-machine with only the standard library is never left without a workspace. The other tools
+is missing they fall back to a **reduced** Tk build and say so on stderr, so a machine with
+only the standard library still has a usable workspace — but the Tk build has the original
+five screens only. The campaign builder, QC fast-charge control, deadline solver, C-rate
+chips and step editor are Qt-only, and the Tk workspace is scheduled for removal when the
+web UI lands ([`planning/WEB_PORT_PLAN.md`](planning/WEB_PORT_PLAN.md)). The other tools
 (viewer, flow canvas, bulk editor, resume wizard) remain Tk.
 
 One window with five steps, in the order the work actually happens:
