@@ -88,6 +88,10 @@ def create_app(library_root: Path | None = None) -> Any:
     def _views():
         return jsonify(routes.views(body()))
 
+    @app.post("/api/steps")
+    def _steps():
+        return jsonify(routes.steps(body()))
+
     # ---- transform -------------------------------------------------------
 
     @app.post("/api/edit/<action>")

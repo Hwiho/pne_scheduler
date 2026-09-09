@@ -278,7 +278,33 @@ class MethodLibrary:
         )
 
 
+def save_project_as_method(
+    store: MethodLibrary,
+    project: Any,
+    *,
+    name: str,
+    description: str = "",
+    method_id: str | None = None,
+) -> MethodVersion:
+    """Save a project's module list, reading the equipment off the project.
+
+    The CLI and the API both needed this; having it twice meant a method saved
+    one way could carry a different equipment record than the same project saved
+    the other.
+    """
+    equipment = project.equipment
+    return store.save(
+        name=name,
+        description=description,
+        method_id=method_id,
+        modules=[node.to_dict() for node in project.modules],
+        equipment_unit=equipment.unit if equipment else "",
+        equipment_layout=(equipment.layout_key or "") if equipment else "",
+    )
+
+
 __all__ = [
+    "save_project_as_method",
     "LIBRARY_SCHEMA",
     "LoadPlan",
     "MethodLibrary",

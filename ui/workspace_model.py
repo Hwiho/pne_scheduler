@@ -8,7 +8,7 @@ without a display.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -39,7 +39,12 @@ from ..ir.procedure import (
 from ..ir.project import ModuleNode, ScheduleProject
 from ..modules.base import get_module_class
 from ..modules.catalog import get_module_spec, palette_module_types
-from ..library import LoadPlan, MethodLibrary, MethodVersion
+from ..library import (
+    LoadPlan,
+    MethodLibrary,
+    MethodVersion,
+    save_project_as_method,
+)
 from ..protocol.campaign import CampaignPlan, build_cycle_rpt_campaign
 from ..protocol.planning import CycleBudget, cycles_within
 from ..protocol.presets import CRatePreset, presets_within
@@ -93,6 +98,17 @@ class ValidationRow:
     field_key: str | None = None
     step_number: int | None = None
     remediation: str = ""
+    # How many places raised this same finding, and where the rest of them are.
+    # A 2000-cycle campaign produced 1294 rows saying six things; listing every
+    # one buries the problems instead of showing them.
+    occurrences: int = 1
+    other_locations: tuple[str, ...] = ()
+
+    @property
+    def location_text(self) -> str:
+        if self.occurrences <= 1:
+            return self.location
+        return f"{self.location} 외 {self.occurrences - 1}곳"
 
     @property
     def severity_label(self) -> str:
@@ -109,6 +125,11 @@ class WorkspaceModel:
         library: MethodLibrary | None = None,
     ) -> None:
         self.document = document or ProjectDocument.new()
+        # Building one payload asked for the procedure seven times and expanded
+        # the schedule four; at 2400 steps that was most of the request. Keyed on
+        # the project's own content rather than a revision counter, so a caller
+        # that mutates the project directly cannot be served a stale view.
+        self._procedure_cache: tuple[Any, ProcedureView] | None = None
         # Created lazily: a session that never opens the library never touches
         # the user's home directory.
         self._library = library
@@ -126,7 +147,7 @@ class WorkspaceModel:
         )
 
     def summary(self) -> ProjectSummary:
-        return summarize_project(self.project)
+        return summarize_project(self.project, procedure=self.procedure())
 
     def release(self) -> ReleaseState:
         return evaluate_release(self.project)
@@ -331,14 +352,12 @@ class WorkspaceModel:
         self, name: str, *, description: str = "", method_id: str | None = None
     ) -> MethodVersion:
         """Store the current module list as a new library version."""
-        equipment = self.project.equipment
-        return self.library().save(
+        return save_project_as_method(
+            self.library(),
+            self.project,
             name=name,
             description=description,
             method_id=method_id,
-            modules=[node.to_dict() for node in self.project.modules],
-            equipment_unit=equipment.unit if equipment else "",
-            equipment_layout=(equipment.layout_key or "") if equipment else "",
         )
 
     def saved_methods(self) -> tuple[MethodVersion, ...]:
@@ -604,7 +623,13 @@ class WorkspaceModel:
         return self.set_param(module_id, "loop_count", count)
 
     def procedure(self) -> ProcedureView:
-        return build_procedure(self.project)
+        key = _snapshot_key(self.project.to_dict())
+        cached = self._procedure_cache
+        if cached is not None and cached[0] == key:
+            return cached[1]
+        view = build_procedure(self.project)
+        self._procedure_cache = (key, view)
+        return view
 
     def step_rows(self) -> tuple[dict[str, Any], ...]:
         return procedure_step_rows(self.procedure())
@@ -816,18 +841,25 @@ class WorkspaceModel:
 
         order = {"error": 0, "warning": 1}
         rows.sort(key=lambda row: (order.get(row.severity, 2), row.location))
-        return tuple(_dedupe_rows(rows))
+        return tuple(_group_rows(rows))
 
     def unverified_notes(self) -> tuple[str, ...]:
         """Which parts of this schedule are not yet proven, in plain Korean."""
-        notes: list[str] = []
+        # Grouped by module type: trust is a property of the pattern, not of each
+        # instance, so a 161-module campaign of two types has two things to say.
+        counts: dict[str, int] = {}
         for node in self.project.modules:
-            spec = get_module_spec(node.module_type)
+            counts[node.module_type] = counts.get(node.module_type, 0) + 1
+
+        notes: list[str] = []
+        for module_type, count in counts.items():
+            spec = get_module_spec(module_type)
             if spec is None:
                 continue
             label = VERIFICATION_LABELS_KO.get(spec.trust_status)
             status = label or TRUST_LABELS_KO.get(spec.trust_status, spec.trust_status)
-            notes.append(f"{node.id} · {spec.title}: {status}")
+            where = spec.title if count == 1 else f"{spec.title} ({count}개 구간)"
+            notes.append(f"{where}: {status}")
             notes.extend(f"    - {limit}" for limit in spec.limitations)
         return tuple(notes)
 
@@ -893,16 +925,50 @@ class WorkspaceModel:
         return f"{module_type}_{index}"
 
 
-def _dedupe_rows(rows: list[ValidationRow]) -> list[ValidationRow]:
-    seen: set[tuple[str, str, str, str | None]] = set()
-    unique: list[ValidationRow] = []
+def _snapshot_key(data: Any) -> Any:
+    """A hashable, comparable stand-in for a project's content."""
+    if isinstance(data, dict):
+        return tuple(sorted((k, _snapshot_key(v)) for k, v in data.items()))
+    if isinstance(data, list):
+        return tuple(_snapshot_key(item) for item in data)
+    return data
+
+
+# Beyond this many, extra locations stop being useful and start being weight:
+# the point is "this is everywhere", and the step table shows exactly where.
+MAX_LISTED_LOCATIONS = 20
+
+
+def _group_rows(rows: list[ValidationRow]) -> list[ValidationRow]:
+    """One row per distinct finding, carrying where else it occurred.
+
+    The same finding at 729 steps is one problem, not 729. Grouping keeps the
+    first location — the one a user would jump to — and records the count and a
+    bounded sample of the others, so nothing is hidden but nothing is repeated.
+    """
+    grouped: dict[tuple[str, str, str], ValidationRow] = {}
+    extra: dict[tuple[str, str, str], list[str]] = {}
     for row in rows:
-        key = (row.code, row.message, row.location, row.module_id)
-        if key in seen:
+        key = (row.severity, row.code, row.message)
+        first = grouped.get(key)
+        if first is None:
+            grouped[key] = row
+            extra[key] = []
             continue
-        seen.add(key)
-        unique.append(row)
-    return unique
+        if row.location != first.location:
+            extra[key].append(row.location)
+
+    result: list[ValidationRow] = []
+    for key, first in grouped.items():
+        others = extra[key]
+        result.append(
+            replace(
+                first,
+                occurrences=1 + len(others),
+                other_locations=tuple(others[:MAX_LISTED_LOCATIONS]),
+            )
+        )
+    return result
 
 
 __all__ = [

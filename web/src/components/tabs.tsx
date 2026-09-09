@@ -4,7 +4,7 @@
 // payload the API returned — no screen recomputes a gate or a validation result.
 
 import { useState } from "react";
-import type { Json, Views } from "@/lib/api";
+import { api, type Json, type Views } from "@/lib/api";
 import { Field } from "./Field";
 
 interface TabProps {
@@ -259,8 +259,10 @@ export function ProtocolTab({ views, apply, select, plan }: TabProps) {
 
 // --- 3. 절차 ---------------------------------------------------------------
 
-export function ProcedureTab({ views, apply, select, plan }: TabProps) {
+export function ProcedureTab({ views, project, apply, select, plan }: TabProps) {
   const [days, setDays] = useState("14");
+  const [steps, setSteps] = useState<Record<string, string>[]>([]);
+  const [stepsShown, setStepsShown] = useState(false);
   const [step, setStep] = useState("50");
   const [budget, setBudget] = useState<{ ok?: boolean; totalCycles?: number; text?: string } | null>(null);
   const [kind, setKind] = useState("rest");
@@ -397,8 +399,23 @@ export function ProcedureTab({ views, apply, select, plan }: TabProps) {
       )}
 
       <div className="card">
-        <h2>장비 상세 보기 (읽기 전용)</h2>
-        <div style={{ maxHeight: 320, overflow: "auto" }}>
+        <div className="row">
+          <h2 style={{ margin: 0 }}>장비 상세 보기 (읽기 전용)</h2>
+          <span className="muted grow">{views.procedure.stepCount} 스텝</span>
+          <button
+            onClick={async () => {
+              if (stepsShown) {
+                setStepsShown(false);
+                return;
+              }
+              setSteps((await api.steps(project)).steps);
+              setStepsShown(true);
+            }}
+          >
+            {stepsShown ? "접기" : "펼치기"}
+          </button>
+        </div>
+        <div style={{ maxHeight: 320, overflow: "auto", display: stepsShown ? undefined : "none" }}>
           <table>
             <thead>
               <tr>{["number", "phase", "type", "mode", "current", "voltage", "end", "loop"].map((c) => (
@@ -406,7 +423,7 @@ export function ProcedureTab({ views, apply, select, plan }: TabProps) {
               ))}</tr>
             </thead>
             <tbody>
-              {views.steps.map((row, index) => (
+              {steps.map((row, index) => (
                 <tr key={index}>
                   {["number", "phase", "type", "mode", "current", "voltage", "end", "loop"].map((c) => (
                     <td key={c}>{row[c]}</td>

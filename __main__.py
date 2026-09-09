@@ -275,14 +275,14 @@ def main(argv: list[str] | None = None) -> int:
                 return 2
             for repair in load.repairs:
                 print(f"수정됨: {repair}", file=sys.stderr)
-            equipment = load.project.equipment
+            from .library import save_project_as_method
+
             try:
-                entry = store.save(
+                entry = save_project_as_method(
+                    store,
+                    load.project,
                     name=args.name,
                     description=args.description,
-                    modules=[node.to_dict() for node in load.project.modules],
-                    equipment_unit=equipment.unit if equipment else "",
-                    equipment_layout=(equipment.layout_key or "") if equipment else "",
                 )
             except ValueError as exc:
                 print(f"저장할 수 없습니다: {exc}", file=sys.stderr)

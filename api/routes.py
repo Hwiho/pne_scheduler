@@ -52,7 +52,18 @@ def _args(payload: dict[str, Any]) -> dict[str, Any]:
 
 def views(payload: dict[str, Any]) -> dict[str, Any]:
     model = _model(payload)
-    return {"ok": True, "views": views_json(model, payload.get("selected"))}
+    return {
+        "ok": True,
+        "views": views_json(
+            model, payload.get("selected"), include_steps=bool(payload.get("includeSteps"))
+        ),
+    }
+
+
+def steps(payload: dict[str, Any]) -> dict[str, Any]:
+    """The expanded step table on its own, for the tab that shows it."""
+    model = _model(payload)
+    return {"ok": True, "steps": list(model.display_step_rows())}
 
 
 # --- transform --------------------------------------------------------------
@@ -392,6 +403,7 @@ __all__ = [
     "library_save",
     "library_versions",
     "plan",
+    "steps",
     "transform",
     "views",
 ]

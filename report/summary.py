@@ -7,6 +7,8 @@ expansion the writer uses, so they cannot drift from the file.
 
 from __future__ import annotations
 
+from typing import Any
+
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 
@@ -108,12 +110,19 @@ def summarize_project(
     project: ScheduleProject,
     *,
     start: datetime | None = None,
+    procedure: Any = None,
 ) -> ProjectSummary:
+    """``procedure`` lets a caller that already built one avoid a second pass.
+
+    Expanding a 2400-step schedule twice to render one screen was most of the
+    cost of that screen.
+    """
     from ..ir.equipment_profile import effective_current_limit_mA
     from ..ir.procedure import build_procedure
 
     cell = project.cell_profile
-    procedure = build_procedure(project)
+    if procedure is None:
+        procedure = build_procedure(project)
     limit = effective_current_limit_mA(cell.max_current_mA, project.equipment)
 
     cell_line = (

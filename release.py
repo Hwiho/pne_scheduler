@@ -38,6 +38,22 @@ REOPEN_SUPPORTED_UNIT = "PNE02"
 REOPEN_SUPPORTED_LAYOUT = "0x00010003/612"
 
 
+def _blockers(issues: tuple[PreflightIssue, ...]) -> tuple[str, ...]:
+    """One line per distinct reason, counted rather than repeated.
+
+    A gate is blocked by a *kind* of problem, not by each occurrence of it. A
+    2000-cycle campaign produced 1135 blockers on one gate that said six things;
+    the validation tab is where the per-step detail belongs.
+    """
+    counts: dict[str, int] = {}
+    for issue in issues:
+        key = f"[{issue.code}] {issue.message}"
+        counts[key] = counts.get(key, 0) + 1
+    return tuple(
+        text if count == 1 else f"{text} ({count}곳)" for text, count in counts.items()
+    )
+
+
 @dataclass(frozen=True, slots=True)
 class OutputOption:
     kind: str
@@ -115,12 +131,8 @@ def evaluate_release(project: ScheduleProject) -> ReleaseState:
     if limit is None:
         limit_blockers.append("최대 전류 한계가 지정되지 않아 안전 확인을 할 수 없습니다.")
 
-    software_blockers = tuple(
-        f"[{issue.code}] {issue.message}" for issue in preview.errors
-    )
-    production_blockers = tuple(
-        f"[{issue.code}] {issue.message}" for issue in production.errors
-    )
+    software_blockers = _blockers(preview.errors)
+    production_blockers = _blockers(production.errors)
 
     review = project.review
     stage: Stage = "draft"

@@ -163,12 +163,22 @@ def form_json(form: ModuleForm | None, module_id: str, sibling_count: int) -> di
     }
 
 
-def views_json(model: WorkspaceModel, selected: str | None = None) -> dict[str, Any]:
+def views_json(
+    model: WorkspaceModel,
+    selected: str | None = None,
+    *,
+    include_steps: bool = False,
+) -> dict[str, Any]:
     """Every derived view of one project, in one payload.
 
     A screen needs several of these at once and they all come from the same
     project, so splitting them into separate round trips would only add latency
     and the chance of showing two views of different states.
+
+    The expanded step table is the exception. It is read-only, it is shown on one
+    tab, and it grew to 312 KB of a 400 KB response on a 2000-cycle campaign —
+    sent on every keystroke that committed a field. It is fetched on demand
+    instead; `stepCount` still travels so a caller knows what it would get.
     """
     modules = [node.id for node in model.project.modules]
     module_id = selected if selected in modules else (modules[0] if modules else "")
@@ -231,7 +241,7 @@ def views_json(model: WorkspaceModel, selected: str | None = None) -> dict[str, 
             "durationExact": procedure.duration_exact,
             "stepCount": len(model.step_rows()),
         },
-        "steps": list(model.display_step_rows()),
+        "steps": list(model.display_step_rows()) if include_steps else [],
         "canEditSteps": bool(module_id) and model.can_edit_steps(module_id),
         "customSteps": (
             [

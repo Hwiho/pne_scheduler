@@ -48,6 +48,11 @@ export const api = {
   views: (project: Json, selected?: string) =>
     post<{ views: Views }>("/api/views", { project, selected }),
 
+  // The expanded step table is fetched only by the tab that shows it: it is
+  // read-only and was 312 KB of a 400 KB response on a large campaign, resent on
+  // every edit.
+  steps: (project: Json) => post<{ steps: Record<string, string>[] }>("/api/steps", { project }),
+
   edit: (action: string, project: Json, args: Json = {}) =>
     post<EditResult>(`/api/edit/${action}`, { project, args }),
 
