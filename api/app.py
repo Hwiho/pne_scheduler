@@ -147,6 +147,10 @@ def create_app(library_root: Path | None = None) -> Any:
     def _import_plan(session_id: str):
         return jsonify(routes.import_proposal(sessions.get(session_id)))
 
+    @app.post("/api/export")
+    def _export():
+        return jsonify(routes.export(body()))
+
     @app.get("/api/health")
     def _health():
         return jsonify({"ok": True, "libraryRoot": str(store.root)})

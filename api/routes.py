@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from ..edit.steps import StepEditError
+from ..exporting import ExportBlocked, export_preview, export_review_candidate
 from ..import_session import ImportSession
 from ..library import MethodLibrary, MethodVersion
 from ..ui.document import ProjectDocument
@@ -293,6 +294,47 @@ def library_load(store: MethodLibrary, payload: dict[str, Any]) -> dict[str, Any
     }
 
 
+EXPORTS: dict[str, Callable[[Any, Path], Any]] = {
+    "preview": export_preview,
+    "review_candidate": export_review_candidate,
+}
+
+
+def export(payload: dict[str, Any]) -> dict[str, Any]:
+    """Write an output, but only through the gate that guards it.
+
+    `exporting` re-checks the release ladder itself, so a direct call cannot slip
+    past a blocked path — this route adds no judgement of its own, it just names
+    the failure. The two writers not exposed here are deliberate: the template
+    patch runs through `patch-sch` against a real CTSPro file, and the
+    equipment-ready path needs recorded human approval, neither of which should
+    be reachable by one POST.
+    """
+    model = _model(payload)
+    kind = str(payload.get("kind", ""))
+    writer = EXPORTS.get(kind)
+    if writer is None:
+        raise ApiError(f"알 수 없는 내보내기 경로입니다: {kind}", status=404)
+
+    out_dir = Path(str(payload.get("outDir", ""))).expanduser()
+    if not out_dir.is_dir():
+        raise ApiError(f"출력 폴더가 없습니다: {out_dir}")
+
+    try:
+        result = writer(model.project, out_dir)
+    except ExportBlocked as exc:
+        raise ApiError(str(exc), status=409) from exc
+    except (OSError, ValueError) as exc:
+        raise ApiError(f"내보내기에 실패했습니다: {exc}") from exc
+
+    return {
+        "ok": True,
+        "kind": result.kind,
+        "paths": [str(path) for path in result.paths],
+        "note": result.note,
+    }
+
+
 def import_open(path: str) -> tuple[ImportSession, dict[str, Any]]:
     try:
         session = ImportSession.open(Path(path))
@@ -339,8 +381,10 @@ def import_proposal(session: ImportSession) -> dict[str, Any]:
 
 
 __all__ = [
+    "EXPORTS",
     "PLANS",
     "TRANSFORMS",
+    "export",
     "import_open",
     "import_proposal",
     "library_list",

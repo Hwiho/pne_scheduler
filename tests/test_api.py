@@ -218,3 +218,55 @@ def test_the_registry_is_bounded():
         except Exception:
             pass
     assert alive <= 2
+
+
+# --- G3: export goes through the gate, never around it ----------------------
+
+
+def test_a_preview_export_writes_its_files(client, project, tmp_path):
+    body = client.post(
+        "/api/export",
+        json={"project": project, "kind": "preview", "outDir": str(tmp_path)},
+    ).get_json()
+    assert body["ok"]
+    names = {Path(p).name for p in body["paths"]}
+    assert {"steps.csv", "summary.txt"} <= names
+    assert all(Path(p).exists() for p in body["paths"])
+
+
+def test_a_blocked_export_is_refused_with_the_blockers(client, project, tmp_path):
+    """`exporting` re-checks the ladder itself; the route only names the failure."""
+    broken = client.post(
+        "/api/edit/setParam",
+        json={
+            "project": project,
+            "args": {"moduleId": "formation_1", "key": "charge_c_rate", "text": "999C"},
+        },
+    ).get_json()["project"]
+
+    response = client.post(
+        "/api/export",
+        json={"project": broken, "kind": "preview", "outDir": str(tmp_path)},
+    )
+    assert response.status_code == 409
+    assert "잠겨" in response.get_json()["error"]
+    assert not list(tmp_path.iterdir()), "a blocked export must write nothing"
+
+
+@pytest.mark.parametrize("kind", ["equipment_export", "template_patch"])
+def test_the_dangerous_paths_are_not_reachable_by_one_post(client, project, tmp_path, kind):
+    """Template patch needs a real CTSPro file; equipment-ready needs recorded
+    human approval. Neither belongs behind a single HTTP call."""
+    response = client.post(
+        "/api/export", json={"project": project, "kind": kind, "outDir": str(tmp_path)}
+    )
+    assert response.status_code == 404
+
+
+def test_a_missing_output_directory_is_refused_before_anything_runs(client, project):
+    response = client.post(
+        "/api/export",
+        json={"project": project, "kind": "preview", "outDir": "/no/such/dir"},
+    )
+    assert response.status_code == 400
+    assert "출력 폴더가 없습니다" in response.get_json()["error"]
