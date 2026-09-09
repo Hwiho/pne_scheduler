@@ -1,0 +1,79 @@
+:root {
+  --bg: #f6f1ea;
+  --panel: #fffdfa;
+  --panel-alt: #f2ece3;
+  --line: #e3d9cc;
+  --ink: #3b2f27;
+  --muted: #7a6452;
+  --accent: #245c3d;
+  --accent-soft: #e6f0e9;
+  --danger: #b03a2e;
+  --danger-soft: #fbeceb;
+  --warn: #9a5b00;
+  --warn-soft: #fdf2e2;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 14px/1.5 -apple-system, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+button {
+  font: inherit;
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--ink);
+  cursor: pointer;
+}
+button:hover:not(:disabled) { background: var(--panel-alt); }
+button:disabled { opacity: 0.45; cursor: default; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+input, select {
+  font: inherit;
+  padding: 4px 7px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--ink);
+}
+input.error { border-color: var(--danger); }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.card.accent { background: var(--accent-soft); border: 2px solid var(--accent); }
+.card h2 { margin: 0 0 10px; font-size: 14px; color: var(--accent); }
+
+.muted { color: var(--muted); font-size: 11px; }
+.danger { color: var(--danger); }
+.warn { color: var(--warn); }
+
+.row { display: flex; gap: 8px; align-items: center; }
+.col { display: flex; flex-direction: column; gap: 10px; }
+.grow { flex: 1; }
+
+table { border-collapse: collapse; width: 100%; font-size: 12px; }
+th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; }
+
+.badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 3px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+.chip { padding: 2px 8px; font-size: 11px; }
