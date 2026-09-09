@@ -107,3 +107,41 @@ def test_review_candidate_writes_a_reopen_only_pack(tmp_path: Path) -> None:
         tmp_path / "review" / "candidate_REOPEN_ONLY_DO_NOT_RUN.sch.manifest.json"
     ).read_text(encoding="utf-8")
     assert '"equipment_executable": false' in manifest
+
+
+# --- E3.1: the patch path is the default one ---------------------------------
+
+
+def _options(project):
+    from pne_scheduler.release import evaluate_release
+
+    return evaluate_release(project).options
+
+
+def test_the_patch_path_is_offered_before_the_from_scratch_build():
+    """L9: a patch changes known offsets in a CTSPro file; a build regenerates
+    every byte from our own model, including the header's unexplained region."""
+    from pne_scheduler.ui.document import ProjectDocument
+
+    kinds = [option.kind for option in _options(ProjectDocument.new().project)]
+    assert kinds.index("template_patch") < kinds.index("review_candidate")
+
+
+def test_exactly_one_option_is_recommended_and_it_is_the_patch():
+    from pne_scheduler.ui.document import ProjectDocument
+
+    options = _options(ProjectDocument.new().project)
+    recommended = [option.kind for option in options if option.recommended]
+    assert recommended == ["template_patch"]
+
+
+def test_the_from_scratch_build_is_marked_dangerous_and_experimental():
+    from pne_scheduler.ui.document import ProjectDocument
+
+    build = next(
+        option for option in _options(ProjectDocument.new().project)
+        if option.kind == "review_candidate"
+    )
+    assert build.danger
+    assert "실험적" in build.title
+    assert not build.recommended

@@ -10,12 +10,15 @@ Rectangle {
     id: card
     property string title: ""
     property real padding: Theme.pad
+    // Marks the panel a reader should land on first. Carried by border and
+    // ground, not colour alone, so it survives a monochrome screenshot.
+    property bool accent: false
     default property alias content: inner.data
 
-    color: Theme.panel
+    color: card.accent ? Theme.accentSoft : Theme.panel
     radius: Theme.radius
-    border.color: Theme.line
-    border.width: 1
+    border.color: card.accent ? Theme.accent : Theme.line
+    border.width: card.accent ? 2 : 1
     implicitWidth: column.implicitWidth + padding * 2
     implicitHeight: column.implicitHeight + padding * 2
 

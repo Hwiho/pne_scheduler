@@ -706,7 +706,7 @@ Gate D is software-only. Module expands are **protocol templates**; golden compa
 
 | | |
 |---|---|
-| **Status** | 🔄 **Partial** (E0/E0.5/E2.1/E2.3/E2.4/E3/E4 ✅; E1/E2/E2.2/E3.1 in progress; E5–E7 ⏳) |
+| **Status** | 🔄 **Partial** (E0/E0.5/E2.1/E2.3/E2.4/E3/E3.1/E4 ✅; E1/E2/E2.2 in progress; E5–E7 ⏳) |
 | **Depends on** | **Nothing blocking as of 2026-09-08** — E0–E2.4 never needed a trusted writer, and E3/E3.1's Gate C exit dependency was satisfied by the C5 PNE02 pass. Export UX is now gated by *evidence discipline* (§5.6 L6/L9), not by an unmet gate |
 | **Exit criteria** | Schedule authoring feels like **module + procedure** composition (Nova/LabVIEW-like); multi-module END/LOOP composition is safe; pattern trust is visible; unsafe export blocked; library + Cell setup; byte-preserving imported patch session |
 | **Next gate** | Gate F |
@@ -736,8 +736,8 @@ a reopen record for that exact artifact (L6, §6.7 F1–F4).
 | | ↳ 2026-09-09: `library.py` stores methods as append-only versions under `~/.pne_scheduler/library`, each recording the unit and SCH layout it was written for. Loading onto a different profile warns rather than blocks, ids are reassigned to avoid collision, and every load states that saved ≠ verified. `pne_scheduler library` lists them. | | | |
 | E2.4 | Cell / equipment setup pane | ✅ | Explicit 1C mA, V limits, PNE unit/range, layout target; blocks export if missing | Setup before edit | No (the pane itself; it just *displays* a profile that later needs equipment-verified export) |
 | E3 | Pre-export validation UX | ✅ | Block invalid loops, missing END, V/I violations | Readiness before export | No — **unblocked by the 2026-09-08 C5 pass** |
-| E3.1 | Export path choice | 🔄 | Default **patch-sch** onto approved template; optional experimental `build` | PNE safety | No — unblocked, but keep `patch-sch` as the default path per L9 |
-| | ↳ 2026-09-09: `release.py` ships the full ladder and marks from-scratch output `danger=True` while calling template patch 가장 안전한 경로. Not yet closed: patch is described as the safest path but is not *positioned* as the default action in the export tab. | | | |
+| E3.1 | Export path choice | ✅ | Default **patch-sch** onto approved template; optional experimental `build` | PNE safety | No — unblocked, but keep `patch-sch` as the default path per L9 |
+| | ↳ 2026-09-09: template patch now precedes the from-scratch build in the ladder and carries `recommended=True` — a 권장 badge and highlighted button in the export tab, a `← 권장` marker in `pne_scheduler summary`. The build is retitled 실험적 and keeps `danger=True`. Tests assert the ordering and that exactly one option is recommended. | | | |
 | E4 | `.sch` imported patch session | ✅ | Preserve source hash/raw bytes; writer-ready edits only; lossy `Clone as draft` separate | Open existing schedule | No — parser exists; safe session model does not |
 | | ↳ 2026-09-09: `import_session.py` holds the source bytes and digest, offers only `get_writer_ready_fields()` for in-place editing, and emits an `SchPatchPlan` bound to the digest it read. Measured on a real 0x00010004 lab file: one float edit changes **2 bytes** and the 1760-byte CTSPro header is untouched. `Clone as draft` is a separate exit that names everything it discards. `pne_scheduler import-sch` reports both. | | | |
 | E5 | Advanced: 0x00010007/EIS, fingerprint | ⏳ | Deferred until explicit schema evidence | Later | No (blocked on schema evidence, not equipment) |

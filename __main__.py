@@ -165,7 +165,8 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"  · {reason}")
         print(f"진행 상태: {state.stage_label}")
         for option in state.options:
-            print(f"  [{option.status_text}] {option.title}")
+            mark = " ← 권장" if option.recommended else ""
+            print(f"  [{option.status_text}] {option.title}{mark}")
             for blocker in option.blockers:
                 print(f"        · {blocker}")
         return 0

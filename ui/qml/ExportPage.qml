@@ -76,6 +76,9 @@ Item {
                 Card {
                     required property var modelData
                     Layout.fillWidth: true
+                    // The recommended path is the one to reach for; the rest are
+                    // available, not equal.
+                    accent: modelData.recommended === true
 
                     RowLayout {
                         Layout.fillWidth: true
@@ -88,13 +91,32 @@ Item {
                         ColumnLayout {
                             Layout.fillWidth: true
                             spacing: 2
-                            Text {
-                                text: modelData.title
-                                color: modelData.danger && modelData.allowed ? Theme.warn : Theme.ink
-                                font.pixelSize: 14
-                                font.bold: true
+                            RowLayout {
                                 Layout.fillWidth: true
-                                wrapMode: Text.WordWrap
+                                spacing: 6
+                                Text {
+                                    text: modelData.title
+                                    color: modelData.danger && modelData.allowed ? Theme.warn : Theme.ink
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    Layout.fillWidth: true
+                                    wrapMode: Text.WordWrap
+                                }
+                                Rectangle {
+                                    visible: modelData.recommended === true
+                                    radius: 3
+                                    color: Theme.accent
+                                    implicitWidth: badge.implicitWidth + 10
+                                    implicitHeight: badge.implicitHeight + 4
+                                    Text {
+                                        id: badge
+                                        anchors.centerIn: parent
+                                        text: "권장"
+                                        color: "#ffffff"
+                                        font.pixelSize: 10
+                                        font.bold: true
+                                    }
+                                }
                             }
                             Text {
                                 text: modelData.description
@@ -107,6 +129,7 @@ Item {
                         Button {
                             text: modelData.allowed ? "실행" : "잠김"
                             enabled: modelData.allowed
+                            highlighted: modelData.recommended === true && modelData.allowed
                             onClicked: appWindow.runExport(modelData.kind)
                         }
                     }

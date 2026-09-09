@@ -312,6 +312,7 @@ class WorkspaceBridge(QObject):
                 "blockers": list(option.blockers),
                 "nextAction": option.next_action,
                 "danger": option.danger,
+                "recommended": option.recommended,
                 "status": option.status_text,
             }
             for option in self.model.release().options

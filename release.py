@@ -47,6 +47,11 @@ class OutputOption:
     blockers: tuple[str, ...] = ()
     next_action: str = ""
     danger: bool = False
+    # The path the lab should reach for first. L9 keeps this on template patch
+    # until the CLI header's unexplained 54-byte region is understood, because a
+    # patch changes known offsets in a CTSPro-authored file and a from-scratch
+    # build regenerates every byte from our own model.
+    recommended: bool = False
 
     @property
     def status_text(self) -> str:
@@ -148,21 +153,29 @@ def evaluate_release(project: ScheduleProject) -> ReleaseState:
             next_action="검증 탭의 오류를 먼저 해결하세요.",
         ),
         OutputOption(
+            kind="template_patch",
+            title="템플릿 패치 (기존 SCH 수정)",
+            description=(
+                "CTSPro 가 만든 원본 SCH 의 검증된 필드만 바꿔 씁니다. "
+                "나머지 바이트는 원본 그대로 남으므로 기본으로 이 경로를 쓰십시오."
+            ),
+            allowed=software_ok,
+            blockers=software_blockers,
+            next_action="원본 .sch 와 SHA-256 을 준비한 뒤 patch-sch 명령을 사용하세요.",
+            recommended=True,
+        ),
+        OutputOption(
             kind="review_candidate",
-            title="CTSPro 검토용 SCH (실행 금지)",
-            description="CTSEditorPro 로 열어 값을 눈으로 확인하기 위한 후보 파일입니다. 장비 실행용이 아닙니다.",
+            title="처음부터 새로 만든 SCH (실험적 · 실행 금지)",
+            description=(
+                "모든 바이트를 우리 모델로 새로 씁니다. 원본이 없을 때만 쓰고, "
+                "CTSEditorPro 로 열어 값을 눈으로 확인하기 위한 후보입니다. "
+                "가능하면 템플릿 패치를 쓰십시오."
+            ),
             allowed=software_ok and not equipment_blockers and not limit_blockers,
             blockers=tuple([*software_blockers, *equipment_blockers, *limit_blockers]),
             next_action="장비 프로파일과 소프트웨어 검증을 먼저 통과시키세요.",
             danger=True,
-        ),
-        OutputOption(
-            kind="template_patch",
-            title="템플릿 패치 (기존 SCH 수정)",
-            description="CTSPro 가 만든 원본 SCH 의 검증된 필드만 바꿔 씁니다. 가장 안전한 경로입니다.",
-            allowed=software_ok,
-            blockers=software_blockers,
-            next_action="원본 .sch 와 SHA-256 을 준비한 뒤 patch-sch 명령을 사용하세요.",
         ),
         OutputOption(
             kind="equipment_export",
