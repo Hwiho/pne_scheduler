@@ -6,7 +6,12 @@
     "Recommended maximum current (권장 최대전류), not minimum resolution.",
     "SCH files may store higher mA values (cell Q_nom × C-rate); validate against this tier in writer/linter.",
     "PNE04–PNE11 confirmed 500mA tier by user (2026-09-02).",
-    "PNE12–PNE14 confirmed 20A tier by user (2026-09-02)."
+    "PNE12–PNE14 confirmed 20A tier by user (2026-09-02).",
+    "PNE15 confirmed 6A tier by user (2026-09-11); first 0x00010005/720 corpus zip.",
+    "PNE17 confirmed 6A tier by user (2026-09-11); CTSMonPro CYCC-1006-S01-R006-N04, Spec 5V/6.0A 3-range. Protocol zip was empty.",
+    "PNE18 confirmed 6A tier by user (2026-09-11); CTSMonPro CYCC-1006-S01-R006-N04 (same build as PNE17), Spec 5V/6.0A 3-range. First 1006-family SCH corpus is 0x10003/612 only.",
+    "PNE19 confirmed 6A recommended max by user (2026-09-11); CTSMonPro CYCN-P1107-S01-8001-N03. GUI Spec column shows 5V/9.0A,3.0A,0.6A(3R) — hardware range vs 6A lab rating.",
+    "PNE20 confirmed 6A tier by user (2026-09-11); CTSMonPro CYCSA-P1107-S01-R001-N013, Spec 5V/6.0A 3-range. First CYCSA-P1107 SCH corpus; dominant 0x10004/696, no 0x10005/720."
   ],
   "tiers": [
     {
@@ -24,9 +29,12 @@
       "rating_mA": 6000,
       "units": [
         "PNE03",
+        "PNE15",
         "PNE16",
         "PNE17",
+        "PNE18",
         "PNE19",
+        "PNE20",
         "PNE26",
         "PNE27",
         "PNE28",
@@ -62,9 +70,12 @@
     "PNE12": { "rating": "20A", "rating_mA": 20000, "tier": "20A" },
     "PNE13": { "rating": "20A", "rating_mA": 20000, "tier": "20A" },
     "PNE14": { "rating": "20A", "rating_mA": 20000, "tier": "20A" },
+    "PNE15": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
     "PNE16": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
     "PNE17": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE18": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
     "PNE19": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
+    "PNE20": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },
     "PNE21": { "rating": "100mA", "rating_mA": 100, "tier": "100mA" },
     "PNE22": { "rating": "100mA", "rating_mA": 100, "tier": "100mA" },
     "PNE26": { "rating": "6A", "rating_mA": 6000, "tier": "6A" },

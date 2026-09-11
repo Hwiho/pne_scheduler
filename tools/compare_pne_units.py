@@ -383,7 +383,7 @@ def _render_markdown(report: dict) -> str:
             "",
             "- **Unknown filenames** are mostly project/material names; low unknown% (PNE01) means clearer naming, not better binary.",
             "- **Max I (mA)** in a zip reflects stored schedule values (cell size × C-rate), not always equipment rating.",
-            "- **696B / 0x10004** is a file-format generation, not tied to one cycler — but only PNE02/PNE03 have any in this corpus.",
+            "- **696B / 0x10004** is a file-format generation, not tied to one cycler. PNE15/PNE16 are the large 696 corpora; both also carry `0x00010005/720`. PNE19/PNE20 are 696-dominant with no 720 (CYCN-P1107 / CYCSA-P1107). PNE18 (CYCC-1006, 6A) is 612-only.",
             "- **LOOP both%** = nested loop steps with both +48 and +564 populated; higher on complex HPPC/RPT schedules.",
             "",
         ]

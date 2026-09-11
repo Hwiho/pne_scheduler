@@ -25,6 +25,54 @@ def test_registry_backed_profile_carries_rating_build_and_layout() -> None:
     assert profile.is_complete
 
 
+def test_pne15_registry_profile_is_6a_with_observed_v4_layout() -> None:
+    profile = EquipmentProfile.from_unit("PNE15")
+
+    assert profile.unit == "PNE15"
+    assert profile.max_current_mA == 6000.0
+    assert profile.rating_label == "6A"
+    assert profile.ctspro_build == "CYCC-1004-S01-R004-N01"
+    assert profile.layout_key == "0x00010004/696"
+    assert profile.is_complete
+    assert profile.layout_confirmed is False
+
+
+def test_pne18_registry_profile_is_6a_with_observed_612_layout() -> None:
+    profile = EquipmentProfile.from_unit("PNE18")
+
+    assert profile.unit == "PNE18"
+    assert profile.max_current_mA == 6000.0
+    assert profile.rating_label == "6A"
+    assert profile.ctspro_build == "CYCC-1006-S01-R006-N04"
+    assert profile.layout_key == "0x00010003/612"
+    assert profile.is_complete
+    assert profile.layout_confirmed is False
+
+
+def test_pne19_registry_profile_is_6a_with_observed_696_layout() -> None:
+    profile = EquipmentProfile.from_unit("PNE19")
+
+    assert profile.unit == "PNE19"
+    assert profile.max_current_mA == 6000.0
+    assert profile.rating_label == "6A"
+    assert profile.ctspro_build == "CYCN-P1107-S01-8001-N03"
+    assert profile.layout_key == "0x00010004/696"
+    assert profile.is_complete
+    assert profile.layout_confirmed is False
+
+
+def test_pne20_registry_profile_is_6a_with_observed_696_layout() -> None:
+    profile = EquipmentProfile.from_unit("PNE20")
+
+    assert profile.unit == "PNE20"
+    assert profile.max_current_mA == 6000.0
+    assert profile.rating_label == "6A"
+    assert profile.ctspro_build == "CYCSA-P1107-S01-R001-N013"
+    assert profile.layout_key == "0x00010004/696"
+    assert profile.is_complete
+    assert profile.layout_confirmed is False
+
+
 def test_unknown_unit_stays_incomplete_rather_than_guessing() -> None:
     profile = EquipmentProfile.from_unit("PNE99")
 

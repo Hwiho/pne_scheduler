@@ -4,6 +4,11 @@
 
 | Date | Summary |
 |------|---------|
+| 2026-09-11 | PNE20 (6A) unit zip ingested: 354 sch; CTSMonPro `CYCSA-P1107-S01-R001-N013` (first CYCSA-P1107 family vs PNE19 CYCN-P1107). Dominant `0x00010004/696` (343), 10×`0x10002/612`, no `0x10005/720`. Spec 5V/6.0A 3-range. Writer not verified. |
+| 2026-09-11 | PNE18/PNE19 (both 6A) unit zips ingested. PNE18 shares PNE17 CTS `CYCC-1006-S01-R006-N04` but SCH corpus is **612-only** (53×0x10003, 4×0x10002). PNE19 is a new `CYCN-P1107-S01-8001-N03` family; dominant `0x00010004/696` (267), no `0x10005/720`. GUI Spec on PNE19 is 9.0A 3-range vs 6A recommended max. |
+| 2026-09-11 | PNE17 (6A) CTSMonPro `CYCC-1006-S01-R006-N04` recorded (new 1006/R006 family vs PNE15/16). `c:\PNE17.zip` is empty (`PNE17/` only); no SCH layout observed. |
+| 2026-09-11 | PNE16 (6A) unit zip ingested: 2453 sch; dominant `0x00010004/696` (matches goldens); also `0x00010005/720` (221). CTSMonPro `CYCC-1004-S01-R004-N01`. |
+| 2026-09-11 | PNE15 (6A) unit zip ingested: dominant `0x00010004/696`; first `0x00010005` corpus (header 1868 / step 720). CTSMonPro build `CYCC-1004-S01-R004-N01`. Writer layout not verified on this unit. |
 | 2026-08-31 | Initial draft: documented the structure based on `sch_file_structure_20250211.xlsx`, ASSB_Analyzer_dev, and the Ensol PNE converter; established the roadmap for a visual modular schedule builder |
 | 2026-08-31 | Created the `pne_scheduler/` package — IR, C-rate, module stubs, CLI, and example `.schproj` |
 | 2026-08-31 | Reassessed repository status — secured the original SCH archive and reprioritized implementation and validation |
@@ -94,12 +99,14 @@ Nova and LabVIEW are **co-equal metaphors** for the same idea: modular compositi
 | Type2 `0x00010001` | 65537 | ~90 | Similar to Type1 |
 | `0x00010002` | 65538 | ~90 | |
 | `0x00010003` | 65539 | ~105 | ASSB converter **default target** (`step_size=612`) |
-| `0x00010004` | 65540 | ~118 | |
+| `0x00010004` | 65540 | ~118 | `step_size=696`, header 1844 |
+| `0x00010005` | 65541 | prefix + unmapped +24B tail | **Observed PNE15 2026-09-11**: header 1868, `step_size=720`. Not in the 2025-02-11 Excel sheets. Shared 612-byte prefix only; not a writer target. |
 | `0x00010007` | 65543 | **132** (includes `stEISSet`) | Latest, adds EIS fields |
 
 **Primary target version:** `0x00010003` + `step_size=612`
 → The ASSB converter already implements its layout policy, DCIR SOC rules, and current-condition mapping for this combination.
 **Secondary:** `0x00010004` + `step_size=696`, which accounts for 90% of the corpus.
+**Observed, not a writer target:** `0x00010005` + `step_size=720` (PNE15/PNE16 unit zips). PNE18 (`CYCC-1006`) corpus is 612-only; PNE19 (`CYCN-P1107`) and PNE20 (`CYCSA-P1107`) are 696-dominant with no 720 — 6A tier does not imply 696 or 720.
 **Later:** `0x00010007` (when EIS experiments are needed).
 
 ### 2.3 Binary Layout (4 Sections)

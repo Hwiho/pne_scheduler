@@ -89,6 +89,16 @@ def test_classify_capacheck_fixtures(
         ("07100395_260330_XRD SOC0.sch", ScheduleCategory.SOC_SETTING),
         ("00219150_230824_STACK_set24_AA after XRM.sch", ScheduleCategory.DISCHARGE),
         ("profile_LT25C_cycle.sch", ScheduleCategory.CYCLE_LIFE),
+        ("00214700_260902_2M_DOE_set5_L4.3_0.15C.sch", ScheduleCategory.DOE),
+        ("00224241_231020_LFP_pulse1.sch", ScheduleCategory.HPPC),
+        ("221226_NCM_7stack_C-rate_0.1C0.4C.sch", ScheduleCategory.RATE_TEST),
+        ("00224241_230927_LFP_1Ah_rate2.sch", ScheduleCategory.RATE_TEST),
+        ("Capacity Check.sch", ScheduleCategory.CAPACHECK),
+        ("07100105_260601_LMformation.sch", ScheduleCategory.FORMATION),
+        ("220512_45oC_preaging.sch", ScheduleCategory.STORAGE),
+        ("07005896_dchg1.sch", ScheduleCategory.DISCHARGE),
+        ("07003107_NCM6131L_A0 fast ch.sch", ScheduleCategory.QC),
+        ("130mAh 0.05C CHDCH.sch", ScheduleCategory.DISCHARGE),
     ],
 )
 def test_new_filename_rules(filename: str, expected: ScheduleCategory) -> None:

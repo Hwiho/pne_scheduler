@@ -91,3 +91,28 @@ def test_detect_sch_layout_accepts_exact_fit_two_step_file(tmp_path: Path) -> No
     assert layout.payload_offset == 1760
     assert layout.step_size == 612
     assert read_sch_binary(output).step_count == 2
+
+
+def test_detect_sch_layout_v5_720_from_pne15_framing(tmp_path: Path) -> None:
+    """PNE15 0x00010005 files use header 1868 + 720-byte steps (+24/+24 vs 0x10004)."""
+    payload_offset = 1868
+    step_size = 720
+    data = bytearray(payload_offset + 3 * step_size)
+    struct.pack_into("<I", data, 0, SCH_FILE_MAGIC)
+    struct.pack_into("<I", data, 4, 0x00010005)
+    for index, type_code in enumerate((0x03, 0x03, 0x06)):
+        base = payload_offset + index * step_size
+        struct.pack_into("<i", data, base, index + 1)
+        struct.pack_into("<i", data, base + 8, type_code)
+
+    path = tmp_path / "pne15_v5.sch"
+    path.write_bytes(data)
+
+    layout = detect_sch_layout(bytes(data))
+    assert layout is not None
+    assert layout.payload_offset == payload_offset
+    assert layout.step_size == step_size
+    doc = read_sch_binary(path)
+    assert doc.sch_version == 0x00010005
+    assert doc.step_count == 3
+    assert doc.steps[-1].is_end

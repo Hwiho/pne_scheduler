@@ -22,8 +22,7 @@
       "max_current_mA_seen": 128.85,
       "categories": {
         "capacheck": 20,
-        "doe": 8,
-        "rpt": 5,
+        "doe": 13,
         "unknown": 3
       },
       "versions": {
@@ -186,48 +185,6 @@
               "current_mA_p50": 5.0
             }
           }
-        ],
-        "rpt": [
-          {
-            "file": "260821_불균일가압_Form_RPT_Cycle_100mAh_DCIR1.5C_84.2mAh.sch",
-            "classify_rule": "rpt_keyword",
-            "binary": {
-              "version": "0x00010002",
-              "payload_offset": 1632,
-              "step_size": 612,
-              "file_bytes": 31008,
-              "step_count": 48,
-              "loop_steps": 8,
-              "loop_goto": {
-                "only_48": 0,
-                "only_564": 7,
-                "both": 1,
-                "neither": 0
-              },
-              "current_mA_max": 126.3,
-              "current_mA_p50": 27.786
-            }
-          },
-          {
-            "file": "260821_불균일가압_Form_RPT_Cycle_100mAh_DCIR1.5C_85.4mAh.sch",
-            "classify_rule": "rpt_keyword",
-            "binary": {
-              "version": "0x00010002",
-              "payload_offset": 1632,
-              "step_size": 612,
-              "file_bytes": 31008,
-              "step_count": 48,
-              "loop_steps": 8,
-              "loop_goto": {
-                "only_48": 0,
-                "only_564": 7,
-                "both": 1,
-                "neither": 0
-              },
-              "current_mA_max": 128.1,
-              "current_mA_p50": 28.182
-            }
-          }
         ]
       },
       "rating_hint": {
@@ -246,9 +203,9 @@
       "zip": "PNE02.zip",
       "zip_bytes": 2780588,
       "sch_count": 3449,
-      "unknown_count": 845,
-      "unknown_pct": 24.5,
-      "classified_pct": 75.5,
+      "unknown_count": 839,
+      "unknown_pct": 24.3,
+      "classified_pct": 75.7,
       "parse_errors": 1,
       "files_with_loop": 3448,
       "loop_goto_aggregate": {
@@ -259,10 +216,10 @@
       },
       "max_current_mA_seen": 37763.375,
       "categories": {
-        "rate_capability": 1450,
-        "unknown": 845,
-        "cycle_life": 258,
-        "formation": 182,
+        "rate_capability": 1463,
+        "unknown": 839,
+        "cycle_life": 244,
+        "formation": 187,
         "charge": 145,
         "capacheck": 114,
         "rate_test": 96,
@@ -279,7 +236,7 @@
         "eis": 5,
         "plating": 4,
         "storage": 4,
-        "doe": 2
+        "doe": 4
       },
       "versions": {
         "0x00010003": 3344,
@@ -1101,6 +1058,48 @@
             }
           }
         ],
+        "doe": [
+          {
+            "file": "07004541_A 250107 VDo_SE 250422 DOE Do_C 250312 LL3.7 Set5_3 0.5C.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 54.84,
+              "current_mA_p50": 5.484
+            }
+          },
+          {
+            "file": "07004541_A 250107 VDo_SE 250422 DOE Do_C 250312 LL4 Set5_2 4 0.5C.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 59.29,
+              "current_mA_p50": 5.929
+            }
+          }
+        ],
         "eis": [
           {
             "file": "1818_RPT_EIS(SOC50).sch",
@@ -1140,48 +1139,6 @@
               },
               "current_mA_max": 14.9,
               "current_mA_p50": 4.919
-            }
-          }
-        ],
-        "doe": [
-          {
-            "file": "220502-LDJ-X02-2%-TAPE X.sch",
-            "classify_rule": "doe_keyword",
-            "binary": {
-              "version": "0x00010003",
-              "payload_offset": 1760,
-              "step_size": 612,
-              "file_bytes": 29300,
-              "step_count": 45,
-              "loop_steps": 8,
-              "loop_goto": {
-                "only_48": 0,
-                "only_564": 8,
-                "both": 0,
-                "neither": 0
-              },
-              "current_mA_max": 11.52,
-              "current_mA_p50": 3.802
-            }
-          },
-          {
-            "file": "220502-LDJ-X02-2%-TAPE X_000.sch",
-            "classify_rule": "doe_keyword",
-            "binary": {
-              "version": "0x00010003",
-              "payload_offset": 1760,
-              "step_size": 612,
-              "file_bytes": 25628,
-              "step_count": 39,
-              "loop_steps": 7,
-              "loop_goto": {
-                "only_48": 0,
-                "only_564": 7,
-                "both": 0,
-                "neither": 0
-              },
-              "current_mA_max": 11.52,
-              "current_mA_p50": 1.152
             }
           }
         ],
@@ -1244,9 +1201,9 @@
       "zip": "PNE03.zip",
       "zip_bytes": 1210167,
       "sch_count": 1541,
-      "unknown_count": 536,
-      "unknown_pct": 34.8,
-      "classified_pct": 65.2,
+      "unknown_count": 527,
+      "unknown_pct": 34.2,
+      "classified_pct": 65.8,
       "parse_errors": 0,
       "files_with_loop": 1541,
       "loop_goto_aggregate": {
@@ -1257,22 +1214,23 @@
       },
       "max_current_mA_seen": 6000.0,
       "categories": {
-        "unknown": 536,
-        "cycle_life": 232,
-        "formation": 209,
-        "rate_test": 134,
-        "hppc": 114,
-        "rpt": 102,
-        "rate_capability": 79,
+        "unknown": 527,
+        "cycle_life": 214,
+        "formation": 181,
+        "rate_test": 136,
+        "hppc": 128,
+        "rpt": 87,
+        "rate_capability": 82,
+        "doe": 62,
         "capacheck": 51,
-        "discharge": 25,
         "eis": 13,
-        "ocv": 9,
+        "discharge": 12,
         "dcir": 8,
+        "ocv": 8,
+        "storage": 8,
         "rest": 6,
         "qc": 6,
         "soc_setting": 6,
-        "storage": 5,
         "charge": 4,
         "safety": 2
       },
@@ -1801,6 +1759,48 @@
             }
           }
         ],
+        "doe": [
+          {
+            "file": "00215540_260304_Formation_DOE_set1-2_T60_P6_formation_╖╬╡σ╝┐.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 9104,
+              "step_count": 12,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 3,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 16.0,
+              "current_mA_p50": 16.0
+            }
+          },
+          {
+            "file": "00215540_260304_Formation_DOE_set1-4_T60_P6_formation_╖╬╡σ╝┐.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 9104,
+              "step_count": 12,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 3,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 16.0,
+              "current_mA_p50": 16.0
+            }
+          }
+        ],
         "discharge": [
           {
             "file": "00217474_240902_3350_CBC_6stack_1Ah_1┬≈_Set1_6stack_1Tx2└σ_DCHG.sch",
@@ -1840,6 +1840,48 @@
               },
               "current_mA_max": 350.0,
               "current_mA_p50": 350.0
+            }
+          }
+        ],
+        "storage": [
+          {
+            "file": "00223112_250702_[╢⌠┐╡]_5╜║┼├_aging 7 days.sch",
+            "classify_rule": "storage_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 10940,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 3,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 191.0,
+              "current_mA_p50": 191.0
+            }
+          },
+          {
+            "file": "00223112_250702_[╢⌠┐╡]_5╜║┼├_aging 7 days_000.sch",
+            "classify_rule": "storage_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 10940,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 3,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 191.0,
+              "current_mA_p50": 191.0
             }
           }
         ],
@@ -2052,48 +2094,6 @@
               "current_mA_p50": 21.0
             }
           }
-        ],
-        "storage": [
-          {
-            "file": "220812_LMB_LFP_45storage_2w.sch",
-            "classify_rule": "storage_keyword",
-            "binary": {
-              "version": "0x00010003",
-              "payload_offset": 1760,
-              "step_size": 612,
-              "file_bytes": 3596,
-              "step_count": 3,
-              "loop_steps": 1,
-              "loop_goto": {
-                "only_48": 0,
-                "only_564": 1,
-                "both": 0,
-                "neither": 0
-              },
-              "current_mA_max": null,
-              "current_mA_p50": null
-            }
-          },
-          {
-            "file": "250804_2multi set3_25'C storage 2wk_4ea.sch",
-            "classify_rule": "storage_keyword",
-            "binary": {
-              "version": "0x00010003",
-              "payload_offset": 1760,
-              "step_size": 612,
-              "file_bytes": 32972,
-              "step_count": 51,
-              "loop_steps": 10,
-              "loop_goto": {
-                "only_48": 0,
-                "only_564": 10,
-                "both": 0,
-                "neither": 0
-              },
-              "current_mA_max": 240.0,
-              "current_mA_p50": 24.0
-            }
-          }
         ]
       },
       "rating_hint": {
@@ -2126,9 +2126,9 @@
       "max_current_mA_seen": 8153.0,
       "categories": {
         "unknown": 2141,
-        "rate_capability": 470,
-        "hppc": 351,
-        "cycle_life": 143,
+        "rate_capability": 468,
+        "hppc": 354,
+        "cycle_life": 142,
         "formation": 64,
         "discharge": 30,
         "rate_test": 26,
@@ -2787,9 +2787,9 @@
       "zip": "PNE05.zip",
       "zip_bytes": 1649703,
       "sch_count": 1874,
-      "unknown_count": 612,
-      "unknown_pct": 32.7,
-      "classified_pct": 67.3,
+      "unknown_count": 591,
+      "unknown_pct": 31.5,
+      "classified_pct": 68.5,
       "parse_errors": 0,
       "files_with_loop": 1874,
       "loop_goto_aggregate": {
@@ -2800,11 +2800,11 @@
       },
       "max_current_mA_seen": 499.0,
       "categories": {
-        "unknown": 612,
+        "unknown": 591,
         "rate_capability": 568,
         "hppc": 233,
         "cycle_life": 197,
-        "formation": 145,
+        "formation": 166,
         "storage": 70,
         "rpt": 25,
         "charge": 10,
@@ -3419,9 +3419,9 @@
       "zip": "PNE06.zip",
       "zip_bytes": 1059221,
       "sch_count": 1074,
-      "unknown_count": 419,
-      "unknown_pct": 39.0,
-      "classified_pct": 61.0,
+      "unknown_count": 416,
+      "unknown_pct": 38.7,
+      "classified_pct": 61.3,
       "parse_errors": 0,
       "files_with_loop": 1074,
       "loop_goto_aggregate": {
@@ -3432,11 +3432,12 @@
       },
       "max_current_mA_seen": 374.88,
       "categories": {
-        "unknown": 419,
-        "rate_capability": 354,
+        "unknown": 416,
+        "rate_capability": 350,
         "cycle_life": 266,
         "hppc": 18,
-        "storage": 13,
+        "storage": 14,
+        "doe": 6,
         "charge": 3,
         "formation": 1
       },
@@ -3708,6 +3709,48 @@
             }
           }
         ],
+        "doe": [
+          {
+            "file": "07004541_250520_A 250107 R2R VDo _ 250422 SE DOE _C 250312 LL 4 set3-3 4 0.5C.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 54.84,
+              "current_mA_p50": 5.484
+            }
+          },
+          {
+            "file": "07004541_250520_A 250107 R2R VDo _ 250422 SE DOE _C 250312 LL 4 set3_2 0.5C.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 57.81,
+              "current_mA_p50": 5.781
+            }
+          }
+        ],
         "charge": [
           {
             "file": "07006388_241025_HPH_3pass_HL_3350_ch 1to6_6p13mah.sch",
@@ -3789,9 +3832,9 @@
       "zip": "PNE07.zip",
       "zip_bytes": 1498910,
       "sch_count": 1459,
-      "unknown_count": 390,
-      "unknown_pct": 26.7,
-      "classified_pct": 73.3,
+      "unknown_count": 386,
+      "unknown_pct": 26.5,
+      "classified_pct": 73.5,
       "parse_errors": 0,
       "files_with_loop": 1459,
       "loop_goto_aggregate": {
@@ -3803,12 +3846,13 @@
       "max_current_mA_seen": 499.0,
       "categories": {
         "rate_capability": 800,
-        "unknown": 390,
+        "unknown": 386,
         "hppc": 112,
         "qpeed": 69,
         "formation": 43,
         "cycle_life": 32,
         "rate_test": 8,
+        "doe": 4,
         "rpt": 3,
         "charge": 2
       },
@@ -4081,6 +4125,48 @@
             }
           }
         ],
+        "doe": [
+          {
+            "file": "07004616_╣½└╜▒╪░°┴ñ_250119_SET3_11┐∙ pilot DOE2.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 39704,
+              "step_count": 62,
+              "loop_steps": 13,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 12,
+                "both": 1,
+                "neither": 0
+              },
+              "current_mA_max": 64.25,
+              "current_mA_p50": 6.425
+            }
+          },
+          {
+            "file": "07004616_╣½└╜▒╪░°┴ñ_250119_SET6_12┐∙ pilot DOE3.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 39704,
+              "step_count": 62,
+              "loop_steps": 13,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 12,
+                "both": 1,
+                "neither": 0
+              },
+              "current_mA_max": 64.25,
+              "current_mA_p50": 6.425
+            }
+          }
+        ],
         "cycle_life": [
           {
             "file": "07004616_╣½└╜▒╪░°┴ñ_SET1_250106_251230_5145one-pot_8%_mathis_cycle └τ╞≥░í.sch",
@@ -4266,9 +4352,9 @@
       "zip": "PNE08.zip",
       "zip_bytes": 1781549,
       "sch_count": 2221,
-      "unknown_count": 916,
-      "unknown_pct": 41.2,
-      "classified_pct": 58.8,
+      "unknown_count": 912,
+      "unknown_pct": 41.1,
+      "classified_pct": 58.9,
       "parse_errors": 0,
       "files_with_loop": 2221,
       "loop_goto_aggregate": {
@@ -4279,17 +4365,18 @@
       },
       "max_current_mA_seen": 174076.0,
       "categories": {
-        "unknown": 916,
-        "cycle_life": 293,
-        "rate_capability": 284,
-        "formation": 281,
-        "rpt": 158,
+        "unknown": 912,
+        "cycle_life": 287,
+        "formation": 284,
+        "rate_capability": 281,
+        "rpt": 157,
         "hppc": 87,
         "rate_test": 85,
         "qpeed": 44,
         "charge": 20,
         "ocv": 17,
         "discharge": 16,
+        "doe": 11,
         "capacheck": 8,
         "storage": 5,
         "gitt": 3,
@@ -4946,6 +5033,48 @@
             }
           }
         ],
+        "doe": [
+          {
+            "file": "07000432_240827_C-type bi cell_frame DOE_A1_F+iniRPT+50cyc.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 20732,
+              "step_count": 31,
+              "loop_steps": 5,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 5,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 174.08,
+              "current_mA_p50": 17.408
+            }
+          },
+          {
+            "file": "07000432_240827_C-type bi cell_frame DOE_A1_F+iniRPT+50cyc_re.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 20732,
+              "step_count": 31,
+              "loop_steps": 5,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 5,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 174.08,
+              "current_mA_p50": 17.408
+            }
+          }
+        ],
         "qpeed": [
           {
             "file": "07004581_250225_3350_╕≡│δ╝┐_╖╬╡∙2.7_Set1_4_8MPa_Qpeed.sch",
@@ -5027,9 +5156,9 @@
       "zip": "PNE09.zip",
       "zip_bytes": 1884536,
       "sch_count": 2121,
-      "unknown_count": 764,
-      "unknown_pct": 36.0,
-      "classified_pct": 64.0,
+      "unknown_count": 717,
+      "unknown_pct": 33.8,
+      "classified_pct": 66.2,
       "parse_errors": 0,
       "files_with_loop": 2121,
       "loop_goto_aggregate": {
@@ -5040,15 +5169,15 @@
       },
       "max_current_mA_seen": 174227.0,
       "categories": {
-        "unknown": 764,
-        "rate_capability": 400,
-        "hppc": 182,
-        "rate_test": 155,
-        "cycle_life": 127,
-        "formation": 116,
+        "unknown": 717,
+        "rate_capability": 429,
+        "hppc": 181,
+        "rate_test": 167,
+        "formation": 122,
+        "cycle_life": 119,
         "qpeed": 116,
-        "storage": 74,
-        "rpt": 51,
+        "storage": 86,
+        "rpt": 48,
         "charge": 41,
         "ocv": 22,
         "dcir": 17,
@@ -5932,19 +6061,19 @@
       },
       "max_current_mA_seen": 496.0,
       "categories": {
-        "rate_capability": 500,
+        "rate_capability": 509,
         "unknown": 452,
-        "cycle_life": 250,
-        "hppc": 202,
+        "cycle_life": 249,
+        "hppc": 201,
         "qpeed": 153,
-        "formation": 127,
+        "formation": 119,
         "rate_test": 54,
         "charge": 35,
         "rest": 13,
         "discharge": 11,
         "dcir": 8,
         "capacheck": 8,
-        "storage": 5,
+        "storage": 6,
         "qc": 5,
         "rpt": 4,
         "eis": 4,
@@ -6219,48 +6348,6 @@
             }
           }
         ],
-        "formation": [
-          {
-            "file": "00219684_250115_OYJ_Gr mono_56.3mA_Formation C-rate_000.sch",
-            "classify_rule": "formation_keyword",
-            "binary": {
-              "version": "0x00010003",
-              "payload_offset": 1760,
-              "step_size": 612,
-              "file_bytes": 25628,
-              "step_count": 39,
-              "loop_steps": 7,
-              "loop_goto": {
-                "only_48": 0,
-                "only_564": 7,
-                "both": 0,
-                "neither": 0
-              },
-              "current_mA_max": 56.3,
-              "current_mA_p50": 5.63
-            }
-          },
-          {
-            "file": "00219684_250115_OYJ_Gr mono_56.45mA_Formation C-rate_000.sch",
-            "classify_rule": "formation_keyword",
-            "binary": {
-              "version": "0x00010003",
-              "payload_offset": 1760,
-              "step_size": 612,
-              "file_bytes": 25628,
-              "step_count": 39,
-              "loop_steps": 7,
-              "loop_goto": {
-                "only_48": 0,
-                "only_564": 7,
-                "both": 0,
-                "neither": 0
-              },
-              "current_mA_max": 56.45,
-              "current_mA_p50": 5.645
-            }
-          }
-        ],
         "hppc": [
           {
             "file": "00219684_250122_57.40mAh_HPPC.sch",
@@ -6342,6 +6429,48 @@
               },
               "current_mA_max": 2.465,
               "current_mA_p50": 2.465
+            }
+          }
+        ],
+        "formation": [
+          {
+            "file": "00219684_OYJ_250915_2M_3Mpa 80d 0.1C Formation_4ea.sch",
+            "classify_rule": "formation_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 7268,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 2,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 22.0,
+              "current_mA_p50": 22.0
+            }
+          },
+          {
+            "file": "00219684_OYJ_250915_2M_3Mpa 80d 0.2C Formation_4ea.sch",
+            "classify_rule": "formation_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 7268,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 2,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 44.0,
+              "current_mA_p50": 44.0
             }
           }
         ],
@@ -7471,15 +7600,15 @@
       "max_current_mA_seen": 20000.0,
       "categories": {
         "cycle_life": 52,
-        "rpt": 50,
+        "rpt": 49,
         "unknown": 48,
-        "hppc": 20,
+        "hppc": 25,
         "ocv": 15,
         "rate_test": 12,
         "formation": 7,
-        "rate_capability": 6,
         "capacheck": 6,
         "discharge": 5,
+        "rate_capability": 2,
         "rest": 1
       },
       "versions": {
@@ -7650,18 +7779,18 @@
             }
           },
           {
-            "file": "101295_3M3U_0.33C_RPT_1C pulse.sch",
+            "file": "FP3350_HPCD_0.05C_10mV_180min.sch",
             "classify_rule": "multi_current_rate_capability",
             "binary": {
-              "version": "0x00010003",
-              "payload_offset": 1760,
+              "version": "0x00010002",
+              "payload_offset": 1632,
               "step_size": 612,
-              "file_bytes": 29300,
-              "step_count": 45,
-              "loop_steps": 7,
+              "file_bytes": 32844,
+              "step_count": 51,
+              "loop_steps": 8,
               "loop_goto": {
                 "only_48": 0,
-                "only_564": 7,
+                "only_564": 8,
                 "both": 0,
                 "neither": 0
               },
@@ -8003,9 +8132,9 @@
       "zip": "PNE13.zip",
       "zip_bytes": 312122,
       "sch_count": 414,
-      "unknown_count": 233,
-      "unknown_pct": 56.3,
-      "classified_pct": 43.7,
+      "unknown_count": 225,
+      "unknown_pct": 54.3,
+      "classified_pct": 45.7,
       "parse_errors": 1,
       "files_with_loop": 413,
       "loop_goto_aggregate": {
@@ -8016,20 +8145,20 @@
       },
       "max_current_mA_seen": 12500.0,
       "categories": {
-        "unknown": 233,
-        "hppc": 32,
+        "unknown": 225,
+        "hppc": 41,
         "ocv": 26,
-        "formation": 24,
-        "cycle_life": 23,
+        "cycle_life": 22,
         "rpt": 21,
+        "formation": 21,
         "rate_capability": 12,
-        "discharge": 12,
         "rate_test": 12,
+        "discharge": 10,
         "rest": 8,
+        "storage": 7,
         "charge": 5,
-        "soc_setting": 3,
-        "storage": 2,
-        "capacheck": 1
+        "soc_setting": 2,
+        "capacheck": 2
       },
       "versions": {
         "0x00010003": 398,
@@ -8429,48 +8558,6 @@
             }
           }
         ],
-        "discharge": [
-          {
-            "file": "00215540_250630_1.2Ah_L4ms_10stack_Ferrai Pulse DCH then CH 25oC_5m26d_3.sch",
-            "classify_rule": "discharge_keyword",
-            "binary": {
-              "version": "0x00010003",
-              "payload_offset": 1760,
-              "step_size": 612,
-              "file_bytes": 87440,
-              "step_count": 140,
-              "loop_steps": 26,
-              "loop_goto": {
-                "only_48": 0,
-                "only_564": 26,
-                "both": 0,
-                "neither": 0
-              },
-              "current_mA_max": 9600.0,
-              "current_mA_p50": 360.0
-            }
-          },
-          {
-            "file": "00224787_251013_10Ah_0.05C discharge.sch",
-            "classify_rule": "discharge_keyword",
-            "binary": {
-              "version": "0x00010003",
-              "payload_offset": 1760,
-              "step_size": 612,
-              "file_bytes": 7880,
-              "step_count": 10,
-              "loop_steps": 3,
-              "loop_goto": {
-                "only_48": 0,
-                "only_564": 3,
-                "both": 0,
-                "neither": 0
-              },
-              "current_mA_max": 540.0,
-              "current_mA_p50": 540.0
-            }
-          }
-        ],
         "formation": [
           {
             "file": "00217552_250314_6.5Ah_70150_13stack_CBC.sch",
@@ -8555,20 +8642,62 @@
             }
           }
         ],
+        "discharge": [
+          {
+            "file": "00224787_251013_10Ah_0.05C discharge.sch",
+            "classify_rule": "discharge_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 7880,
+              "step_count": 10,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 3,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 540.0,
+              "current_mA_p50": 540.0
+            }
+          },
+          {
+            "file": "00224973_[╛╚└ⁿ╝║] 251027_5M4U_autoclave_SO2 gas test_noBL_dcg.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 4820,
+              "step_count": 5,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 1,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 250.0,
+              "current_mA_p50": 250.0
+            }
+          }
+        ],
         "storage": [
           {
-            "file": "00224973_250508_1.20Ah_L4ms_10stack_Aging_SOC95_RPT after aging.sch",
+            "file": "00224973_250502_1.19Ah_L4ms_10stack_Formation_Aging_SOC95_4m7d_2.sch",
             "classify_rule": "storage_keyword",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
               "step_size": 612,
-              "file_bytes": 19508,
-              "step_count": 29,
-              "loop_steps": 5,
+              "file_bytes": 21956,
+              "step_count": 33,
+              "loop_steps": 6,
               "loop_goto": {
                 "only_48": 0,
-                "only_564": 5,
+                "only_564": 6,
                 "both": 0,
                 "neither": 0
               },
@@ -8577,49 +8706,49 @@
             }
           },
           {
-            "file": "00224973_250604_[70150_3┬≈]_unit_Set01 SE40um_░φ┐┬Aging.sch",
+            "file": "00224973_250502_1.22Ah_L4ms_10stack_Formation_Aging_SOC95_4m17d_2_3_4.sch",
             "classify_rule": "storage_keyword",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
               "step_size": 612,
-              "file_bytes": 12164,
-              "step_count": 17,
-              "loop_steps": 3,
+              "file_bytes": 21956,
+              "step_count": 33,
+              "loop_steps": 6,
               "loop_goto": {
                 "only_48": 0,
-                "only_564": 3,
+                "only_564": 6,
                 "both": 0,
                 "neither": 0
               },
-              "current_mA_max": 1002.0,
-              "current_mA_p50": 304.0
+              "current_mA_max": 1200.0,
+              "current_mA_p50": 120.0
             }
           }
         ],
         "soc_setting": [
           {
-            "file": "00224973_250602_[70150_3┬≈]_unit_Set01 SE 40um_░φ┐┬Aging_SOC95 Setting.sch",
+            "file": "00224973_260223_6M4U_Autoclave_SOC100 Setting.sch",
             "classify_rule": "soc_setting_keyword",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
               "step_size": 612,
-              "file_bytes": 10940,
-              "step_count": 15,
-              "loop_steps": 3,
+              "file_bytes": 6044,
+              "step_count": 7,
+              "loop_steps": 2,
               "loop_goto": {
                 "only_48": 0,
-                "only_564": 3,
+                "only_564": 2,
                 "both": 0,
                 "neither": 0
               },
-              "current_mA_max": 304.0,
-              "current_mA_p50": 304.0
+              "current_mA_max": 300.0,
+              "current_mA_p50": 300.0
             }
           },
           {
-            "file": "00224973_260223_6M4U_Autoclave_SOC100 Setting.sch",
+            "file": "00224973_260223_6M4U_Autoclave_SOC100 Setting_2.sch",
             "classify_rule": "soc_setting_keyword",
             "binary": {
               "version": "0x00010003",
@@ -8640,6 +8769,26 @@
           }
         ],
         "capacheck": [
+          {
+            "file": "DCH Capacity Check.sch",
+            "classify_rule": "capa_generic_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 25628,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 7,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 2440.0,
+              "current_mA_p50": 122.0
+            }
+          },
           {
             "file": "░φ░┤┤δ└└_5Multi_2Stack_L4_CapaCheck.sch",
             "classify_rule": "capacheck_keyword",
@@ -8694,14 +8843,14 @@
         "unknown": 123,
         "rate_test": 58,
         "cycle_life": 25,
+        "hppc": 16,
         "rpt": 15,
-        "hppc": 14,
         "formation": 9,
         "discharge": 7,
         "capacheck": 6,
-        "rate_capability": 6,
         "ocv": 6,
         "storage": 5,
+        "rate_capability": 4,
         "rest": 3
       },
       "versions": {
@@ -9126,23 +9275,23 @@
             }
           },
           {
-            "file": "101295_3M3U_0.33C_RPT_1C pulse.sch",
+            "file": "2.437Ah form rate R.sch",
             "classify_rule": "multi_current_rate_capability",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
               "step_size": 612,
-              "file_bytes": 29300,
-              "step_count": 45,
-              "loop_steps": 7,
+              "file_bytes": 45212,
+              "step_count": 71,
+              "loop_steps": 14,
               "loop_goto": {
                 "only_48": 0,
-                "only_564": 7,
+                "only_564": 14,
                 "both": 0,
                 "neither": 0
               },
-              "current_mA_max": 16200.001,
-              "current_mA_p50": 5400.0
+              "current_mA_max": 2437.0,
+              "current_mA_p50": 244.0
             }
           }
         ],
@@ -9284,14 +9433,3022 @@
         "confirmation": "user_guideline"
       }
     },
+    "PNE15": {
+      "unit": "PNE15",
+      "zip": "PNE15.zip",
+      "zip_bytes": 2035912,
+      "sch_count": 2732,
+      "unknown_count": 1137,
+      "unknown_pct": 41.6,
+      "classified_pct": 58.4,
+      "parse_errors": 1,
+      "files_with_loop": 2731,
+      "loop_goto_aggregate": {
+        "only_48": 472,
+        "only_564": 1667,
+        "both": 281,
+        "neither": 10367
+      },
+      "max_current_mA_seen": 11190.0,
+      "categories": {
+        "unknown": 1137,
+        "formation": 426,
+        "cycle_life": 399,
+        "hppc": 176,
+        "rate_test": 156,
+        "rate_capability": 104,
+        "capacheck": 88,
+        "doe": 50,
+        "storage": 50,
+        "discharge": 30,
+        "rpt": 30,
+        "rest": 24,
+        "dcir": 17,
+        "qc": 15,
+        "charge": 13,
+        "ocv": 8,
+        "eis": 8,
+        "soc_setting": 1
+      },
+      "versions": {
+        "0x00010004": 1927,
+        "0x00010005": 609,
+        "0x00010002": 195
+      },
+      "step_sizes": {
+        "696": 1927,
+        "720": 609,
+        "612": 195
+      },
+      "top_layouts": [
+        [
+          "0x00010004/696B/15st",
+          435
+        ],
+        [
+          "0x00010004/696B/9st",
+          425
+        ],
+        [
+          "0x00010004/696B/12st",
+          227
+        ],
+        [
+          "0x00010005/720B/15st",
+          181
+        ],
+        [
+          "0x00010005/720B/21st",
+          156
+        ],
+        [
+          "0x00010004/696B/7st",
+          84
+        ],
+        [
+          "0x00010004/696B/4st",
+          73
+        ],
+        [
+          "0x00010004/696B/21st",
+          64
+        ],
+        [
+          "0x00010004/696B/13st",
+          59
+        ],
+        [
+          "0x00010004/696B/6st",
+          55
+        ],
+        [
+          "0x00010004/696B/18st",
+          46
+        ],
+        [
+          "0x00010005/720B/63st",
+          43
+        ]
+      ],
+      "current_threshold_hits": {
+        ">500mA": 457,
+        ">6A": 3
+      },
+      "samples_by_category": {
+        "unknown": [
+          {
+            "file": "0.1 soc100_4.3V_0.0457Ah.sch",
+            "classify_rule": "none",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 5324,
+              "step_count": 5,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 5.0,
+              "current_mA_p50": 5.0
+            }
+          },
+          {
+            "file": "0.46Ah 02_03_╛╚└ⁿ.sch",
+            "classify_rule": "none",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 16460,
+              "step_count": 21,
+              "loop_steps": 4,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 4
+              },
+              "current_mA_max": 139.0,
+              "current_mA_p50": 46.0
+            }
+          }
+        ],
+        "rate_test": [
+          {
+            "file": "0.1C check n SOC100.sch",
+            "classify_rule": "standalone_c_rate_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 9500,
+              "step_count": 11,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 327.0,
+              "current_mA_p50": 98.0
+            }
+          },
+          {
+            "file": "0.1C check.sch",
+            "classify_rule": "standalone_c_rate_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6020,
+              "step_count": 6,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 98.0,
+              "current_mA_p50": 98.0
+            }
+          }
+        ],
+        "cycle_life": [
+          {
+            "file": "0.1C form 2cyc.sch",
+            "classify_rule": "cyc_abbrev_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 8108,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 29.0,
+              "current_mA_p50": 29.0
+            }
+          },
+          {
+            "file": "0.588 0.1C 1 cyc 0.2C 100 cyc.sch",
+            "classify_rule": "cycle_life_keyword",
+            "binary": {
+              "version": "0x00010002",
+              "payload_offset": 1632,
+              "step_size": 612,
+              "file_bytes": 9588,
+              "step_count": 13,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 2,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 117.0,
+              "current_mA_p50": 117.0
+            }
+          }
+        ],
+        "rate_capability": [
+          {
+            "file": "0.386Ah rate_5C.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 28988,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 7
+              },
+              "current_mA_max": 1930.0,
+              "current_mA_p50": 129.0
+            }
+          },
+          {
+            "file": "0.386Ah rate_5C_└τ░í╡┐.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 28988,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 7
+              },
+              "current_mA_max": 1930.0,
+              "current_mA_p50": 129.0
+            }
+          }
+        ],
+        "capacheck": [
+          {
+            "file": "0.44Ah capa check n cycle 0.33C (4stack).sch",
+            "classify_rule": "capa_generic_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 12284,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 145.0,
+              "current_mA_p50": 145.0
+            }
+          },
+          {
+            "file": "0.5C cycle 0.1 capacheck re.sch",
+            "classify_rule": "capacheck_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 74924,
+              "step_count": 105,
+              "loop_steps": 18,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 18
+              },
+              "current_mA_max": 490.0,
+              "current_mA_p50": 98.0
+            }
+          }
+        ],
+        "formation": [
+          {
+            "file": "0.44Ah formation.sch",
+            "classify_rule": "formation_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 8108,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 44.0,
+              "current_mA_p50": 44.0
+            }
+          },
+          {
+            "file": "00209060_260415_[╟╤┤┘░µ]_1_Ref_60╡╡_2.5MPa_formation.sch",
+            "classify_rule": "formation_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 8108,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 8.0,
+              "current_mA_p50": 8.0
+            }
+          }
+        ],
+        "discharge": [
+          {
+            "file": "00206354_241204 [AYH] A0 10ea_E7-523 2ea_E8 2ea_discharge.sch",
+            "classify_rule": "discharge_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6716,
+              "step_count": 7,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 140.0,
+              "current_mA_p50": 140.0
+            }
+          },
+          {
+            "file": "07000872_251222_Mono_ch44V_dch_2V_▒╕╡┐└ⁿ╛╨║»░µ╜╟╟Φ.sch",
+            "classify_rule": "discharge_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 24812,
+              "step_count": 33,
+              "loop_steps": 6,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 6
+              },
+              "current_mA_max": 42.0,
+              "current_mA_p50": 13.0
+            }
+          }
+        ],
+        "rpt": [
+          {
+            "file": "00206354_241205 [AYH] A0 3ea_40oC cycle_RPT(100cycle).sch",
+            "classify_rule": "rpt_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 38732,
+              "step_count": 53,
+              "loop_steps": 11,
+              "loop_goto": {
+                "only_48": 1,
+                "only_564": 0,
+                "both": 0,
+                "neither": 10
+              },
+              "current_mA_max": 961.0,
+              "current_mA_p50": 140.0
+            }
+          },
+          {
+            "file": "00206354_241205 [AYH] A0 3ea_40oC cycle_RPT(100cycle)_000.sch",
+            "classify_rule": "rpt_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 38732,
+              "step_count": 53,
+              "loop_steps": 11,
+              "loop_goto": {
+                "only_48": 1,
+                "only_564": 0,
+                "both": 0,
+                "neither": 10
+              },
+              "current_mA_max": 961.0,
+              "current_mA_p50": 140.0
+            }
+          }
+        ],
+        "dcir": [
+          {
+            "file": "00209060_260129_6A_45oC_1.5MPa_1_Ref.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 47780,
+              "step_count": 66,
+              "loop_steps": 12,
+              "loop_goto": {
+                "only_48": 1,
+                "only_564": 0,
+                "both": 0,
+                "neither": 11
+              },
+              "current_mA_max": 62.46,
+              "current_mA_p50": 6.246
+            }
+          },
+          {
+            "file": "00209060_260129_6A_45oC_1.5MPa_2_Fe-Ni40.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 47780,
+              "step_count": 66,
+              "loop_steps": 12,
+              "loop_goto": {
+                "only_48": 1,
+                "only_564": 0,
+                "both": 0,
+                "neither": 11
+              },
+              "current_mA_max": 62.46,
+              "current_mA_p50": 6.246
+            }
+          }
+        ],
+        "doe": [
+          {
+            "file": "00214700_260902_[└»┤╓]_2M_╛τ▒╪╖╬╡∙DOE_set5_L4'3_0'15C_D100.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 12284,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 39.6,
+              "current_mA_p50": 39.6
+            }
+          },
+          {
+            "file": "00214700_260902_[└»┤╓]_2M_╛τ▒╪╖╬╡∙DOE_set6_L4'3_0'15C_D37.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 16460,
+              "step_count": 21,
+              "loop_steps": 4,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 4
+              },
+              "current_mA_max": 39.6,
+              "current_mA_p50": 39.6
+            }
+          }
+        ],
+        "storage": [
+          {
+            "file": "00217552_250402_╚½╝«╟÷_░φ┐┬aging╚─ ocv.sch",
+            "classify_rule": "storage_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          },
+          {
+            "file": "00217552_250430_Mono_HT aging Test_OCV tracking.sch",
+            "classify_rule": "storage_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 4628,
+              "step_count": 4,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          }
+        ],
+        "rest": [
+          {
+            "file": "00223112_[╕╓╞╝░í╛╨]_250908_set4_5stk_10min_5├■_rest.sch",
+            "classify_rule": "rest_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 12284,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 12.0,
+              "current_mA_p50": 12.0
+            }
+          },
+          {
+            "file": "00224241_240726 test1.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          }
+        ],
+        "hppc": [
+          {
+            "file": "00224241_230717 [KTJ] LFP_9stack_HMCE3_HPPC 25.sch",
+            "classify_rule": "hppc_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 23420,
+              "step_count": 31,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 4900.0,
+              "current_mA_p50": 980.0
+            }
+          },
+          {
+            "file": "00224241_231020 [KTJ] LFP_1Ah_9stk_F1_negativr pulse.sch",
+            "classify_rule": "hppc_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 14372,
+              "step_count": 18,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 2156.0,
+              "current_mA_p50": 1470.0
+            }
+          }
+        ],
+        "charge": [
+          {
+            "file": "00224241_230920 [KTJ] LFP_full charge_HMC EOL.sch",
+            "classify_rule": "charge_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 4628,
+              "step_count": 4,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 327.0,
+              "current_mA_p50": 327.0
+            }
+          },
+          {
+            "file": "00224241_240214 [KTJ] LFP_9stack_F2_step charge_re.sch",
+            "classify_rule": "charge_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 82580,
+              "step_count": 116,
+              "loop_steps": 11,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 11
+              },
+              "current_mA_max": 1960.0,
+              "current_mA_p50": 490.0
+            }
+          }
+        ],
+        "ocv": [
+          {
+            "file": "00224973_250805_3Ah_autoclave_ref.bufferX_╕╕├µ ╚─ ocv tracking.sch",
+            "classify_rule": "ocv_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6716,
+              "step_count": 7,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 313.0,
+              "current_mA_p50": 313.0
+            }
+          },
+          {
+            "file": "00224973_250822_3Ah_autoclave_ref.bufferX_OCV Drop ╝┐ ╕╕╣µ.sch",
+            "classify_rule": "ocv_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 1000.0,
+              "current_mA_p50": 1000.0
+            }
+          }
+        ],
+        "qc": [
+          {
+            "file": "00229733_230407 [KJF] NCM_7stack_Fastcharge_SP_0.89Ah_4.3V_formation.sch",
+            "classify_rule": "qc_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 10196,
+              "step_count": 12,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 89.0,
+              "current_mA_p50": 89.0
+            }
+          },
+          {
+            "file": "00229733_230417 [KJE] NCM_7stack_Fastcharge_SP_0.89Ah_4.3V_SOC0.sch",
+            "classify_rule": "qc_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 4628,
+              "step_count": 4,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 89.0,
+              "current_mA_p50": 89.0
+            }
+          }
+        ],
+        "soc_setting": [
+          {
+            "file": "07005142_241204 [╣┌╝╥┤π] hot box SOC100 setting.sch",
+            "classify_rule": "soc_setting_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6020,
+              "step_count": 6,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 181.0,
+              "current_mA_p50": 181.0
+            }
+          }
+        ],
+        "eis": [
+          {
+            "file": "200904 [╝┐TF] Set99 EIS form.sch",
+            "classify_rule": "eis_keyword",
+            "binary": {
+              "version": "0x00010005",
+              "payload_offset": 1868,
+              "step_size": 720,
+              "file_bytes": 8348,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 28.0,
+              "current_mA_p50": 28.0
+            }
+          },
+          {
+            "file": "210903 [░φ┐┬└·└σ] ║╨╝«_3048_FD20N5_EIS_0w.sch",
+            "classify_rule": "eis_keyword",
+            "binary": {
+              "version": "0x00010005",
+              "payload_offset": 1868,
+              "step_size": 720,
+              "file_bytes": 8348,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 26.0,
+              "current_mA_p50": 26.0
+            }
+          }
+        ]
+      },
+      "rating_hint": {
+        "inferred_from_corpus": null,
+        "official_rating": "6A",
+        "official_rating_mA": 6000,
+        "ctspro_build": "CYCC-1004-S01-R004-N01",
+        "ctspro_build_source": "ctsmonpro_titlebar",
+        "max_current_mA_seen": 11190.0,
+        "corpus_exceeds_official": true,
+        "confirmation": "user_guideline"
+      }
+    },
+    "PNE16": {
+      "unit": "PNE16",
+      "zip": "PNE16.zip",
+      "zip_bytes": 1794428,
+      "sch_count": 2453,
+      "unknown_count": 873,
+      "unknown_pct": 35.6,
+      "classified_pct": 64.4,
+      "parse_errors": 3,
+      "files_with_loop": 2450,
+      "loop_goto_aggregate": {
+        "only_48": 438,
+        "only_564": 1165,
+        "both": 163,
+        "neither": 7646
+      },
+      "max_current_mA_seen": 9440.0,
+      "categories": {
+        "unknown": 873,
+        "cycle_life": 440,
+        "formation": 295,
+        "hppc": 174,
+        "rate_capability": 174,
+        "rate_test": 163,
+        "capacheck": 71,
+        "rpt": 54,
+        "storage": 53,
+        "charge": 43,
+        "discharge": 31,
+        "qc": 27,
+        "doe": 24,
+        "rest": 15,
+        "qpeed": 6,
+        "safety": 4,
+        "ocv": 3,
+        "gitt": 2,
+        "soc_setting": 1
+      },
+      "versions": {
+        "0x00010004": 2048,
+        "0x00010005": 221,
+        "0x00010002": 179,
+        "0x00010003": 2
+      },
+      "step_sizes": {
+        "696": 2048,
+        "720": 221,
+        "612": 181
+      },
+      "top_layouts": [
+        [
+          "0x00010004/696B/12st",
+          348
+        ],
+        [
+          "0x00010004/696B/9st",
+          326
+        ],
+        [
+          "0x00010004/696B/6st",
+          262
+        ],
+        [
+          "0x00010004/696B/15st",
+          130
+        ],
+        [
+          "0x00010005/720B/15st",
+          125
+        ],
+        [
+          "0x00010004/696B/18st",
+          97
+        ],
+        [
+          "0x00010002/612B/15st",
+          78
+        ],
+        [
+          "0x00010004/696B/13st",
+          67
+        ],
+        [
+          "0x00010004/696B/14st",
+          60
+        ],
+        [
+          "0x00010004/696B/7st",
+          55
+        ],
+        [
+          "0x00010004/696B/4st",
+          53
+        ],
+        [
+          "0x00010002/612B/66st",
+          44
+        ]
+      ],
+      "current_threshold_hits": {
+        ">500mA": 762,
+        ">6A": 5
+      },
+      "samples_by_category": {
+        "capacheck": [
+          {
+            "file": "0.1C capa_SJ1300░╟╜─ #1.sch",
+            "classify_rule": "capa_01c_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 10892,
+              "step_count": 13,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 70.0,
+              "current_mA_p50": 70.0
+            }
+          },
+          {
+            "file": "0.1C capa_SJ1300░╟╜─ #3.sch",
+            "classify_rule": "capa_01c_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 10892,
+              "step_count": 13,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 110.0,
+              "current_mA_p50": 110.0
+            }
+          }
+        ],
+        "rate_test": [
+          {
+            "file": "0.1C cpk.sch",
+            "classify_rule": "standalone_c_rate_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6716,
+              "step_count": 7,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 74.0,
+              "current_mA_p50": 74.0
+            }
+          },
+          {
+            "file": "00207966_250611_capa.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 99.0,
+              "current_mA_p50": 99.0
+            }
+          }
+        ],
+        "unknown": [
+          {
+            "file": "0.225_0310╝÷╕φ_░φ├Γ╖┬.sch",
+            "classify_rule": "none",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 12284,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 225.0,
+              "current_mA_p50": 112.0
+            }
+          },
+          {
+            "file": "0.225_0310╝÷╕φ_░φ├Γ╖┬_└τ▒╕╡┐.sch",
+            "classify_rule": "none",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 8108,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 225.0,
+              "current_mA_p50": 225.0
+            }
+          }
+        ],
+        "hppc": [
+          {
+            "file": "0.229Ah_1th5CHPPC_0310.sch",
+            "classify_rule": "hppc_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 33860,
+              "step_count": 46,
+              "loop_steps": 9,
+              "loop_goto": {
+                "only_48": 1,
+                "only_564": 0,
+                "both": 0,
+                "neither": 8
+              },
+              "current_mA_max": 1145.0,
+              "current_mA_p50": 69.0
+            }
+          },
+          {
+            "file": "00209609_250325_KHS_1Ah_Cell1_HPPC.sch",
+            "classify_rule": "hppc_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 40820,
+              "step_count": 56,
+              "loop_steps": 12,
+              "loop_goto": {
+                "only_48": 1,
+                "only_564": 0,
+                "both": 0,
+                "neither": 11
+              },
+              "current_mA_max": 880.0,
+              "current_mA_p50": 88.0
+            }
+          }
+        ],
+        "cycle_life": [
+          {
+            "file": "0.2_0.5cycle.sch",
+            "classify_rule": "cycle_life_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 10196,
+              "step_count": 12,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 445.0,
+              "current_mA_p50": 178.0
+            }
+          },
+          {
+            "file": "00207966_250616_1Ah_swelling_Gore 2.5Mpa_0.5C cycle_1-300.sch",
+            "classify_rule": "cycle_life_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 23420,
+              "step_count": 31,
+              "loop_steps": 5,
+              "loop_goto": {
+                "only_48": 1,
+                "only_564": 0,
+                "both": 0,
+                "neither": 4
+              },
+              "current_mA_max": 990.0,
+              "current_mA_p50": 99.0
+            }
+          }
+        ],
+        "rate_capability": [
+          {
+            "file": "0.5C cycle.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 23420,
+              "step_count": 31,
+              "loop_steps": 5,
+              "loop_goto": {
+                "only_48": 1,
+                "only_564": 0,
+                "both": 0,
+                "neither": 4
+              },
+              "current_mA_max": 990.0,
+              "current_mA_p50": 99.0
+            }
+          },
+          {
+            "file": "00215570_250718_└▓╝╙╞≥░í_SET2_0.33C_0.5C.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 12284,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 57.0,
+              "current_mA_p50": 38.0
+            }
+          }
+        ],
+        "rest": [
+          {
+            "file": "00.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          },
+          {
+            "file": "00219684_OYJ_250922_2M_3MPa 60d 4.2 24h rest 0.5C Cycle_3ea.sch",
+            "classify_rule": "rest_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 8108,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 120.0,
+              "current_mA_p50": 120.0
+            }
+          }
+        ],
+        "formation": [
+          {
+            "file": "00207966_250611_1Ah_swelling 1st_FM.sch",
+            "classify_rule": "formation_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 15068,
+              "step_count": 19,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 990.0,
+              "current_mA_p50": 99.0
+            }
+          },
+          {
+            "file": "00207966_250912_1Ah_Gr-SiC_├╩▒Γ░í╛╨ ╞≥░í┐δ_FM.sch",
+            "classify_rule": "formation_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 15068,
+              "step_count": 19,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 1043.0,
+              "current_mA_p50": 104.0
+            }
+          }
+        ],
+        "discharge": [
+          {
+            "file": "00207966_260702_3┐∙ ░φ┐┬└·└σ╝┐ ╣µ└ⁿ.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 5324,
+              "step_count": 5,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 15.0,
+              "current_mA_p50": 15.0
+            }
+          },
+          {
+            "file": "00207966_260819_514bimodal ╛τ▒╪ ╞≥░í_ref ╛τ▒╪_╝┐ ╞≤▒Γ └ⁿ ╣µ└ⁿ.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 5324,
+              "step_count": 5,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 15.0,
+              "current_mA_p50": 15.0
+            }
+          }
+        ],
+        "safety": [
+          {
+            "file": "00209609_250314_safety_ini_test_8ea.sch",
+            "classify_rule": "safety_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 28988,
+              "step_count": 39,
+              "loop_steps": 7,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 7
+              },
+              "current_mA_max": 1042.0,
+              "current_mA_p50": 104.0
+            }
+          },
+          {
+            "file": "07004996_240913 [KDY] Safety_LFP-AF_E8 F2_SOC100.sch",
+            "classify_rule": "safety_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6020,
+              "step_count": 6,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 76.0,
+              "current_mA_p50": 76.0
+            }
+          }
+        ],
+        "charge": [
+          {
+            "file": "00215540_250626_1.2Ah_L4_10stack_Ferrari Charge Cmptnce_T70_5m26d_1_4.sch",
+            "classify_rule": "charge_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 41516,
+              "step_count": 57,
+              "loop_steps": 10,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 10
+              },
+              "current_mA_max": 2880.0,
+              "current_mA_p50": 400.0
+            }
+          },
+          {
+            "file": "00215540_250701_1.2Ah_L4_10stack_Ferrari Charge Cmptnce_T80_5m26d_1.sch",
+            "classify_rule": "charge_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 41516,
+              "step_count": 57,
+              "loop_steps": 10,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 10
+              },
+              "current_mA_max": 2880.0,
+              "current_mA_p50": 400.0
+            }
+          }
+        ],
+        "ocv": [
+          {
+            "file": "00217475_260406_3350_1Ah_Ref_40um Cuprimer_OCV_at 60_TEST.sch",
+            "classify_rule": "ocv_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 33164,
+              "step_count": 45,
+              "loop_steps": 9,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 9
+              },
+              "current_mA_max": 321.4,
+              "current_mA_p50": 321.4
+            }
+          },
+          {
+            "file": "00217475_260406_3350_1Ah_Ref_40um Cuprimer_OCV_at 60_TEST_000.sch",
+            "classify_rule": "ocv_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 33164,
+              "step_count": 45,
+              "loop_steps": 9,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 9
+              },
+              "current_mA_max": 321.4,
+              "current_mA_p50": 321.4
+            }
+          }
+        ],
+        "rpt": [
+          {
+            "file": "00224973_240108_[LKJ] USO6 Driving Pattern_Initial RPT.sch",
+            "classify_rule": "rpt_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 23420,
+              "step_count": 31,
+              "loop_steps": 5,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 5
+              },
+              "current_mA_max": 790.0,
+              "current_mA_p50": 79.0
+            }
+          },
+          {
+            "file": "00224973_240129_[LKJ] USO6 Driving Pattern_RPT(1).sch",
+            "classify_rule": "rpt_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 23420,
+              "step_count": 31,
+              "loop_steps": 5,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 5
+              },
+              "current_mA_max": 790.0,
+              "current_mA_p50": 79.0
+            }
+          }
+        ],
+        "storage": [
+          {
+            "file": "00224973_250613_L4_2stack_░φ┐┬Aging_SOC║░_RPT.sch",
+            "classify_rule": "storage_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 24812,
+              "step_count": 33,
+              "loop_steps": 6,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 6
+              },
+              "current_mA_max": 249.0,
+              "current_mA_p50": 25.0
+            }
+          },
+          {
+            "file": "00224973_250613_L4_2stack_░φ┐┬Aging_SOC║░_RPT_000.sch",
+            "classify_rule": "storage_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 24812,
+              "step_count": 33,
+              "loop_steps": 6,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 6
+              },
+              "current_mA_max": 373.0,
+              "current_mA_p50": 37.0
+            }
+          }
+        ],
+        "qc": [
+          {
+            "file": "00229713_250905_2Ah QC set_set1_QC1CH_15min_60oC.sch",
+            "classify_rule": "qc_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 17852,
+              "step_count": 23,
+              "loop_steps": 4,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 4
+              },
+              "current_mA_max": 6000.0,
+              "current_mA_p50": 222.0
+            }
+          },
+          {
+            "file": "00229713_250905_2Ah QC set_set2_QC1CH_15min_60oC.sch",
+            "classify_rule": "qc_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 17852,
+              "step_count": 23,
+              "loop_steps": 4,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 4
+              },
+              "current_mA_max": 5728.0,
+              "current_mA_p50": 199.0
+            }
+          }
+        ],
+        "doe": [
+          {
+            "file": "07003777_230707 [KJK] NCM613_0.89Ah_E7 DOE_formation2_4.35V.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 10196,
+              "step_count": 12,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 89.0,
+              "current_mA_p50": 89.0
+            }
+          },
+          {
+            "file": "07003777_230707 [KJK] NCM613_0.89Ah_E7 DOE_formation3_4.35V.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 10196,
+              "step_count": 12,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 89.0,
+              "current_mA_p50": 89.0
+            }
+          }
+        ],
+        "qpeed": [
+          {
+            "file": "07004581_250327_╖╬╡∙_2_7_╣┘└╠╝┐_60╡╡_Qpeed_Set2_1_Set2_3_4_8_MPa.sch",
+            "classify_rule": "qpeed_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 95108,
+              "step_count": 134,
+              "loop_steps": 12,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 12
+              },
+              "current_mA_max": 349.0,
+              "current_mA_p50": 29.0
+            }
+          },
+          {
+            "file": "07004581_250327_╖╬╡∙_2_7_╣┘└╠╝┐_80╡╡_Qpeed_Set3_4_8_MPa.sch",
+            "classify_rule": "qpeed_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 95108,
+              "step_count": 134,
+              "loop_steps": 12,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 12
+              },
+              "current_mA_max": 360.0,
+              "current_mA_p50": 30.0
+            }
+          }
+        ],
+        "soc_setting": [
+          {
+            "file": "07004609_260507 [└╠└τ╟÷] Mid Ni_T8 25cyc SOC0 setting.sch",
+            "classify_rule": "soc_setting_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6716,
+              "step_count": 7,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 406.0,
+              "current_mA_p50": 406.0
+            }
+          }
+        ],
+        "gitt": [
+          {
+            "file": "GITT after 50 cyc_0.89Ah.sch",
+            "classify_rule": "gitt_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 17852,
+              "step_count": 23,
+              "loop_steps": 4,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 4
+              },
+              "current_mA_max": 445.0,
+              "current_mA_p50": 89.0
+            }
+          },
+          {
+            "file": "GITT after CPK_0.89Ah.sch",
+            "classify_rule": "gitt_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 13676,
+              "step_count": 17,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 89.0,
+              "current_mA_p50": 89.0
+            }
+          }
+        ]
+      },
+      "rating_hint": {
+        "inferred_from_corpus": null,
+        "official_rating": "6A",
+        "official_rating_mA": 6000,
+        "ctspro_build": "CYCC-1004-S01-R004-N01",
+        "ctspro_build_source": "ctsmonpro_titlebar",
+        "max_current_mA_seen": 9440.0,
+        "corpus_exceeds_official": true,
+        "confirmation": "user_guideline"
+      }
+    },
+    "PNE18": {
+      "unit": "PNE18",
+      "zip": "PNE18.zip",
+      "zip_bytes": 60360,
+      "sch_count": 57,
+      "unknown_count": 47,
+      "unknown_pct": 82.5,
+      "classified_pct": 17.5,
+      "parse_errors": 0,
+      "files_with_loop": 57,
+      "loop_goto_aggregate": {
+        "only_48": 0,
+        "only_564": 479,
+        "both": 15,
+        "neither": 0
+      },
+      "max_current_mA_seen": 78.0,
+      "categories": {
+        "unknown": 47,
+        "hppc": 4,
+        "storage": 3,
+        "ocv": 2,
+        "cycle_life": 1
+      },
+      "versions": {
+        "0x00010003": 53,
+        "0x00010002": 4
+      },
+      "step_sizes": {
+        "612": 57
+      },
+      "top_layouts": [
+        [
+          "0x00010003/612B/68st",
+          25
+        ],
+        [
+          "0x00010003/612B/35st",
+          11
+        ],
+        [
+          "0x00010003/612B/15st",
+          8
+        ],
+        [
+          "0x00010003/612B/10st",
+          4
+        ],
+        [
+          "0x00010003/612B/3st",
+          2
+        ],
+        [
+          "0x00010003/612B/9st",
+          2
+        ],
+        [
+          "0x00010003/612B/6st",
+          1
+        ],
+        [
+          "0x00010002/612B/47st",
+          1
+        ],
+        [
+          "0x00010002/612B/9st",
+          1
+        ],
+        [
+          "0x00010002/612B/68st",
+          1
+        ],
+        [
+          "0x00010002/612B/15st",
+          1
+        ]
+      ],
+      "current_threshold_hits": {},
+      "samples_by_category": {
+        "unknown": [
+          {
+            "file": "00219393_260522_set05 838ref 무음극 저온저압_1_2_3.sch",
+            "classify_rule": "none",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 43376,
+              "step_count": 68,
+              "loop_steps": 14,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 13,
+                "both": 1,
+                "neither": 0
+              },
+              "current_mA_max": 73.88,
+              "current_mA_p50": 7.388
+            }
+          },
+          {
+            "file": "00219393_260522_set06 80 무음극 저온저압_1_2_3.sch",
+            "classify_rule": "none",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 43376,
+              "step_count": 68,
+              "loop_steps": 14,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 13,
+                "both": 1,
+                "neither": 0
+              },
+              "current_mA_max": 73.88,
+              "current_mA_p50": 7.388
+            }
+          }
+        ],
+        "ocv": [
+          {
+            "file": "07006341_260728_set06 LEM NCN OC 고온 저장 OCV.sch",
+            "classify_rule": "ocv_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 3596,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 1,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          },
+          {
+            "file": "고온 저장 OCV.sch",
+            "classify_rule": "ocv_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 3596,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 1,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          }
+        ],
+        "hppc": [
+          {
+            "file": "74_건식공정_최종3350_Formation+RC+HPPC+CC_챔버미연동_챔버미연동.sch",
+            "classify_rule": "hppc_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 43376,
+              "step_count": 68,
+              "loop_steps": 14,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 13,
+                "both": 1,
+                "neither": 0
+              },
+              "current_mA_max": 73.88,
+              "current_mA_p50": 7.388
+            }
+          },
+          {
+            "file": "무음극_[수정]무음극_3350_+HPPC+CC_Rev1_챔버미연동.sch",
+            "classify_rule": "hppc_keyword",
+            "binary": {
+              "version": "0x00010002",
+              "payload_offset": 1632,
+              "step_size": 612,
+              "file_bytes": 30396,
+              "step_count": 47,
+              "loop_steps": 10,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 9,
+                "both": 1,
+                "neither": 0
+              },
+              "current_mA_max": 62.5,
+              "current_mA_p50": 6.25
+            }
+          }
+        ],
+        "storage": [
+          {
+            "file": "건식 AgC_PNE_건식양극_보관 후 storage test_65.0mAh_SOC95종료_챔버미연동.sch",
+            "classify_rule": "storage_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 23180,
+              "step_count": 35,
+              "loop_steps": 8,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 8,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 65.0,
+              "current_mA_p50": 6.5
+            }
+          },
+          {
+            "file": "건식 AgC_PNE_건식양극_보관 후_storage test_65.0mAh_SOC50종료_챔버미연동.sch",
+            "classify_rule": "storage_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 23180,
+              "step_count": 35,
+              "loop_steps": 8,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 8,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 65.0,
+              "current_mA_p50": 6.5
+            }
+          }
+        ],
+        "cycle_life": [
+          {
+            "file": "무음극공정_3350_65.04mAh_cycle만_챔버미연동.sch",
+            "classify_rule": "cycle_life_keyword",
+            "binary": {
+              "version": "0x00010002",
+              "payload_offset": 1632,
+              "step_size": 612,
+              "file_bytes": 7140,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 2,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 65.039,
+              "current_mA_p50": 65.039
+            }
+          }
+        ]
+      },
+      "rating_hint": {
+        "inferred_from_corpus": null,
+        "official_rating": "6A",
+        "official_rating_mA": 6000,
+        "ctspro_build": "CYCC-1006-S01-R006-N04",
+        "ctspro_build_source": "ctsmonpro_titlebar",
+        "max_current_mA_seen": 78.0,
+        "corpus_exceeds_official": false,
+        "confirmation": "user_guideline"
+      }
+    },
+    "PNE19": {
+      "unit": "PNE19",
+      "zip": "PNE19.zip",
+      "zip_bytes": 208892,
+      "sch_count": 276,
+      "unknown_count": 180,
+      "unknown_pct": 65.2,
+      "classified_pct": 34.8,
+      "parse_errors": 1,
+      "files_with_loop": 275,
+      "loop_goto_aggregate": {
+        "only_48": 8,
+        "only_564": 73,
+        "both": 2,
+        "neither": 1106
+      },
+      "max_current_mA_seen": 1045.0,
+      "categories": {
+        "unknown": 180,
+        "storage": 23,
+        "formation": 22,
+        "cycle_life": 18,
+        "rpt": 12,
+        "rate_test": 7,
+        "ocv": 5,
+        "rest": 5,
+        "rate_capability": 3,
+        "qpeed": 1
+      },
+      "versions": {
+        "0x00010004": 267,
+        "0x00010002": 8
+      },
+      "step_sizes": {
+        "696": 267,
+        "612": 8
+      },
+      "top_layouts": [
+        [
+          "0x00010004/696B/15st",
+          67
+        ],
+        [
+          "0x00010004/696B/33st",
+          60
+        ],
+        [
+          "0x00010004/696B/6st",
+          45
+        ],
+        [
+          "0x00010004/696B/9st",
+          29
+        ],
+        [
+          "0x00010004/696B/13st",
+          13
+        ],
+        [
+          "0x00010004/696B/145st",
+          10
+        ],
+        [
+          "0x00010004/696B/3st",
+          9
+        ],
+        [
+          "0x00010004/696B/53st",
+          8
+        ],
+        [
+          "0x00010004/696B/49st",
+          7
+        ],
+        [
+          "0x00010004/696B/71st",
+          6
+        ],
+        [
+          "0x00010004/696B/12st",
+          5
+        ],
+        [
+          "0x00010004/696B/11st",
+          5
+        ]
+      ],
+      "current_threshold_hits": {
+        ">500mA": 11
+      },
+      "samples_by_category": {
+        "rpt": [
+          {
+            "file": "00219805_0409_CBC_RPT_Cyc.sch",
+            "classify_rule": "rpt_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 35948,
+              "step_count": 49,
+              "loop_steps": 8,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 8
+              },
+              "current_mA_max": 198.0,
+              "current_mA_p50": 43.0
+            }
+          },
+          {
+            "file": "00219805_0409_Mono_RPT_Cyc.sch",
+            "classify_rule": "rpt_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 35948,
+              "step_count": 49,
+              "loop_steps": 8,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 8
+              },
+              "current_mA_max": 99.0,
+              "current_mA_p50": 22.0
+            }
+          }
+        ],
+        "ocv": [
+          {
+            "file": "00219805_0409_UCL비전표면불량_SOC59_5_OCV.sch",
+            "classify_rule": "ocv_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          },
+          {
+            "file": "00219805_0409_UCL비전표면불량_SOC59_5_OCV_000.sch",
+            "classify_rule": "ocv_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          }
+        ],
+        "formation": [
+          {
+            "file": "00219805_0409_UCL비전표면불량_formation_SOC59_5.sch",
+            "classify_rule": "formation_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 10892,
+              "step_count": 13,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 22.0,
+              "current_mA_p50": 13.0
+            }
+          },
+          {
+            "file": "00224327_260626_CPO_meree_3350_4stack_formation_set1.sch",
+            "classify_rule": "formation_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 8108,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 26.4,
+              "current_mA_p50": 26.4
+            }
+          }
+        ],
+        "unknown": [
+          {
+            "file": "00219805_0422_CBC_Cyc_re.sch",
+            "classify_rule": "none",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 35948,
+              "step_count": 49,
+              "loop_steps": 8,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 8
+              },
+              "current_mA_max": 198.0,
+              "current_mA_p50": 43.0
+            }
+          },
+          {
+            "file": "00219805_0422_Mono_Cyc_re.sch",
+            "classify_rule": "none",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6020,
+              "step_count": 6,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 33.0,
+              "current_mA_p50": 33.0
+            }
+          }
+        ],
+        "cycle_life": [
+          {
+            "file": "00219805_0422_UCL비전표면불량_Cycle_re.sch",
+            "classify_rule": "cycle_life_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6020,
+              "step_count": 6,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 33.0,
+              "current_mA_p50": 33.0
+            }
+          },
+          {
+            "file": "07000323_[zerogap]_02_set1345_cycle 이어서.sch",
+            "classify_rule": "cycle_life_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6020,
+              "step_count": 6,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": 162.003,
+              "current_mA_p50": 162.003
+            }
+          }
+        ],
+        "rest": [
+          {
+            "file": "07001811_260320_NTC 양극 이물_3350 CBC.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          },
+          {
+            "file": "07001811_260320_NTC 양극미커팅0.3이하_3350 CBC.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          }
+        ],
+        "storage": [
+          {
+            "file": "07004139_0417_GF08_0.1C방전.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6020,
+              "step_count": 6,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 246.0,
+              "current_mA_p50": 246.0
+            }
+          },
+          {
+            "file": "07004139_260703_기존것들정리.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6020,
+              "step_count": 6,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 123.0,
+              "current_mA_p50": 123.0
+            }
+          }
+        ],
+        "rate_test": [
+          {
+            "file": "07004139_260703_CPO_0.5C_2stk_방전.sch",
+            "classify_rule": "rate_test_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6020,
+              "step_count": 6,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 123.0,
+              "current_mA_p50": 123.0
+            }
+          },
+          {
+            "file": "07004139_260703_CPO_0.5C_biclee 방전.sch",
+            "classify_rule": "rate_test_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6020,
+              "step_count": 6,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 10.0,
+              "current_mA_p50": 10.0
+            }
+          }
+        ],
+        "rate_capability": [
+          {
+            "file": "07005822_260323_CPO_21차_se위도포 uvx6654_Bi cell_미건조_율특성부터.sch",
+            "classify_rule": "rate_capability_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 20636,
+              "step_count": 27,
+              "loop_steps": 5,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 5
+              },
+              "current_mA_max": 132.0,
+              "current_mA_p50": 44.0
+            }
+          },
+          {
+            "file": "07005822_260323_CPO_21차_se위도포 uvx6654_Bi cell_미건조_율특성부터_000.sch",
+            "classify_rule": "rate_capability_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 20636,
+              "step_count": 27,
+              "loop_steps": 5,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 5
+              },
+              "current_mA_max": 132.0,
+              "current_mA_p50": 44.0
+            }
+          }
+        ],
+        "qpeed": [
+          {
+            "file": "김기환_260626_GS64_SJ1300B_B1_VGCF-H 1.5%_1.5MPa_QC_챔버미연동.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010002",
+              "payload_offset": 1632,
+              "step_size": 612,
+              "file_bytes": 63444,
+              "step_count": 101,
+              "loop_steps": 9,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 9,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 306.916,
+              "current_mA_p50": 25.321
+            }
+          }
+        ]
+      },
+      "rating_hint": {
+        "inferred_from_corpus": null,
+        "official_rating": "6A",
+        "official_rating_mA": 6000,
+        "ctspro_build": "CYCN-P1107-S01-8001-N03",
+        "ctspro_build_source": "ctsmonpro_titlebar",
+        "max_current_mA_seen": 1045.0,
+        "corpus_exceeds_official": false,
+        "confirmation": "user_guideline"
+      }
+    },
+    "PNE20": {
+      "unit": "PNE20",
+      "zip": "PNE20.zip",
+      "zip_bytes": 256858,
+      "sch_count": 354,
+      "unknown_count": 243,
+      "unknown_pct": 68.6,
+      "classified_pct": 31.4,
+      "parse_errors": 1,
+      "files_with_loop": 353,
+      "loop_goto_aggregate": {
+        "only_48": 35,
+        "only_564": 105,
+        "both": 12,
+        "neither": 1132
+      },
+      "max_current_mA_seen": 605.0,
+      "categories": {
+        "unknown": 243,
+        "rate_test": 35,
+        "cycle_life": 23,
+        "rate_capability": 20,
+        "hppc": 20,
+        "rest": 4,
+        "formation": 4,
+        "ocv": 3,
+        "rpt": 2
+      },
+      "versions": {
+        "0x00010004": 343,
+        "0x00010002": 10
+      },
+      "step_sizes": {
+        "696": 343,
+        "612": 10
+      },
+      "top_layouts": [
+        [
+          "0x00010004/696B/15st",
+          265
+        ],
+        [
+          "0x00010004/696B/27st",
+          19
+        ],
+        [
+          "0x00010004/696B/9st",
+          12
+        ],
+        [
+          "0x00010004/696B/7st",
+          11
+        ],
+        [
+          "0x00010004/696B/79st",
+          9
+        ],
+        [
+          "0x00010004/696B/3st",
+          7
+        ],
+        [
+          "0x00010004/696B/12st",
+          7
+        ],
+        [
+          "0x00010002/612B/79st",
+          6
+        ],
+        [
+          "0x00010004/696B/23st",
+          5
+        ],
+        [
+          "0x00010004/696B/13st",
+          4
+        ],
+        [
+          "0x00010002/612B/15st",
+          3
+        ],
+        [
+          "0x00010004/696B/18st",
+          2
+        ]
+      ],
+      "current_threshold_hits": {
+        ">500mA": 16
+      },
+      "samples_by_category": {
+        "rest": [
+          {
+            "file": "0.33-rest-0.33C cycle.sch",
+            "classify_rule": "rest_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 14372,
+              "step_count": 18,
+              "loop_steps": 4,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 4
+              },
+              "current_mA_max": 48.2,
+              "current_mA_p50": 48.2
+            }
+          },
+          {
+            "file": "00224973_260624_[이건제]_ocvtracking.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          }
+        ],
+        "rate_test": [
+          {
+            "file": "0.33C chg.sch",
+            "classify_rule": "standalone_c_rate_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 6716,
+              "step_count": 7,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 48.2,
+              "current_mA_p50": 48.2
+            }
+          },
+          {
+            "file": "0.33C cycle.sch",
+            "classify_rule": "standalone_c_rate_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 12284,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 1,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 48.0,
+              "current_mA_p50": 48.0
+            }
+          }
+        ],
+        "rate_capability": [
+          {
+            "file": "0.33C cycle rpt.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 17852,
+              "step_count": 23,
+              "loop_steps": 5,
+              "loop_goto": {
+                "only_48": 1,
+                "only_564": 0,
+                "both": 0,
+                "neither": 4
+              },
+              "current_mA_max": 146.0,
+              "current_mA_p50": 48.2
+            }
+          },
+          {
+            "file": "00223112_260305_[신규구조]SE도포 압연유무_Set1_ref.frame.sch",
+            "classify_rule": "multi_current_rate_capability",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 20636,
+              "step_count": 27,
+              "loop_steps": 5,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 5
+              },
+              "current_mA_max": 120.0,
+              "current_mA_p50": 12.0
+            }
+          }
+        ],
+        "cycle_life": [
+          {
+            "file": "00209060_260320_HDK_roughness_Feni40_cycle_3_4.sch",
+            "classify_rule": "cycle_life_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 8108,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 21.0,
+              "current_mA_p50": 21.0
+            }
+          },
+          {
+            "file": "00209060_260421_[한다경]_3_1_2_Civen_pilot_0.33 cycle_re.sch",
+            "classify_rule": "cycle_life_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 8108,
+              "step_count": 9,
+              "loop_steps": 2,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 2
+              },
+              "current_mA_max": 25.0,
+              "current_mA_p50": 25.0
+            }
+          }
+        ],
+        "unknown": [
+          {
+            "file": "00214700_260407_[유닛구조]_전해질defect_set1.sch",
+            "classify_rule": "none",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 12284,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 53.0,
+              "current_mA_p50": 53.0
+            }
+          },
+          {
+            "file": "00214700_260407_[유닛구조]_전해질defect_set2.sch",
+            "classify_rule": "none",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 12284,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 53.0,
+              "current_mA_p50": 53.0
+            }
+          }
+        ],
+        "ocv": [
+          {
+            "file": "00215540_260804_[3PJT셀개발]_파일럿A_JF_ocv tracking_after_25도.sch",
+            "classify_rule": "ocv_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          },
+          {
+            "file": "00215540_260804_[3PJT셀개발]_파일럿A_JF_ocv tracking_after_60도.sch",
+            "classify_rule": "ocv_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 3932,
+              "step_count": 3,
+              "loop_steps": 1,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 1
+              },
+              "current_mA_max": null,
+              "current_mA_p50": null
+            }
+          }
+        ],
+        "hppc": [
+          {
+            "file": "00217474_260713_[제품개발]_S40f_Ca_CBC_SET2_S40f_4.25V.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 56828,
+              "step_count": 79,
+              "loop_steps": 17,
+              "loop_goto": {
+                "only_48": 2,
+                "only_564": 0,
+                "both": 0,
+                "neither": 15
+              },
+              "current_mA_max": 146.0,
+              "current_mA_p50": 15.0
+            }
+          },
+          {
+            "file": "00217474_260713_[제품개발]_S40f_Ca_CBC_SET2_S40f_4.25V_000.sch",
+            "classify_rule": "signature_label",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 56828,
+              "step_count": 79,
+              "loop_steps": 17,
+              "loop_goto": {
+                "only_48": 2,
+                "only_564": 0,
+                "both": 0,
+                "neither": 15
+              },
+              "current_mA_max": 165.0,
+              "current_mA_p50": 16.5
+            }
+          }
+        ],
+        "formation": [
+          {
+            "file": "00223213_260601 [3팀] KPI_1차 Set03 10stack 3V_4.35V 1C form.sch",
+            "classify_rule": "formation_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 12284,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 545.0,
+              "current_mA_p50": 545.0
+            }
+          },
+          {
+            "file": "00223213_260601 [3팀] KPI_1차 Set05 CBC 2.5V_4.35V 1C form.sch",
+            "classify_rule": "formation_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 12284,
+              "step_count": 15,
+              "loop_steps": 3,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 3
+              },
+              "current_mA_max": 55.0,
+              "current_mA_p50": 55.0
+            }
+          }
+        ],
+        "rpt": [
+          {
+            "file": "26_제품개발_L 5.5_RPT_260820.sch",
+            "classify_rule": "rpt_keyword",
+            "binary": {
+              "version": "0x00010002",
+              "payload_offset": 1632,
+              "step_size": 612,
+              "file_bytes": 17544,
+              "step_count": 26,
+              "loop_steps": 6,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 6,
+                "both": 0,
+                "neither": 0
+              },
+              "current_mA_max": 146.0,
+              "current_mA_p50": 15.0
+            }
+          },
+          {
+            "file": "L 5.5_RPT.sch",
+            "classify_rule": "rpt_keyword",
+            "binary": {
+              "version": "0x00010004",
+              "payload_offset": 1844,
+              "step_size": 696,
+              "file_bytes": 19940,
+              "step_count": 26,
+              "loop_steps": 6,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 0,
+                "both": 0,
+                "neither": 6
+              },
+              "current_mA_max": 146.0,
+              "current_mA_p50": 15.0
+            }
+          }
+        ]
+      },
+      "rating_hint": {
+        "inferred_from_corpus": null,
+        "official_rating": "6A",
+        "official_rating_mA": 6000,
+        "ctspro_build": "CYCSA-P1107-S01-R001-N013",
+        "ctspro_build_source": "ctsmonpro_titlebar",
+        "max_current_mA_seen": 605.0,
+        "corpus_exceeds_official": false,
+        "confirmation": "user_guideline"
+      }
+    },
     "PNE22": {
       "unit": "PNE22",
       "zip": "PNE22.zip",
       "zip_bytes": 1184922,
       "sch_count": 1660,
-      "unknown_count": 523,
-      "unknown_pct": 31.5,
-      "classified_pct": 68.5,
+      "unknown_count": 514,
+      "unknown_pct": 31.0,
+      "classified_pct": 69.0,
       "parse_errors": 0,
       "files_with_loop": 1660,
       "loop_goto_aggregate": {
@@ -9302,21 +12459,22 @@
       },
       "max_current_mA_seen": 82300.0,
       "categories": {
-        "unknown": 523,
+        "unknown": 514,
         "rate_capability": 436,
-        "rate_test": 162,
-        "formation": 127,
-        "rpt": 106,
-        "cycle_life": 96,
+        "rate_test": 157,
+        "formation": 108,
+        "rpt": 104,
+        "cycle_life": 93,
         "hppc": 82,
-        "storage": 26,
+        "storage": 42,
+        "doe": 25,
         "capacheck": 23,
-        "ocv": 22,
+        "ocv": 20,
         "qpeed": 20,
         "discharge": 11,
         "gitt": 8,
-        "eis": 7,
         "soc_setting": 7,
+        "eis": 6,
         "rest": 2,
         "dcir": 2
       },
@@ -10034,23 +13192,23 @@
             }
           },
           {
-            "file": "07004627_260721_3350_Aging_└τ╜╟╟Φ_45╡╡_EIS_SOC50.sch",
+            "file": "07100766_260507_1818_BOL_A_SOC50_EIS.sch",
             "classify_rule": "eis_keyword",
             "binary": {
               "version": "0x00010003",
               "payload_offset": 1760,
               "step_size": 612,
-              "file_bytes": 8492,
-              "step_count": 11,
-              "loop_steps": 2,
+              "file_bytes": 14000,
+              "step_count": 20,
+              "loop_steps": 4,
               "loop_goto": {
                 "only_48": 0,
-                "only_564": 2,
+                "only_564": 4,
                 "both": 0,
                 "neither": 0
               },
-              "current_mA_max": 20.472,
-              "current_mA_p50": 20.472
+              "current_mA_max": 14.9,
+              "current_mA_p50": 4.919
             }
           }
         ],
@@ -10095,6 +13253,48 @@
               "current_mA_p50": 79.552
             }
           }
+        ],
+        "doe": [
+          {
+            "file": "07100741_260710_░╟┴╢DOE1┬≈_RPT+30cycles.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 43376,
+              "step_count": 68,
+              "loop_steps": 14,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 13,
+                "both": 1,
+                "neither": 0
+              },
+              "current_mA_max": 65.69,
+              "current_mA_p50": 6.569
+            }
+          },
+          {
+            "file": "07100741_260713_░╟┴╢DOE1┬≈_noVD-RPT+30cycles.sch",
+            "classify_rule": "doe_keyword",
+            "binary": {
+              "version": "0x00010003",
+              "payload_offset": 1760,
+              "step_size": 612,
+              "file_bytes": 43376,
+              "step_count": 68,
+              "loop_steps": 14,
+              "loop_goto": {
+                "only_48": 0,
+                "only_564": 13,
+                "both": 1,
+                "neither": 0
+              },
+              "current_mA_max": 65.69,
+              "current_mA_p50": 6.569
+            }
+          }
         ]
       },
       "rating_hint": {
@@ -10110,36 +13310,37 @@
     }
   },
   "cross_unit_summary": {
-    "unit_count": 15,
-    "total_sch": 23281,
-    "total_unknown": 8587,
-    "unknown_pct": 36.9,
+    "unit_count": 20,
+    "total_sch": 29153,
+    "total_unknown": 10956,
+    "unknown_pct": 37.6,
     "categories_all_units": {
-      "unknown": 8587,
-      "rate_capability": 5461,
-      "cycle_life": 2149,
-      "hppc": 1961,
-      "formation": 1523,
-      "qpeed": 824,
-      "rate_test": 819,
-      "rpt": 602,
-      "charge": 285,
-      "capacheck": 243,
-      "storage": 216,
-      "discharge": 156,
-      "ocv": 140,
-      "dcir": 71,
-      "rest": 59,
-      "eis": 49,
-      "soc_setting": 40,
-      "gitt": 37,
-      "qc": 29,
-      "doe": 13
+      "unknown": 10956,
+      "rate_capability": 5801,
+      "cycle_life": 2978,
+      "hppc": 2366,
+      "formation": 2247,
+      "rate_test": 1189,
+      "qpeed": 831,
+      "rpt": 673,
+      "capacheck": 403,
+      "storage": 383,
+      "charge": 341,
+      "doe": 202,
+      "discharge": 202,
+      "ocv": 158,
+      "rest": 107,
+      "dcir": 88,
+      "qc": 71,
+      "eis": 56,
+      "soc_setting": 41,
+      "gitt": 39
     },
     "versions_all_units": {
-      "0x00010003": 22661,
-      "0x00010002": 599,
-      "0x00010004": 15
+      "0x00010003": 22716,
+      "0x00010004": 4600,
+      "0x00010002": 995,
+      "0x00010005": 830
     }
   }
 }

@@ -34,6 +34,11 @@ SCH_LAYOUTS: dict[int, SchLayout] = {
         payload_offset=1844,
         step_size=696,
     ),
+    int(SchFileVersion.V0X00010005): SchLayout(
+        version=int(SchFileVersion.V0X00010005),
+        payload_offset=1868,
+        step_size=720,
+    ),
 }
 
 

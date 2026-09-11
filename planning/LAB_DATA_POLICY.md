@@ -67,6 +67,12 @@ Writer smoke tests and layout maps are valid only for the **(unit, ctspro_build)
 | PNE01.zip | PNE01 | yes (500 mA) |
 | PNE02.zip | PNE02 | yes (500 mA) |
 | PNE03.zip | PNE03 | yes (6 A) |
+| PNE15.zip | PNE15 | yes (6 A) |
+| PNE16.zip | PNE16 | yes (6 A) |
+| PNE17.zip | PNE17 | yes (6 A) — zip empty (0 sch), pending re-drop |
+| PNE18.zip | PNE18 | yes (6 A) |
+| PNE19.zip | PNE19 | yes (6 A) |
+| PNE20.zip | PNE20 | yes (6 A) |
 | PNE04.zip | PNE04 | **pending** |
 | PNE05.zip | PNE05 | **pending** |
 | PNE22.zip | PNE22 | yes (100 mA) |
@@ -82,5 +88,10 @@ Writer smoke tests and layout maps are valid only for the **(unit, ctspro_build)
 | PNE03 | ? | 0x10003/612, 0x10004/696 (observed) |
 | PNE04 | ? | 0x10003/612 (observed) |
 | PNE05 | ? | 0x10003/612 (observed) |
-| PNE16 | CYCC-1004-S01-R004-N01 | 0x10004/696 (golden, no unit zip yet) |
+| PNE15 | CYCC-1004-S01-R004-N01 | 0x10004/696 (dominant), 0x10005/720 (609 files, first corpus), 0x10002/612 |
+| PNE16 | CYCC-1004-S01-R004-N01 | 0x10004/696 (golden + unit zip dominant), 0x10005/720 (221 files), 0x10002/612, 0x10003/612 |
+| PNE17 | CYCC-1006-S01-R006-N04 | none yet — `PNE17.zip` empty folder only |
+| PNE18 | CYCC-1006-S01-R006-N04 | 0x10003/612 (dominant, 53), 0x10002/612 (4) — first 1006-family SCH corpus, no 696/720 |
+| PNE19 | CYCN-P1107-S01-8001-N03 | 0x10004/696 (dominant, 267), 0x10002/612 (8); no 0x10005/720. PPT listed CYCGN-P1107-S01-R001-N026 |
+| PNE20 | CYCSA-P1107-S01-R001-N013 | 0x10004/696 (dominant, 343), 0x10002/612 (10); no 0x10005/720. First CYCSA-P1107 family |
 | PNE22 | ? | 0x10003/612 (observed) |

@@ -24,14 +24,12 @@
       "unknown_pct": 8.3,
       "categories_top": {
         "capacheck": 20,
-        "doe": 8,
-        "rpt": 5,
+        "doe": 13,
         "unknown": 3
       },
       "category_share": {
         "capacheck": 55.6,
-        "doe": 22.2,
-        "rpt": 13.9
+        "doe": 36.1
       },
       "versions": {
         "0x00010003": 21,
@@ -163,7 +161,7 @@
           "count": 11
         }
       ],
-      "distinct_protocols": 3
+      "distinct_protocols": 2
     },
     "PNE02": {
       "unit": "PNE02",
@@ -191,34 +189,34 @@
       ],
       "sch_count": 3449,
       "parse_errors": 1,
-      "unknown_pct": 56.7,
+      "unknown_pct": 55.6,
       "categories_top": {
-        "unknown": 1957,
-        "rate_test": 512,
-        "cycle_life": 246,
-        "formation": 181,
+        "unknown": 1919,
+        "rate_test": 525,
+        "cycle_life": 232,
+        "formation": 186,
         "charge": 124,
         "capacheck": 114,
         "hppc": 82,
         "qpeed": 81,
         "rpt": 52,
+        "doe": 36,
         "soc_setting": 20,
         "gitt": 17,
         "discharge": 14,
         "rest": 14,
-        "ocv": 8,
-        "qc": 5
+        "ocv": 8
       },
       "category_share": {
-        "rate_test": 14.8,
-        "cycle_life": 7.1,
-        "formation": 5.2,
+        "rate_test": 15.2,
+        "cycle_life": 6.7,
+        "formation": 5.4,
         "charge": 3.6,
         "capacheck": 3.3,
         "hppc": 2.4,
         "qpeed": 2.3,
         "rpt": 1.5,
-        "soc_setting": 0.6
+        "doe": 1.0
       },
       "versions": {
         "0x00010003": 3344,
@@ -407,34 +405,34 @@
       ],
       "sch_count": 1541,
       "parse_errors": 0,
-      "unknown_pct": 44.2,
+      "unknown_pct": 43.5,
       "categories_top": {
-        "unknown": 681,
-        "cycle_life": 219,
-        "formation": 200,
-        "rate_test": 128,
-        "rpt": 97,
-        "hppc": 91,
+        "unknown": 670,
+        "cycle_life": 201,
+        "formation": 172,
+        "rate_test": 133,
+        "hppc": 105,
+        "rpt": 82,
+        "doe": 62,
         "capacheck": 51,
-        "discharge": 20,
         "eis": 13,
-        "ocv": 9,
+        "discharge": 9,
         "dcir": 8,
+        "ocv": 8,
+        "storage": 8,
         "soc_setting": 6,
-        "storage": 5,
-        "charge": 4,
-        "rest": 4
+        "charge": 4
       },
       "category_share": {
-        "cycle_life": 14.2,
-        "formation": 13.0,
-        "rate_test": 8.3,
-        "rpt": 6.3,
-        "hppc": 5.9,
+        "cycle_life": 13.0,
+        "formation": 11.2,
+        "rate_test": 8.6,
+        "hppc": 6.8,
+        "rpt": 5.3,
+        "doe": 4.0,
         "capacheck": 3.3,
-        "discharge": 1.3,
         "eis": 0.8,
-        "ocv": 0.6
+        "discharge": 0.6
       },
       "versions": {
         "0x00010003": 1484,
@@ -603,7 +601,7 @@
           "count": 1
         }
       ],
-      "distinct_protocols": 16
+      "distinct_protocols": 17
     },
     "PNE04": {
       "unit": "PNE04",
@@ -625,28 +623,29 @@
       ],
       "sch_count": 3273,
       "parse_errors": 0,
-      "unknown_pct": 80.3,
+      "unknown_pct": 79.8,
       "categories_top": {
-        "unknown": 2629,
-        "hppc": 224,
-        "rate_test": 169,
-        "cycle_life": 125,
+        "unknown": 2612,
+        "hppc": 227,
+        "rate_test": 167,
+        "cycle_life": 124,
         "formation": 64,
-        "discharge": 22,
+        "discharge": 35,
         "charge": 12,
         "dcir": 11,
         "storage": 7,
         "rpt": 4,
+        "doe": 4,
         "ocv": 3,
         "qc": 2,
         "rest": 1
       },
       "category_share": {
-        "hppc": 6.8,
-        "rate_test": 5.2,
+        "hppc": 6.9,
+        "rate_test": 5.1,
         "cycle_life": 3.8,
         "formation": 2.0,
-        "discharge": 0.7,
+        "discharge": 1.1,
         "charge": 0.4,
         "dcir": 0.3,
         "storage": 0.2,
@@ -806,7 +805,7 @@
         "1": 31170
       },
       "safety_header_top": [],
-      "distinct_protocols": 12
+      "distinct_protocols": 13
     },
     "PNE05": {
       "unit": "PNE05",
@@ -828,18 +827,19 @@
       ],
       "sch_count": 1874,
       "parse_errors": 0,
-      "unknown_pct": 63.9,
+      "unknown_pct": 62.7,
       "categories_top": {
-        "unknown": 1198,
+        "unknown": 1175,
         "hppc": 199,
         "cycle_life": 171,
-        "formation": 145,
+        "formation": 166,
         "rate_test": 66,
         "storage": 53,
         "rpt": 25,
         "charge": 7,
         "capacheck": 4,
         "doe": 3,
+        "discharge": 2,
         "rest": 1,
         "ocv": 1,
         "gitt": 1
@@ -847,7 +847,7 @@
       "category_share": {
         "hppc": 10.6,
         "cycle_life": 9.1,
-        "formation": 7.7,
+        "formation": 8.9,
         "rate_test": 3.5,
         "storage": 2.8,
         "rpt": 1.3,
@@ -1009,7 +1009,7 @@
         "1": 23783
       },
       "safety_header_top": [],
-      "distinct_protocols": 12
+      "distinct_protocols": 13
     },
     "PNE06": {
       "unit": "PNE06",
@@ -1025,23 +1025,25 @@
       ],
       "sch_count": 1074,
       "parse_errors": 0,
-      "unknown_pct": 86.0,
+      "unknown_pct": 83.2,
       "categories_top": {
-        "unknown": 924,
+        "unknown": 894,
         "cycle_life": 107,
-        "rate_test": 23,
-        "storage": 12,
+        "doe": 32,
+        "rate_test": 19,
+        "storage": 13,
         "hppc": 4,
         "charge": 3,
-        "formation": 1
+        "formation": 2
       },
       "category_share": {
         "cycle_life": 10.0,
-        "rate_test": 2.1,
-        "storage": 1.1,
+        "doe": 3.0,
+        "rate_test": 1.8,
+        "storage": 1.2,
         "hppc": 0.4,
         "charge": 0.3,
-        "formation": 0.1
+        "formation": 0.2
       },
       "versions": {
         "0x00010003": 1074
@@ -1195,7 +1197,7 @@
         "1": 17358
       },
       "safety_header_top": [],
-      "distinct_protocols": 6
+      "distinct_protocols": 7
     },
     "PNE07": {
       "unit": "PNE07",
@@ -1217,14 +1219,15 @@
       ],
       "sch_count": 1459,
       "parse_errors": 0,
-      "unknown_pct": 86.1,
+      "unknown_pct": 85.3,
       "categories_top": {
-        "unknown": 1256,
+        "unknown": 1244,
         "qpeed": 69,
         "hppc": 51,
         "rate_test": 39,
         "cycle_life": 23,
         "formation": 16,
+        "doe": 12,
         "rpt": 3,
         "charge": 2
       },
@@ -1234,6 +1237,7 @@
         "rate_test": 2.7,
         "cycle_life": 1.6,
         "formation": 1.1,
+        "doe": 0.8,
         "rpt": 0.2,
         "charge": 0.1
       },
@@ -1391,7 +1395,7 @@
         "1": 26629
       },
       "safety_header_top": [],
-      "distinct_protocols": 7
+      "distinct_protocols": 8
     },
     "PNE08": {
       "unit": "PNE08",
@@ -1413,34 +1417,34 @@
       ],
       "sch_count": 2221,
       "parse_errors": 0,
-      "unknown_pct": 58.9,
+      "unknown_pct": 58.3,
       "categories_top": {
-        "unknown": 1308,
-        "formation": 237,
-        "rate_test": 190,
-        "rpt": 158,
-        "cycle_life": 133,
+        "unknown": 1295,
+        "formation": 240,
+        "rate_test": 189,
+        "rpt": 157,
+        "cycle_life": 127,
         "hppc": 78,
         "qpeed": 44,
         "charge": 20,
+        "doe": 20,
         "ocv": 17,
-        "rate_capability": 10,
         "capacheck": 8,
-        "discharge": 6,
+        "discharge": 8,
+        "rate_capability": 6,
         "storage": 5,
-        "gitt": 3,
-        "eis": 3
+        "gitt": 3
       },
       "category_share": {
-        "formation": 10.7,
-        "rate_test": 8.6,
+        "formation": 10.8,
+        "rate_test": 8.5,
         "rpt": 7.1,
-        "cycle_life": 6.0,
+        "cycle_life": 5.7,
         "hppc": 3.5,
         "qpeed": 2.0,
         "charge": 0.9,
-        "ocv": 0.8,
-        "rate_capability": 0.5
+        "doe": 0.9,
+        "ocv": 0.8
       },
       "versions": {
         "0x00010003": 2173,
@@ -1625,7 +1629,7 @@
           "count": 1
         }
       ],
-      "distinct_protocols": 15
+      "distinct_protocols": 16
     },
     "PNE09": {
       "unit": "PNE09",
@@ -1653,16 +1657,16 @@
       ],
       "sch_count": 2121,
       "parse_errors": 0,
-      "unknown_pct": 49.4,
+      "unknown_pct": 46.1,
       "categories_top": {
-        "unknown": 1047,
-        "rate_test": 411,
-        "hppc": 148,
-        "formation": 107,
-        "cycle_life": 93,
+        "unknown": 978,
+        "rate_test": 458,
+        "hppc": 147,
+        "formation": 113,
         "qpeed": 93,
-        "storage": 60,
-        "rpt": 51,
+        "storage": 87,
+        "cycle_life": 85,
+        "rpt": 48,
         "charge": 41,
         "ocv": 19,
         "eis": 17,
@@ -1672,13 +1676,13 @@
         "safety": 4
       },
       "category_share": {
-        "rate_test": 19.4,
-        "hppc": 7.0,
-        "formation": 5.0,
-        "cycle_life": 4.4,
+        "rate_test": 21.6,
+        "hppc": 6.9,
+        "formation": 5.3,
         "qpeed": 4.4,
-        "storage": 2.8,
-        "rpt": 2.4,
+        "storage": 4.1,
+        "cycle_life": 4.0,
+        "rpt": 2.3,
         "charge": 1.9,
         "ocv": 0.9
       },
@@ -1869,7 +1873,7 @@
           "count": 1
         }
       ],
-      "distinct_protocols": 17
+      "distinct_protocols": 18
     },
     "PNE10": {
       "unit": "PNE10",
@@ -1891,30 +1895,30 @@
       ],
       "sch_count": 1832,
       "parse_errors": 0,
-      "unknown_pct": 54.7,
+      "unknown_pct": 54.5,
       "categories_top": {
-        "unknown": 1003,
-        "rate_test": 257,
-        "hppc": 174,
+        "unknown": 998,
+        "rate_test": 271,
+        "hppc": 173,
         "qpeed": 129,
-        "cycle_life": 127,
-        "formation": 65,
+        "cycle_life": 126,
+        "formation": 57,
         "charge": 27,
         "discharge": 11,
         "capacheck": 8,
         "rest": 7,
         "dcir": 6,
-        "storage": 4,
+        "storage": 5,
         "rpt": 4,
         "eis": 4,
         "qc": 3
       },
       "category_share": {
-        "rate_test": 14.0,
-        "hppc": 9.5,
+        "rate_test": 14.8,
+        "hppc": 9.4,
         "qpeed": 7.0,
         "cycle_life": 6.9,
-        "formation": 3.5,
+        "formation": 3.1,
         "charge": 1.5,
         "discharge": 0.6,
         "capacheck": 0.4,
@@ -2102,9 +2106,9 @@
       ],
       "sch_count": 1828,
       "parse_errors": 1,
-      "unknown_pct": 49.1,
+      "unknown_pct": 49.0,
       "categories_top": {
-        "unknown": 898,
+        "unknown": 896,
         "hppc": 387,
         "qpeed": 209,
         "formation": 159,
@@ -2117,6 +2121,7 @@
         "soc_setting": 2,
         "capacheck": 2,
         "rest": 2,
+        "storage": 2,
         "plating": 2
       },
       "category_share": {
@@ -2289,7 +2294,7 @@
         "1": 43446
       },
       "safety_header_top": [],
-      "distinct_protocols": 13
+      "distinct_protocols": 14
     },
     "PNE12": {
       "unit": "PNE12",
@@ -2315,10 +2320,10 @@
       "categories_top": {
         "cycle_life": 52,
         "unknown": 52,
-        "rpt": 50,
-        "hppc": 20,
-        "rate_test": 16,
+        "rpt": 49,
+        "hppc": 25,
         "ocv": 15,
+        "rate_test": 12,
         "formation": 7,
         "capacheck": 6,
         "discharge": 3,
@@ -2326,10 +2331,10 @@
       },
       "category_share": {
         "cycle_life": 23.4,
-        "rpt": 22.5,
-        "hppc": 9.0,
-        "rate_test": 7.2,
+        "rpt": 22.1,
+        "hppc": 11.3,
         "ocv": 6.8,
+        "rate_test": 5.4,
         "formation": 3.2,
         "capacheck": 2.7,
         "discharge": 1.4,
@@ -2511,32 +2516,32 @@
       ],
       "sch_count": 414,
       "parse_errors": 1,
-      "unknown_pct": 60.1,
+      "unknown_pct": 58.2,
       "categories_top": {
-        "unknown": 249,
-        "hppc": 32,
+        "unknown": 241,
+        "hppc": 41,
         "ocv": 26,
         "rpt": 21,
-        "formation": 20,
         "rate_test": 19,
-        "cycle_life": 19,
-        "discharge": 10,
+        "cycle_life": 18,
+        "formation": 17,
+        "discharge": 8,
         "rest": 7,
+        "storage": 7,
         "charge": 5,
-        "soc_setting": 3,
-        "storage": 2,
-        "capacheck": 1
+        "soc_setting": 2,
+        "capacheck": 2
       },
       "category_share": {
-        "hppc": 7.7,
+        "hppc": 9.9,
         "ocv": 6.3,
         "rpt": 5.1,
-        "formation": 4.8,
         "rate_test": 4.6,
-        "cycle_life": 4.6,
-        "discharge": 2.4,
+        "cycle_life": 4.3,
+        "formation": 4.1,
+        "discharge": 1.9,
         "rest": 1.7,
-        "charge": 1.2
+        "storage": 1.7
       },
       "versions": {
         "0x00010003": 398,
@@ -2723,10 +2728,10 @@
       "unknown_pct": 57.0,
       "categories_top": {
         "unknown": 158,
-        "rate_test": 43,
+        "rate_test": 41,
         "cycle_life": 17,
+        "hppc": 16,
         "rpt": 15,
-        "hppc": 14,
         "formation": 9,
         "discharge": 6,
         "capacheck": 6,
@@ -2734,10 +2739,10 @@
         "rest": 3
       },
       "category_share": {
-        "rate_test": 15.5,
+        "rate_test": 14.8,
         "cycle_life": 6.1,
+        "hppc": 5.8,
         "rpt": 5.4,
-        "hppc": 5.1,
         "formation": 3.2,
         "discharge": 2.2,
         "capacheck": 2.2,
@@ -2904,6 +2909,1106 @@
       "safety_header_top": [],
       "distinct_protocols": 9
     },
+    "PNE15": {
+      "unit": "PNE15",
+      "zip": "PNE15.zip",
+      "ctspro_build": "CYCC-1004-S01-R004-N01",
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010004",
+          "payload_offset": 1844,
+          "step_size": 696,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010005",
+          "payload_offset": 1868,
+          "step_size": 720,
+          "dominant": false
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
+      "sch_count": 2732,
+      "parse_errors": 1,
+      "unknown_pct": 45.3,
+      "categories_top": {
+        "unknown": 1238,
+        "formation": 422,
+        "cycle_life": 378,
+        "rate_test": 232,
+        "hppc": 160,
+        "capacheck": 88,
+        "doe": 50,
+        "storage": 49,
+        "rpt": 30,
+        "discharge": 15,
+        "qc": 15,
+        "charge": 13,
+        "dcir": 12,
+        "rest": 11,
+        "ocv": 8
+      },
+      "category_share": {
+        "formation": 15.4,
+        "cycle_life": 13.8,
+        "rate_test": 8.5,
+        "hppc": 5.9,
+        "capacheck": 3.2,
+        "doe": 1.8,
+        "storage": 1.8,
+        "rpt": 1.1,
+        "discharge": 0.5
+      },
+      "versions": {
+        "0x00010004": 1927,
+        "0x00010005": 609,
+        "0x00010002": 195
+      },
+      "step_sizes": {
+        "696": 1927,
+        "720": 609,
+        "612": 195
+      },
+      "payload_offsets": {
+        "1844": 1927,
+        "1868": 609,
+        "1632": 195
+      },
+      "top_layouts": [
+        [
+          "0x00010004/696B/15st",
+          435
+        ],
+        [
+          "0x00010004/696B/9st",
+          425
+        ],
+        [
+          "0x00010004/696B/12st",
+          227
+        ],
+        [
+          "0x00010005/720B/15st",
+          181
+        ],
+        [
+          "0x00010005/720B/21st",
+          156
+        ],
+        [
+          "0x00010004/696B/7st",
+          84
+        ],
+        [
+          "0x00010004/696B/4st",
+          73
+        ],
+        [
+          "0x00010004/696B/21st",
+          64
+        ]
+      ],
+      "top_step_counts": [
+        [
+          15,
+          649
+        ],
+        [
+          9,
+          470
+        ],
+        [
+          21,
+          232
+        ],
+        [
+          12,
+          230
+        ],
+        [
+          7,
+          86
+        ],
+        [
+          13,
+          84
+        ],
+        [
+          4,
+          75
+        ],
+        [
+          39,
+          75
+        ]
+      ],
+      "loop_goto": {
+        "neither": 10367,
+        "only_48": 472,
+        "only_564": 1667,
+        "both": 281
+      },
+      "loop_both_pct": 2.2,
+      "current_mA": {
+        "median": 98.0,
+        "p90": 490.0,
+        "max": 11190.0,
+        "top_modes": [
+          [
+            98.0,
+            2095
+          ],
+          [
+            327.0,
+            1554
+          ],
+          [
+            490.0,
+            538
+          ],
+          [
+            980.0,
+            437
+          ],
+          [
+            33.0,
+            415
+          ],
+          [
+            44.0,
+            353
+          ],
+          [
+            56.0,
+            348
+          ],
+          [
+            53.0,
+            316
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          707
+        ],
+        [
+          0.506,
+          131
+        ],
+        [
+          0.302,
+          79
+        ],
+        [
+          0.492,
+          78
+        ],
+        [
+          0.48,
+          75
+        ],
+        [
+          0.3,
+          70
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 60037,
+        "1": 4188
+      },
+      "safety_header_top": [
+        {
+          "maxV_mV": 3500,
+          "minV_mV": 1500,
+          "maxI_mA": 500,
+          "minI_mA": 500,
+          "count": 72
+        },
+        {
+          "maxV_mV": 4250,
+          "minV_mV": 1500,
+          "maxI_mA": 500,
+          "minI_mA": 500,
+          "count": 41
+        },
+        {
+          "maxV_mV": 4250,
+          "minV_mV": 1500,
+          "maxI_mA": 5000,
+          "minI_mA": 2000,
+          "count": 13
+        },
+        {
+          "maxV_mV": 3250,
+          "minV_mV": 1500,
+          "maxI_mA": 600,
+          "minI_mA": 700,
+          "count": 13
+        },
+        {
+          "maxV_mV": 3500,
+          "minV_mV": 1500,
+          "maxI_mA": 500,
+          "minI_mA": 700,
+          "count": 5
+        }
+      ],
+      "distinct_protocols": 17
+    },
+    "PNE16": {
+      "unit": "PNE16",
+      "zip": "PNE16.zip",
+      "ctspro_build": "CYCC-1004-S01-R004-N01",
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010004",
+          "payload_offset": 1844,
+          "step_size": 696,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010005",
+          "payload_offset": 1868,
+          "step_size": 720,
+          "dominant": false
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        },
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
+      "sch_count": 2453,
+      "parse_errors": 3,
+      "unknown_pct": 40.6,
+      "categories_top": {
+        "unknown": 995,
+        "cycle_life": 396,
+        "rate_test": 312,
+        "formation": 289,
+        "hppc": 174,
+        "capacheck": 71,
+        "rpt": 54,
+        "storage": 42,
+        "charge": 30,
+        "qc": 27,
+        "doe": 24,
+        "discharge": 19,
+        "qpeed": 6,
+        "safety": 4,
+        "ocv": 3
+      },
+      "category_share": {
+        "cycle_life": 16.1,
+        "rate_test": 12.7,
+        "formation": 11.8,
+        "hppc": 7.1,
+        "capacheck": 2.9,
+        "rpt": 2.2,
+        "storage": 1.7,
+        "charge": 1.2,
+        "qc": 1.1
+      },
+      "versions": {
+        "0x00010004": 2048,
+        "0x00010005": 221,
+        "0x00010002": 179,
+        "0x00010003": 2
+      },
+      "step_sizes": {
+        "696": 2048,
+        "720": 221,
+        "612": 181
+      },
+      "payload_offsets": {
+        "1844": 2048,
+        "1868": 221,
+        "1632": 179,
+        "1760": 2
+      },
+      "top_layouts": [
+        [
+          "0x00010004/696B/12st",
+          348
+        ],
+        [
+          "0x00010004/696B/9st",
+          326
+        ],
+        [
+          "0x00010004/696B/6st",
+          262
+        ],
+        [
+          "0x00010004/696B/15st",
+          130
+        ],
+        [
+          "0x00010005/720B/15st",
+          125
+        ],
+        [
+          "0x00010004/696B/18st",
+          97
+        ],
+        [
+          "0x00010002/612B/15st",
+          78
+        ],
+        [
+          "0x00010004/696B/13st",
+          67
+        ]
+      ],
+      "top_step_counts": [
+        [
+          12,
+          348
+        ],
+        [
+          9,
+          344
+        ],
+        [
+          15,
+          334
+        ],
+        [
+          6,
+          267
+        ],
+        [
+          18,
+          98
+        ],
+        [
+          13,
+          69
+        ],
+        [
+          21,
+          68
+        ],
+        [
+          14,
+          60
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 1165,
+        "neither": 7646,
+        "only_48": 438,
+        "both": 163
+      },
+      "loop_both_pct": 1.7,
+      "current_mA": {
+        "median": 89.0,
+        "p90": 1000.0,
+        "max": 9440.0,
+        "top_modes": [
+          [
+            65.0,
+            1232
+          ],
+          [
+            89.0,
+            832
+          ],
+          [
+            74.0,
+            473
+          ],
+          [
+            200.0,
+            321
+          ],
+          [
+            24.0,
+            309
+          ],
+          [
+            22.0,
+            263
+          ],
+          [
+            98.0,
+            256
+          ],
+          [
+            178.0,
+            249
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          1312
+        ],
+        [
+          0.506,
+          385
+        ],
+        [
+          0.508,
+          244
+        ],
+        [
+          0.25,
+          196
+        ],
+        [
+          0.15,
+          168
+        ],
+        [
+          0.495,
+          93
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 51598,
+        "1": 2787
+      },
+      "safety_header_top": [
+        {
+          "maxV_mV": 3500,
+          "minV_mV": 1500,
+          "maxI_mA": 500,
+          "minI_mA": 500,
+          "count": 49
+        },
+        {
+          "maxV_mV": 4250,
+          "minV_mV": 1500,
+          "maxI_mA": 500,
+          "minI_mA": 500,
+          "count": 49
+        },
+        {
+          "maxV_mV": 4250,
+          "minV_mV": 1500,
+          "maxI_mA": 5000,
+          "minI_mA": 2000,
+          "count": 19
+        },
+        {
+          "maxV_mV": 4250,
+          "minV_mV": 1500,
+          "maxI_mA": 500,
+          "minI_mA": 450,
+          "count": 11
+        },
+        {
+          "maxV_mV": 3250,
+          "minV_mV": 1500,
+          "maxI_mA": 500,
+          "minI_mA": 500,
+          "count": 8
+        }
+      ],
+      "distinct_protocols": 18
+    },
+    "PNE18": {
+      "unit": "PNE18",
+      "zip": "PNE18.zip",
+      "ctspro_build": "CYCC-1006-S01-R006-N04",
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010003",
+          "payload_offset": 1760,
+          "step_size": 612,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
+      "sch_count": 57,
+      "parse_errors": 0,
+      "unknown_pct": 82.5,
+      "categories_top": {
+        "unknown": 47,
+        "hppc": 4,
+        "storage": 3,
+        "ocv": 2,
+        "cycle_life": 1
+      },
+      "category_share": {
+        "hppc": 7.0,
+        "storage": 5.3,
+        "ocv": 3.5,
+        "cycle_life": 1.8
+      },
+      "versions": {
+        "0x00010003": 53,
+        "0x00010002": 4
+      },
+      "step_sizes": {
+        "612": 57
+      },
+      "payload_offsets": {
+        "1760": 53,
+        "1632": 4
+      },
+      "top_layouts": [
+        [
+          "0x00010003/612B/68st",
+          25
+        ],
+        [
+          "0x00010003/612B/35st",
+          11
+        ],
+        [
+          "0x00010003/612B/15st",
+          8
+        ],
+        [
+          "0x00010003/612B/10st",
+          4
+        ],
+        [
+          "0x00010003/612B/3st",
+          2
+        ],
+        [
+          "0x00010003/612B/9st",
+          2
+        ],
+        [
+          "0x00010003/612B/6st",
+          1
+        ],
+        [
+          "0x00010002/612B/47st",
+          1
+        ]
+      ],
+      "top_step_counts": [
+        [
+          68,
+          26
+        ],
+        [
+          35,
+          11
+        ],
+        [
+          15,
+          9
+        ],
+        [
+          10,
+          4
+        ],
+        [
+          9,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          47,
+          1
+        ]
+      ],
+      "loop_goto": {
+        "only_564": 479,
+        "both": 15
+      },
+      "loop_both_pct": 3.0,
+      "current_mA": {
+        "median": 7.0,
+        "p90": 66.0,
+        "max": 78.0,
+        "top_modes": [
+          [
+            7.0,
+            147
+          ],
+          [
+            6.0,
+            100
+          ],
+          [
+            6.5,
+            88
+          ],
+          [
+            7.388,
+            66
+          ],
+          [
+            7.8,
+            48
+          ],
+          [
+            66.0,
+            32
+          ],
+          [
+            70.0,
+            23
+          ],
+          [
+            73.88,
+            20
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          136
+        ],
+        [
+          0.429,
+          50
+        ],
+        [
+          0.571,
+          13
+        ],
+        [
+          0.2,
+          12
+        ],
+        [
+          0.05,
+          11
+        ],
+        [
+          0.152,
+          9
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 1341,
+        "1": 1073
+      },
+      "safety_header_top": [],
+      "distinct_protocols": 4
+    },
+    "PNE19": {
+      "unit": "PNE19",
+      "zip": "PNE19.zip",
+      "ctspro_build": "CYCN-P1107-S01-8001-N03",
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010004",
+          "payload_offset": 1844,
+          "step_size": 696,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
+      "sch_count": 276,
+      "parse_errors": 1,
+      "unknown_pct": 75.7,
+      "categories_top": {
+        "unknown": 209,
+        "formation": 22,
+        "cycle_life": 18,
+        "rpt": 12,
+        "rate_test": 7,
+        "ocv": 5,
+        "rate_capability": 3
+      },
+      "category_share": {
+        "formation": 8.0,
+        "cycle_life": 6.5,
+        "rpt": 4.3,
+        "rate_test": 2.5,
+        "ocv": 1.8,
+        "rate_capability": 1.1
+      },
+      "versions": {
+        "0x00010004": 267,
+        "0x00010002": 8
+      },
+      "step_sizes": {
+        "696": 267,
+        "612": 8
+      },
+      "payload_offsets": {
+        "1844": 267,
+        "1632": 8
+      },
+      "top_layouts": [
+        [
+          "0x00010004/696B/15st",
+          67
+        ],
+        [
+          "0x00010004/696B/33st",
+          60
+        ],
+        [
+          "0x00010004/696B/6st",
+          45
+        ],
+        [
+          "0x00010004/696B/9st",
+          29
+        ],
+        [
+          "0x00010004/696B/13st",
+          13
+        ],
+        [
+          "0x00010004/696B/145st",
+          10
+        ],
+        [
+          "0x00010004/696B/3st",
+          9
+        ],
+        [
+          "0x00010004/696B/53st",
+          8
+        ]
+      ],
+      "top_step_counts": [
+        [
+          15,
+          69
+        ],
+        [
+          33,
+          60
+        ],
+        [
+          6,
+          45
+        ],
+        [
+          9,
+          29
+        ],
+        [
+          13,
+          13
+        ],
+        [
+          53,
+          10
+        ],
+        [
+          145,
+          10
+        ],
+        [
+          3,
+          9
+        ]
+      ],
+      "loop_goto": {
+        "neither": 1106,
+        "only_48": 8,
+        "only_564": 73,
+        "both": 2
+      },
+      "loop_both_pct": 0.2,
+      "current_mA": {
+        "median": 30.0,
+        "p90": 187.5,
+        "max": 1045.0,
+        "top_modes": [
+          [
+            30.0,
+            100
+          ],
+          [
+            13.0,
+            98
+          ],
+          [
+            26.0,
+            98
+          ],
+          [
+            7.563,
+            90
+          ],
+          [
+            12.0,
+            80
+          ],
+          [
+            25.0,
+            69
+          ],
+          [
+            66.0,
+            57
+          ],
+          [
+            25.037,
+            50
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          292
+        ],
+        [
+          0.152,
+          102
+        ],
+        [
+          0.151,
+          87
+        ],
+        [
+          0.2,
+          68
+        ],
+        [
+          0.538,
+          65
+        ],
+        [
+          0.197,
+          41
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 6829,
+        "1": 172
+      },
+      "safety_header_top": [],
+      "distinct_protocols": 6
+    },
+    "PNE20": {
+      "unit": "PNE20",
+      "zip": "PNE20.zip",
+      "ctspro_build": "CYCSA-P1107-S01-R001-N013",
+      "sch_layouts_observed": [
+        {
+          "file_version": "0x00010004",
+          "payload_offset": 1844,
+          "step_size": 696,
+          "dominant": true
+        },
+        {
+          "file_version": "0x00010002",
+          "payload_offset": 1632,
+          "step_size": 612,
+          "dominant": false
+        }
+      ],
+      "sch_count": 354,
+      "parse_errors": 1,
+      "unknown_pct": 76.6,
+      "categories_top": {
+        "unknown": 271,
+        "rate_test": 36,
+        "cycle_life": 23,
+        "hppc": 12,
+        "formation": 4,
+        "rest": 3,
+        "ocv": 3,
+        "rpt": 2
+      },
+      "category_share": {
+        "rate_test": 10.2,
+        "cycle_life": 6.5,
+        "hppc": 3.4,
+        "formation": 1.1,
+        "rest": 0.8,
+        "ocv": 0.8,
+        "rpt": 0.6
+      },
+      "versions": {
+        "0x00010004": 343,
+        "0x00010002": 10
+      },
+      "step_sizes": {
+        "696": 343,
+        "612": 10
+      },
+      "payload_offsets": {
+        "1844": 343,
+        "1632": 10
+      },
+      "top_layouts": [
+        [
+          "0x00010004/696B/15st",
+          265
+        ],
+        [
+          "0x00010004/696B/27st",
+          19
+        ],
+        [
+          "0x00010004/696B/9st",
+          12
+        ],
+        [
+          "0x00010004/696B/7st",
+          11
+        ],
+        [
+          "0x00010004/696B/79st",
+          9
+        ],
+        [
+          "0x00010004/696B/3st",
+          7
+        ],
+        [
+          "0x00010004/696B/12st",
+          7
+        ],
+        [
+          "0x00010002/612B/79st",
+          6
+        ]
+      ],
+      "top_step_counts": [
+        [
+          15,
+          268
+        ],
+        [
+          27,
+          19
+        ],
+        [
+          79,
+          15
+        ],
+        [
+          9,
+          12
+        ],
+        [
+          7,
+          11
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          12,
+          7
+        ],
+        [
+          23,
+          5
+        ]
+      ],
+      "loop_goto": {
+        "neither": 1132,
+        "only_48": 35,
+        "only_564": 105,
+        "both": 12
+      },
+      "loop_both_pct": 0.9,
+      "current_mA": {
+        "median": 29.0,
+        "p90": 145.0,
+        "max": 605.0,
+        "top_modes": [
+          [
+            15.0,
+            175
+          ],
+          [
+            13.0,
+            116
+          ],
+          [
+            43.0,
+            95
+          ],
+          [
+            16.0,
+            94
+          ],
+          [
+            53.0,
+            80
+          ],
+          [
+            48.0,
+            78
+          ],
+          [
+            16.5,
+            70
+          ],
+          [
+            12.0,
+            59
+          ]
+        ]
+      },
+      "cv_cutoff_ratio_modes": [
+        [
+          0.5,
+          186
+        ],
+        [
+          0.302,
+          136
+        ],
+        [
+          0.467,
+          91
+        ],
+        [
+          0.462,
+          65
+        ],
+        [
+          0.503,
+          47
+        ],
+        [
+          0.303,
+          35
+        ]
+      ],
+      "cap_mode_496": {
+        "0": 6156,
+        "1": 133
+      },
+      "safety_header_top": [],
+      "distinct_protocols": 7
+    },
     "PNE22": {
       "unit": "PNE22",
       "zip": "PNE22.zip",
@@ -2924,34 +4029,34 @@
       ],
       "sch_count": 1660,
       "parse_errors": 0,
-      "unknown_pct": 55.8,
+      "unknown_pct": 55.2,
       "categories_top": {
-        "unknown": 926,
-        "rate_test": 215,
-        "formation": 127,
-        "rpt": 104,
-        "cycle_life": 93,
+        "unknown": 917,
+        "rate_test": 210,
+        "formation": 108,
+        "rpt": 102,
+        "cycle_life": 90,
         "hppc": 76,
-        "storage": 26,
+        "storage": 42,
+        "doe": 25,
         "capacheck": 23,
         "qpeed": 20,
-        "ocv": 16,
+        "ocv": 14,
         "discharge": 10,
         "gitt": 8,
-        "eis": 7,
         "soc_setting": 7,
-        "rest": 2
+        "eis": 6
       },
       "category_share": {
-        "rate_test": 13.0,
-        "formation": 7.7,
-        "rpt": 6.3,
-        "cycle_life": 5.6,
+        "rate_test": 12.7,
+        "formation": 6.5,
+        "rpt": 6.1,
+        "cycle_life": 5.4,
         "hppc": 4.6,
-        "storage": 1.6,
+        "storage": 2.5,
+        "doe": 1.5,
         "capacheck": 1.4,
-        "qpeed": 1.2,
-        "ocv": 1.0
+        "qpeed": 1.2
       },
       "versions": {
         "0x00010003": 1588,
@@ -3122,7 +4227,7 @@
           "count": 1
         }
       ],
-      "distinct_protocols": 14
+      "distinct_protocols": 15
     }
   },
   "shared_across_units": {
@@ -3139,113 +4244,155 @@
       "unit": "PNE01",
       "category": "capacheck",
       "unit_share_pct": 55.6,
-      "corpus_share_pct": 1.0,
-      "delta_pp": 54.5
+      "corpus_share_pct": 1.4,
+      "delta_pp": 54.2
     },
     {
       "unit": "PNE01",
       "category": "doe",
-      "unit_share_pct": 22.2,
-      "corpus_share_pct": 0.0,
-      "delta_pp": 22.2
+      "unit_share_pct": 36.1,
+      "corpus_share_pct": 1.0,
+      "delta_pp": 35.1
     },
     {
       "unit": "PNE12",
       "category": "rpt",
-      "unit_share_pct": 22.5,
-      "corpus_share_pct": 2.6,
-      "delta_pp": 20.0
+      "unit_share_pct": 22.1,
+      "corpus_share_pct": 2.3,
+      "delta_pp": 19.8
     },
     {
       "unit": "PNE12",
       "category": "cycle_life",
       "unit_share_pct": 23.4,
-      "corpus_share_pct": 6.6,
-      "delta_pp": 16.8
+      "corpus_share_pct": 7.9,
+      "delta_pp": 15.5
     },
     {
       "unit": "PNE11",
       "category": "hppc",
       "unit_share_pct": 21.2,
-      "corpus_share_pct": 6.8,
+      "corpus_share_pct": 6.7,
       "delta_pp": 14.4
-    },
-    {
-      "unit": "PNE01",
-      "category": "rpt",
-      "unit_share_pct": 13.9,
-      "corpus_share_pct": 2.6,
-      "delta_pp": 11.3
     },
     {
       "unit": "PNE09",
       "category": "rate_test",
-      "unit_share_pct": 19.4,
-      "corpus_share_pct": 9.1,
-      "delta_pp": 10.3
+      "unit_share_pct": 21.6,
+      "corpus_share_pct": 9.5,
+      "delta_pp": 12.1
     },
     {
       "unit": "PNE11",
       "category": "qpeed",
       "unit_share_pct": 11.4,
-      "corpus_share_pct": 2.8,
-      "delta_pp": 8.7
+      "corpus_share_pct": 2.2,
+      "delta_pp": 9.2
     },
     {
-      "unit": "PNE03",
+      "unit": "PNE15",
+      "category": "formation",
+      "unit_share_pct": 15.4,
+      "corpus_share_pct": 7.1,
+      "delta_pp": 8.4
+    },
+    {
+      "unit": "PNE16",
       "category": "cycle_life",
-      "unit_share_pct": 14.2,
-      "corpus_share_pct": 6.6,
-      "delta_pp": 7.6
+      "unit_share_pct": 16.1,
+      "corpus_share_pct": 7.9,
+      "delta_pp": 8.2
     },
     {
       "unit": "PNE11",
       "category": "rate_test",
       "unit_share_pct": 1.7,
-      "corpus_share_pct": 9.1,
-      "delta_pp": -7.4
-    },
-    {
-      "unit": "PNE03",
-      "category": "formation",
-      "unit_share_pct": 13.0,
-      "corpus_share_pct": 5.8,
-      "delta_pp": 7.2
+      "corpus_share_pct": 9.5,
+      "delta_pp": -7.8
     },
     {
       "unit": "PNE06",
       "category": "rate_test",
-      "unit_share_pct": 2.1,
-      "corpus_share_pct": 9.1,
+      "unit_share_pct": 1.8,
+      "corpus_share_pct": 9.5,
+      "delta_pp": -7.7
+    },
+    {
+      "unit": "PNE19",
+      "category": "rate_test",
+      "unit_share_pct": 2.5,
+      "corpus_share_pct": 9.5,
       "delta_pp": -7.0
     },
     {
       "unit": "PNE06",
-      "category": "hppc",
-      "unit_share_pct": 0.4,
-      "corpus_share_pct": 6.8,
-      "delta_pp": -6.4
+      "category": "formation",
+      "unit_share_pct": 0.2,
+      "corpus_share_pct": 7.1,
+      "delta_pp": -6.9
     },
     {
       "unit": "PNE07",
       "category": "rate_test",
       "unit_share_pct": 2.7,
-      "corpus_share_pct": 9.1,
+      "corpus_share_pct": 9.5,
+      "delta_pp": -6.8
+    },
+    {
+      "unit": "PNE06",
+      "category": "hppc",
+      "unit_share_pct": 0.4,
+      "corpus_share_pct": 6.7,
       "delta_pp": -6.4
     },
     {
-      "unit": "PNE14",
-      "category": "rate_test",
-      "unit_share_pct": 15.5,
-      "corpus_share_pct": 9.1,
-      "delta_pp": 6.4
+      "unit": "PNE07",
+      "category": "cycle_life",
+      "unit_share_pct": 1.6,
+      "corpus_share_pct": 7.9,
+      "delta_pp": -6.3
     },
     {
       "unit": "PNE12",
       "category": "ocv",
       "unit_share_pct": 6.8,
       "corpus_share_pct": 0.5,
-      "delta_pp": 6.2
+      "delta_pp": 6.3
+    },
+    {
+      "unit": "PNE18",
+      "category": "cycle_life",
+      "unit_share_pct": 1.8,
+      "corpus_share_pct": 7.9,
+      "delta_pp": -6.2
+    },
+    {
+      "unit": "PNE05",
+      "category": "rate_test",
+      "unit_share_pct": 3.5,
+      "corpus_share_pct": 9.5,
+      "delta_pp": -6.0
+    },
+    {
+      "unit": "PNE07",
+      "category": "formation",
+      "unit_share_pct": 1.1,
+      "corpus_share_pct": 7.1,
+      "delta_pp": -6.0
+    },
+    {
+      "unit": "PNE15",
+      "category": "cycle_life",
+      "unit_share_pct": 13.8,
+      "corpus_share_pct": 7.9,
+      "delta_pp": 5.9
+    },
+    {
+      "unit": "PNE20",
+      "category": "formation",
+      "unit_share_pct": 1.1,
+      "corpus_share_pct": 7.1,
+      "delta_pp": -5.9
     },
     {
       "unit": "PNE13",
@@ -3257,100 +4404,57 @@
     {
       "unit": "PNE02",
       "category": "rate_test",
-      "unit_share_pct": 14.8,
-      "corpus_share_pct": 9.1,
+      "unit_share_pct": 15.2,
+      "corpus_share_pct": 9.5,
       "delta_pp": 5.7
     },
     {
-      "unit": "PNE06",
-      "category": "formation",
-      "unit_share_pct": 0.1,
-      "corpus_share_pct": 5.8,
-      "delta_pp": -5.7
-    },
-    {
-      "unit": "PNE05",
+      "unit": "PNE10",
       "category": "rate_test",
-      "unit_share_pct": 3.5,
-      "corpus_share_pct": 9.1,
-      "delta_pp": -5.6
+      "unit_share_pct": 14.8,
+      "corpus_share_pct": 9.5,
+      "delta_pp": 5.3
     },
     {
-      "unit": "PNE07",
+      "unit": "PNE14",
+      "category": "rate_test",
+      "unit_share_pct": 14.8,
+      "corpus_share_pct": 9.5,
+      "delta_pp": 5.3
+    },
+    {
+      "unit": "PNE03",
       "category": "cycle_life",
-      "unit_share_pct": 1.6,
-      "corpus_share_pct": 6.6,
-      "delta_pp": -5.1
-    },
-    {
-      "unit": "PNE08",
-      "category": "formation",
-      "unit_share_pct": 10.7,
-      "corpus_share_pct": 5.8,
-      "delta_pp": 4.9
-    },
-    {
-      "unit": "PNE10",
-      "category": "rate_test",
-      "unit_share_pct": 14.0,
-      "corpus_share_pct": 9.1,
-      "delta_pp": 4.9
-    },
-    {
-      "unit": "PNE07",
-      "category": "formation",
-      "unit_share_pct": 1.1,
-      "corpus_share_pct": 5.8,
-      "delta_pp": -4.7
-    },
-    {
-      "unit": "PNE08",
-      "category": "rpt",
-      "unit_share_pct": 7.1,
-      "corpus_share_pct": 2.6,
-      "delta_pp": 4.6
-    },
-    {
-      "unit": "PNE13",
-      "category": "rate_test",
-      "unit_share_pct": 4.6,
-      "corpus_share_pct": 9.1,
-      "delta_pp": -4.5
-    },
-    {
-      "unit": "PNE02",
-      "category": "hppc",
-      "unit_share_pct": 2.4,
-      "corpus_share_pct": 6.8,
-      "delta_pp": -4.4
-    },
-    {
-      "unit": "PNE10",
-      "category": "qpeed",
-      "unit_share_pct": 7.0,
-      "corpus_share_pct": 2.8,
-      "delta_pp": 4.3
-    },
-    {
-      "unit": "PNE04",
-      "category": "rate_test",
-      "unit_share_pct": 5.2,
-      "corpus_share_pct": 9.1,
-      "delta_pp": -4.0
+      "unit_share_pct": 13.0,
+      "corpus_share_pct": 7.9,
+      "delta_pp": 5.1
     },
     {
       "unit": "PNE04",
       "category": "formation",
       "unit_share_pct": 2.0,
-      "corpus_share_pct": 5.8,
-      "delta_pp": -3.8
+      "corpus_share_pct": 7.1,
+      "delta_pp": -5.1
+    },
+    {
+      "unit": "PNE13",
+      "category": "rate_test",
+      "unit_share_pct": 4.6,
+      "corpus_share_pct": 9.5,
+      "delta_pp": -4.9
+    },
+    {
+      "unit": "PNE08",
+      "category": "rpt",
+      "unit_share_pct": 7.1,
+      "corpus_share_pct": 2.3,
+      "delta_pp": 4.8
     }
   ],
   "unit_unique_traits": {
     "PNE01": [
       "696B step records: none",
-      "safety header populated: maxI=200 mA (11 files)",
-      "high typical current (median 28.182 mA vs corpus 8.1)"
+      "safety header populated: maxI=200 mA (11 files)"
     ],
     "PNE02": [
       "696B step records: 2 files",
@@ -3361,12 +4465,12 @@
       "696B step records: 8 files",
       "0x10004 (696 formation): 8 files",
       "safety header populated: maxI=6000 mA (1 files)",
-      "high typical current (median 64.0 mA vs corpus 8.1)"
+      "high typical current (median 64.0 mA vs corpus 12.7)"
     ],
     "PNE04": [
       "696B step records: none",
       "safety header @0x3D8: mostly empty",
-      "low typical current (median 2.0 mA vs corpus 8.1)"
+      "low typical current (median 2.0 mA vs corpus 12.7)"
     ],
     "PNE05": [
       "696B step records: none",
@@ -3401,18 +4505,44 @@
     "PNE12": [
       "696B step records: none",
       "safety header @0x3D8: mostly empty",
-      "high typical current (median 3092.0 mA vs corpus 8.1)"
+      "high typical current (median 3092.0 mA vs corpus 12.7)"
     ],
     "PNE13": [
       "696B step records: none",
       "safety header @0x3D8: mostly empty",
-      "high typical current (median 327.0 mA vs corpus 8.1)"
+      "high typical current (median 327.0 mA vs corpus 12.7)"
     ],
     "PNE14": [
       "696B step records: 2 files",
       "0x10004 (696 formation): 2 files",
       "safety header @0x3D8: mostly empty",
-      "high typical current (median 1486.5 mA vs corpus 8.1)"
+      "high typical current (median 1486.5 mA vs corpus 12.7)"
+    ],
+    "PNE15": [
+      "696B step records: 1927 files",
+      "0x10004 (696 formation): 1927 files",
+      "safety header populated: maxI=500 mA (72 files)",
+      "high typical current (median 98.0 mA vs corpus 12.7)"
+    ],
+    "PNE16": [
+      "696B step records: 2048 files",
+      "0x10004 (696 formation): 2048 files",
+      "safety header populated: maxI=500 mA (49 files)",
+      "high typical current (median 89.0 mA vs corpus 12.7)"
+    ],
+    "PNE18": [
+      "696B step records: none",
+      "safety header @0x3D8: mostly empty"
+    ],
+    "PNE19": [
+      "696B step records: 267 files",
+      "0x10004 (696 formation): 267 files",
+      "safety header @0x3D8: mostly empty"
+    ],
+    "PNE20": [
+      "696B step records: 343 files",
+      "0x10004 (696 formation): 343 files",
+      "safety header @0x3D8: mostly empty"
     ],
     "PNE22": [
       "696B step records: none",
@@ -3424,7 +4554,7 @@
       "unit": "PNE01",
       "files": 36,
       "unknown_pct": 8.3,
-      "protocols": 3,
+      "protocols": 2,
       "median_mA": 28.182,
       "max_mA": 128.85,
       "step_696": 0,
@@ -3434,7 +4564,7 @@
     {
       "unit": "PNE02",
       "files": 3449,
-      "unknown_pct": 56.7,
+      "unknown_pct": 55.6,
       "protocols": 20,
       "median_mA": 6.632,
       "max_mA": 37763.375,
@@ -3445,8 +4575,8 @@
     {
       "unit": "PNE03",
       "files": 1541,
-      "unknown_pct": 44.2,
-      "protocols": 16,
+      "unknown_pct": 43.5,
+      "protocols": 17,
       "median_mA": 64.0,
       "max_mA": 6000.0,
       "step_696": 8,
@@ -3456,8 +4586,8 @@
     {
       "unit": "PNE04",
       "files": 3273,
-      "unknown_pct": 80.3,
-      "protocols": 12,
+      "unknown_pct": 79.8,
+      "protocols": 13,
       "median_mA": 2.0,
       "max_mA": 8153.0,
       "step_696": 0,
@@ -3467,8 +4597,8 @@
     {
       "unit": "PNE05",
       "files": 1874,
-      "unknown_pct": 63.9,
-      "protocols": 12,
+      "unknown_pct": 62.7,
+      "protocols": 13,
       "median_mA": 5.723,
       "max_mA": 499.0,
       "step_696": 0,
@@ -3478,8 +4608,8 @@
     {
       "unit": "PNE06",
       "files": 1074,
-      "unknown_pct": 86.0,
-      "protocols": 6,
+      "unknown_pct": 83.2,
+      "protocols": 7,
       "median_mA": 7.45,
       "max_mA": 374.88,
       "step_696": 0,
@@ -3489,8 +4619,8 @@
     {
       "unit": "PNE07",
       "files": 1459,
-      "unknown_pct": 86.1,
-      "protocols": 7,
+      "unknown_pct": 85.3,
+      "protocols": 8,
       "median_mA": 8.05,
       "max_mA": 499.0,
       "step_696": 0,
@@ -3500,8 +4630,8 @@
     {
       "unit": "PNE08",
       "files": 2221,
-      "unknown_pct": 58.9,
-      "protocols": 15,
+      "unknown_pct": 58.3,
+      "protocols": 16,
       "median_mA": 9.12,
       "max_mA": 174076.0,
       "step_696": 0,
@@ -3511,8 +4641,8 @@
     {
       "unit": "PNE09",
       "files": 2121,
-      "unknown_pct": 49.4,
-      "protocols": 17,
+      "unknown_pct": 46.1,
+      "protocols": 18,
       "median_mA": 16.3,
       "max_mA": 174227.0,
       "step_696": 1,
@@ -3522,7 +4652,7 @@
     {
       "unit": "PNE10",
       "files": 1832,
-      "unknown_pct": 54.7,
+      "unknown_pct": 54.5,
       "protocols": 16,
       "median_mA": 8.0,
       "max_mA": 496.0,
@@ -3533,8 +4663,8 @@
     {
       "unit": "PNE11",
       "files": 1828,
-      "unknown_pct": 49.1,
-      "protocols": 13,
+      "unknown_pct": 49.0,
+      "protocols": 14,
       "median_mA": 7.814,
       "max_mA": 393.216,
       "step_696": 2,
@@ -3555,7 +4685,7 @@
     {
       "unit": "PNE13",
       "files": 414,
-      "unknown_pct": 60.1,
+      "unknown_pct": 58.2,
       "protocols": 12,
       "median_mA": 327.0,
       "max_mA": 12500.0,
@@ -3575,10 +4705,65 @@
       "top_layout": "0x00010003/612B/9st"
     },
     {
+      "unit": "PNE15",
+      "files": 2732,
+      "unknown_pct": 45.3,
+      "protocols": 17,
+      "median_mA": 98.0,
+      "max_mA": 11190.0,
+      "step_696": 1927,
+      "loop_both_pct": 2.2,
+      "top_layout": "0x00010004/696B/15st"
+    },
+    {
+      "unit": "PNE16",
+      "files": 2453,
+      "unknown_pct": 40.6,
+      "protocols": 18,
+      "median_mA": 89.0,
+      "max_mA": 9440.0,
+      "step_696": 2048,
+      "loop_both_pct": 1.7,
+      "top_layout": "0x00010004/696B/12st"
+    },
+    {
+      "unit": "PNE18",
+      "files": 57,
+      "unknown_pct": 82.5,
+      "protocols": 4,
+      "median_mA": 7.0,
+      "max_mA": 78.0,
+      "step_696": 0,
+      "loop_both_pct": 3.0,
+      "top_layout": "0x00010003/612B/68st"
+    },
+    {
+      "unit": "PNE19",
+      "files": 276,
+      "unknown_pct": 75.7,
+      "protocols": 6,
+      "median_mA": 30.0,
+      "max_mA": 1045.0,
+      "step_696": 267,
+      "loop_both_pct": 0.2,
+      "top_layout": "0x00010004/696B/15st"
+    },
+    {
+      "unit": "PNE20",
+      "files": 354,
+      "unknown_pct": 76.6,
+      "protocols": 7,
+      "median_mA": 29.0,
+      "max_mA": 605.0,
+      "step_696": 343,
+      "loop_both_pct": 0.9,
+      "top_layout": "0x00010004/696B/15st"
+    },
+    {
       "unit": "PNE22",
       "files": 1660,
-      "unknown_pct": 55.8,
-      "protocols": 14,
+      "unknown_pct": 55.2,
+      "protocols": 15,
       "median_mA": 6.306,
       "max_mA": 82300.0,
       "step_696": 0,

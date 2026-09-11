@@ -22,7 +22,12 @@ def test_official_ratings_user_guideline() -> None:
     assert get_equipment_rating("PNE12").rating_mA == 20000
     assert get_equipment_rating("PNE13").rating_mA == 20000
     assert get_equipment_rating("PNE14").rating_mA == 20000
+    assert get_equipment_rating("PNE15").rating_mA == 6000
     assert get_equipment_rating("PNE16").rating_mA == 6000
+    assert get_equipment_rating("PNE17").rating_mA == 6000
+    assert get_equipment_rating("PNE18").rating_mA == 6000
+    assert get_equipment_rating("PNE19").rating_mA == 6000
+    assert get_equipment_rating("PNE20").rating_mA == 6000
     assert get_equipment_rating("PNE22").rating_mA == 100
     assert get_equipment_rating("PNE01").rating_mA == 500
     assert get_equipment_rating("PNE33").rating_mA == 10000

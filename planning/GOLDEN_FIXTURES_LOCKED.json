@@ -51,22 +51,47 @@
       "rating_mA": 20000,
       "rating_source": "user_guideline_2026-09-02"
     },
+    "PNE15": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_confirmed_2026-09-11",
+      "software_build_ppt": "CYCC-1004-S01-R004-N01"
+    },
     "PNE16": {
       "rating": "6A",
       "rating_mA": 6000,
       "rating_source": "user_guideline_2026-09-02",
       "software_build_ppt": "CYCC-1004-S01-R004-N01",
+      "software_build_lab": "CYCC-1004-S01-R004-N01",
       "fixtures_confirmed": 2
     },
     "PNE17": {
       "rating": "6A",
       "rating_mA": 6000,
-      "rating_source": "user_guideline_2026-09-02"
+      "rating_source": "user_confirmed_2026-09-11",
+      "software_build_lab": "CYCC-1006-S01-R006-N04"
+    },
+    "PNE18": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_confirmed_2026-09-11",
+      "software_build_ppt": "CYCC-1006-S01-R006-N04",
+      "software_build_lab": "CYCC-1006-S01-R006-N04"
     },
     "PNE19": {
       "rating": "6A",
       "rating_mA": 6000,
-      "rating_source": "user_guideline_2026-09-02"
+      "rating_source": "user_confirmed_2026-09-11",
+      "software_build_ppt": "CYCGN-P1107-S01-R001-N026",
+      "software_build_lab": "CYCN-P1107-S01-8001-N03",
+      "gui_spec_note": "CTSMonPro Spec column 5V/9.0A,3.0A,0.6A(3R); lab recommended max remains 6A"
+    },
+    "PNE20": {
+      "rating": "6A",
+      "rating_mA": 6000,
+      "rating_source": "user_confirmed_2026-09-11",
+      "software_build_lab": "CYCSA-P1107-S01-R001-N013",
+      "gui_spec_note": "CTSMonPro Spec column 5V/6.0A,3.0A,0.6A(3R); matches 6A lab rating"
     },
     "PNE21": {
       "rating": "100mA",

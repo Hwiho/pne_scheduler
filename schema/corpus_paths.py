@@ -45,6 +45,11 @@ def default_corpus_zip_map(units: list[str] | None = None) -> dict[str, Path]:
             "PNE12",
             "PNE13",
             "PNE14",
+            "PNE15",
+            "PNE16",
+            "PNE18",
+            "PNE19",
+            "PNE20",
             "PNE22",
         ]
     return {u: corpus_zip_path(u) for u in units}

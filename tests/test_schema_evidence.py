@@ -48,6 +48,8 @@ def test_partial_field_registry_is_valid_for_each_layout() -> None:
         == FieldConfidence.SEMANTIC_UNVERIFIED
     )
     assert get_step_field(0x00010004, 600) is None
+    assert get_step_field(0x00010005, 16).name == "fVref"
+    assert get_step_field(0x00010005, 700) is None
 
 
 def test_legacy_v3_field_exports_are_derived_from_canonical_registry() -> None:

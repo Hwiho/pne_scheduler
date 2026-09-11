@@ -207,18 +207,92 @@
       "writer_layout_key": null,
       "notes": "Corpus 2026-09-02: 277 sch, 44.4% unknown; rate_test/cycle_life; 2×696B files; max corpus mA 86250 (exceeds 20A tier — cell Q×C-rate)"
     },
-    "PNE16": {
-      "corpus_zip": null,
-      "corpus_zip_allowed_for_analysis": false,
+    "PNE15": {
+      "corpus_zip": "PNE15.zip",
+      "corpus_zip_allowed_for_analysis": true,
       "rating_mA": 6000,
       "rating": "6A",
       "ctspro_build": "CYCC-1004-S01-R004-N01",
-      "ctspro_build_source": "golden_fixture_intake_ppt",
+      "ctspro_build_source": "ctsmonpro_titlebar",
+      "sch_layouts_observed": [
+        { "file_version": "0x00010004", "payload_offset": 1844, "step_size": 696, "dominant": true },
+        { "file_version": "0x00010005", "payload_offset": 1868, "step_size": 720, "dominant": false },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Intake 2026-09-11: 2732 sch; first 0x00010005/720 corpus (609 files, header 1868). Dominant 0x10004/696. User: 6A cycler. CTSMonPro title bar CYCC-1004-S01-R004-N01. Writer not verified on this unit. One leftover parse miss: sbc_schedule_info.sch (0x10004 sidecar, not a step schedule)."
+    },
+    "PNE16": {
+      "corpus_zip": "PNE16.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 6000,
+      "rating": "6A",
+      "ctspro_build": "CYCC-1004-S01-R004-N01",
+      "ctspro_build_source": "ctsmonpro_titlebar",
+      "sch_layouts_observed": [
+        { "file_version": "0x00010004", "payload_offset": 1844, "step_size": 696, "dominant": true },
+        { "file_version": "0x00010005", "payload_offset": 1868, "step_size": 720, "dominant": false },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false },
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": false }
+      ],
       "sch_layouts_confirmed": [
         { "file_version": "0x00010004", "payload_offset": 1844, "step_size": 696, "golden_ids": ["golden-formation-696", "golden-cycle-696"] }
       ],
       "writer_layout_key": "0x00010004/696",
-      "notes": "Golden fixtures only until PNE16.zip is provided"
+      "notes": "Intake 2026-09-11: 2453 sch. Dominant 0x10004/696 (2048). Also 0x10005/720 (221), 0x10002/612 (179), 0x10003/612 (2). CTSMonPro CYCC-1004-S01-R004-N01. Three parse misses: sbc_schedule_info.sch, test.sch, test_loop.sch."
+    },
+    "PNE17": {
+      "corpus_zip": "PNE17.zip",
+      "corpus_zip_allowed_for_analysis": false,
+      "rating_mA": 6000,
+      "rating": "6A",
+      "ctspro_build": "CYCC-1006-S01-R006-N04",
+      "ctspro_build_source": "ctsmonpro_titlebar",
+      "sch_layouts_observed": [],
+      "writer_layout_key": null,
+      "notes": "User 2026-09-11: 6A. CTSMonPro title bar CYCC-1006-S01-R006-N04 (Chamber); Spec 5V/6.0A, 3.0A, 0.6A(3R); two modules x 64 ch. c:\\PNE17.zip is an empty folder stub (PNE17/ only, 0 sch, 174 bytes). Sibling PNE18 shares this CTS build and its zip is 0x10003/612-only — do not assume PNE17 matches until a real zip is dropped."
+    },
+    "PNE18": {
+      "corpus_zip": "PNE18.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 6000,
+      "rating": "6A",
+      "ctspro_build": "CYCC-1006-S01-R006-N04",
+      "ctspro_build_source": "ctsmonpro_titlebar",
+      "sch_layouts_observed": [
+        { "file_version": "0x00010003", "payload_offset": 1760, "step_size": 612, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Intake 2026-09-11: 57 sch, 0 parse misses. User: 6A. CTSMonPro CYCC-1006-S01-R006-N04 (Chamber), same build as PNE17; Spec 5V/6.0A,3.0A,0.6A(3R); two modules x 64 ch (Unit1 192.168.5.13 idle, Unit2 192.168.5.14 40/64 working); SBC CYCC-1006-S01-R002-N03. First CYCC-1006 SCH corpus — 612B only (53×0x10003, 4×0x10002). No 696/720. LOOP goto is Ensol +564. Max corpus current 78 mA (anode-less / ~65 mAh cells). PPT already listed this CTS string."
+    },
+    "PNE19": {
+      "corpus_zip": "PNE19.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 6000,
+      "rating": "6A",
+      "ctspro_build": "CYCN-P1107-S01-8001-N03",
+      "ctspro_build_source": "ctsmonpro_titlebar",
+      "sch_layouts_observed": [
+        { "file_version": "0x00010004", "payload_offset": 1844, "step_size": 696, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Intake 2026-09-11: 276 sch, 1 leftover parse miss (sbc_schedule_info.sch sidecar). User: 6A recommended. CTSMonPro CYCN-P1107-S01-8001-N03 (new P1107 family vs PPT CYCGN-P1107-S01-R001-N026); GUI Spec 5V/9.0A,3.0A,0.6A(3R); TOS 조회 + SBC Protocol/Release/Ping columns; two modules x 64 ch (192.168.5.11 / .12); SBC CYCS-P1107-S01-R002-N002. Dominant 0x10004/696 (267); 8×0x10002/612; no 0x10005/720. Max corpus 1045 mA (Halide 1 Ah form+RC+RPT) — under 6A. Writer not verified."
+    },
+    "PNE20": {
+      "corpus_zip": "PNE20.zip",
+      "corpus_zip_allowed_for_analysis": true,
+      "rating_mA": 6000,
+      "rating": "6A",
+      "ctspro_build": "CYCSA-P1107-S01-R001-N013",
+      "ctspro_build_source": "ctsmonpro_titlebar",
+      "sch_layouts_observed": [
+        { "file_version": "0x00010004", "payload_offset": 1844, "step_size": 696, "dominant": true },
+        { "file_version": "0x00010002", "payload_offset": 1632, "step_size": 612, "dominant": false }
+      ],
+      "writer_layout_key": null,
+      "notes": "Intake 2026-09-11: 354 sch, 1 leftover parse miss (sbc_schedule_info.sch sidecar). User: 6A. CTSMonPro CYCSA-P1107-S01-R001-N013 (first CYCSA-P1107 family; PNE19 is CYCN-P1107); Spec 5V/6.0A,3.0A,0.6A(3R); TOS 조회; two modules x 64 ch (both 192.168.1.6); SBC CYCSA-P1107-S01-R002-N002. Dominant 0x10004/696 (343); 10×0x10002/612; no 0x10005/720. Max corpus 605 mA — under 6A. 265 files share one 15-step 696 template. Writer not verified."
     },
     "PNE22": {
       "corpus_zip": "PNE22.zip",

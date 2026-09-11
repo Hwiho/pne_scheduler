@@ -78,7 +78,10 @@ CATEGORY_TO_MODULE: dict[ScheduleCategory, str] = {
 
 _QPEED_PATTERN = re.compile(r"qpeed", re.IGNORECASE)
 _QPEED_SOC_SETTING_PATTERN = re.compile(r"soc[_\s-]*setting", re.IGNORECASE)
-_HPPC_PATTERN = re.compile(r"hppc|pulse\s+test|pulse\s+heat", re.IGNORECASE)
+_HPPC_PATTERN = re.compile(
+    r"hppc|pulse\s+test|pulse\s+heat|(?<![a-z])pulse(?![a-z])",
+    re.IGNORECASE,
+)
 _RATE_CAPABILITY_PATTERN = re.compile(
     r"rate[\s_-]*cap(?:ability)?|multi[\s_-]*rate|"
     r"(?:c[\s_-]*)?rate[\s_-]*(?:평가|evaluation|performance)|"
@@ -89,6 +92,7 @@ _RATE_TEST_PATTERN = re.compile(
     r"rate[_\s-]?test|ratetest|mAh\s*rate|rate\+cycle|\brate\.sch|"
     r"(?:^|[\s_\[\]#])(?:\d+(?:\.\d+)?c\s*)?rate(?:[_\s.+]|$)|"
     r"ch_rate|soc_rate|_rate(?:_|\.|$)|"
+    r"c[\s_-]*rate|_rate\d|ratev\d|"
     r"[\s_-](?:0?\.\d+|[0-9]{1,2})'?\s*C(?:\.sch|[-_]|$)",
     re.IGNORECASE,
 )
@@ -97,24 +101,34 @@ _STANDALONE_SOC_SETTING_PATTERN = re.compile(
     re.IGNORECASE,
 )
 _CAPA_GENERIC_PATTERN = re.compile(
-    r"capa_rate|capa[\s_-]soc|\bcapa\b|capcheck|capa[_\s-]*check|initial[_\s-]*check|init[_\s-]*check",
+    r"capa_rate|capa[\s_-]soc|\bcapa\b|capcheck|capa[_\s-]*check|"
+    r"capacity[\s_-]*check|initial[_\s-]*check|init[_\s-]*check",
     re.IGNORECASE,
 )
 _GITT_PATTERN = re.compile(r"gitt|pitt", re.IGNORECASE)
 _DCIR_PATTERN = re.compile(r"dcir|dcr", re.IGNORECASE)
 _OCV_PATTERN = re.compile(r"(?<![a-z])ocv(?![a-z])", re.IGNORECASE)
 _EIS_PATTERN = re.compile(r"(?<![a-z])eis(?![a-z])", re.IGNORECASE)
-_STORAGE_PATTERN = re.compile(r"storage|soak|\baging\b|ageing", re.IGNORECASE)
+_STORAGE_PATTERN = re.compile(
+    r"(?:storage|soak|ageing|preaging|(?<![a-z])aging(?![a-z0-9]))(?!.*form)",
+    re.IGNORECASE,
+)
 _SAFETY_PATTERN = re.compile(r"safety", re.IGNORECASE)
-_QC_PATTERN = re.compile(r"\bqc\b|qcharge|fast[\s_-]?charge", re.IGNORECASE)
-_DISCHARGE_PATTERN = re.compile(r"discharge|_dchg\b|\bdchg\b|\bDCH\b", re.IGNORECASE)
+_QC_PATTERN = re.compile(
+    r"\bqc\b|qcharge|fast[\s_-]?charge|fast[\s_-]?ch(?:arge)?(?:\.sch|\b)",
+    re.IGNORECASE,
+)
+_DISCHARGE_PATTERN = re.compile(
+    r"discharge|_dchg\b|\bdchg\b|_dchg\d|\bdch\b|_dch_|CHDCH|DCHCH",
+    re.IGNORECASE,
+)
 _CHARGE_PATTERN = re.compile(
     r"charge|_chg\b|\bchg\b|_Ch\b|\bCH\s+for|\bCH\b(?=\s)",
     re.IGNORECASE,
 )
 _REST_PATTERN = re.compile(r"(?<![a-z])rest(?![a-z])|preheat|preheating", re.IGNORECASE)
 _DOE_PATTERN = re.compile(
-    r"불균일|donut|asympad|tape\s*x|nobottom|\btilt\b|cross\d+%",
+    r"불균일|donut|asympad|tape\s*x|nobottom|\btilt\b|cross\d+%|(?<![a-z])doe(?![a-z])",
     re.IGNORECASE,
 )
 _DRY_WET_PATTERN = re.compile(r"\bdry\b|\bwet\b", re.IGNORECASE)
@@ -128,11 +142,11 @@ _CURRENT_DENSITY_PATTERN = re.compile(r"mA\s*/\s*cm|mAcm2|ma/cm", re.IGNORECASE)
 _FORMATION_PATTERN = re.compile(
     r"(?:"
     r"(?:^|[_\s\[\(])fm(?:$|[_\s.\)\]-])"
-    r"|(?:^|[_\s-])formation(?:$|[_\s.+\-()])"
+    r"|formation|formatio\s*n"
     r"|포메이션"
     r"|c1\s*%"
     r"|\bcip\b"
-    r"|(?:^|[_\s-])form(?!_rpt|_rate|_cycle|\+)(?:\.sch|\.{2}sch|_|$|\s)"
+    r"|(?:^|[_\s-])form(?!_rpt|_rate|_cycle|\+)(?:\.sch|\.{2}sch|_|$|\s|-)"
     r")",
     re.IGNORECASE,
 )
@@ -173,6 +187,11 @@ _RULES: tuple[tuple[str, re.Pattern[str], ScheduleCategory], ...] = (
         "hppc_keyword",
         _HPPC_PATTERN,
         ScheduleCategory.HPPC,
+    ),
+    (
+        "doe_keyword",
+        _DOE_PATTERN,
+        ScheduleCategory.DOE,
     ),
     (
         "soc_setting_keyword",
@@ -276,11 +295,6 @@ _RULES: tuple[tuple[str, re.Pattern[str], ScheduleCategory], ...] = (
         "safety_keyword",
         _SAFETY_PATTERN,
         ScheduleCategory.SAFETY,
-    ),
-    (
-        "doe_keyword",
-        _DOE_PATTERN,
-        ScheduleCategory.DOE,
     ),
     (
         "insitu_cycle_keyword",

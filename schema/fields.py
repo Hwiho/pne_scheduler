@@ -266,6 +266,12 @@ STEP_FIELDS_BY_VERSION: dict[int, tuple[SchFieldDefinition, ...]] = {
         *COMMON_STEP_FIELDS,
         *V3_612_CORPUS_STEP_FIELDS,
     ),
+    # 0x10005/720: PNE15 corpus (609 files). Header +24 and step +24 vs 0x10004;
+    # shared 612-byte prefix only. 108-byte tail unmapped. Not writer-ready.
+    int(SchFileVersion.V0X00010005): (
+        *COMMON_STEP_FIELDS,
+        *V3_612_CORPUS_STEP_FIELDS,
+    ),
 }
 
 _DTYPE_SIZES = {

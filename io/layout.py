@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import struct
 
-from ..schema.enums import ALTERNATE_STEP_SIZE, DEFAULT_STEP_SIZE, SCH_STEP_TYPES
+from ..schema.enums import STEP_SIZE_CANDIDATES, SCH_STEP_TYPES
 from ..schema.layouts import SCH_FILE_MAGIC, SchLayout, get_sch_layout
 
 
@@ -34,7 +34,7 @@ def detect_sch_layout(data: bytes) -> SchLayout | None:
         step_type = struct.unpack_from("<i", data, payload_offset + 8)[0] & 0xFFFF
         if step_no != 1 or step_type not in SCH_STEP_TYPES:
             continue
-        for step_size in (DEFAULT_STEP_SIZE, ALTERNATE_STEP_SIZE):
+        for step_size in STEP_SIZE_CANDIDATES:
             score = _score_layout(data, payload_offset, step_size)
             if best is None or score > best[0]:
                 best = (score, payload_offset, step_size)
