@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 
 from .enums import SchFileVersion
@@ -282,8 +282,64 @@ _DTYPE_SIZES = {
 }
 
 
+# Writer keys were promoted by CTSEditorPro reopen on PNE02's 612-byte layout.
+# Two other layouts share that byte prefix, and whether the promotion carries is
+# a question the project has answered differently for each:
+#
+#   0x10004/696 — carries. Gate B recorded the reasoning: B1 diffed 200 samples
+#     of each layout and found no float divergence at the promoted offsets, so
+#     the PNE02 pairs stand in for a separate reopen session. That is a decision
+#     with evidence behind it; do not quietly revoke it here.
+#   0x10005/720 — **currently promoted, and the repository disagrees with itself
+#     about whether it should be.** Commit 24ad984 (2026-09-11) added
+#     `test_writer_ready_allowlist_matches_gate_b_controlled_pairs`'s assertion
+#     that 720 carries all seven keys, while the same commit's table entry below
+#     says "Not writer-ready", its ratings note says "Writer keys stay unverified
+#     on the new units", and GATE_B_VALIDATION_REPORT.json never mentions 720 —
+#     there is no B1 diff for it the way there is for 696.
+#
+#     It is left promoted here so this module changes no behaviour on its own.
+#     Resolving it is a lab decision, not a refactor: demoting it closes the
+#     recommended patch path for every PNE15–20 file, and leaving it means that
+#     path writes to a layout with 108 unmapped tail bytes. See §11.
+#
+# Sharing an offset is not sharing the evidence that writing to it does what we
+# think. Membership here is that judgement, made once and in the open.
+WRITER_VERIFIED_VERSIONS: frozenset[int] = frozenset(
+    {
+        int(SchFileVersion.V0X00010002),
+        int(SchFileVersion.V0X00010003),
+        int(SchFileVersion.V0X00010004),
+        int(SchFileVersion.V0X00010005),
+    }
+)
+
+_UNVERIFIED_LAYOUT_NOTE = (
+    " 이 근거는 0x00010003/612 레이아웃에서 얻은 것이고, 이 레이아웃에 대해서는 "
+    "레이아웃 diff 도 CTSPro 재열기 기록도 없습니다."
+)
+
+
 def get_step_fields(version: int) -> tuple[SchFieldDefinition, ...]:
-    return STEP_FIELDS_BY_VERSION.get(int(version), ())
+    """Field definitions for a layout, with writer promotion scoped to evidence.
+
+    The map is shared across layouts on purpose; the promotion is not. On a
+    layout with no reopen record of its own, every field comes back not
+    writer-ready and says why, so a caller cannot offer it as proven.
+    """
+    fields = STEP_FIELDS_BY_VERSION.get(int(version), ())
+    if int(version) in WRITER_VERIFIED_VERSIONS:
+        return fields
+    return tuple(
+        field
+        if not field.writer_ready
+        else replace(
+            field,
+            writer_ready=False,
+            evidence=field.evidence + _UNVERIFIED_LAYOUT_NOTE,
+        )
+        for field in fields
+    )
 
 
 def get_writer_ready_fields(version: int) -> tuple[str, ...]:
