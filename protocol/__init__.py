@@ -1,3 +1,12 @@
+from .explain import (
+    EvidenceKind,
+    ScheduleExplanation,
+    SocCheckpoint,
+    explain_schedule,
+    format_explanation,
+    rest_duration_s,
+    voltage_v_from_raw,
+)
 from .defaults import (
     CAPACHECK_INITIAL_C_RATE,
     CAPACHECK_MEASUREMENT_C_RATE,
@@ -12,6 +21,13 @@ from .defaults import (
 from .infer import InferredProtocol, ProtocolInference, infer_protocol_from_schedule
 
 __all__ = [
+    "EvidenceKind",
+    "ScheduleExplanation",
+    "SocCheckpoint",
+    "explain_schedule",
+    "format_explanation",
+    "rest_duration_s",
+    "voltage_v_from_raw",
     "CAPACHECK_INITIAL_C_RATE",
     "CAPACHECK_MEASUREMENT_C_RATE",
     "CYCLE_DEFAULT_C_RATE",

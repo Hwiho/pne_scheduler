@@ -23,6 +23,7 @@ from ..schema.ensol_v612 import (
     OFF_VOLT_OR_VLIM_MV,
     OFF_VOLTAGE_CUTOFF_MV,
 )
+from ..schema.fields import OFFSET_LOOP_COUNT, OFFSET_LOOP_GOTO
 from ..schema.fields import OFFSET_F_END_C
 from ..stack import CellGeometryInference, c_rate_from_current, infer_cell_geometry, l_from_fvref
 from .layout import detect_sch_layout
@@ -55,6 +56,8 @@ class SchStepView:
     f_end_v: float
     f_end_i: float
     f_end_c: float
+    loop_target: int = 0
+    loop_count: int = 0
     step_l_level: float | None = None
     c_rate: float | None = None
     c_rate_label: str = ""
@@ -136,6 +139,8 @@ def parse_schedule_file(path: str | Path) -> ScheduleDocument:
                 f_end_v=step.f_end_v,
                 f_end_i=step.f_end_i,
                 f_end_c=step.f_end_c,
+                loop_target=step.loop_target,
+                loop_count=step.loop_count,
                 step_l_level=step_l,
                 c_rate=c_rate,
                 c_rate_label=c_snap.label if c_snap is not None else "",
@@ -172,6 +177,11 @@ class _RawStep:
     f_end_v: float
     f_end_i: float
     f_end_c: float
+    # LOOP target and repeat count. The schema has carried these as writer-ready
+    # since Gate B, but the reader never surfaced them, so anything reading a
+    # file back could see the steps and not the structure joining them.
+    loop_target: int = 0
+    loop_count: int = 0
 
     @property
     def f_vref(self) -> float:
@@ -216,6 +226,12 @@ def _read_steps(data: bytes, payload_offset: int, step_size: int) -> list[_RawSt
                 f_end_v=struct.unpack_from("<f", data, base + OFF_VOLTAGE_CUTOFF_MV)[0],
                 f_end_i=struct.unpack_from("<f", data, base + OFF_CV_CUTOFF_MA)[0],
                 f_end_c=struct.unpack_from("<f", data, base + OFFSET_F_END_C)[0],
+                loop_target=struct.unpack_from("<I", data, base + OFFSET_LOOP_GOTO)[0]
+                if base + OFFSET_LOOP_GOTO + 4 <= len(data)
+                else 0,
+                loop_count=struct.unpack_from("<I", data, base + OFFSET_LOOP_COUNT)[0]
+                if base + OFFSET_LOOP_COUNT + 4 <= len(data)
+                else 0,
             )
         )
         if step_type_code == int(SCH_STEP_TYPE_END):

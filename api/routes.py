@@ -22,6 +22,7 @@ from ..edit.steps import StepEditError
 from ..exporting import ExportBlocked, export_preview, export_review_candidate
 from ..import_session import ImportSession
 from ..library import MethodLibrary, MethodVersion
+from ..protocol.explain import explain_schedule, format_explanation
 from ..ui.document import ProjectDocument
 from ..ui.workspace_model import WorkspaceModel
 from .errors import ApiError
@@ -369,6 +370,10 @@ def import_open(path: str) -> tuple[ImportSession, dict[str, Any]]:
             for field in session.editable_fields()
         ],
         "dropIfCloned": list(session.propose_clone().dropped),
+        # What the file actually does, in plain language with its evidence
+        # limits attached — the question a user opening someone else's schedule
+        # asks first, and the one the step table alone does not answer.
+        "explanation": format_explanation(explain_schedule(session.document)),
     }
     return session, body
 

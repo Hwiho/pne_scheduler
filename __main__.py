@@ -60,6 +60,19 @@ def _build_parser() -> argparse.ArgumentParser:
         "--plan-out", type=Path, help="Write the resulting patch plan as JSON"
     )
 
+    explain = sub.add_parser(
+        "explain",
+        help="Narrate what an existing .sch does (blocks, SOC hints, evidence limits)",
+    )
+    explain.add_argument("sch", type=Path, help="Input .sch path")
+    explain.add_argument(
+        "--json",
+        action="store_true",
+        dest="as_json",
+        help="Print a structured JSON explanation",
+    )
+    explain.add_argument("-o", "--output", type=Path, help="Optional output path")
+
     library = sub.add_parser("library", help="List or save methods in the library")
     library.add_argument("method_id", nargs="?", help="Show every version of one method")
     library.add_argument(
@@ -251,11 +264,43 @@ def main(argv: list[str] | None = None) -> int:
                 print("--plan-out 으로 계획을 저장한 뒤 patch-sch 로 적용하십시오.")
             return 0
 
+        from .protocol import explain_schedule, format_explanation
+
+        print()
+        print("이 스케줄이 하는 일:")
+        for line in format_explanation(explain_schedule(session.document)).splitlines():
+            print(f"  {line}" if line else "")
+
         clone = session.propose_clone()
         print()
         print("초안으로 복제하면 버려지는 것:")
         for item in clone.dropped:
             print(f"  · {item}")
+        return 0
+
+    if args.command == "explain":
+        import json as _json
+
+        from .io.sch_parser import parse_schedule_file
+        from .protocol import explain_schedule, format_explanation
+
+        try:
+            document = parse_schedule_file(args.sch)
+        except (OSError, ValueError) as exc:
+            print(f"스케줄을 읽을 수 없습니다: {exc}", file=sys.stderr)
+            return 2
+
+        explanation = explain_schedule(document)
+        rendered = (
+            _json.dumps(explanation.to_dict(), indent=2, ensure_ascii=False) + "\n"
+            if args.as_json
+            else format_explanation(explanation)
+        )
+        if args.output:
+            args.output.write_text(rendered, encoding="utf-8")
+            print(f"Wrote {args.output}")
+        else:
+            print(rendered, end="")
         return 0
 
     if args.command == "library":

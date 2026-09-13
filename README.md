@@ -52,6 +52,7 @@ python run_pne_scheduler.py build example/example.schproj -o output.sch --allow-
 
 | Command | Description |
 |------|------|
+| `explain file.sch` | Narrate what an existing schedule does, with its evidence limits |
 | `library [--save file.schproj --name NAME]` | List or save reusable methods |
 | `import-sch file.sch [--set 3:fVref=25.0 --plan-out plan.json]` | Open an existing schedule and stage writer-ready edits |
 | `summary file.schproj` | Print a Korean plain-language summary and the export gate status |
