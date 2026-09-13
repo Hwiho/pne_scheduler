@@ -127,3 +127,9 @@ python tools/import_goto_controlled_pair.py c:/goto_controlled_pair.zip
 
 CTSEditorPro expanded baseline3 to 18 steps (12648 B, `0x10002`) on save.
 `loop_goto_ensol@564` unchanged; PNE02 UI writes goto to **+48**.
+
+## Offline seed for a new pair
+
+For PNE02, `_baseline/PNE02_V612_BASELINE_ANALYSIS_ONLY.sch` is available as an
+offline seed. Follow `_baseline/README.md` to convert it into a CTSPro-saved,
+close/reopen-verified baseline before collecting any pair.

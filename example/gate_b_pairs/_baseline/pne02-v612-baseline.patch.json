@@ -1,0 +1,47 @@
+{
+  "schema": "pne_scheduler.sch_patch/v1",
+  "template_sha256": "5321449813b21162cee9faaa80782646ba2dabf50eccb465f948f6451461683e",
+  "expected_version": "0x00010003",
+  "patches": [
+    {
+      "step_no": 1,
+      "field": "fIref",
+      "value": 60.0
+    },
+    {
+      "step_no": 4,
+      "field": "fVref",
+      "value": 10.0
+    },
+    {
+      "step_no": 4,
+      "field": "fEndI",
+      "value": 2.0
+    },
+    {
+      "step_no": 4,
+      "field": "record_time_s",
+      "value": 1.0
+    },
+    {
+      "step_no": 6,
+      "field": "fVref",
+      "value": 10.0
+    },
+    {
+      "step_no": 6,
+      "field": "fEndV",
+      "value": 3000.0
+    },
+    {
+      "step_no": 6,
+      "field": "record_time_s",
+      "value": 1.0
+    },
+    {
+      "step_no": 14,
+      "field": "loop_goto_ensol",
+      "value": 2
+    }
+  ]
+}
