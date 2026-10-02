@@ -205,6 +205,52 @@ def test_import_sessions_expire_rather_than_pinning_lab_bytes():
         registry.get(key)
 
 
+def test_import_patch_writes_separate_analysis_file_and_manifest(client, tmp_path):
+    opened = client.post("/api/import/open", json={"path": str(SCH)}).get_json()
+    session_id = opened["sessionId"]
+    client.post(
+        f"/api/import/{session_id}/stage",
+        json={"stepNo": 3, "field": "fVref", "value": 25.0},
+    )
+    output = tmp_path / "patched.sch"
+    url = f"/api/import/{session_id}/patch"
+    denied = client.post(url, json={"outputPath": str(output)}).get_json()
+    assert denied["ok"] is False and not output.exists()
+
+    response = client.post(
+        url, json={"outputPath": str(output), "allowAnalysisOutput": True}
+    )
+    saved = response.get_json()
+    assert response.status_code == 200
+    assert saved["equipmentExecutable"] is False
+    assert output.exists() and Path(saved["manifestPath"]).exists()
+    assert output.read_bytes() != SCH.read_bytes()
+    assert SCH.read_bytes()[:1760] == output.read_bytes()[:1760]
+    assert client.post(
+        url, json={"outputPath": str(output), "allowAnalysisOutput": True}
+    ).status_code == 400
+
+
+def test_import_patch_refuses_any_rejected_staged_edit(client, tmp_path):
+    opened = client.post("/api/import/open", json={"path": str(SCH)}).get_json()
+    session_id = opened["sessionId"]
+    client.post(
+        f"/api/import/{session_id}/stage",
+        json={"stepNo": 3, "field": "fVref", "value": 25.0},
+    )
+    client.post(
+        f"/api/import/{session_id}/stage",
+        json={"stepNo": 3, "field": "unverified", "value": 1.0},
+    )
+    output = tmp_path / "refused.sch"
+    response = client.post(
+        f"/api/import/{session_id}/patch",
+        json={"outputPath": str(output), "allowAnalysisOutput": True},
+    )
+    assert response.status_code == 400
+    assert not output.exists()
+
+
 def test_the_registry_is_bounded():
     from pne_scheduler.import_session import ImportSession
 

@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import hashlib
+import struct
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -118,3 +120,24 @@ def test_staged_edits_can_be_cleared(session):
     session.stage(2, session.editable_fields()[0].name, 25.0)
     session.clear()
     assert not session.propose_patch().accepted
+
+
+def test_real_pne15_720_file_opens_but_refuses_unverified_patch(tmp_path):
+    archive = FIXTURE.parents[2] / "corpus_zips" / "PNE15.zip"
+    with zipfile.ZipFile(archive) as files:
+        member = next(
+            item for item in files.infolist()
+            if item.filename.lower().endswith(".sch")
+            and struct.unpack_from("<I", files.read(item)[:8], 4)[0] == 0x00010005
+        )
+        source = tmp_path / "pne15_720.sch"
+        source.write_bytes(files.read(member))
+
+    imported = ImportSession.open(source)
+    assert imported.sch_version == 0x00010005
+    assert imported.step_count > 0
+    assert imported.editable_fields() == ()
+    imported.stage(1, "fVref", 25.0)
+    proposal = imported.propose_patch()
+    assert proposal.plan is None
+    assert len(proposal.rejected) == 1

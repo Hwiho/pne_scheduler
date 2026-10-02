@@ -290,18 +290,9 @@ _DTYPE_SIZES = {
 #     of each layout and found no float divergence at the promoted offsets, so
 #     the PNE02 pairs stand in for a separate reopen session. That is a decision
 #     with evidence behind it; do not quietly revoke it here.
-#   0x10005/720 — **currently promoted, and the repository disagrees with itself
-#     about whether it should be.** Commit 24ad984 (2026-09-11) added
-#     `test_writer_ready_allowlist_matches_gate_b_controlled_pairs`'s assertion
-#     that 720 carries all seven keys, while the same commit's table entry below
-#     says "Not writer-ready", its ratings note says "Writer keys stay unverified
-#     on the new units", and GATE_B_VALIDATION_REPORT.json never mentions 720 —
-#     there is no B1 diff for it the way there is for 696.
-#
-#     It is left promoted here so this module changes no behaviour on its own.
-#     Resolving it is a lab decision, not a refactor: demoting it closes the
-#     recommended patch path for every PNE15–20 file, and leaving it means that
-#     path writes to a layout with 108 unmapped tail bytes. See §11.
+#   0x10005/720 — observed in PNE15/PNE16, but no layout-specific B1 diff or
+#     CTSEditorPro reopen record exists. Reading and explanation are supported;
+#     patching stays closed until controlled evidence promotes this version.
 #
 # Sharing an offset is not sharing the evidence that writing to it does what we
 # think. Membership here is that judgement, made once and in the open.
@@ -310,7 +301,6 @@ WRITER_VERIFIED_VERSIONS: frozenset[int] = frozenset(
         int(SchFileVersion.V0X00010002),
         int(SchFileVersion.V0X00010003),
         int(SchFileVersion.V0X00010004),
-        int(SchFileVersion.V0X00010005),
     }
 )
 

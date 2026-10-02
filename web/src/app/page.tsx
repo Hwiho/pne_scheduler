@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { api, type Json } from "@/lib/api";
 import { useDocument } from "@/lib/useDocument";
+import { ImportTab } from "@/components/ImportTab";
 import {
   ExportTab,
   ProcedureTab,
@@ -11,7 +12,7 @@ import {
   ValidateTab,
 } from "@/components/tabs";
 
-const TABS = ["1. 설정", "2. 프로토콜", "3. 절차", "4. 검증", "5. 내보내기"] as const;
+const TABS = ["1. 설정", "2. 프로토콜", "3. 절차", "4. 검증", "5. 내보내기", "기존 SCH 열기"] as const;
 
 export default function Workspace() {
   const doc = useDocument();
@@ -95,6 +96,7 @@ export default function Workspace() {
       {tab === 2 && <ProcedureTab {...props} />}
       {tab === 3 && <ValidateTab {...props} />}
       {tab === 4 && <ExportTab {...props} />}
+      {tab === 5 && <ImportTab />}
 
       <footer className="muted">
         {doc.views.summary.totalSteps} 스텝 · {doc.views.summary.durationText} ·{" "}

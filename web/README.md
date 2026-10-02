@@ -27,3 +27,12 @@ rather than needing markup written for it.
 
 Undo/redo and autosave live in the browser: an undo entry is just a past project,
 so the server stays stateless and a restart loses nothing.
+
+## Existing SCH files
+
+Open **기존 SCH 열기** and enter an absolute `.sch` path on the PC running the API.
+The screen shows an evidence-labeled explanation and the fields approved for
+byte-preserving edits. A patch creates a separate analysis-only `.sch` and a
+validation manifest; it never replaces the source file. The 0x00010005/720
+layout can be opened and explained, but currently has no approved patch fields
+because no controlled writer/reopen evidence exists for it.

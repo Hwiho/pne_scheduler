@@ -18,6 +18,8 @@ from pathlib import Path
 from typing import Any
 
 from ..import_session import ImportSession
+from ..io.template_writer import apply_sch_patch
+from ..io.validation_manifest import default_manifest_path, write_validation_manifest
 from ..library import MethodLibrary
 from . import routes
 from .errors import ApiError
@@ -150,6 +152,40 @@ def create_app(library_root: Path | None = None) -> Any:
     @app.post("/api/import/<session_id>/plan")
     def _import_plan(session_id: str):
         return jsonify(routes.import_proposal(sessions.get(session_id)))
+
+    @app.post("/api/import/<session_id>/patch")
+    def _import_patch(session_id: str):
+        payload = body()
+        session = sessions.get(session_id)
+        output = Path(str(payload.get("outputPath", "")))
+        if payload.get("allowAnalysisOutput") is not True:
+            raise ApiError("분석용 파일임을 확인해야 저장할 수 있습니다.")
+        if not output.is_absolute() or output.suffix.lower() != ".sch":
+            raise ApiError("출력 경로는 .sch 확장자를 가진 절대 경로여야 합니다.")
+        manifest = default_manifest_path(output)
+        if output.exists() or manifest.exists():
+            raise ApiError("출력 파일이나 검증 기록이 이미 있습니다. 다른 이름을 지정하십시오.")
+        if not session.source_unchanged():
+            raise ApiError("원본 파일이 열린 뒤 바뀌었습니다. 다시 여십시오.")
+        proposal = session.propose_patch()
+        if proposal.rejected or proposal.plan is None:
+            raise ApiError("적용할 수 없는 편집이 있거나 유효한 패치 계획이 없습니다.")
+        try:
+            result = apply_sch_patch(
+                session.path, proposal.plan, output, allow_analysis_output=True
+            )
+            write_validation_manifest(manifest, result.report)
+        except (OSError, ValueError) as exc:
+            output.unlink(missing_ok=True)
+            manifest.unlink(missing_ok=True)
+            raise ApiError(f"SCH 패치에 실패했습니다: {exc}") from exc
+        return jsonify({
+            "ok": True,
+            "outputPath": str(output),
+            "manifestPath": str(manifest),
+            "equipmentExecutable": False,
+            "changedByteCount": result.report["changed_byte_count"],
+        })
 
     @app.post("/api/export")
     def _export():

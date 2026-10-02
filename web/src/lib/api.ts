@@ -18,14 +18,14 @@ export class ApiError extends Error {
   }
 }
 
-async function post<T>(path: string, body: Json): Promise<T> {
+async function post<T>(path: string, body: Json, allowNotOk = false): Promise<T> {
   const response = await fetch(path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
   const payload = await response.json().catch(() => null);
-  if (!response.ok || (payload && payload.ok === false)) {
+  if (!response.ok || (!allowNotOk && payload && payload.ok === false)) {
     const message =
       (payload as ApiFailure | null)?.error ?? `요청이 실패했습니다 (${response.status})`;
     throw new ApiError(message, response.status);
@@ -69,6 +69,21 @@ export const api = {
       project,
       methodId,
       replace,
+    }),
+
+  openImport: (path: string) =>
+    post<ImportInfo>("/api/import/open", { path }),
+
+  stageImport: (sessionId: string, stepNo: number, field: string, value: number) =>
+    post<ImportProposal>(`/api/import/${sessionId}/stage`, { stepNo, field, value }, true),
+
+  clearImport: (sessionId: string) =>
+    post<ImportProposal>(`/api/import/${sessionId}/clear`, {}, true),
+
+  patchImport: (sessionId: string, outputPath: string) =>
+    post<ImportPatchResult>(`/api/import/${sessionId}/patch`, {
+      outputPath,
+      allowAnalysisOutput: true,
     }),
 };
 
@@ -212,4 +227,33 @@ export interface MethodSummary {
   equipmentUnit: string;
   moduleCount: number;
   savedAt: string;
+}
+
+export interface ImportInfo {
+  ok: true;
+  sessionId: string;
+  path: string;
+  sha256: string;
+  schVersion: string;
+  stepCount: number;
+  editableFields: { name: string; offset: number; dtype: string; evidence: string }[];
+  dropIfCloned: string[];
+  explanation: string;
+}
+
+export interface ImportProposal {
+  ok: boolean;
+  accepted: { stepNo: number; field: string; value: number }[];
+  rejected: { stepNo: number; field: string; reason: string }[];
+  notes: string[];
+  warnings: string[];
+  plan: Json | null;
+}
+
+export interface ImportPatchResult {
+  ok: true;
+  outputPath: string;
+  manifestPath: string;
+  equipmentExecutable: false;
+  changedByteCount: number;
 }
