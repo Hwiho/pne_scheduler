@@ -1,6 +1,6 @@
 "use client";
 
-// The five screens, in the order the work happens. Each is a pure view over the
+// The workspace screens are pure views over the
 // payload the API returned — no screen recomputes a gate or a validation result.
 
 import { useState } from "react";
@@ -13,19 +13,21 @@ interface TabProps {
   apply: (action: string, args?: Json) => Promise<void>;
   select: (moduleId: string) => Promise<void>;
   plan: <T>(action: string, args?: Json) => Promise<T>;
+  openImport?: () => void;
 }
 
 // --- 1. 설정 ---------------------------------------------------------------
 
 export function SetupTab({ views, apply }: TabProps) {
   return (
-    <div className="card">
+    <div className="card setup-card">
       <h2>셀과 장비</h2>
       {views.setupFields.map((field) => (
-        <div className="row" key={field.key} style={{ padding: "5px 0" }}>
-          <label style={{ width: 190 }}>{field.label}</label>
+        <div className="setup-field" key={field.key}>
+          <label htmlFor={`setup-${field.key}`}>{field.label}</label>
           {field.choices.length > 0 ? (
             <select
+              id={`setup-${field.key}`}
               value={field.value}
               onChange={(e) => apply("setEquipmentUnit", { unit: e.target.value })}
             >
@@ -37,7 +39,7 @@ export function SetupTab({ views, apply }: TabProps) {
             </select>
           ) : (
             <input
-              style={{ width: 220 }}
+              id={`setup-${field.key}`}
               defaultValue={field.value}
               readOnly={field.readOnly}
               onBlur={(e) =>
@@ -47,8 +49,10 @@ export function SetupTab({ views, apply }: TabProps) {
               }
             />
           )}
-          <span className="muted">{field.detail}</span>
-          {field.issue && <span className="danger" style={{ fontSize: 11 }}>{field.issue}</span>}
+          <div className="setup-detail">
+            <span className="muted">{field.detail}</span>
+            {field.issue && <span className="danger">{field.issue}</span>}
+          </div>
         </div>
       ))}
     </div>
@@ -78,8 +82,8 @@ export function ProtocolTab({ views, apply, select, plan }: TabProps) {
   });
 
   return (
-    <div className="row" style={{ alignItems: "flex-start", gap: 14 }}>
-      <div className="col" style={{ width: 330, flexShrink: 0 }}>
+    <div className="protocol-grid">
+      <div className="col">
         <div className="card">
           <h2>사이클 + RPT 캠페인</h2>
           {(
@@ -130,20 +134,21 @@ export function ProtocolTab({ views, apply, select, plan }: TabProps) {
         <div className="card">
           <h2>무엇을 알고 싶으신가요?</h2>
           {views.goals.map((goal) => (
-            <div
+            <button
               key={goal.goalId}
-              style={{ padding: "6px 0", borderBottom: "1px solid var(--line)", cursor: "pointer" }}
+              type="button"
+              className="goal-button"
               onClick={() => apply("addGoal", { goalId: goal.goalId })}
             >
               <div style={{ fontWeight: 600 }}>{goal.title}</div>
               <div className="muted">{goal.question}</div>
               <div className="muted">→ {goal.outcome} · {goal.trust}</div>
-            </div>
+            </button>
           ))}
         </div>
       </div>
 
-      <div className="col grow">
+      <div className="col">
         <div className="card">
           <h2>{views.form.title || "구간을 고르세요"}</h2>
           <div className="muted" style={{ marginBottom: 8 }}>
@@ -306,7 +311,7 @@ export function ProcedureTab({ views, project, apply, select, plan }: TabProps) 
 
       <div className="card">
         <h2>실행 순서 · {views.procedure.stepCount} 스텝</h2>
-        <table>
+        <div className="table-scroll"><table>
           <thead>
             <tr><th>#</th><th>구간</th><th>스텝</th><th>범위</th><th>예상</th><th>검증</th><th /></tr>
           </thead>
@@ -338,7 +343,7 @@ export function ProcedureTab({ views, project, apply, select, plan }: TabProps) 
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
       </div>
 
       {views.canEditSteps && (
@@ -415,7 +420,7 @@ export function ProcedureTab({ views, project, apply, select, plan }: TabProps) 
             {stepsShown ? "접기" : "펼치기"}
           </button>
         </div>
-        <div style={{ maxHeight: 320, overflow: "auto", display: stepsShown ? undefined : "none" }}>
+        <div className="table-scroll" style={{ maxHeight: 320, display: stepsShown ? undefined : "none" }}>
           <table>
             <thead>
               <tr>{["number", "phase", "type", "mode", "current", "voltage", "end", "loop"].map((c) => (
@@ -477,8 +482,27 @@ export function ValidateTab({ views, select }: TabProps) {
 
 // --- 5. 내보내기 -----------------------------------------------------------
 
-export function ExportTab({ views }: TabProps) {
+export function ExportTab({ views, project, openImport }: TabProps) {
   const label = views.release.label;
+  const [outDir, setOutDir] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [saved, setSaved] = useState<string[]>([]);
+
+  async function runExport(kind: "draft_save" | "preview" | "review_candidate") {
+    setBusy(true);
+    setError("");
+    setSaved([]);
+    try {
+      const result = await api.exportProject(project, kind, outDir.trim());
+      setSaved(result.paths);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <div className="col">
       <div className="card">
@@ -499,10 +523,18 @@ export function ExportTab({ views }: TabProps) {
         )}
       </div>
 
+      <div className="card">
+        <h2>파일 저장 위치</h2>
+        <p className="muted">초안, 미리보기와 검토용 SCH는 API가 실행 중인 PC의 비어 있는 폴더에 저장합니다.</p>
+        <input className="import-path" aria-label="내보내기 폴더" placeholder="/path/to/empty-output-folder" value={outDir} onChange={(event) => setOutDir(event.target.value)} />
+        {error && <p className="danger" role="alert">{error}</p>}
+        {saved.length > 0 && <div className="import-note import-file" role="status">저장된 파일:<ul>{saved.map((path) => <li key={path}>{path}</li>)}</ul></div>}
+      </div>
+
       {views.release.options.map((option) => (
         <div key={option.kind} className={option.recommended ? "card accent" : "card"}>
           <div className="row">
-            <span>{option.allowed ? "🔓" : "🔒"}</span>
+            <span className={option.allowed ? "status-dot available" : "status-dot"} aria-label={option.allowed ? "가능" : "잠김"} />
             <div className="grow">
               <div className="row">
                 <strong className={option.danger && option.allowed ? "warn" : ""}>{option.title}</strong>
@@ -510,8 +542,16 @@ export function ExportTab({ views }: TabProps) {
               </div>
               <div className="muted">{option.description}</div>
             </div>
-            <button className={option.recommended ? "primary" : ""} disabled={!option.allowed}>
-              {option.status}
+            <button
+              className={option.recommended ? "primary" : ""}
+              disabled={!option.allowed || busy || (option.kind === "equipment_export") ||
+                ((option.kind === "draft_save" || option.kind === "preview" || option.kind === "review_candidate") && !outDir.trim())}
+              onClick={() => {
+                if (option.kind === "template_patch") openImport?.();
+                if (option.kind === "draft_save" || option.kind === "preview" || option.kind === "review_candidate") void runExport(option.kind);
+              }}
+            >
+              {option.kind === "equipment_export" ? "별도 승인 절차" : option.kind === "template_patch" ? "기존 SCH 열기" : option.allowed ? "파일 생성" : "잠김"}
             </button>
           </div>
           {option.blockers.map((blocker, index) => (

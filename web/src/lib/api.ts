@@ -53,8 +53,8 @@ export const api = {
   // every edit.
   steps: (project: Json) => post<{ steps: Record<string, string>[] }>("/api/steps", { project }),
 
-  edit: (action: string, project: Json, args: Json = {}) =>
-    post<EditResult>(`/api/edit/${action}`, { project, args }),
+  edit: (action: string, project: Json, args: Json = {}, selected?: string) =>
+    post<EditResult>(`/api/edit/${action}`, { project, args, selected }),
 
   plan: <T>(action: string, project: Json, args: Json = {}) =>
     post<T>(`/api/plan/${action}`, { project, args }),
@@ -84,6 +84,11 @@ export const api = {
     post<ImportPatchResult>(`/api/import/${sessionId}/patch`, {
       outputPath,
       allowAnalysisOutput: true,
+    }),
+
+  exportProject: (project: Json, kind: "draft_save" | "preview" | "review_candidate", outDir: string) =>
+    post<{ ok: true; paths: string[]; note: string }>("/api/export", {
+      project, kind, outDir,
     }),
 };
 

@@ -28,6 +28,11 @@ rather than needing markup written for it.
 Undo/redo and autosave live in the browser: an undo entry is just a past project,
 so the server stays stateless and a restart loses nothing.
 
+The Export screen saves a draft, step preview, or review candidate into an
+existing **empty** directory on the PC running the API. It refuses a nonempty
+directory so an existing output cannot be overwritten. A draft can be saved
+even while validation errors remain.
+
 ## Existing SCH files
 
 Open **기존 SCH 열기** and enter an absolute `.sch` path on the PC running the API.

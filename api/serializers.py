@@ -136,7 +136,16 @@ def setup_field_json(item: Any, unit_choices: tuple[str, ...]) -> dict[str, Any]
 
 def form_json(form: ModuleForm | None, module_id: str, sibling_count: int) -> dict[str, Any]:
     if form is None:
-        return {"moduleId": "", "sections": [], "derived": [], "title": ""}
+        return {
+            "moduleId": "",
+            "moduleType": "",
+            "sections": [],
+            "derived": [],
+            "title": "",
+            "trust": "",
+            "limitations": [],
+            "siblingCount": 0,
+        }
     return {
         "moduleId": module_id,
         "moduleType": form.module_type,

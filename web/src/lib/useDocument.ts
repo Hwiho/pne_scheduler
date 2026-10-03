@@ -45,7 +45,7 @@ export function useDocument() {
     async (next: Json, pick?: string) => {
       const body = await api.views(next, pick ?? selected);
       setViews(body.views);
-      if (!pick && !selected) setSelected(body.views.selectedModule);
+      setSelected(body.views.selectedModule);
     },
     [selected],
   );
@@ -102,11 +102,12 @@ export function useDocument() {
       setBusy(true);
       setError("");
       try {
-        const result: EditResult = await api.edit(action, project, args);
+        const result: EditResult = await api.edit(action, project, args, selected);
         undo.current = [...undo.current, { project, label: result.label }].slice(-UNDO_LIMIT);
         redo.current = [];
         setProject(result.project);
         setViews(result.views);
+        setSelected(result.views.selectedModule);
         setNotice(result.label || "");
         force((n) => n + 1);
       } catch (err) {
@@ -115,7 +116,7 @@ export function useDocument() {
         setBusy(false);
       }
     },
-    [project],
+    [project, selected],
   );
 
   const stepBack = useCallback(async () => {

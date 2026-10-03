@@ -70,17 +70,25 @@ def steps(payload: dict[str, Any]) -> dict[str, Any]:
 # --- transform --------------------------------------------------------------
 
 
-def _run(model: WorkspaceModel, call: Callable[[], Any]) -> dict[str, Any]:
+def _run(
+    model: WorkspaceModel,
+    call: Callable[[], Any],
+    *,
+    selected: str | None = None,
+    select_new: bool = False,
+) -> dict[str, Any]:
     try:
         result = call()
     except (StepEditError, ValueError) as exc:
         raise ApiError(str(exc)) from exc
+    if select_new and model.project.modules:
+        selected = model.project.modules[-1].id
     return {
         "ok": True,
         "project": model.project.to_dict(),
         "label": model.document.last_label,
         "diff": diff_json(result if hasattr(result, "changes") else None),
-        "views": views_json(model, model.project.modules[0].id if model.project.modules else None),
+        "views": views_json(model, selected),
     }
 
 
@@ -123,7 +131,12 @@ def transform(action: str, payload: dict[str, Any]) -> dict[str, Any]:
     model = _model(payload)
     args = _args(payload)
     try:
-        return _run(model, lambda: handler(model, args))
+        return _run(
+            model,
+            lambda: handler(model, args),
+            selected=str(payload.get("selected") or ""),
+            select_new=action in {"addGoal", "addModule", "addCampaign"},
+        )
     except KeyError as exc:
         raise ApiError(f"필요한 값이 없습니다: {exc.args[0]}") from exc
     except TypeError as exc:
@@ -315,9 +328,9 @@ EXPORTS: dict[str, Callable[[Any, Path], Any]] = {
 def export(payload: dict[str, Any]) -> dict[str, Any]:
     """Write an output, but only through the gate that guards it.
 
-    `exporting` re-checks the release ladder itself, so a direct call cannot slip
-    past a blocked path — this route adds no judgement of its own, it just names
-    the failure. The two writers not exposed here are deliberate: the template
+    `exporting` re-checks the release ladder for preview and review candidates.
+    Draft saving remains available with validation errors. The two writers not
+    exposed here are deliberate: the template
     patch runs through `patch-sch` against a real CTSPro file, and the
     equipment-ready path needs recorded human approval, neither of which should
     be reachable by one POST.
@@ -325,14 +338,34 @@ def export(payload: dict[str, Any]) -> dict[str, Any]:
     model = _model(payload)
     kind = str(payload.get("kind", ""))
     writer = EXPORTS.get(kind)
-    if writer is None:
+    if writer is None and kind != "draft_save":
         raise ApiError(f"알 수 없는 내보내기 경로입니다: {kind}", status=404)
 
     out_dir = Path(str(payload.get("outDir", ""))).expanduser()
     if not out_dir.is_dir():
         raise ApiError(f"출력 폴더가 없습니다: {out_dir}")
+    try:
+        occupied = any(out_dir.iterdir())
+    except OSError as exc:
+        raise ApiError(f"출력 폴더를 읽을 수 없습니다: {exc}") from exc
+    if occupied:
+        raise ApiError("출력 폴더가 비어 있지 않습니다. 새 빈 폴더를 지정하십시오.")
+
+    if kind == "draft_save":
+        draft_path = out_dir / "project.schproj"
+        try:
+            model.project.save(draft_path)
+        except (OSError, ValueError) as exc:
+            raise ApiError(f"초안 저장에 실패했습니다: {exc}") from exc
+        return {
+            "ok": True,
+            "kind": kind,
+            "paths": [str(draft_path)],
+            "note": "초안은 검증 오류가 있어도 저장할 수 있습니다.",
+        }
 
     try:
+        assert writer is not None
         result = writer(model.project, out_dir)
     except ExportBlocked as exc:
         raise ApiError(str(exc), status=409) from exc

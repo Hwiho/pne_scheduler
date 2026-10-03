@@ -28,9 +28,9 @@ export function Field({ field, presets = [], siblingCount = 1, onCommit, onApply
 
   return (
     <div style={{ padding: "6px 0", borderBottom: "1px solid var(--line)" }}>
-      <div className="row">
+      <div className="field-row">
         <label
-          style={{ width: 170, fontWeight: 600, color: field.risk === "critical" ? "var(--danger)" : undefined }}
+          style={{ color: field.risk === "critical" ? "var(--danger)" : undefined }}
         >
           {field.label}
           {field.risk === "critical" ? " ⚠" : ""}
@@ -53,7 +53,6 @@ export function Field({ field, presets = [], siblingCount = 1, onCommit, onApply
         ) : (
           <input
             className={field.hasError ? "error" : ""}
-            style={{ width: 200 }}
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onBlur={commit}
@@ -62,7 +61,6 @@ export function Field({ field, presets = [], siblingCount = 1, onCommit, onApply
         )}
 
         <span className="muted">{field.unit}</span>
-        <span className="grow" />
         {siblingCount > 1 && onApplyAll && (
           <button className="chip" onClick={() => onApplyAll(field.key, draft)}>
             같은 실험 {siblingCount}개에 적용
@@ -71,7 +69,7 @@ export function Field({ field, presets = [], siblingCount = 1, onCommit, onApply
       </div>
 
       {field.kind === "c_rate" && presets.length > 0 && (
-        <div className="row" style={{ marginLeft: 170, flexWrap: "wrap", gap: 4, marginTop: 4 }}>
+        <div className="field-help field-presets">
           {presets.map((preset) => (
             <button
               key={preset.label}
@@ -85,7 +83,7 @@ export function Field({ field, presets = [], siblingCount = 1, onCommit, onApply
         </div>
       )}
 
-      <div className="muted" style={{ marginLeft: 170, marginTop: 3, whiteSpace: "pre-line" }}>
+      <div className="muted field-help" style={{ whiteSpace: "pre-line" }}>
         {[
           field.detail && `→ ${field.detail}`,
           field.help,
@@ -100,8 +98,7 @@ export function Field({ field, presets = [], siblingCount = 1, onCommit, onApply
 
       {field.issues.length > 0 && (
         <div
-          className={field.hasError ? "danger" : "warn"}
-          style={{ marginLeft: 170, fontSize: 11, marginTop: 3 }}
+          className={`field-help ${field.hasError ? "danger" : "warn"}`}
         >
           {field.issues.join("\n")}
         </div>

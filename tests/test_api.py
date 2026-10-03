@@ -71,6 +71,20 @@ def test_the_recommended_export_is_the_patch_path(client, project):
     assert recommended == ["template_patch"]
 
 
+def test_empty_project_form_has_the_shape_required_by_protocol_tab(client):
+    empty = {
+        "schema": "pne_scheduler.schproj/v2",
+        "name": "새 스케줄",
+        "sch_version": 0x00010003,
+        "cell_profile": {"nominal_capacity_mAh": 80.0, "v_min": 2.5, "v_max": 4.2},
+        "modules": [],
+        "connections": [],
+    }
+    views = client.post("/api/views", json={"project": empty}).get_json()["views"]
+    assert views["form"]["limitations"] == []
+    assert views["form"]["sections"] == []
+
+
 # --- statelessness ----------------------------------------------------------
 
 def test_the_server_keeps_nothing_between_edits(client, project):
@@ -89,6 +103,29 @@ def test_an_edit_reports_the_label_for_the_client_history(client, project):
         "/api/edit/addModule", json={"project": project, "args": {"moduleType": "rest"}}
     ).get_json()
     assert body["label"] == "Rest 추가"
+
+
+def test_module_selection_survives_parameter_edit(client, project):
+    second = project["modules"][1]["id"]
+    response = client.post(
+        "/api/edit/setParam",
+        json={
+            "project": project,
+            "selected": second,
+            "args": {"moduleId": second, "key": "charge_c_rate", "text": "0.4C"},
+        },
+    )
+    assert response.status_code == 200
+    assert response.get_json()["views"]["selectedModule"] == second
+
+
+def test_new_module_is_selected_after_addition(client, project):
+    response = client.post(
+        "/api/edit/addModule",
+        json={"project": project, "args": {"moduleType": "rest"}},
+    )
+    body = response.get_json()
+    assert body["views"]["selectedModule"] == body["project"]["modules"][-1]["id"]
 
 
 # --- plan is not transform --------------------------------------------------
@@ -278,6 +315,28 @@ def test_a_preview_export_writes_its_files(client, project, tmp_path):
     names = {Path(p).name for p in body["paths"]}
     assert {"steps.csv", "summary.txt"} <= names
     assert all(Path(p).exists() for p in body["paths"])
+
+
+def test_export_refuses_to_overwrite_an_existing_output_folder(client, project, tmp_path):
+    (tmp_path / "steps.csv").write_text("keep this", encoding="utf-8")
+    response = client.post(
+        "/api/export",
+        json={"project": project, "kind": "preview", "outDir": str(tmp_path)},
+    )
+    assert response.status_code == 400
+    assert (tmp_path / "steps.csv").read_text(encoding="utf-8") == "keep this"
+
+
+def test_draft_export_saves_even_with_validation_errors(client, project, tmp_path):
+    project["modules"] = []
+    response = client.post(
+        "/api/export",
+        json={"project": project, "kind": "draft_save", "outDir": str(tmp_path)},
+    )
+    assert response.status_code == 200
+    path = Path(response.get_json()["paths"][0])
+    assert path.name == "project.schproj"
+    assert json.loads(path.read_text(encoding="utf-8"))["modules"] == []
 
 
 def test_a_blocked_export_is_refused_with_the_blockers(client, project, tmp_path):
