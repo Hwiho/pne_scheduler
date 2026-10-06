@@ -21,6 +21,7 @@ from ..import_session import ImportSession
 from ..io.template_writer import apply_sch_patch
 from ..io.validation_manifest import default_manifest_path, write_validation_manifest
 from ..library import MethodLibrary
+from ..storage_records import StorageStore, default_storage_db
 from . import routes
 from .errors import ApiError
 
@@ -60,11 +61,12 @@ class SessionRegistry:
         return found[1]
 
 
-def create_app(library_root: Path | None = None) -> Any:
+def create_app(library_root: Path | None = None, storage_db_path: Path | None = None) -> Any:
     from flask import Flask, jsonify, request
 
     app = Flask(__name__)
     store = MethodLibrary(library_root)
+    storage = StorageStore(storage_db_path or default_storage_db())
     sessions = SessionRegistry()
 
     @app.errorhandler(ApiError)
@@ -190,6 +192,42 @@ def create_app(library_root: Path | None = None) -> Any:
     @app.post("/api/export")
     def _export():
         return jsonify(routes.export(body()))
+
+    @app.post("/api/export/cell-batch")
+    def _export_cell_batch():
+        return jsonify(routes.export_batch(body()))
+
+    @app.get("/api/storage")
+    def _storage_list():
+        return jsonify({"ok": True, "records": storage.list_records(),
+                        "companion": storage.companion_status()})
+
+    @app.post("/api/storage")
+    def _storage_add():
+        try:
+            record = storage.add(body())
+        except ValueError as exc:
+            raise ApiError(str(exc)) from exc
+        return jsonify({"ok": True, "record": record})
+
+    @app.post("/api/storage/import-legacy")
+    def _storage_import_legacy():
+        try:
+            result = storage.import_legacy(body().get("records"))
+        except ValueError as exc:
+            raise ApiError(str(exc)) from exc
+        return jsonify({"ok": True, **result})
+
+    @app.post("/api/storage/<record_id>/complete")
+    def _storage_complete(record_id: str):
+        payload = body()
+        if not isinstance(payload.get("completed"), bool):
+            raise ApiError("완료 상태는 true 또는 false여야 합니다.")
+        try:
+            storage.complete(record_id, completed=payload["completed"])
+        except ValueError as exc:
+            raise ApiError(str(exc), status=404) from exc
+        return jsonify({"ok": True})
 
     @app.get("/api/health")
     def _health():

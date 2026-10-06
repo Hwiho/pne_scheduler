@@ -3,9 +3,11 @@
 // The workspace screens are pure views over the
 // payload the API returned — no screen recomputes a gate or a validation result.
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api, type Json, type Views } from "@/lib/api";
 import { Field } from "./Field";
+import { ModuleFlow } from "./ModuleFlow";
+import { BatchExport } from "./BatchExport";
 
 interface TabProps {
   views: Views;
@@ -14,6 +16,7 @@ interface TabProps {
   select: (moduleId: string) => Promise<void>;
   plan: <T>(action: string, args?: Json) => Promise<T>;
   openImport?: () => void;
+  busy?: boolean;
 }
 
 // --- 1. 설정 ---------------------------------------------------------------
@@ -61,7 +64,11 @@ export function SetupTab({ views, apply }: TabProps) {
 
 // --- 2. 프로토콜 -----------------------------------------------------------
 
-export function ProtocolTab({ views, apply, select, plan }: TabProps) {
+export function ProtocolTab({ views, project, apply, select, plan, busy }: TabProps) {
+  const [goalsOpen, setGoalsOpen] = useState(false);
+  const [days, setDays] = useState("14");
+  const [step, setStep] = useState("50");
+  const [budget, setBudget] = useState<{ ok?: boolean; totalCycles?: number; text?: string; source: Json } | null>(null);
   const [campaign, setCampaign] = useState({
     totalCycles: "200",
     rptEvery: "50",
@@ -69,9 +76,11 @@ export function ProtocolTab({ views, apply, select, plan }: TabProps) {
     dischargeCRate: "0.5",
     dcirRates: "1, 1.5, 2",
   });
-  const [preview, setPreview] = useState<{ blocks?: { title: string }[]; warnings?: string[]; errors?: string[] } | null>(null);
+  const [preview, setPreview] = useState<{ ok?: boolean; blocks?: { title: string }[]; warnings?: string[]; errors?: string[] } | null>(null);
   const [qcRates, setQcRates] = useState("");
   const [qcPreview, setQcPreview] = useState<{ ok?: boolean; notes?: string[]; warnings?: string[]; times?: number[] } | null>(null);
+  const cycleTarget = views.modules.find((m) => m.moduleId === views.selectedModule && ["cycle_life", "insitu_cycle"].includes(m.moduleType))
+    ?? views.modules.find((m) => ["cycle_life", "insitu_cycle"].includes(m.moduleType));
 
   const options = () => ({
     totalCycles: Number(campaign.totalCycles) || 0,
@@ -82,6 +91,20 @@ export function ProtocolTab({ views, apply, select, plan }: TabProps) {
   });
 
   return (
+    <div className="col">
+    <div className="protocol-overview">
+      <div>
+        <span className="eyebrow">BUILD YOUR TEST</span>
+        <h2>프로토콜 설계</h2>
+        <p>목적으로 시작하거나 프로토콜을 직접 추가한 뒤, 구간별 조건과 실행 순서를 한 화면에서 조정하세요.</p>
+      </div>
+      <div className="protocol-stats" aria-label="현재 일정 요약">
+        <div><strong>{views.modules.length}</strong><span>구간</span></div>
+        <div><strong>{views.summary.totalSteps}</strong><span>스텝</span></div>
+        <div><strong className="duration-stat" title={views.summary.durationText}>{views.summary.durationText.replace(/\s*\(근사\)/, "")}</strong><span>예상 시간 · 근사</span></div>
+      </div>
+    </div>
+    <ModuleFlow views={views} apply={apply} select={select} busy={busy} />
     <div className="protocol-grid">
       <div className="col">
         <div className="card">
@@ -95,12 +118,13 @@ export function ProtocolTab({ views, apply, select, plan }: TabProps) {
               ["DC-IR 전류", "dcirRates"],
             ] as const
           ).map(([label, key]) => (
-            <div className="row" key={key} style={{ padding: "2px 0" }}>
-              <label className="muted" style={{ width: 90 }}>{label}</label>
+            <div className="row campaign-row" key={key}>
+              <label className="muted" htmlFor={`campaign-${key}`}>{label}</label>
               <input
+                id={`campaign-${key}`}
                 className="grow"
                 value={campaign[key]}
-                onChange={(e) => setCampaign({ ...campaign, [key]: e.target.value })}
+                onChange={(e) => { setCampaign({ ...campaign, [key]: e.target.value }); setPreview(null); }}
               />
             </div>
           ))}
@@ -110,7 +134,7 @@ export function ProtocolTab({ views, apply, select, plan }: TabProps) {
             </button>
             <button
               className="primary"
-              disabled={!preview?.blocks?.length}
+              disabled={!preview?.ok || !preview.blocks?.length}
               onClick={async () => {
                 await apply("addCampaign", options());
                 setPreview(null);
@@ -129,22 +153,65 @@ export function ProtocolTab({ views, apply, select, plan }: TabProps) {
               {preview.warnings.join("\n\n")}
             </div>
           )}
+          {preview?.errors && preview.errors.length > 0 && (
+            <div className="danger" role="alert" style={{ fontSize: 12, marginTop: 6, whiteSpace: "pre-line" }}>
+              {preview.errors.join("\n")}
+            </div>
+          )}
         </div>
 
         <div className="card">
-          <h2>무엇을 알고 싶으신가요?</h2>
+          <button
+            type="button"
+            className="picker-toggle"
+            aria-expanded={goalsOpen}
+            aria-controls="goal-options"
+            onClick={() => setGoalsOpen((open) => !open)}
+          >
+            <span>무엇을 알고 싶으신가요?</span>
+            <span aria-hidden="true">{goalsOpen ? "▴" : "▾"}</span>
+          </button>
+          {goalsOpen && <div id="goal-options" className="goal-list" role="group" aria-label="실험 목적 목록">
           {views.goals.map((goal) => (
             <button
               key={goal.goalId}
               type="button"
               className="goal-button"
-              onClick={() => apply("addGoal", { goalId: goal.goalId })}
+              onClick={async () => {
+                await apply("addGoal", { goalId: goal.goalId });
+                setGoalsOpen(false);
+              }}
             >
               <div style={{ fontWeight: 600 }}>{goal.title}</div>
               <div className="muted">{goal.question}</div>
               <div className="muted">→ {goal.outcome} · {goal.trust}</div>
             </button>
           ))}
+          </div>}
+        </div>
+
+        <div className="card">
+          <h2>기간 기준 사이클 계산</h2>
+          <p className="muted">현재 프로토콜의 예상 시간을 기준으로 가능한 사이클 수를 계산합니다. 근사치이므로 실제 장비 시간과 다를 수 있습니다.</p>
+          <div className="row budget-controls">
+            <label htmlFor="budget-days">기간 (일)</label>
+            <input id="budget-days" type="number" min="1" value={days} onChange={(e) => { setDays(e.target.value); setBudget(null); }} />
+            <label htmlFor="budget-step">사이클 간격</label>
+            <input id="budget-step" type="number" min="1" value={step} onChange={(e) => { setStep(e.target.value); setBudget(null); }} />
+            <button disabled={!cycleTarget || !Number.isFinite(Number(days)) || Number(days) <= 0 || !Number.isInteger(Number(step)) || Number(step) <= 0} onClick={async () => {
+              if (!cycleTarget) return;
+              const result = await plan<{ ok?: boolean; totalCycles?: number; text?: string }>("cycleBudget", { days: Number(days), step: Number(step), moduleId: cycleTarget.moduleId });
+              setBudget({ ...result, source: project });
+            }}>계산</button>
+          </div>
+          {budget?.source === project && budget.text && <p className="muted" role="status">{budget.text}</p>}
+          {budget?.source === project && budget.ok && budget.totalCycles && cycleTarget && (
+            <button className="primary" onClick={async () => {
+              await apply("setCycleCount", { moduleId: cycleTarget.moduleId, count: budget.totalCycles });
+              setBudget(null);
+            }}>{budget.totalCycles} 사이클로 맞추기</button>
+          )}
+          {!cycleTarget && <p className="muted">먼저 수명 사이클 프로토콜을 추가하세요.</p>}
         </div>
       </div>
 
@@ -156,17 +223,7 @@ export function ProtocolTab({ views, apply, select, plan }: TabProps) {
               .filter(Boolean)
               .join("  |  ")}
           </div>
-          <div className="row" style={{ flexWrap: "wrap", marginBottom: 8 }}>
-            {views.modules.map((module) => (
-              <button
-                key={module.moduleId}
-                className={module.moduleId === views.selectedModule ? "primary chip" : "chip"}
-                onClick={() => select(module.moduleId)}
-              >
-                {module.position}. {module.title}
-              </button>
-            ))}
-          </div>
+          <p className="muted">위의 모듈 박스를 선택하면 이곳에서 해당 구간의 조건을 편집할 수 있습니다.</p>
 
           {views.form.moduleType === "qc" && (
             <div className="card" style={{ marginBottom: 10, background: "var(--panel-alt)" }}>
@@ -259,56 +316,32 @@ export function ProtocolTab({ views, apply, select, plan }: TabProps) {
         </div>
       </div>
     </div>
+    <ProcedureTab views={views} project={project} apply={apply} select={select} plan={plan} />
+    </div>
   );
 }
 
 // --- 3. 절차 ---------------------------------------------------------------
 
-export function ProcedureTab({ views, project, apply, select, plan }: TabProps) {
-  const [days, setDays] = useState("14");
+export function ProcedureTab({ views, project, apply, select }: TabProps) {
   const [steps, setSteps] = useState<Record<string, string>[]>([]);
   const [stepsShown, setStepsShown] = useState(false);
-  const [step, setStep] = useState("50");
-  const [budget, setBudget] = useState<{ ok?: boolean; totalCycles?: number; text?: string } | null>(null);
+  const [stepsError, setStepsError] = useState("");
   const [kind, setKind] = useState("rest");
+
+  useEffect(() => {
+    if (!stepsShown) return;
+    let cancelled = false;
+    api.steps(project).then((result) => {
+      if (!cancelled) { setSteps(result.steps); setStepsError(""); }
+    }).catch((error: unknown) => {
+      if (!cancelled) setStepsError(error instanceof Error ? error.message : String(error));
+    });
+    return () => { cancelled = true; };
+  }, [project, stepsShown]);
 
   return (
     <div className="col">
-      <div className="card">
-        <div className="row" style={{ flexWrap: "wrap" }}>
-          <strong>기간으로 정하기</strong>
-          <input style={{ width: 60 }} value={days} onChange={(e) => setDays(e.target.value)} />
-          <span className="muted">일 안에</span>
-          <input style={{ width: 55 }} value={step} onChange={(e) => setStep(e.target.value)} />
-          <span className="muted">사이클 단위로</span>
-          <button
-            onClick={async () =>
-              setBudget(await plan("cycleBudget", { days: Number(days), step: Number(step) }))
-            }
-          >
-            계산
-          </button>
-          <button
-            className="primary"
-            disabled={!budget?.ok}
-            onClick={async () => {
-              const target = views.modules.find((m) =>
-                ["cycle_life", "insitu_cycle"].includes(m.moduleType),
-              );
-              if (target && budget?.totalCycles)
-                await apply("setCycleCount", {
-                  moduleId: target.moduleId,
-                  count: budget.totalCycles,
-                });
-              setBudget(null);
-            }}
-          >
-            {budget?.totalCycles ? `${budget.totalCycles} 사이클로 맞추기` : "맞추기"}
-          </button>
-          <span className="muted grow">{budget?.text ?? ""}</span>
-        </div>
-      </div>
-
       <div className="card">
         <h2>실행 순서 · {views.procedure.stepCount} 스텝</h2>
         <div className="table-scroll"><table>
@@ -407,19 +440,11 @@ export function ProcedureTab({ views, project, apply, select, plan }: TabProps) 
         <div className="row">
           <h2 style={{ margin: 0 }}>장비 상세 보기 (읽기 전용)</h2>
           <span className="muted grow">{views.procedure.stepCount} 스텝</span>
-          <button
-            onClick={async () => {
-              if (stepsShown) {
-                setStepsShown(false);
-                return;
-              }
-              setSteps((await api.steps(project)).steps);
-              setStepsShown(true);
-            }}
-          >
+          <button onClick={() => setStepsShown((shown) => !shown)}>
             {stepsShown ? "접기" : "펼치기"}
           </button>
         </div>
+        {stepsError && <p className="danger" role="alert">{stepsError}</p>}
         <div className="table-scroll" style={{ maxHeight: 320, display: stepsShown ? undefined : "none" }}>
           <table>
             <thead>
@@ -443,44 +468,7 @@ export function ProcedureTab({ views, project, apply, select, plan }: TabProps) 
   );
 }
 
-// --- 4. 검증 ---------------------------------------------------------------
-
-export function ValidateTab({ views, select }: TabProps) {
-  const errors = views.validation.filter((row) => row.severity === "error");
-  const warnings = views.validation.filter((row) => row.severity !== "error");
-
-  return (
-    <div className="col">
-      <div className="card">
-        <h2>오류 {errors.length}건 · 경고 {warnings.length}건</h2>
-        {views.validation.length === 0 && <div className="muted">문제가 없습니다.</div>}
-        {views.validation.map((row, index) => (
-          <div
-            key={index}
-            style={{ padding: "6px 0", borderBottom: "1px solid var(--line)", cursor: row.moduleId ? "pointer" : undefined }}
-            onClick={() => row.moduleId && select(row.moduleId)}
-          >
-            <div className={row.severity === "error" ? "danger" : "warn"}>
-              [{row.severityLabel}] {row.location} — {row.message}
-            </div>
-            {row.remediation && <div className="muted">{row.remediation}</div>}
-          </div>
-        ))}
-      </div>
-
-      {views.unverified.length > 0 && (
-        <div className="card">
-          <h2>검증되지 않은 근거</h2>
-          <div className="muted" style={{ whiteSpace: "pre-line" }}>
-            {views.unverified.join("\n")}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// --- 5. 내보내기 -----------------------------------------------------------
+// --- 내보내기 ---------------------------------------------------------------
 
 export function ExportTab({ views, project, openImport }: TabProps) {
   const label = views.release.label;
@@ -505,6 +493,18 @@ export function ExportTab({ views, project, openImport }: TabProps) {
 
   return (
     <div className="col">
+      {(views.validation.length > 0 || views.unverified.length > 0) && (
+        <details className="card export-checks" open={views.validation.some((row) => row.severity === "error")}>
+          <summary>내보내기 전 확인 · 오류 {views.validation.filter((row) => row.severity === "error").length}건 · 경고 {views.validation.filter((row) => row.severity !== "error").length}건</summary>
+          {views.validation.map((row, index) => (
+            <p key={index} className={row.severity === "error" ? "danger" : "warn"}>
+              [{row.severityLabel}] {row.location} — {row.message}
+              {row.remediation && <span className="muted"> · {row.remediation}</span>}
+            </p>
+          ))}
+          {views.unverified.length > 0 && <p className="muted">미확인 근거: {views.unverified.join(" · ")}</p>}
+        </details>
+      )}
       <div className="card">
         <h2>진행 상태: {views.release.stageLabel}</h2>
         {label && (
@@ -562,6 +562,7 @@ export function ExportTab({ views, project, openImport }: TabProps) {
           )}
         </div>
       ))}
+      <BatchExport project={project} />
     </div>
   );
 }

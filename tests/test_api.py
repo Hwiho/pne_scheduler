@@ -85,6 +85,42 @@ def test_empty_project_form_has_the_shape_required_by_protocol_tab(client):
     assert views["form"]["sections"] == []
 
 
+def test_palette_metadata_matches_the_available_protocol_types(client, project):
+    views = client.post("/api/views", json={"project": project}).get_json()["views"]
+
+    assert [item["moduleType"] for item in views["palette"]] == views["paletteTypes"]
+    assert len(views["paletteTypes"]) == len(set(views["paletteTypes"]))
+    for item in views["palette"]:
+        assert set(item) == {
+            "moduleType", "title", "category", "description", "trust"
+        }
+        assert all(isinstance(value, str) and value for value in item.values())
+
+
+def test_adding_a_protocol_from_the_palette_selects_it_and_shows_its_form(
+    client, project
+):
+    original_modules = list(project["modules"])
+    palette = client.post(
+        "/api/views", json={"project": project}
+    ).get_json()["views"]["palette"]
+    chosen = palette[0]
+
+    response = client.post(
+        "/api/edit/addModule",
+        json={"project": project, "args": {"moduleType": chosen["moduleType"]}},
+    )
+
+    assert response.status_code == 200
+    body = response.get_json()
+    added = body["project"]["modules"][-1]
+    assert body["views"]["selectedModule"] == added["id"]
+    assert added["module_type"] == chosen["moduleType"]
+    assert body["views"]["form"]["moduleType"] == chosen["moduleType"]
+    assert body["views"]["form"]["sections"]
+    assert project["modules"] == original_modules
+
+
 # --- statelessness ----------------------------------------------------------
 
 def test_the_server_keeps_nothing_between_edits(client, project):
@@ -126,6 +162,59 @@ def test_new_module_is_selected_after_addition(client, project):
     )
     body = response.get_json()
     assert body["views"]["selectedModule"] == body["project"]["modules"][-1]["id"]
+
+
+def test_insert_module_between_boxes_rewires_execution_order(client, project):
+    original_ids = [node["id"] for node in project["modules"]]
+    response = client.post(
+        "/api/edit/addModule",
+        json={"project": project, "args": {"moduleType": "rest", "index": 1}},
+    )
+    assert response.status_code == 200
+    body = response.get_json()
+    ids = [node["id"] for node in body["project"]["modules"]]
+    assert ids[0] == original_ids[0]
+    assert ids[2:] == original_ids[1:]
+    assert body["views"]["selectedModule"] == ids[1]
+    assert [(edge["source_id"], edge["target_id"]) for edge in body["project"]["connections"]] == list(zip(ids, ids[1:]))
+
+
+def test_insert_module_rejects_out_of_range_slot(client, project):
+    response = client.post(
+        "/api/edit/addModule",
+        json={"project": project, "args": {"moduleType": "rest", "index": 999}},
+    )
+    assert response.status_code == 400
+    assert "위치" in response.get_json()["error"]
+
+
+def test_connecting_a_box_to_another_slot_reorders_and_rewires(client, project):
+    ids = [node["id"] for node in project["modules"]]
+    order = list(reversed(ids))
+    response = client.post(
+        "/api/edit/reorder",
+        json={"project": project, "selected": ids[0], "args": {"order": order}},
+    )
+    assert response.status_code == 200
+    body = response.get_json()
+    assert [node["id"] for node in body["project"]["modules"]] == order
+    assert body["views"]["selectedModule"] == ids[0]
+    assert [(edge["source_id"], edge["target_id"]) for edge in body["project"]["connections"]] == list(zip(order, order[1:]))
+
+
+def test_insert_slot_uses_existing_wiring_order_not_raw_json_order(client, project):
+    first, second = [node["id"] for node in project["modules"][:2]]
+    project["modules"] = project["modules"][:2]
+    project["connections"] = [{"source_id": second, "target_id": first}]
+    response = client.post(
+        "/api/edit/addModule",
+        json={"project": project, "args": {"moduleType": "rest", "index": 1}},
+    )
+    assert response.status_code == 200
+    ids = [node["id"] for node in response.get_json()["project"]["modules"]]
+    assert ids[0] == second
+    assert ids[2] == first
+    assert ids[1].startswith("rest_")
 
 
 # --- plan is not transform --------------------------------------------------

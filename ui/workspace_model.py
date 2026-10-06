@@ -29,6 +29,7 @@ from ..ir.equipment_profile import (
 )
 from ..ir.procedure import (
     ProcedureView,
+    adopt_connection_order,
     build_procedure,
     detach_module,
     linearize,
@@ -287,14 +288,24 @@ class WorkspaceModel:
         params: dict[str, Any] | None = None,
         *,
         label: str | None = None,
+        index: int | None = None,
     ) -> str:
         if get_module_class(module_type) is None:
             raise ValueError(f"알 수 없는 실험 종류입니다: {module_type}")
+        if index is not None and not 0 <= index <= len(self.project.modules):
+            raise ValueError("모듈을 넣을 위치가 실행 순서를 벗어났습니다.")
         resolved = resolve_params(module_type, dict(params or {}))
         module_id = self._next_id(module_type)
 
         def mutate(project: ScheduleProject) -> None:
-            project.modules.append(ModuleNode(module_id, module_type, resolved))
+            # Existing projects may carry valid wiring in an order different
+            # from their serialized module list. The flow's insertion index
+            # refers to the visible execution order, not that raw list.
+            adopt_connection_order(project)
+            project.modules.insert(
+                len(project.modules) if index is None else index,
+                ModuleNode(module_id, module_type, resolved),
+            )
             linearize(project)
 
         title = label or (get_module_spec(module_type).title if get_module_spec(module_type) else module_type)
@@ -411,6 +422,7 @@ class WorkspaceModel:
 
     def remove_module(self, module_id: str) -> None:
         def mutate(project: ScheduleProject) -> None:
+            adopt_connection_order(project)
             project.modules[:] = [n for n in project.modules if n.id != module_id]
             project.connections[:] = [
                 edge
@@ -426,6 +438,7 @@ class WorkspaceModel:
         new_id = self._next_id(node.module_type)
 
         def mutate(project: ScheduleProject) -> None:
+            adopt_connection_order(project)
             index = [n.id for n in project.modules].index(module_id)
             project.modules.insert(
                 index + 1, ModuleNode(new_id, node.module_type, dict(node.params))

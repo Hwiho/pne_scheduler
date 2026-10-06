@@ -1,0 +1,83 @@
+"""Local storage record persistence and notifier contracts."""
+
+from __future__ import annotations
+
+from datetime import datetime, timedelta, timezone
+
+import pytest
+
+from pne_scheduler.storage_companion import process_due
+from pne_scheduler.storage_records import StorageStore
+
+NOW = datetime(2026, 10, 3, 12, tzinfo=timezone.utc)
+
+
+def row(**changes):
+    return {"id": "cell_01", "sample": "Cell 01", "temperatureC": 45,
+            "startedAt": (NOW - timedelta(days=2)).isoformat(),
+            "targetDays": 1, "notifyEnabled": True, **changes}
+
+
+def test_persistence_due_and_once(tmp_path):
+    path = tmp_path / "storage.sqlite3"
+    store = StorageStore(path)
+    store.add(row(), now=NOW)
+    assert len(StorageStore(path).list_records()) == 1
+    notices = []
+    assert process_due(store, lambda title, message: notices.append((title, message)), now=NOW) == 1
+    assert "Cell 01" in notices[0][1]
+    assert process_due(store, lambda *_: pytest.fail("duplicate alert"), now=NOW) == 0
+    assert store.list_records()[0]["notifiedAt"] is not None
+
+
+def test_failed_send_retries_and_completed_does_not_alert(tmp_path):
+    store = StorageStore(tmp_path / "storage.sqlite3")
+    store.add(row(), now=NOW)
+
+    def fail(*_):
+        raise OSError("notifications disabled")
+
+    assert process_due(store, fail, now=NOW) == 0
+    assert store.list_records()[0]["notifiedAt"] is None
+    store.complete("cell_01", completed=True, now=NOW)
+    assert process_due(store, lambda *_: pytest.fail("completed alerted"), now=NOW) == 0
+    store.complete("cell_01", completed=False, now=NOW)
+    assert process_due(store, lambda *_: None, now=NOW) == 1
+
+
+def test_legacy_import_idempotent_atomic_and_opt_out(tmp_path):
+    store = StorageStore(tmp_path / "storage.sqlite3")
+    imported = store.import_legacy([row()], now=NOW)
+    assert imported == {"inserted": 1, "alreadyPresent": 0}
+    assert store.import_legacy([row()], now=NOW) == {"inserted": 0, "alreadyPresent": 1}
+    assert store.list_records()[0]["notifyEnabled"] is False
+    with pytest.raises(ValueError, match="충돌"):
+        store.import_legacy([row(sample="Different")], now=NOW)
+    assert store.list_records()[0]["sample"] == "Cell 01"
+
+
+def test_heartbeat_and_validation(tmp_path):
+    store = StorageStore(tmp_path / "storage.sqlite3")
+    assert store.companion_status(now=NOW)["active"] is False
+    store.heartbeat(now=NOW)
+    assert store.companion_status(now=NOW)["active"] is True
+    assert store.companion_status(now=NOW + timedelta(minutes=4))["active"] is False
+    with pytest.raises(ValueError, match="미래"):
+        store.add(row(startedAt=(NOW + timedelta(days=1)).isoformat()), now=NOW)
+    with pytest.raises(ValueError, match="기간"):
+        store.add(row(targetDays=0), now=NOW)
+
+
+def test_api_storage_flow(tmp_path):
+    pytest.importorskip("flask")
+    from pne_scheduler.api.app import create_app
+
+    client = create_app(tmp_path / "library", tmp_path / "storage.sqlite3").test_client()
+    empty = client.get("/api/storage").get_json()
+    assert empty["records"] == []
+    created = client.post("/api/storage", json=row()).get_json()
+    assert created["ok"] is True
+    assert client.get("/api/storage").get_json()["records"][0]["sample"] == "Cell 01"
+    assert client.post("/api/storage/cell_01/complete", json={"completed": True}).status_code == 200
+    assert client.get("/api/storage").get_json()["records"][0]["completedAt"] is not None
+    assert client.post("/api/storage", json=row(targetDays=0)).status_code == 400

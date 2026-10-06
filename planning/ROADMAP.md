@@ -4,6 +4,9 @@
 
 | Date | Summary |
 |------|---------|
+| 2026-10-03 | Replaced unreliable native HTML drag/drop in the method flow with pointer-captured palette/box dragging and a full-canvas nearest-connector target. Browser-tested insertion, box reordering, step-range updates and reload persistence on an isolated draft; still a linear execution model. Local only; no commit/push. |
+| 2026-10-03 | Clarified the intended Nova-style authoring UX: the primary web interaction is a **visible linear chain of box modules and connectors**, with insertion at connection points, drag/button reordering and box selection for parameters. Implemented locally in `web/src/components/ModuleFlow.tsx` using existing module-order/rewiring semantics; not yet committed or released. |
+| 2026-10-03 | Gate H: user chose directly entered per-cell reference capacity; the batch UI/API and local Windows storage companion code are in the uncommitted worktree. Automatic activation/derating result import is optional future scope, not a prerequisite. UI smoke and Python tests cover the local slice, not Windows delivery or equipment approval. Detail: [`GATE_H_PLAN.md`](GATE_H_PLAN.md). |
 | 2026-09-11 | PNE20 (6A) unit zip ingested: 354 sch; CTSMonPro `CYCSA-P1107-S01-R001-N013` (first CYCSA-P1107 family vs PNE19 CYCN-P1107). Dominant `0x00010004/696` (343), 10×`0x10002/612`, no `0x10005/720`. Spec 5V/6.0A 3-range. Writer not verified. |
 | 2026-09-11 | PNE18/PNE19 (both 6A) unit zips ingested. PNE18 shares PNE17 CTS `CYCC-1006-S01-R006-N04` but SCH corpus is **612-only** (53×0x10003, 4×0x10002). PNE19 is a new `CYCN-P1107-S01-8001-N03` family; dominant `0x00010004/696` (267), no `0x10005/720`. GUI Spec on PNE19 is 9.0A 3-range vs 6A recommended max. |
 | 2026-09-11 | PNE17 (6A) CTSMonPro `CYCC-1006-S01-R006-N04` recorded (new 1006/R006 family vs PNE15/16). `c:\PNE17.zip` is empty (`PNE17/` only); no SCH layout observed. |
@@ -51,7 +54,7 @@ What that means in practice:
 
 | Feel we want | In this product |
 |--------------|-----------------|
-| Drop / place **modules** then tune parameters | Experiment modules (Formation, Cycle Life, RPT, HPPC, …) expand to steps |
+| Place **box modules**, connect them in execution order, then tune parameters | Experiment modules (Formation, Cycle Life, RPT, HPPC, …) form a visible START→modules→END chain and expand to steps |
 | Ordered **procedure** of commands | Step list: CC, CCCV, Rest, Loop, END, … with a property pane |
 | Library of reusable methods | Versioned `.schproj` / module templates |
 | Clear cell / setup before editing | Explicit **Cell Profile** (1C = mA, limits, equipment) — never inferred for write |
@@ -59,12 +62,19 @@ What that means in practice:
 
 **Out of scope (clarified 2026-09-03):** realtime potentiostat-style instrument control, live I–V plots, CTSMonPro replacement. Export `.sch` → open/run on CTS remains the execution path. “Autolab” here is **visual/interaction language for making schedules**, nothing more.
 
-Nova and LabVIEW are **co-equal metaphors** for the same idea: modular composition. Prefer a clean procedure + module palette first; a free-form campaign canvas can follow if needed.
+Nova and LabVIEW are **co-equal metaphors** for the same idea: modular composition.
+The primary editor is the **box-and-connector method flow**, not a table or dropdown
+of modules. The present execution model is intentionally **one ordered path**;
+free branching needs a separate IR/compiler design and is not implied by a visual wire.
 
 ### 1.2 Functional goals
 
 - Users author **schedules from primitives + modules**, not raw binary fields
+- Users arrange modules as connected boxes; placing or moving a box changes the same
+  project order and connector edges used to compile the schedule.
 - Users enter a **C-rate**; current (mA) is calculated from an **explicit** reference capacity (1C = ___ mA)
+- For a cell batch, users **directly enter each cell's reference capacity (mAh)** for the chosen recipe phase. `1C (mA) = reference capacity (mAh)`; no measured-result import or automatic capacity-source selection is required. Each cell file records the entered value and actual currents as unverified manual input.
+- High-temperature storage records may show elapsed/due time in the web UI; background Windows notifications require a separate, locally installed notification component and persistent records.
 - Generated `.sch` files must be **CTSPro-reopen-verified** (and later equipment-verified) before any “executable” label
 - Dual authoring paths: **`patch-sch`** (template-preserving, preferred near-term) and experimental from-scratch **`build`**
 
@@ -245,7 +255,7 @@ Place a **version-independent IR** between the UI and binary layers.
 @dataclass
 class ScheduleProject:
     name: str
-    cell_profile: CellProfile          # reference capacity, Vmax/Vmin
+    cell_profile: CellProfile          # current v2: one explicit Q_nom, Vmax/Vmin
     sch_version: int                   # 0x00010003
     modules: list[ExperimentModule]    # graph nodes
     connections: list[ModuleConnection]  # execution order
@@ -255,7 +265,7 @@ class CellProfile:
     nominal_capacity_mAh: float
     v_max: float
     v_min: float
-    # optional: formation capacity, DCIR pulse C-rate table
+    # current v2: optional formation capacity; no per-cell result lineage yet
 
 @dataclass
 class StepIntent:
@@ -272,10 +282,16 @@ class StepIntent:
 
 Modules generate `StepIntent[]`, and the compiler flattens it into `FILE_STEP_CONDITION` byte records.
 
+**Current vs extension:** The code above is the single-cell `.schproj/v2` shape.
+Gate H batch clones it per cell and explicitly substitutes the user-entered
+reference capacity for that output; the original project is unchanged. A versioned
+observation model is optional future work. See [`GATE_H_PLAN.md`](GATE_H_PLAN.md) §2.
+
 ### 3.3 C-rate Engine (Addresses Requirement 3)
 
 ```
-I_mA = C_rate × Q_nominal_mAh
+Current writer (v2): I_mA = C_rate × Q_nominal_mAh
+Gate H batch:        I_mA = C_rate × Q_reference_entered(cell)_mAh
 ```
 
 | Input | Example | Output |
@@ -286,40 +302,33 @@ I_mA = C_rate × Q_nominal_mAh
 
 **UI rules:**
 - The user-facing unit is **always C-rate** (direct current input is available only as an advanced option)
-- Set `nominal_capacity_mAh` once in the Cell Profile → propagate it to every module
+- **Current v2:** set `nominal_capacity_mAh` once in the Cell Profile; it propagates to every module. **Gate H batch:** enter a reference capacity per cell; refuse a missing/invalid value. Each file uses that explicit value for its C-rate currents. Never infer writer Q from filenames or stack geometry.
 - Provide the allowed C-rate table (`_ALLOWED_CURRENT_RATES`) from ASSB `cell_c_rate_reference.py` as presets
 - When writing output, apply PNE raw units (mA) and float32 packing (`_f32repr` rules)
 
 ### 3.4 Visual UI (Addresses Requirement 1)
 
-**Screen layout:**
+**Current web interaction (2026-10-03 local checkout):**
 
 ```
-┌─────────────┬────────────────────────────────┬──────────────┐
-│ Module      │  Canvas (node graph)           │ Properties   │
-│ Palette     │                                │ Panel        │
-│             │  [Formation]──▶[CycleLife]     │              │
-│ · Formation │         │                      │ C-rate: 1C   │
-│ · CycleLife │         └──▶[RPT every 50]     │ Vmax: 4.2 V  │
-│ · RPT       │                                │ Loop: 500    │
-│ · HPPC      │                                │              │
-│ · DC-IR     │                                │              │
-│ · Rest      │                                │              │
-│ · Loop      │                                │              │
-└─────────────┴────────────────────────────────┴──────────────┘
-│ Timeline preview  │  Step table  │  Export .sch  │  Validate │
-└───────────────────────────────────────────────────────────────┘
+모듈 팔레트  →  START ──[Formation]──[Cycle Life]──[RPT]── END
+                   ↑          ↑              ↑
+                 삽입점     삽입점         삽입점
+선택한 박스 → 조건 편집  /  아래에는 스텝 표·예상 시간·내보내기
 ```
 
-**Technology stack candidates:**
+Click a palette tile to append, click `+` at a connector to insert, or choose a
+box's **연결** action and click its new connector to reorder; arrow controls and
+pointer-captured dragging offer alternatives. Dragging to the canvas selects the
+nearest connector, rather than requiring a precise drop on the small `+` button.
+All of these call the same module-order
+transform. `ir/procedure.py::linearize` regenerates `ModuleConnection` edges;
+the canvas does not maintain a second execution graph. The property form edits
+the selected box and server-side validation/release still governs output.
 
-| Option | Advantages | Disadvantages |
-|--------|------------|---------------|
-| **A. Tkinter + custom canvas** | Same stack as pne_studio2, simple deployment | Significant effort to implement the node graph |
-| **B. PySide6 + NodeEditor** | Closer to the LabVIEW UX | Adds dependencies |
-| **C. Web (React Flow) + Electron** | Best graph UX | Separate app, complex deployment |
-
-**Recommendation:** Start the Phase 3 visual UI as a separate app in `pne_scheduler/ui/`, then integrate it with pne_studio2 later.
+**Technology:** Next.js + Flask on the lab PC (Gate G), not the older
+Tk/Qt/Electron options. This is an **ordered method chain**, not a free-form
+branching graph or realtime instrument control.
 
 ---
 
@@ -332,7 +341,7 @@ I_mA = C_rate × Q_nominal_mAh
 | **Formation** | Charge CCCV → Rest → Discharge CC → Rest (×N cycles) | charge C, discharge C, Vmax/Vmin, cycle count |
 | **Cycle Life** | [Charge CCCV → Rest → Discharge CC → Rest] × loop | C_charge, C_discharge, end condition (V or C), loop count |
 | **RPT** | Reference discharge (C/3) → Rest → pseudo-OCV steps | C_ref, SOC checkpoints, anchor cycle interval |
-| **DC-IR** | SOC setting discharge → Rest → pulse discharge (short CC) → Rest | SOC %, pulse C, pulse duration, DCR window |
+| **DC-IR** | SOC setting discharge → Rest → pulse discharge (short CC) → Rest | SOC %, pulse C, pulse duration, DCR window; independent module currently has one pulse rate, whereas RPT/campaign already accept several (§6.9) |
 | **HPPC** | SOC staircase + pulse train (charge/discharge pulses) | SOC list, pulse C, pulse/rest duration |
 | **Rest / OCV** | Rest or OCV hold | duration, ΔV sampling |
 
@@ -380,7 +389,9 @@ class ExperimentModule(Protocol):
 |---------|-------------|
 | **Template library** | Cell Profile integration with ASSB presets (`06_assb_design_stack`) |
 | **Import existing .sch** | Reverse-parse a measured sch → IR → graph editing (reader extension) |
-| **Clone & parameter sweep** | Sweep only C-rate / cycle count over the same structure → batch export |
+| **Cell-capacity batch export** | Use one approved recipe with cell-specific, explicitly sourced reference capacities; preview per-cell currents and export separate gated SCH files |
+| **Clone & parameter sweep** | Sweep only C-rate / cycle count over the same structure → separate follow-on from capacity-specific batch |
+| **Storage due reminders** | Browser elapsed-time view plus optional local Windows background companion; persistent records, opt-in alerting, catch-up after missed times |
 | **Schedule fingerprint** | Compatible with ASSB `FrozenScheduleStructureFingerprint` — search for Sources with the same structure |
 | **Human-readable export** | Step table in Excel/PDF (for attachment to process documents) |
 | **Estimated duration / throughput** | Summary of total estimated time, energy, and cycle count |
@@ -418,7 +429,11 @@ from-scratch binary generation.
 | P1 | **Read-only SCH → IR import** | Enables review, cloning, and diffing of existing schedules before editable round-trip is trusted | Semantic reader coverage |
 | P1 | **Versioned protocol templates** | Makes Formation/Cycle/RPT/HPPC defaults reviewable and traceable by equipment profile | Golden module fixtures |
 | P1 | **Autolab/LabVIEW-feel schedule workspace** | Procedure + module palette + property pane + library (authoring UX only) | Trusted IR + Gate C exit |
-| P2 | **Parameter sweep and batch export** | Produces controlled variants after one template is verified | Safe patcher and manifest |
+| Optional / Gate H | **Automatic result-capacity provenance** | Future convenience if direct entry becomes burdensome; never silently replaces user-entered reference values | Real result samples and cell-ID mapping (H0); v1/v2 compatibility |
+| P1 / Gate H | **Cell-specific batch preview/export** | One recipe, directly entered reference capacity and distinct currents/SCH per cell, with per-artifact gates | Explicit input, safe writer and manifest (H2) |
+| P1 / Gate H | **Windows storage due reminders** | Delivers local due/overdue notices beyond an open browser, without asserting guaranteed delivery | Persistent store, opt-in Windows companion and on-device testing (H4) |
+| P1 / Gate H | **Standalone DC-IR rate policy** | Aligns the one-current standalone module with configurable RPT/campaign behavior | Confirm intended one-versus-many rule (H3) |
+| P2 | **General parameter sweep** | Produces controlled C-rate/cycle-count variants after cell-capacity batch works | Safe patcher and manifest |
 | P2 | **Approval/audit bundle** | Packages SCH hash, human-readable step table, diff report, screenshots, and operator approval | Stable export workflow |
 | P3 | **Campaign / multi-module canvas** | Extra LabVIEW-like graph if procedure+modules UI is not enough | Gates D–E |
 
@@ -475,8 +490,10 @@ not be marked done.
 
 ## 6. Implementation Roadmap
 
-Work proceeds **Gate A → B → C → D → E** in order for anything that reads on
-an equipment-readiness claim; **F and G then run in parallel** (see the diagram below). That said, most of D/E/F's *individual tasks* have
+Work proceeded **Gate A → B → C → D → E → G** for the established writer and web
+workspace. **F release evidence is independent of G**, while H product work extends
+the G web/API platform; the two active tracks can proceed in parallel.
+H does not override F's exact-artifact approval. Most D/E/F/H *software tasks* have
 no equipment dependency at all. The remaining physical checkpoints are pattern PV1/PV4
 (controlled pairs and CTSPro batch reopen), optional PV6/F3 execution, and any new exact-artifact
 release approval. E3/E3.1 **UI implementation itself** is software-only; applying a verified label
@@ -495,14 +512,17 @@ Gate C  호환 SCH writer    ✅ exited 2026-09-08 (C5 PNE02)
   ↓                         (parallel track below can run now, per-task)
 Gate D  모듈 픽스처 검증   ✅ software exit 2026-09-08 (P0/P1)
   ↓
-Gate E  모듈형 스케줄 UX   🔄 active — desktop workspace shipped 2026-09-09
-  ↓
-  ├─ Gate F  운영 릴리스 / 추적성  F5/F6 unblocked; F1–F4 need release-record work
+Gate E  모듈형 스케줄 UX   ◐ core software shipped; E2.2 lab/optional items open
+  ├─ Gate F  운영 릴리스 / 추적성  🔄 exact-artifact lab records needed
   └─ Gate G  웹 UI (Next.js)      ✅ complete 2026-09-09 — desktop shells removed
+       ↓
+     Gate H  셀별 용량·배치·알림  ◐ local manual batch/alert code; H0 evidence pending
 ```
 
 Gate G is **not** downstream of Gate F. They touch different things — F records what an
 artifact is, G changes what draws the screen — and neither blocks the other.
+Gate H extends the product while preserving that separation: its per-cell outputs must
+still pass F's release ladder independently.
 
 Before claiming any gate **exit**, run the §5.6 checklist — this still applies in
 full; only the "when can I start the next gate's software-only tasks" question
@@ -721,7 +741,7 @@ Gate D is software-only. Module expands are **protocol templates**; golden compa
 
 | | |
 |---|---|
-| **Status** | 🔄 **Partial** (E0/E0.5/E1/E2/E2.1/E2.3/E2.4/E3/E3.1/E4 ✅ — E2.3/E4 closed by G0; E2.2 waiting on CTSPro reopen; E5–E7 ⏳) |
+| **Status** | 🔄 **Core software shipped** (E0/E0.5/E1/E2/E2.1/E2.3/E2.4/E3/E3.1/E4 ✅ — E2.3/E4 closed by G0; E2.2 acceptance waits on CTSPro reopen; optional E5–E7 ⏳). The historical Qt/Tk screens below were retired by G4; the current workspace is web |
 | **Depends on** | **Nothing blocking as of 2026-09-08** — E0–E2.4 never needed a trusted writer, and E3/E3.1's Gate C exit dependency was satisfied by the C5 PNE02 pass. Export UX is now gated by *evidence discipline* (§5.6 L6/L9), not by an unmet gate |
 | **Exit criteria** | Schedule authoring feels like **module + procedure** composition (Nova/LabVIEW-like); multi-module END/LOOP composition is safe; pattern trust is visible; unsafe export blocked; library + Cell setup; byte-preserving imported patch session |
 | **Next gate** | Gate F |
@@ -783,7 +803,7 @@ a reopen record for that exact artifact (L6, §6.7 F1–F4).
 - `pne_scheduler flow` / `run_pne_scheduler_flow.py`: linear graph, `.schproj` load/save, Cell Profile, step preview — **seed** for E2/E2.2
 - 2026-09-06: found 3 abandoned Cursor Cloud branches with substantial unmerged UI work directly relevant to E2/E2.2/E2.3 (theming, recipe editing, schedule explanation) — see §6.6.1
 - 2026-09-06: **ported the `cursor/update-roadmap-5ac9` theming + attach/detach work** (§6.6.1's first recommendation) — `ui/flow_theme.py` (per-module-type card colors/icons, rounded-card Tk Canvas rendering), `engine/duration.py` (schedule duration estimate with loop/CV-taper caveats surfaced as warnings, not silently dropped), and `FlowProjectModel.rewire()` (LabVIEW-style click-port-then-click-port attach/detach, reusing existing cycle validation). Added `ModuleStyle` entries for `smoke_rest_cc_end`/`smoke_writer_probe` (module types that didn't exist when the branch was written). 273 tests pass (was 264); GUI construction + rewire + duration estimate smoke-tested non-interactively (`tk.Tk()` + `withdraw()`, no visible window in this environment — a human should still open it once to confirm the visual result)
-- Remaining for the intended feel: module palette prominence (E2.2), richer property forms (E2.1, still raw JSON), library (E2.3, `cursor/module-recipes-presets-5ac9`'s recipe concept is the recommended next port per `UI_UX_NOTES.md`), validation/export UX (E3 — **no longer gate-blocked** since the 2026-09-08 C5 pass), full undo/redo (the new `rewire()`'s returned notes are a natural logging seam for this, not yet wired to an undo stack)
+- Historical 2026-09-06 design note (superseded by E/G): module palette prominence, richer property forms, library, validation/export UX and undo/redo were still future work in the Tk flow editor. See G0–G5 and §9 for the current web state; do not treat this old note as an active task list.
 
 **Rules**
 - E3/E3.1 semantic export is **unblocked** (C5 passed 2026-09-08), but keep `patch-sch` the default export path and `build` explicitly experimental until the CLI header's 54-byte unexplained region is understood (L9, §11)
@@ -819,7 +839,7 @@ Gate B/C validation tooling, not UI — lower priority to review, listed in §11
 
 | | |
 |---|---|
-| **Status** | ⏳ **Not started on F1–F5**; **F6 done**. The C5 probe artifact can enter release-record work. A product release containing HPPC/QPEED/QC/Cycle presets still depends on the selected pattern pack's acceptance evidence |
+| **Status** | 🔄 **F5 label plumbing done; F1–F4 release records open; F6 core hosted CI exists**. The C5 probe artifact can enter release-record work. A product release containing HPPC/QPEED/QC/Cycle presets still depends on the selected pattern pack's acceptance evidence |
 | **Depends on** | For the exact C5 smoke artifact: record/hash work only. For authored pattern output: [`PATTERN_VALIDATION_PLAN.md`](PATTERN_VALIDATION_PLAN.md) PV4–PV5, plus PV6 if `equipment-run-verified` is claimed |
 | **Exit criteria** | Equipment-verified artifact with immutable hash, documented profile, hosted CI |
 | **Next gate** | — (maintenance / version bumps) |
@@ -847,7 +867,7 @@ before that — it just cannot promote an unapproved pattern.
 | **Status** | ✅ **Complete 2026-09-09** — G0–G5 done. The web app is the workspace; the Tk and Qt shells are deleted |
 | **Depends on** | **Nothing blocking.** G0 also closes what E2.3/E4 left unreachable. Does *not* depend on Gate F — release-record work and the UI re-platform are independent |
 | **Exit criteria** | The web UI is the default entry point; `release.py` still owns every gate; the API never lets a client compute `equipment_executable`; the Tk and Qt shells are removed rather than maintained in parallel |
-| **Next gate** | — (Gate F runs alongside, not after) |
+| **Next gate** | Gate H product plan; Gate F release records remain a parallel track |
 | **Boundary** | Split by whether an operation touches equipment-facing bytes — not by layer. Server stays on the lab PC; the core API is stateless |
 
 The port is affordable because `ui/workspace_model.py` never imported Qt or Tk, and
@@ -860,7 +880,7 @@ against 6,561 lines of shell-free logic that carries over.
 |---|------|--------|---------------------|:---:|
 | G0 | Unblock the stateless path | ✅ | `WorkspaceModel` usable without pushing undo; `SchPatchPlan.to_dict()`; a user-reachable way to save a method. **Closes E2.3 and E4** | No |
 | G1 | Python API — derive / transform / plan | ✅ | `POST /api/views`, `/api/edit/{action}`, `/api/plan/{action}`; no filesystem access in this group; existing 591 tests stand as the contract | No |
-| G2 | Next.js screens | ✅ | 설정 / 프로토콜 / 절차 / 검증 / 내보내기; forms rendered from `spec/` metadata rather than hand-written; undo/redo and autosave in the browser | No |
+| G2 | Next.js screens | ✅ | Original web workspace shipped with 설정 / 프로토콜 / 절차 / 검증 / 내보내기; forms rendered from `spec/` metadata, undo/redo and autosave in browser. The 2026-10-03 checkout has further **uncommitted** navigation, storage-tracker and Nova-style linear box-flow UI edits; these are not part of the 2026-09-09 gate claim | No |
 | G3 | Local-resource API | ✅ | `/api/library`, `/api/import/*`, `/api/export/*` — the only group touching the filesystem, and the line to hold if anything is ever centralised | No |
 | G4 | Retire the desktop shells | ✅ | `ui/workspace.py` and `ui/workspace_qt.py` + `qml/` removed; launchers point at the web app; `[gui]` extra dropped | No |
 | G5 | Lab-PC deployment | ✅ | One script starts both processes on localhost; documented in README with the same PowerShell examples as the current tools | No |
@@ -871,8 +891,9 @@ against 6,561 lines of shell-free logic that carries over.
   make one. The moment a browser computes `equipment_executable`, the safety model is gone.
 - **No central server that can emit equipment files** — §3.1 of the plan. Only the method
   library is worth centralising later, and it writes no equipment file.
-- **Do not back-port features to Tk.** It is a reduced fallback scheduled for removal in G4;
-  eight features added 2026-09-09 are Qt-only and stay that way.
+- **Do not restore a parallel Tk/Qt shell.** G4 removed those shells; any future
+  platform-specific component (such as H4 Windows alerts) must not become a second
+  schedule editor.
 - **No web dependency in `ui/workspace_model.py`.** Keeping Qt and Tk out of it is what made
   this port cheap; the same rule applies to whatever replaces the web UI later.
 
@@ -885,11 +906,43 @@ against 6,561 lines of shell-free logic that carries over.
 
 ---
 
-## 7. Proposed Package Layout
+### 6.9 Gate H — Per-cell capacity lineage, batch generation, DC-IR and Windows reminders
+
+| | |
+|---|---|
+| **Status** | 🔄 **Partial local implementation, uncommitted 2026-10-03**: direct per-cell reference-capacity batch preview/export, local SQLite storage and Windows notification companion code. Automatic result import is optional future work, not a batch prerequisite. Windows real-session delivery and Gate F artifact approval remain open |
+| **Depends on** | Gate G API/export boundary and the existing explicit-Q safety contract. Direct-input batch needs no activation/derating result sample. DC-IR intent and Windows deployment conditions remain open; Gate F artifact approval is separate |
+| **Exit criteria** | For at least three cells with different manually entered reference capacities: preview currents matching generated files, complete per-cell manifest/hash/gate results, explicit blocking on missing/invalid capacity and failed batch; standalone DC-IR rule tested; Windows due/overdue alert verified on a real Windows session, including restart/catch-up |
+| **Release boundary** | Every generated SCH remains draft/reopen-only until exact-file CTSPro review and relevant F approval. Windows alerts report stored deadlines, not verified chamber conditions |
+| **Detailed plan** | [`GATE_H_PLAN.md`](GATE_H_PLAN.md) |
+
+| # | Task | Order | Evidence / exit |
+|---|------|-------|-----------------|
+| H0 | Confirm optional real-data automation and open lab policies | Optional for batch; needed only if later adding result import | Result samples and cell/lot/channel mapping for any future importer; separate DC-IR policy and Windows notification environment |
+| H1 | Optional measured-result provenance/resolver | Only if result import is requested later | `.schproj` migration, discharge-capacity reading or current/time integration, source/units/quality checks; direct-entry output remains unchanged |
+| H2 | Per-cell batch preview/export | Direct-reference input implemented locally | Three-cell distinct 1C/current preview and batch file generation covered by `tests/test_batch.py`; per-file manifests and no-overwrite checks. Entered values remain unverified |
+| H3 | Standalone DC-IR rate reconciliation | After policy confirmation; parallel with H1/H2 | Existing one-rate projects unchanged; multi-rate only if requested; SOC/pulse/rest and current-limit tests |
+| H4 | Durable high-temp records + Windows background companion | Local code implemented; real Windows verification open | SQLite records, explicit non-destructive browser migration, due/overdue claiming and retry covered by `tests/test_storage_records.py`; notification-area delivery and login startup **not yet tested on Windows** |
+| H-UX | User-friendly box workflow and automated UI regression | Implemented locally, continue iterating | Palette/connector insert, select/edit, duplicate/delete, move/undo; scrollable goal selection; inline duration; clear export/storage states. `web/tests/ui-smoke.cjs` tests 1280/390 px, picker, box duplication/undo, batch preview and storage status |
+| H5 | End-to-end review | After H1–H4 | Three-cell lifecycle, UI/export numeric parity, safety regressions; F approval still per artifact |
+
+**Gate rule:** The 2026-09-09 Gate G stateless derive/transform/plan API remains intact.
+Measurement import, if added later, plus persistent reminders and batch disk writes
+belong only to the local-resource boundary. Direct reference-capacity input is
+explicit and cannot be silently replaced by a guessed channel match or lab metric.
+
+**Next usability pass:** add keyboard-first reordering, clear selected-box focus, per-cell
+inline capacity validation/import preview, and a storage companion diagnostic panel. Keep
+the linear execution graph explicit; do not imply branching instrument control.
+
+---
+
+## 7. Current package layout and Gate H additions
 
 ```
 pne_scheduler/                   # main package (repo root)
 ├── planning/ROADMAP.md          # this document
+├── planning/GATE_H_PLAN.md      # proposed additions, not yet implemented
 ├── example/example.schproj
 ├── schema/
 │   ├── v0x00010003_612.py
@@ -918,15 +971,11 @@ pne_scheduler/                   # main package (repo root)
 ├── classify/                    # filename classification
 ├── edit/                        # bulk module editing
 ├── resume/                      # resume interrupted experiments
-├── ui/
-│   ├── workspace_model.py       # every workspace action; no Qt and no Tk import
-│   ├── document.py              # undo/redo, dirty state, autosave, crash recovery
-│   ├── workspace_qt.py + qml/   # default shell (PySide6/QML), draws only
-│   ├── workspace.py             # Tk shell of the same screens; fallback
-│   ├── schedule_viewer.py
-│   ├── project_editor.py
-│   ├── resume_wizard.py
-│   └── flow_editor.py           # secondary graph view under 고급 도구
+├── ui/                          # shell-free workspace model + supporting tools
+│   └── workspace_model.py
+├── api/                         # Flask derive/transform/plan/local-resource
+├── web/                         # Next.js workspace
+├── spec/                        # parameter metadata
 ├── tools/                       # batch fixture analysis
 ├── docs/
 └── tests/
@@ -934,14 +983,12 @@ pne_scheduler/                   # main package (repo root)
 run_pne_scheduler.py             # root launcher
 ```
 
-Gate G adds two directories beside the package and removes `ui/workspace*.py` + `ui/qml/`:
-
-```
-api/                             # FastAPI (or equivalent) over ui/workspace_model.py
-│                                #   derive / transform / plan  — no filesystem
-│                                #   local resource            — library, import, export
-web/                             # Next.js app; forms rendered from spec/ metadata
-```
+Gate G already removed the Qt/Tk shells. Gate H's manual cell-batch exporter,
+durable local storage-record service, and Windows-only notification companion now
+exist in the uncommitted worktree. The capacity-result importer and versioned
+resolver do **not** exist yet. Keep disk writes outside pure derive/transform
+operations and route all equipment
+files through `release.py` and the local-resource API.
 
 **Validation dependency principle:** Basic read/write/round-trip functionality must work
 with the repository alone. Use `assb_analyzer.io.pne_converter.parse_sch_cycle_map_bytes`
@@ -961,7 +1008,11 @@ tests to be skipped.
 | Automatic selection of 612 vs 696 byte step size | Partially understood | Validate version→size mapping against the 102 secured measured sch files |
 | PNE raw current unit (mA vs A) | Depends on ini range | Compare Cell range profile with ASSB `unit_scale` |
 | PNE voltage/L-level encoding | **Partially resolved (612)** | Ensol map: `+12` mV (not `+16`); L-level fVref heuristic only for 15–80 V range; QPEED still needs pair |
-| Dual capacity models | **Writer path resolved** | Writer uses explicit `cell_capacity_mAh` (= 1C mA); viewer may still infer Q_nom |
+| Writer vs viewer capacity model | **Existing contract resolved; H direct-entry extension implemented locally** | Current writer uses explicit `cell_profile.nominal_capacity_mAh` (= 1C mA); viewer may infer display-only Q_nom. H batch substitutes a directly entered value per cell without allowing viewer inference into output |
+| Cell identity and measured-result selection | Optional future H0/H1 | Obtain actual activation/derating export examples only if automatic import is later requested; direct reference input requires no channel match |
+| Different capacities across one batch | H2 direct-input slice implemented | Per-cell input previews currents and emits gated artifacts/manifests. No filename-only assignment or partial-success claim |
+| Background Windows reminder reliability | H4 code implemented; Windows test pending | Browser storage is not a background notifier; local persistent records + Windows companion, opt-in startup, overdue catch-up, test sleep/offline/clock changes. No promise while PC is off |
+| DC-IR one vs many pulse currents | H0/H3 open | Standalone module has one, RPT/campaign have many; confirm intended rule before changing existing recipe topology |
 | Internal structure of `FILE_GRADE`, `STRUCT_EIS_SET` | Only names are present in Excel | Defer 0x00010007 to Phase 4 |
 | Recommended Δt/ΔV/ΔQ values | UNKNOWN in cyclediag | Reverse-extract from internal standard sch samples |
 | Writer validation on physical equipment | **Closed — C5** | PNE02 2026-09-08; checklist signed |
@@ -978,32 +1029,26 @@ tests to be skipped.
 
 ## 9. Current focus (active gate)
 
-**Active: Gate F — operational release.** Gate G completed 2026-09-09; Gate E is closed
-except E2.2, which waits on the lab.
+**Active:** Gate F exact-artifact lab/release evidence; **Gate H partial local software**, with H0 data
+samples and terminology pending. Gate G is complete and is the current web platform;
+Qt/Tk shells were removed. Gate E's core software path shipped, while E2.2 lab
+acceptance and optional E5–E7 remain open. The 2026-10-03 browser UX,
+storage-tracker and box-and-connector method-flow changes in the working tree
+are **local and uncommitted**; the Windows companion exists as separate code but
+has not been checked on Windows. The flow uses the existing linear module semantics; branch wiring
+has not been added.
 
-The desktop workspace shipped 2026-09-09 and Gate E is substantially closed, but the UI is
-being re-platformed to Next.js, so no further work goes into the Tk or Qt shells. What is
-left of E2.3/E4 — a way to save a method, a serializer so an import session's plan can reach
-`patch-sch` — is G0, because those live in the model and carry over.
+| Priority | Gate | Next action |
+|----------|------|-------------|
+| 1 | H2 / H5 | Confirm direct reference-capacity values and per-cell generated currents on the intended Windows/lab workflow; keep SCH candidates reopen-only pending approval |
+| 2 | H0 / H1 (optional) | Request activation/derating result samples only if automatic import is later desired; preserve the direct-input workflow |
+| 3 (parallel) | H3 / H4 | Align standalone DC-IR after intent confirmed; verify implemented local reminders on a Windows user session, including restart and sleep |
+| 4 | H5 | Check three different-capacity cells end-to-end and SCH reparse/current parity; do not promote unsupported binary fields |
+| Lab parallel | PV1/PV4 / F1–F4 | Controlled SOC/capacity field evidence and CTSPro reopen/save-as for exact candidate files; run approval is a separate checkpoint |
 
-Everything that would make the tool *usable for real experiments* is now blocked on people,
-not code: pattern acceptance needs a CTSEditorPro batch reopen (PV4), and F1–F4 need the
-matching records.
-
-| Step | Gate | Action |
-|------|------|--------|
-| 1 | C5 | ✅ Passed — `GATE_C_EQUIPMENT_SMOKE_CHECKLIST.md` |
-| 2 | C exit | ✅ Gaps: DCR IR-only; 696 tail unused; CLI header 54-byte region |
-| 3 | D | ✅ Software P0/P1 complete; see §6.5 honest gaps |
-| 4 | **E foundation** | E0/E0.5: IA + composer END/LOOP + catalog + validator |
-| 5 | **Pattern PV0–PV3** | Canonical HPPC/QPEED/QC/Cycle recipes + reopen candidate pack |
-| 6 | **E workspace** | ✅ Shipped 2026-09-09 (Qt/QML default, Tk fallback) |
-| 7 | **User PV4** | ⏳ Batch CTSPro reopen + save-as files; run은 별도 PV6 |
-| 8 | **G0** | Stateless path + `SchPatchPlan.to_dict()` + method save — closes E2.3/E4 |
-| 9 | **G1–G5** | Web API → Next.js screens → local-resource API → retire desktop shells |
-| 10 | F | Exact pattern hash/profile 범위로 release (G와 병렬) |
-
-Completed: Gate A; Gate B (`gate_b_passed`); Gate C (C5 signed); Gate D (software).
+Completed: Gate A, B (`gate_b_passed`), C (C5 signed), D (software), G (web
+port); E core software. **Not completed:** Gate H, F lab release, E2.2 lab
+acceptance/optional items, PV1/PV4.
 
 Process: use §5.6 lessons checklist on every future gate claim.
 
@@ -1031,6 +1076,10 @@ relevant Gate task table (§6.2–6.7). Closed items stay for audit trail.
 
 | Date | Gate | Severity | Issue | Status | Resolution / next action |
 |------|------|----------|-------|--------|--------------------------|
+| 2026-10-03 | H0/H1 | optional | Existing `nominal_capacity_mAh` drives every module and `fEndC`; automatic design/activation/derating provenance is not implemented. User chose direct per-cell reference-capacity input instead. | deferred | Preserve direct-input output; add observation records only if automatic result import is later requested. [`GATE_H_PLAN.md`](GATE_H_PLAN.md) |
+| 2026-10-03 | H2 | high | One-project export could not create different-capacity SCHs per cell; batch writes need individual release evidence and failure handling. | partial local implementation | Manual per-cell preview/export, fail-closed plan, new-directory staging and per-artifact hash/manifest covered by `tests/test_batch.py`; real result provenance and equipment reopen still open. |
+| 2026-10-03 | H3 | normal | Standalone DC-IR has one pulse C-rate, while RPT/campaign already accept several; desired change needs confirmation. | awaiting H0 | Preserve existing one-rate recipes; if user wants many, migrate to rate list and test SOC/pulse/rest topology; DCR offsets remain unverified. |
+| 2026-10-03 | H4 | high | Browser-local high-temperature storage tracker cannot provide reliable Windows background reminders or cross-browser durable records. | partial local implementation | SQLite store, explicit non-destructive migration and Windows companion with due/overdue retry tests; real Windows notification and login-start verification still open. |
 | 2026-10-03 | G / UX | high | Live browser audit found Protocol tab crashed on an empty project (`form.limitations` absent), module selection reset after editing, and Export buttons had no action. Narrow screens wrapped navigation labels vertically and pushed protocol content off-screen. | ✅ resolved | Complete empty-form API shape, carry selected module through edits, wire draft/preview/review export buttons, reject nonempty output folders, and rework responsive layout. Verified actual browser file writes and 390/768/1280 px layouts. |
 | 2026-09-13 | E1 | low | Four `cursor/*` PRs sat open two weeks, 54–62 commits behind. #6 and #8 are genuinely superseded (duration/theming ported in `e5eee75`; QPEED/HPPC live in Gate D-verified modules; the flow_editor rework died with G4). #12 and #7 were **not** — both landed on master instead. | ✅ resolved | #12 cherry-picked (`2c39f09`); #7's `explain_schedule` ported. **#6 and #8 still need closing on GitHub — no API token is available here.** |
 | 2026-09-11 | B / E4 | **high** | **0x10005/720 writer promotion contradicted its evidence.** Commit 24ad984 asserted seven writer keys for 720 although no 720 controlled diff or CTSEditorPro reopen record existed. | ✅ software restriction applied 2026-10-03; lab evidence pending | Removed 0x10005 from `WRITER_VERIFIED_VERSIONS`. Existing files still open and explain, but imported 720 files offer no patchable fields. Promotion requires a controlled 720 pair or CTSPro reopen record; a matching 612-byte prefix alone does not establish writer safety. |

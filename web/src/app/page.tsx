@@ -4,15 +4,14 @@ import { useState } from "react";
 import { api, type Json } from "@/lib/api";
 import { useDocument } from "@/lib/useDocument";
 import { ImportTab } from "@/components/ImportTab";
+import { StorageTracker } from "@/components/StorageTracker";
 import {
   ExportTab,
-  ProcedureTab,
   ProtocolTab,
   SetupTab,
-  ValidateTab,
 } from "@/components/tabs";
 
-const TABS = ["설정", "프로토콜", "절차", "검증", "내보내기", "기존 SCH"] as const;
+const TABS = ["설정", "프로토콜", "내보내기", "기존 SCH", "고온저장"] as const;
 
 export default function Workspace() {
   const doc = useDocument();
@@ -41,8 +40,9 @@ export default function Workspace() {
     project: doc.project,
     apply: doc.apply,
     select: doc.select,
+    busy: doc.busy,
     plan,
-    openImport: () => setTab(5),
+    openImport: () => setTab(3),
   };
 
   return (
@@ -104,10 +104,9 @@ export default function Workspace() {
 
       {tab === 0 && <SetupTab {...props} />}
       {tab === 1 && <ProtocolTab {...props} />}
-      {tab === 2 && <ProcedureTab {...props} />}
-      {tab === 3 && <ValidateTab {...props} />}
-      {tab === 4 && <ExportTab {...props} />}
-      {tab === 5 && <ImportTab />}
+      {tab === 2 && <ExportTab {...props} />}
+      {tab === 3 && <ImportTab />}
+      {tab === 4 && <StorageTracker />}
 
       <footer className="workspace-footer">
         {doc.views.summary.totalSteps} 스텝 · {doc.views.summary.durationText} ·{" "}

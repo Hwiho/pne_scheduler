@@ -90,7 +90,59 @@ export const api = {
     post<{ ok: true; paths: string[]; note: string }>("/api/export", {
       project, kind, outDir,
     }),
+
+  planCellBatch: (project: Json, args: Json) =>
+    post<CellBatchPlan>("/api/plan/cellBatch", { project, args }),
+
+  exportCellBatch: (project: Json, args: Json, token: string, outDir: string) =>
+    post<{ ok: true; paths: string[]; note: string }>("/api/export/cell-batch", {
+      project, args, token, outDir,
+    }),
+
+  storage: () => get<StorageResponse>("/api/storage"),
+  addStorage: (record: Json) => post<{ ok: true; record: StorageRecord }>("/api/storage", record),
+  importStorage: (records: StorageRecord[]) =>
+    post<{ ok: true; inserted: number; alreadyPresent: number }>("/api/storage/import-legacy", { records }),
+  completeStorage: (id: string, completed: boolean) =>
+    post<{ ok: true }>(`/api/storage/${encodeURIComponent(id)}/complete`, { completed }),
 };
+
+export interface StorageRecord {
+  id: string;
+  sample: string;
+  temperatureC: number;
+  startedAt: string;
+  targetDays: number;
+  dueAt: string;
+  notifyEnabled: boolean;
+  completedAt: string | null;
+  notifiedAt: string | null;
+}
+
+export interface StorageResponse {
+  ok: true;
+  records: StorageRecord[];
+  companion: { active: boolean; lastHeartbeatAt: string | null };
+}
+
+export interface CellBatchPlan {
+  ok: boolean;
+  token: string;
+  note: string;
+  errors: string[];
+  warnings: string[];
+  rows: {
+    cellId: string;
+    designCapacityMah: number | null;
+    selectedCapacityMah: number | null;
+    basis: string;
+    oneCmA: number | null;
+    maxCurrentmA: number;
+    fixedCurrentSteps: number;
+    allowed: boolean;
+    blockers: string[];
+  }[];
+}
 
 // --- payload shapes ---------------------------------------------------------
 
@@ -169,6 +221,13 @@ export interface Views {
     note: string;
   }[];
   paletteTypes: string[];
+  palette: {
+    moduleType: string;
+    title: string;
+    category: string;
+    description: string;
+    trust: string;
+  }[];
   modules: {
     moduleId: string;
     moduleType: string;

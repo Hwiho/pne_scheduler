@@ -11,6 +11,7 @@ from __future__ import annotations
 from typing import Any
 
 from ..edit.diff import StepDiff
+from ..modules.catalog import get_module_spec
 from ..release import ReleaseState
 from ..report.summary import ProjectSummary
 from ..spec.form import ModuleForm
@@ -229,6 +230,17 @@ def views_json(
             for row in model.goal_rows()
         ],
         "paletteTypes": list(model.palette_types()),
+        "palette": [
+            {
+                "moduleType": module_type,
+                "title": spec.title if spec else module_type,
+                "category": spec.category if spec else "",
+                "description": spec.description if spec else "",
+                "trust": spec.trust_status if spec else "prototype",
+            }
+            for module_type in model.palette_types()
+            for spec in [get_module_spec(module_type)]
+        ],
         "modules": [
             {
                 "moduleId": row.module_id,

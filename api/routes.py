@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from ..edit.steps import StepEditError
+from ..batch import export_cell_batch as write_cell_batch, plan_cell_batch
 from ..exporting import ExportBlocked, export_preview, export_review_candidate
 from ..import_session import ImportSession
 from ..library import MethodLibrary, MethodVersion
@@ -82,7 +83,8 @@ def _run(
     except (StepEditError, ValueError) as exc:
         raise ApiError(str(exc)) from exc
     if select_new and model.project.modules:
-        selected = model.project.modules[-1].id
+        ids = {node.id for node in model.project.modules}
+        selected = result if isinstance(result, str) and result in ids else model.project.modules[-1].id
     return {
         "ok": True,
         "project": model.project.to_dict(),
@@ -97,7 +99,10 @@ TRANSFORMS: dict[str, Callable[[WorkspaceModel, dict[str, Any]], Any]] = {
     "setEquipmentUnit": lambda m, a: m.set_equipment_unit(a["unit"]),
     "setCellValue": lambda m, a: m.set_cell_value(a["key"], a["text"]),
     "addGoal": lambda m, a: m.add_goal(a["goalId"]),
-    "addModule": lambda m, a: m.add_module(a["moduleType"], a.get("params")),
+    "addModule": lambda m, a: m.add_module(
+        a["moduleType"], a.get("params"),
+        index=int(a["index"]) if "index" in a else None,
+    ),
     "removeModule": lambda m, a: m.remove_module(a["moduleId"]),
     "duplicateModule": lambda m, a: m.duplicate_module(a["moduleId"]),
     "setParam": lambda m, a: m.set_param(a["moduleId"], a["key"], a["text"]),
@@ -135,7 +140,7 @@ def transform(action: str, payload: dict[str, Any]) -> dict[str, Any]:
             model,
             lambda: handler(model, args),
             selected=str(payload.get("selected") or ""),
-            select_new=action in {"addGoal", "addModule", "addCampaign"},
+            select_new=action in {"addGoal", "addModule", "addCampaign", "duplicateModule"},
         )
     except KeyError as exc:
         raise ApiError(f"필요한 값이 없습니다: {exc.args[0]}") from exc
@@ -213,6 +218,10 @@ def _budget(model: WorkspaceModel, args: dict[str, Any]) -> dict[str, Any]:
 
 
 PLANS: dict[str, Callable[[WorkspaceModel, dict[str, Any]], dict[str, Any]]] = {
+    "cellBatch": lambda m, a: plan_cell_batch(
+        m.project, phase=str(a.get("phase", "")), basis=str(a.get("basis", "manual_reference")),
+        kind=str(a.get("kind", "")), rows=a.get("rows"),
+    ).to_dict(),
     "campaign": _campaign,
     "qcFastCharge": _qc,
     "cycleBudget": _budget,
@@ -377,6 +386,28 @@ def export(payload: dict[str, Any]) -> dict[str, Any]:
         "kind": result.kind,
         "paths": [str(path) for path in result.paths],
         "note": result.note,
+    }
+
+
+def export_batch(payload: dict[str, Any]) -> dict[str, Any]:
+    """Replan before writing: only the exact reviewed project and cell list may run."""
+    model = _model(payload)
+    args = _args(payload)
+    plan = plan_cell_batch(
+        model.project, phase=str(args.get("phase", "")), basis=str(args.get("basis", "manual_reference")),
+        kind=str(args.get("kind", "")), rows=args.get("rows"),
+    )
+    try:
+        paths = write_cell_batch(
+            plan, Path(str(payload.get("outDir", ""))), token=str(payload.get("token", "")),
+        )
+    except ExportBlocked as exc:
+        raise ApiError(str(exc), status=409) from exc
+    except (OSError, ValueError) as exc:
+        raise ApiError(f"배치 생성에 실패했습니다: {exc}") from exc
+    return {
+        "ok": True, "kind": plan.kind, "paths": [str(path) for path in paths],
+        "note": "셀별 수동 입력 용량으로 생성했습니다. 검토용 SCH는 장비 실행 금지입니다.",
     }
 
 

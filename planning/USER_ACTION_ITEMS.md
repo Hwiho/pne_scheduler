@@ -1,35 +1,34 @@
 # What you need to do (lab / decisions)
 
-Gate C **exited 2026-09-08** (C5 PNE02). Gate D **software exit 2026-09-08**
-(capacity contract + all P0/P1 module harnesses + golden family compares).
-Software focus is now **Gate E** plus the pattern-acceptance track. No *lab* work is
-required until the SOC/DOD controlled-pair session or the generated reopen pack is ready —
-but there is now one desk task, below.
+Gate C **exited 2026-09-08** (C5 PNE02); Gate D software and Gate G web port are
+complete. Gate F exact-artifact lab evidence remains open. Gate H has a local,
+uncommitted direct-reference-capacity batch implementation and unfinished Windows
+verification: see [`GATE_H_PLAN.md`](GATE_H_PLAN.md).
+
+The previous desktop workspace instructions below are historical. The current editor
+is the web workspace; Qt/Tk shells were removed. A local browser high-temperature
+storage tracker is not a Windows background notification service.
 
 ---
 
-## 0. Open the new workspace once — 🔎 needs your eyes
+## 0. Gate H inputs — decisions and small real-data samples
 
-```powershell
-pip install -e ".[gui]"
-python run_pne_scheduler_workspace.py example\example.schproj
-```
+No equipment run is needed to answer these; a de-identified export sample is enough
+for H0. Do not put private raw lab files in a public issue or commit without reviewing
+the lab data policy.
 
-The workspace shipped 2026-09-09 and was only ever verified headless: tests build the QML
-engine offscreen and fail on any QML warning, which catches a broken binding but **cannot
-see whether the screen is usable**. Nothing here touches equipment, so this is safe to
-click through freely.
+1. For the current batch workflow, enter each cell's **reference capacity (mAh)**
+   directly; activation/derating result samples are **not required**. Supply such
+   samples only if you later want automatic import and cell/channel matching.
+2. Confirm whether “DC-IR uses only one current” means **add multiple selectable
+   pulse C-rates to standalone DC-IR**, or instead **limit RPT/campaign DC-IR to one**.
+   Existing standalone recipes remain one-rate until this is clear.
+3. State the Windows version, whether the lab PC is logged in/allowed to start a
+   local companion at sign-in, and the desired warning schedule (due only or before
+   due). A powered-off PC cannot show a real-time toast; late notices can be caught up.
 
-Worth reporting back: Korean labels that read wrong for lab use, a tab whose order fights
-how you actually work, and anything in 5. 내보내기 that looks like it would let a file reach
-the cycler without a CTSPro check — the last one is a bug, not a preference.
-
-Newer surfaces that have never been seen either: the 사이클 + RPT 캠페인 card and the
-급속충전 전류 control in 2. 프로토콜, the 기간으로 정하기 row in 3. 절차, the C-rate chips
-under every rate field, and the 단일 스텝 entry in the experiment palette.
-
-Without PySide6 the same command opens the Tk build instead and says so; that fallback is
-expected, not a failure.
+The direct-input batch does not wait for an importer. DC-IR intent and Windows
+environment still determine their respective follow-up work.
 
 ---
 
@@ -102,8 +101,10 @@ CTS Type dropdown의 **Ocv / Impedance / Balance / Pattern** stubs는
 
 ## 5. Software next
 
-- **Gate E** — Nova + LabVIEW *feel* for module/procedure authoring (§1.1, §6.6)
-- **Pattern acceptance PV0–PV3** — canonical recipe를 만든 뒤 reopen pack 생성
+- **Gate H2** — directly entered reference capacity per cell is implemented locally;
+  verify resulting currents and exact SCH candidates in the lab. H1 result import is optional.
+- **Pattern acceptance PV1/PV4 + Gate F** — exact-artifact release remains a separate
+  lab track; a successful batch export is not an execution approval.
 - **PV3 pack 준비됨:** [`../example/pattern_review_pack/2026-09-09/INDEX.md`](../example/pattern_review_pack/2026-09-09/INDEX.md).
   사용자는 `REOPEN_ONLY_DO_NOT_RUN` 파일을 CTSEditorPro에서 일괄 reopen하고
   `review_results.csv`에 기록한다. RPT 및 family-template 후보는 특히 prototype/근사 recipe로 본다.
