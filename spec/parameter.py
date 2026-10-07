@@ -23,6 +23,7 @@ ParamKind = Literal[
     "duration_s",
     "percent",
     "fraction",
+    "soc_percent",
     "count",
     "choice",
     "bool",
@@ -31,6 +32,7 @@ ParamKind = Literal[
     "voltage_list",
     "duration_list",
     "fraction_list",
+    "soc_percent_list",
 ]
 
 Risk = Literal["normal", "caution", "critical"]
@@ -59,6 +61,7 @@ _LIST_ELEMENT_KIND: dict[str, ParamKind] = {
     "voltage_list": "voltage_v",
     "duration_list": "duration_s",
     "fraction_list": "fraction",
+    "soc_percent_list": "soc_percent",
 }
 
 _UNIT_LABELS: dict[str, str] = {
@@ -68,6 +71,7 @@ _UNIT_LABELS: dict[str, str] = {
     "duration_s": "시간",
     "percent": "%",
     "fraction": "비율 (0–1)",
+    "soc_percent": "%",
     "count": "회",
 }
 
@@ -194,6 +198,8 @@ def _format_scalar(kind: ParamKind, value: Any) -> str:
         return units.format_percent(float(value))
     if kind == "fraction":
         return f"{float(value):g}"
+    if kind == "soc_percent":
+        return units.format_percent(float(value) * 100.0)
     if kind == "count":
         return units.format_count(float(value))
     if kind == "bool":
@@ -243,6 +249,10 @@ def parse_value(spec: ParameterSpec, text: Any) -> Any:
 def _parse_scalar(kind: ParamKind, text: Any) -> Any:
     if isinstance(text, bool):
         return text
+    if kind == "soc_percent":
+        # Only the form boundary changes: saved projects and SOC calculations
+        # continue to use fractions. Bare 80 and explicit 80% both mean 0.8.
+        return units.parse_percent(text) / 100.0
     if isinstance(text, (int, float)) and kind != "count":
         return float(text)
     if kind == "c_rate":
@@ -251,6 +261,8 @@ def _parse_scalar(kind: ParamKind, text: Any) -> Any:
         return units.parse_duration_s(text)
     if kind == "voltage_v":
         return units.parse_voltage(text)
+    if kind == "current_mA":
+        return units.parse_current_mA(text)
     if kind == "percent":
         return units.parse_percent(text)
     if kind == "count":
@@ -393,7 +405,7 @@ def describe_value(
     elif spec.element_kind == "duration_s" and value is not None:
         seconds = [float(item) for item in value] if spec.is_list else [float(value)]
         detail = " / ".join(units.format_duration_ko(item) for item in seconds)
-    elif spec.element_kind == "fraction" and value is not None:
+    elif spec.element_kind in {"fraction", "soc_percent"} and value is not None:
         fractions = [float(item) for item in value] if spec.is_list else [float(value)]
         detail = " / ".join(units.format_fraction_as_soc(item) for item in fractions)
     elif spec.kind == "choice":

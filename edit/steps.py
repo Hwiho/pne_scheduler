@@ -21,6 +21,7 @@ Two invariants are enforced here rather than left to the writer:
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 from typing import Any
 
 from ..ir.step_intent import StepIntent
@@ -72,6 +73,7 @@ class StepFieldView:
     kind: str
     text: str
     detail: str = ""
+    numeric_value: float | None = None
 
 
 def _as_intent(raw: dict[str, Any]) -> StepIntent:
@@ -190,6 +192,8 @@ def step_fields(
                 kind=kind,
                 text=_format(kind, value),
                 detail=_detail(kind, value, nominal_capacity_mAh),
+                numeric_value=float(value) if isinstance(value, (int, float))
+                and not isinstance(value, bool) and math.isfinite(value) else None,
             )
         )
     return tuple(views)
@@ -218,7 +222,7 @@ def _detail(kind: str, value: Any, capacity: float) -> str:
     if kind == "duration_s":
         return units.format_duration_ko(float(value))
     if kind == "fraction":
-        return f"SOC {units.format_fraction_as_soc(float(value))}"
+        return f"기준용량의 {units.format_percent(float(value) * 100.0)}"
     return ""
 
 

@@ -33,7 +33,10 @@ PRIMITIVE_KINDS: dict[str, tuple[str, str | None, str]] = {
 }
 
 # Which fields each kind actually uses; the form hides the rest.
-_USES_C_RATE = {"cc_charge", "cccv_charge", "cc_discharge"}
+# A CV step still needs an explicit current ceiling.  Reuse the same C-rate
+# field as CC/CCCV so old projects keep their 0.5C default and the ordinary
+# cell/equipment current-limit gates apply before export.
+_USES_C_RATE = {"cc_charge", "cccv_charge", "cv_charge", "cc_discharge"}
 _USES_TARGET_VOLTAGE = {"cccv_charge", "cv_charge"}
 _USES_CHARGE_CUTOFF = {"cc_charge"}
 _USES_DISCHARGE_CUTOFF = {"cc_discharge"}

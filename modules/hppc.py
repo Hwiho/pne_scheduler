@@ -4,7 +4,18 @@ from dataclasses import dataclass, field
 
 from ..ir.cell_profile import CellProfile
 from ..ir.step_intent import StepIntent
+from ..protocol.soc_ladder import (
+    CHARGE_TO_FULL,
+    PREPARATION_POLICIES,
+    UNCONFIRMED_ENTRY,
+    is_finite_number,
+    pulse_capacity_fraction,
+)
 from .base import register_module
+
+
+_SOC_PULSE_VARIANTS = frozenset({"discharge_soc_pulse", "charge_soc_pulse"})
+_VARIANTS = frozenset({"full", "legacy_soc_pulse", *_SOC_PULSE_VARIANTS})
 
 
 @register_module("hppc")
@@ -21,6 +32,9 @@ class HppcModule:
     full_time_limit_s: float = 57600.0
     full_rest_s: float = 1800.0
     full_long_rest_s: float = 3600.0
+    soc_rest_s: float = 1800.0
+    preparation_policy: str = UNCONFIRMED_ENTRY
+    start_soc: float = 1.0
 
     @classmethod
     def from_params(cls, params: dict) -> HppcModule:
@@ -28,16 +42,158 @@ class HppcModule:
         return cls(**known)
 
     def validate(self, cell: CellProfile) -> list[str]:
-        if self.variant not in {"full", "legacy_soc_pulse"}:
-            return ["variant must be full or legacy_soc_pulse"]
+        if self.variant not in _VARIANTS:
+            return [
+                "variant must be full, legacy_soc_pulse, discharge_soc_pulse, "
+                "or charge_soc_pulse"
+            ]
         if not self.soc_fractions:
             return ["soc_fractions must not be empty"]
+        if self.variant in _SOC_PULSE_VARIANTS:
+            return self._validate_soc_pulse_mode()
         return []
 
     def expand(self, cell: CellProfile) -> list[StepIntent]:
         if self.variant == "full":
             return self._expand_full(cell)
+        if self.variant in _SOC_PULSE_VARIANTS:
+            return self._expand_soc_pulse_mode(cell)
         return self._expand_legacy()
+
+    def _validate_soc_pulse_mode(self) -> list[str]:
+        errors: list[str] = []
+        if self.preparation_policy not in PREPARATION_POLICIES:
+            errors.append(
+                "preparation_policy must be 'unconfirmed_entry', "
+                "'user_confirmed_start_soc', or 'charge_to_full'"
+            )
+        if not is_finite_number(self.start_soc) or not 0.0 <= self.start_soc <= 1.0:
+            errors.append("start_soc must be finite and between 0 and 1")
+        elif self.preparation_policy == CHARGE_TO_FULL and self.start_soc != 1.0:
+            errors.append("charge_to_full requires start_soc == 1")
+
+        if any(not is_finite_number(soc) for soc in self.soc_fractions):
+            errors.append("SOC fractions must be finite")
+        else:
+            socs = [float(soc) for soc in self.soc_fractions]
+            if any(not 0.0 <= soc <= 1.0 for soc in socs):
+                errors.append("SOC fractions must be between 0 and 1")
+            if any(later >= earlier for earlier, later in zip(socs, socs[1:])):
+                errors.append("SOC fractions must be strictly descending")
+
+        if not is_finite_number(self.reference_c_rate) or self.reference_c_rate <= 0.0:
+            errors.append("SOC-adjustment reference C-rate must be finite and positive")
+        if not is_finite_number(self.pulse_c_rate) or self.pulse_c_rate <= 0.0:
+            errors.append("measurement pulse C-rate must be finite and positive")
+        if not is_finite_number(self.pulse_s) or self.pulse_s <= 0.0:
+            errors.append("measurement pulse duration must be finite and positive")
+        if not is_finite_number(self.soc_rest_s) or self.soc_rest_s <= 0.0:
+            errors.append("SOC rest duration must be finite and positive")
+        if not is_finite_number(self.rest_between_s) or self.rest_between_s < 0.0:
+            errors.append("post-pulse rest duration must be finite and nonnegative")
+
+        usable = (
+            is_finite_number(self.start_soc)
+            and all(is_finite_number(soc) for soc in self.soc_fractions)
+            and is_finite_number(self.pulse_c_rate)
+            and self.pulse_c_rate > 0.0
+            and is_finite_number(self.pulse_s)
+            and self.pulse_s > 0.0
+        )
+        if usable:
+            pulse_fraction = pulse_capacity_fraction(self.pulse_c_rate, self.pulse_s)
+            remaining_soc = float(self.start_soc)
+            for soc_value in self.soc_fractions:
+                soc = float(soc_value)
+                if remaining_soc < soc:
+                    errors.append(
+                        "each SOC target must be reachable by reference-rate discharge "
+                        "after prior pulse capacity"
+                    )
+                    break
+                if self.variant == "discharge_soc_pulse":
+                    remaining_soc = soc - pulse_fraction
+                    if remaining_soc <= 0.0:
+                        errors.append(
+                            "discharge measurement pulse would deplete nominal SOC to or below 0%"
+                        )
+                        break
+                else:
+                    remaining_soc = soc + pulse_fraction
+                    if remaining_soc >= 1.0:
+                        errors.append(
+                            "charge measurement pulse would fill nominal SOC to or above 100%"
+                        )
+                        break
+        return errors
+
+    def _expand_soc_pulse_mode(self, cell: CellProfile) -> list[StepIntent]:
+        steps: list[StepIntent] = []
+        if self.preparation_policy == CHARGE_TO_FULL:
+            steps.extend(
+                [
+                    StepIntent(
+                        step_type="charge",
+                        mode="CCCV",
+                        label="HPPC user-selected preparation charge to full",
+                        c_rate=self.reference_c_rate,
+                        voltage_v=cell.v_max,
+                        cv_cutoff_c_rate=0.05,
+                    ),
+                    StepIntent(
+                        step_type="rest",
+                        label="HPPC rest after user-selected preparation charge",
+                        end_time_s=self.soc_rest_s,
+                    ),
+                ]
+            )
+
+        pulse_fraction = pulse_capacity_fraction(self.pulse_c_rate, self.pulse_s)
+        remaining_soc = self.start_soc
+        discharge_pulse = self.variant == "discharge_soc_pulse"
+        for soc in self.soc_fractions:
+            adjustment = remaining_soc - soc
+            if adjustment > 0.0:
+                steps.append(
+                    StepIntent(
+                        step_type="discharge",
+                        mode="CC",
+                        label=f"HPPC reference-rate SOC adjustment discharge to {soc:.0%}",
+                        c_rate=self.reference_c_rate,
+                        end_capacity_fraction=adjustment,
+                        end_voltage_v=cell.v_min,
+                    )
+                )
+            steps.append(
+                StepIntent(
+                    step_type="rest",
+                    label=f"HPPC SOC rest before measurement pulse @ {soc:.0%}",
+                    end_time_s=self.soc_rest_s,
+                )
+            )
+            steps.append(
+                StepIntent(
+                    step_type="discharge" if discharge_pulse else "charge",
+                    mode="CC",
+                    label=(
+                        f"HPPC {'discharge-only' if discharge_pulse else 'charge-only'} "
+                        f"measurement pulse @ {soc:.0%}"
+                    ),
+                    c_rate=self.pulse_c_rate,
+                    voltage_v=cell.v_min if discharge_pulse else cell.v_max,
+                    end_voltage_v=cell.v_min if discharge_pulse else cell.v_max,
+                    end_time_s=self.pulse_s,
+                )
+            )
+            steps.append(
+                StepIntent(
+                    step_type="rest",
+                    label=f"HPPC SOC rest after measurement pulse @ {soc:.0%}",
+                    end_time_s=self.rest_between_s,
+                )
+            )
+            remaining_soc = soc - pulse_fraction if discharge_pulse else soc + pulse_fraction
+        return steps
 
     def _expand_legacy(self) -> list[StepIntent]:
         steps: list[StepIntent] = []

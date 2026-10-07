@@ -1,4 +1,5 @@
 node_modules/
 .next/
+.next-human-audit/
 next-env.d.ts
 *.tsbuildinfo

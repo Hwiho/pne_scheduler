@@ -56,7 +56,7 @@ def _schedule_candidate_score(data: bytes, payload_offset: int, step_size: int) 
 
 
 def detect_sch_layout(data: bytes) -> tuple[int, int] | None:
-    best: tuple[int, int, int] | None = None
+    best: tuple[int, bool, int, int] | None = None
     scan_limit = min(len(data) - 12, 5000)
     for payload_offset in range(0, scan_limit, 4):
         step_no = struct.unpack_from("<i", data, payload_offset)[0]
@@ -65,11 +65,18 @@ def detect_sch_layout(data: bytes) -> tuple[int, int] | None:
             continue
         for step_size in SCH_STEP_SIZE_CANDIDATES:
             score = _schedule_candidate_score(data, payload_offset, step_size)
-            if best is None or score > best[0]:
-                best = (score, payload_offset, step_size)
-    if best is None or best[0] < 3:
+            remaining = len(data) - payload_offset
+            exact_fit = (
+                remaining >= 0
+                and remaining % step_size == 0
+                and remaining // step_size == score
+            )
+            candidate = (score, exact_fit, payload_offset, step_size)
+            if best is None or candidate[:2] > best[:2]:
+                best = candidate
+    if best is None or (best[0] < 3 and not (best[1] and best[0] >= 1)):
         return None
-    return best[1], best[2]
+    return best[2], best[3]
 
 
 def _sch_candidate_value(record: bytes, value_type: str, offset: int) -> MetadataValue:

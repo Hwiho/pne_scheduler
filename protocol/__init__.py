@@ -19,6 +19,7 @@ from .defaults import (
     RPT_DISCHARGE_C_RATE,
 )
 from .infer import InferredProtocol, ProtocolInference, infer_protocol_from_schedule
+from .module_state import ModuleBoundaryIssue, module_boundary_issues
 
 __all__ = [
     "EvidenceKind",
@@ -40,4 +41,6 @@ __all__ = [
     "InferredProtocol",
     "ProtocolInference",
     "infer_protocol_from_schedule",
+    "ModuleBoundaryIssue",
+    "module_boundary_issues",
 ]

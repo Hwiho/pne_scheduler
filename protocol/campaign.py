@@ -14,10 +14,16 @@ handles — each block keeps its own LOOP target and only the last block owns EN
 
 from __future__ import annotations
 
+import math
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from .defaults import RPT_DCIR_SOC_FRACTIONS, RPT_DISCHARGE_C_RATE
+from .defaults import (
+    RPT_DCIR_PULSE_C_RATE_DEFAULT,
+    RPT_DCIR_SOC_FRACTIONS,
+    RPT_DISCHARGE_C_RATE,
+)
+from .soc_ladder import CHARGE_TO_FULL, UNCONFIRMED_ENTRY, validate_soc_ladder
 
 # A measurement point costs real time, so the default rhythm is deliberately
 # coarse; the lab tightens it when a cell is degrading fast.
@@ -68,13 +74,15 @@ def build_cycle_rpt_campaign(
     rpt_every: int = DEFAULT_RPT_EVERY,
     charge_c_rate: float,
     discharge_c_rate: float,
-    dcir_pulse_c_rates: Sequence[float] = (1.0, 1.5, 2.0),
+    dcir_pulse_c_rates: Sequence[float] = (RPT_DCIR_PULSE_C_RATE_DEFAULT,),
     reference_c_rate: float = RPT_DISCHARGE_C_RATE,
     soc_fractions: Sequence[float] = RPT_DCIR_SOC_FRACTIONS,
     cycle_rest_s: float = 300.0,
     rpt_rest_s: float = 1800.0,
     dcir_pulse_s: float = 10.0,
     baseline_rpt: bool = True,
+    preparation_policy: str = UNCONFIRMED_ENTRY,
+    start_soc: float = 1.0,
 ) -> CampaignPlan:
     """Plan a "run N cycles, measure, repeat" campaign.
 
@@ -82,16 +90,34 @@ def build_cycle_rpt_campaign(
     number is meaningless without the value it faded from.
     """
     errors: list[str] = []
-    if total_cycles < 1:
+    if isinstance(total_cycles, bool) or not isinstance(total_cycles, int) or total_cycles < 1:
         errors.append("총 사이클 수는 1 이상이어야 합니다.")
-    if rpt_every < 1:
+    if isinstance(rpt_every, bool) or not isinstance(rpt_every, int) or rpt_every < 1:
         errors.append("RPT 주기는 1 이상이어야 합니다.")
-    if charge_c_rate <= 0 or discharge_c_rate <= 0:
+    if any(
+        isinstance(rate, bool)
+        or not isinstance(rate, (int, float))
+        or not math.isfinite(rate)
+        or rate <= 0
+        for rate in (charge_c_rate, discharge_c_rate)
+    ):
         errors.append("충전율과 방전율은 0보다 커야 합니다.")
     if not dcir_pulse_c_rates:
         errors.append("DC-IR 펄스 전류를 하나 이상 지정하세요.")
-    elif any(rate <= 0 for rate in dcir_pulse_c_rates):
-        errors.append("DC-IR 펄스 전류는 0보다 커야 합니다.")
+    ladder_errors = validate_soc_ladder(
+        start_soc=start_soc,
+        soc_fractions=soc_fractions,
+        setting_c_rate=reference_c_rate,
+        pulse_c_rates=dcir_pulse_c_rates,
+        pulse_s=dcir_pulse_s,
+        rest_s=rpt_rest_s,
+        preparation_policy=preparation_policy,
+        dcr_start_s=1.0,
+        dcr_end_s=10.0,
+    )
+    errors.extend(ladder_errors)
+    if not isinstance(cycle_rest_s, (int, float)) or isinstance(cycle_rest_s, bool) or not math.isfinite(cycle_rest_s) or cycle_rest_s <= 0:
+        errors.append("사이클 휴지 시간은 유한한 양수여야 합니다.")
     if errors:
         return CampaignPlan(errors=tuple(errors))
 
@@ -103,6 +129,8 @@ def build_cycle_rpt_campaign(
         "rest_s": rpt_rest_s,
         "soc_fractions": [float(value) for value in soc_fractions],
         "include_dcir_pulses": True,
+        "preparation_policy": preparation_policy,
+        "start_soc": float(start_soc),
     }
     rate_text = _rate_text(rates)
 
@@ -142,10 +170,28 @@ def build_cycle_rpt_campaign(
             f"마지막 구간은 {chunks[-1]}회입니다 (총 사이클이 주기의 배수가 아니라 나머지가 남았습니다)."
         )
 
+    if preparation_policy == CHARGE_TO_FULL:
+        entry_warning = (
+            "사용자가 charge_to_full을 선택하여 각 RPT 앞에 기준 C-rate CCCV 준비 충전"
+            "(0.05C CV 종료)과 휴지를 추가했습니다. 이는 소프트웨어 구성일 뿐 CTSPro "
+            "재열기 또는 장비 실행이 검증된 것은 아닙니다."
+        )
+    elif preparation_policy == UNCONFIRMED_ENTRY:
+        entry_warning = (
+            "각 RPT 는 기본적으로 시작 SOC 100%를 계산 기준으로 사용하지만 진입 상태를 "
+            "확인하거나 충전하지 않습니다. 시작 SOC를 사용자가 확인하기 전까지는 "
+            "ENTRY_SOC_UNCONFIRMED 경고가 유지됩니다."
+        )
+    else:
+        entry_warning = (
+            "사용자가 시작 SOC를 확인했지만 앞 모듈이 그 상태를 만드는지는 별도 "
+            "경계 검사 대상입니다. 준비 충전은 자동으로 추가되지 않습니다."
+        )
     warnings = [
+        entry_warning,
         "DC-IR 저항 계산 구간(1초–10초)은 장비 파일에 기록되지 않습니다. "
-        "펄스는 정상적으로 실행되지만 저항은 CTSPro 에서 구간을 지정하거나 "
-        "측정 데이터에서 직접 계산해야 합니다.",
+        "펄스 스텝 생성과 장비 동작은 검증된 것이 아니며, 저항은 CTSPro 에서 "
+        "구간을 지정하거나 측정 데이터에서 직접 계산해야 합니다.",
         "RPT 모듈은 아직 prototype 입니다. CTSPro 재열기 확인 전에는 "
         "장비 실행용으로 내보낼 수 없습니다.",
     ]

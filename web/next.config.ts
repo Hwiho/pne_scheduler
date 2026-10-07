@@ -6,6 +6,7 @@ import type { NextConfig } from "next";
 const API = process.env.PNE_API ?? "http://127.0.0.1:8000";
 
 const config: NextConfig = {
+  distDir: process.env.PNE_NEXT_DIST ?? ".next",
   async rewrites() {
     return [{ source: "/api/:path*", destination: `${API}/api/:path*` }];
   },

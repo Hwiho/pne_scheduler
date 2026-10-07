@@ -16,6 +16,8 @@ equipment file, or that a rescaled QC time is a constant-current approximation.
 from __future__ import annotations
 
 from pathlib import Path
+import hashlib
+import json
 from typing import Any, Callable
 
 from ..edit.steps import StepEditError
@@ -24,10 +26,12 @@ from ..exporting import ExportBlocked, export_preview, export_review_candidate
 from ..import_session import ImportSession
 from ..library import MethodLibrary, MethodVersion
 from ..protocol.explain import explain_schedule, format_explanation
+from ..protocol.module_content import derive_module_content
+from ..spec.form import build_module_form
 from ..ui.document import ProjectDocument
 from ..ui.workspace_model import WorkspaceModel
 from .errors import ApiError
-from .serializers import diff_json, views_json
+from .serializers import diff_json, form_json, views_json
 
 
 def _model(
@@ -52,6 +56,24 @@ def _args(payload: dict[str, Any]) -> dict[str, Any]:
 # --- derive -----------------------------------------------------------------
 
 
+def open_project(payload: dict[str, Any]) -> dict[str, Any]:
+    """Normalize a browser-selected project, without reading arbitrary paths."""
+    from ..ir.loader import repair_project_dict
+    from ..ir.project import SCHPROJ_SCHEMA_V1, SCHPROJ_SCHEMA_V2
+
+    raw = payload.get("data")
+    if not isinstance(raw, dict) or "cell_profile" not in raw or "modules" not in raw:
+        raise ApiError(".schproj 프로젝트 파일을 선택하세요. 셀 정보와 모듈 목록이 필요합니다.")
+    if raw.get("schema", SCHPROJ_SCHEMA_V1) not in {SCHPROJ_SCHEMA_V1, SCHPROJ_SCHEMA_V2}:
+        raise ApiError("지원하지 않는 프로젝트 버전입니다. v1/v2 .schproj 파일을 선택하세요.")
+    try:
+        loaded = repair_project_dict(raw)
+        return {"ok": True, "project": loaded.project.to_dict(), "repairs": list(loaded.repairs),
+                "migratedFrom": loaded.migrated_from}
+    except (TypeError, ValueError, KeyError, AttributeError) as exc:
+        raise ApiError(f"프로젝트를 읽을 수 없습니다: {exc}") from exc
+
+
 def views(payload: dict[str, Any]) -> dict[str, Any]:
     model = _model(payload)
     return {
@@ -68,7 +90,87 @@ def steps(payload: dict[str, Any]) -> dict[str, Any]:
     return {"ok": True, "steps": list(model.display_step_rows())}
 
 
+def module_content(payload: dict[str, Any]) -> dict[str, Any]:
+    """A non-mutating expanded view of one module or retained group child."""
+    model = _model(payload)
+    module_id = payload.get("moduleId")
+    if not isinstance(module_id, str) or not module_id:
+        raise ApiError("moduleId 가 필요합니다.")
+    raw_child_index = payload.get("childIndex")
+    if raw_child_index is None:
+        child_index = None
+    elif isinstance(raw_child_index, bool) or not isinstance(raw_child_index, int):
+        raise ApiError("childIndex 는 정수여야 합니다.")
+    else:
+        child_index = raw_child_index
+    try:
+        content = derive_module_content(model.project, module_id, child_index)
+        children = []
+        for child in content.children:
+            form = build_module_form(
+                child.node.module_type,
+                child.node.params,
+                cell=model.project.cell_profile,
+                current_limit_mA=model.current_limit_mA,
+            )
+            children.append(
+                {
+                    "index": child.index,
+                    "moduleId": child.node.id,
+                    "moduleType": child.node.module_type,
+                    "title": child.title,
+                    "summary": child.summary,
+                    "repeatCount": child.repeat_count,
+                    "stepCount": child.step_count,
+                    "form": form_json(form, child.node.id, 1),
+                }
+            )
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ApiError(str(exc)) from exc
+    return {
+        "ok": True,
+        "moduleId": content.module_id,
+        "childIndex": content.child_index,
+        "moduleType": content.node.module_type,
+        "title": content.title,
+        "customized": content.customized,
+        "stepCount": len(content.steps),
+        "steps": list(content.steps),
+        "children": children,
+    }
+
+
 # --- transform --------------------------------------------------------------
+
+def _qpeed_voltage_preview(model: WorkspaceModel, args: dict[str, Any]) -> dict[str, Any]:
+    from ..protocol.qpeed_results import preview_soc_voltages
+    nodes = [node for node in model.project.modules if node.id == args.get("moduleId")]
+    if not nodes or nodes[0].module_type != "qpeed":
+        raise ValueError("전압을 불러올 QPEED 모듈을 선택하세요.")
+    mapping = args.get("mapping", {})
+    if not isinstance(mapping, dict):
+        raise ValueError("열 대응은 객체여야 합니다.")
+    preview = preview_soc_voltages(args.get("text", ""), mapping=mapping,
+                                  reference_capacity_mAh=(model.project.cell_profile.nominal_capacity_mAh
+                                                          if args.get("useReferenceCapacity") is True else None))
+    signed = {"project": model.project.to_dict(), "moduleId": args["moduleId"],
+              "mapping": preview["mapping"], "digest": preview["digest"],
+              "fileName": str(args.get("fileName", ""))[:512],
+              "useReferenceCapacity": args.get("useReferenceCapacity") is True}
+    preview["token"] = hashlib.sha256(json.dumps(signed, sort_keys=True, ensure_ascii=False, allow_nan=False).encode()).hexdigest()
+    return preview
+
+
+def _apply_qpeed_voltage(model: WorkspaceModel, args: dict[str, Any]):
+    preview = _qpeed_voltage_preview(model, args)
+    if args.get("token") != preview["token"]:
+        raise ApiError("미리보기 후 파일·열·프로젝트가 바뀌었습니다. 다시 미리보기 하세요.", status=409)
+    chosen = next((row for row in preview["candidates"] if row["id"] == args.get("candidateId")), None)
+    if chosen is None:
+        raise ValueError("미리보기 목록의 전압 행을 직접 선택하세요.")
+    source = json.dumps({"fileName": Path(str(args.get("fileName", "결과 파일"))).name[:512],
+                         "textSha256": preview["digest"], **chosen}, ensure_ascii=False, sort_keys=True)
+    return model.apply_qpeed_voltage(args["moduleId"], chosen["voltageV"], source, chosen["socPercent"])
 
 
 def _run(
@@ -95,6 +197,7 @@ def _run(
 
 
 TRANSFORMS: dict[str, Callable[[WorkspaceModel, dict[str, Any]], Any]] = {
+    "applyQpeedVoltage": _apply_qpeed_voltage,
     "setProjectName": lambda m, a: m.set_project_name(a["name"]),
     "setEquipmentUnit": lambda m, a: m.set_equipment_unit(a["unit"]),
     "setCellValue": lambda m, a: m.set_cell_value(a["key"], a["text"]),
@@ -105,6 +208,16 @@ TRANSFORMS: dict[str, Callable[[WorkspaceModel, dict[str, Any]], Any]] = {
     ),
     "removeModule": lambda m, a: m.remove_module(a["moduleId"]),
     "duplicateModule": lambda m, a: m.duplicate_module(a["moduleId"]),
+    "groupModules": lambda m, a: m.group_modules(a["moduleIds"], a["name"], a.get("repeatCount", 1)),
+    "loadMethod": lambda m, a: m.load_saved_method(a["methodId"]),
+    "ungroupModule": lambda m, a: m.ungroup_module(a["moduleId"]),
+    "setGroupChildParam": lambda m, a: m.set_group_child_param(a["moduleId"], int(a["index"]), a["key"], a["text"]),
+    "detachGroupChild": lambda m, a: m.detach_group_child(
+        a["moduleId"], int(a["index"])
+    ),
+    "setGroupChildStepField": lambda m, a: m.set_group_child_step_field(
+        a["moduleId"], int(a["childIndex"]), int(a["index"]), a["key"], a["text"]
+    ),
     "setParam": lambda m, a: m.set_param(a["moduleId"], a["key"], a["text"]),
     "applyToAllOfType": lambda m, a: m.apply_to_all_of_type(
         a["moduleType"], a["key"], a["text"]
@@ -129,18 +242,18 @@ TRANSFORMS: dict[str, Callable[[WorkspaceModel, dict[str, Any]], Any]] = {
 }
 
 
-def transform(action: str, payload: dict[str, Any]) -> dict[str, Any]:
+def transform(action: str, payload: dict[str, Any], *, library: MethodLibrary | None = None) -> dict[str, Any]:
     handler = TRANSFORMS.get(action)
     if handler is None:
         raise ApiError(f"알 수 없는 편집입니다: {action}", status=404)
-    model = _model(payload)
+    model = _model(payload, library=library)
     args = _args(payload)
     try:
         return _run(
             model,
             lambda: handler(model, args),
             selected=str(payload.get("selected") or ""),
-            select_new=action in {"addGoal", "addModule", "addCampaign", "duplicateModule"},
+            select_new=action in {"addGoal", "addModule", "addCampaign", "duplicateModule", "groupModules"},
         )
     except KeyError as exc:
         raise ApiError(f"필요한 값이 없습니다: {exc.args[0]}") from exc
@@ -175,8 +288,11 @@ def campaign_options(args: dict[str, Any]) -> dict[str, Any]:
         "charge_c_rate": float(options.get("chargeCRate", 0.5) or 0.0),
         "discharge_c_rate": float(options.get("dischargeCRate", 0.5) or 0.0),
         "dcir_pulse_c_rates": [
-            float(rate) for rate in options.get("dcirRates", [1.0, 1.5, 2.0])
+            float(rate) for rate in options.get("dcirRates", [1.5])
         ],
+        "reference_c_rate": float(options.get("referenceCRate", 1 / 3)),
+        "start_soc": float(options.get("startSoc", 1.0)),
+        "preparation_policy": str(options.get("preparationPolicy", "unconfirmed_entry")),
         "baseline_rpt": bool(options.get("baselineRpt", True)),
     }
 
@@ -218,9 +334,10 @@ def _budget(model: WorkspaceModel, args: dict[str, Any]) -> dict[str, Any]:
 
 
 PLANS: dict[str, Callable[[WorkspaceModel, dict[str, Any]], dict[str, Any]]] = {
+    "qpeedVoltage": _qpeed_voltage_preview,
     "cellBatch": lambda m, a: plan_cell_batch(
         m.project, phase=str(a.get("phase", "")), basis=str(a.get("basis", "manual_reference")),
-        kind=str(a.get("kind", "")), rows=a.get("rows"),
+        kind=str(a.get("kind", "")), rows=a.get("rows"), matrix=a.get("matrix"),
     ).to_dict(),
     "campaign": _campaign,
     "qcFastCharge": _qc,
@@ -286,7 +403,7 @@ def library_save(store: MethodLibrary, payload: dict[str, Any]) -> dict[str, Any
     model = _model(payload, library=store)
     name = str(payload.get("name", "")).strip()
     try:
-        entry = model.save_method(name, description=payload.get("description", ""))
+        entry = model.save_method(name, description=payload.get("description", ""), module_ids=payload.get("moduleIds"))
     except ValueError as exc:
         raise ApiError(str(exc)) from exc
     return {"ok": True, "method": _method_json(entry)}
@@ -351,12 +468,13 @@ def export(payload: dict[str, Any]) -> dict[str, Any]:
         raise ApiError(f"알 수 없는 내보내기 경로입니다: {kind}", status=404)
 
     out_dir = Path(str(payload.get("outDir", ""))).expanduser()
-    if not out_dir.is_dir():
-        raise ApiError(f"출력 폴더가 없습니다: {out_dir}")
+    if not out_dir.is_absolute():
+        raise ApiError("새 출력 폴더의 절대 경로를 입력하세요.")
     try:
+        out_dir.mkdir(parents=True, exist_ok=True)
         occupied = any(out_dir.iterdir())
     except OSError as exc:
-        raise ApiError(f"출력 폴더를 읽을 수 없습니다: {exc}") from exc
+        raise ApiError(f"출력 폴더를 만들거나 읽을 수 없습니다: {exc}") from exc
     if occupied:
         raise ApiError("출력 폴더가 비어 있지 않습니다. 새 빈 폴더를 지정하십시오.")
 
@@ -395,7 +513,7 @@ def export_batch(payload: dict[str, Any]) -> dict[str, Any]:
     args = _args(payload)
     plan = plan_cell_batch(
         model.project, phase=str(args.get("phase", "")), basis=str(args.get("basis", "manual_reference")),
-        kind=str(args.get("kind", "")), rows=args.get("rows"),
+        kind=str(args.get("kind", "")), rows=args.get("rows"), matrix=args.get("matrix"),
     )
     try:
         paths = write_cell_batch(
@@ -416,6 +534,17 @@ def import_open(path: str) -> tuple[ImportSession, dict[str, Any]]:
         session = ImportSession.open(Path(path))
     except (OSError, ValueError) as exc:
         raise ApiError(f"열 수 없습니다: {exc}") from exc
+    # Legacy binary names are deliberately retained as patch keys. Their
+    # evidence-qualified Ensol meanings, not the names, define the UI units.
+    descriptions = {
+        "fVref": ("설정 전류", "mA"),
+        "fIref": ("휴지 시간 / 전류 스텝 시간 제한", "초"),
+        "fEndV": ("종료 전압", "mV"),
+        "fEndI": ("CV 종료 전류", "mA"),
+        "loop_target": ("반복 시작 스텝 번호", "스텝"),
+        "loop_count": ("반복 횟수", "회"),
+        "record_time_s": ("기록 간격", "초"),
+    }
     body = {
         "ok": True,
         "path": str(session.path),
@@ -430,6 +559,8 @@ def import_open(path: str) -> tuple[ImportSession, dict[str, Any]]:
                 "offset": field.offset,
                 "dtype": field.dtype,
                 "evidence": field.evidence,
+                "label": descriptions.get(field.name, (field.name, ""))[0],
+                "unit": descriptions.get(field.name, (field.name, ""))[1],
             }
             for field in session.editable_fields()
         ],
@@ -471,6 +602,7 @@ __all__ = [
     "library_load",
     "library_save",
     "library_versions",
+    "module_content",
     "plan",
     "steps",
     "transform",

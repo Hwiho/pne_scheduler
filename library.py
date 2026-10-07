@@ -21,7 +21,9 @@ and the same export ladder as anything else.
 
 from __future__ import annotations
 
+import hashlib
 import json
+import logging
 import os
 import re
 import tempfile
@@ -32,6 +34,7 @@ from pathlib import Path
 from typing import Any
 
 LIBRARY_SCHEMA = "pne_scheduler.method/v1"
+LOG = logging.getLogger(__name__)
 
 # Keep letters and digits of any script: a Korean-named method must get a
 # Korean id. Stripping to ASCII collapsed every Korean name onto the same
@@ -44,6 +47,15 @@ def default_library_dir() -> Path:
     return Path.home() / ".pne_scheduler" / "library"
 
 
+def _normalized_name(name: str) -> str:
+    return unicodedata.normalize("NFC", name.strip().lower())
+
+
+def _hashed_id(name: str, prefix: str = "method") -> str:
+    digest = hashlib.sha256(_normalized_name(name).encode("utf-8")).hexdigest()[:12]
+    return f"{prefix[:_SLUG_MAX - 13]}-{digest}"
+
+
 def _slug(name: str) -> str:
     """A filesystem-safe id that still resembles the name a person typed.
 
@@ -51,9 +63,8 @@ def _slug(name: str) -> str:
     filesystem, so a composed and a decomposed spelling of the same name would
     otherwise become two different methods.
     """
-    normalized = unicodedata.normalize("NFC", name.strip().lower())
-    slug = _SLUG_UNSAFE.sub("-", normalized).strip("-")
-    return slug[:_SLUG_MAX] or "method"
+    slug = _SLUG_UNSAFE.sub("-", _normalized_name(name)).strip("-")
+    return slug[:_SLUG_MAX] if slug else _hashed_id(name)
 
 
 def _atomic_write(path: Path, text: str) -> None:
@@ -110,15 +121,48 @@ class MethodVersion:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any], *, path: Path | None = None) -> MethodVersion:
-        equipment = data.get("equipment") or {}
+        for key in ("method_id", "name"):
+            if not isinstance(data.get(key), str) or not data[key].strip():
+                raise ValueError(f"{key} must be a nonempty string")
+        version = data.get("version", 1)
+        if isinstance(version, bool) or not isinstance(version, (int, str)):
+            raise ValueError("version must be a positive integer")
+        try:
+            version = int(version)
+        except ValueError as exc:
+            raise ValueError("version must be a positive integer") from exc
+        if version < 1:
+            raise ValueError("version must be a positive integer")
+        equipment = data.get("equipment")
+        if equipment is None:
+            equipment = {}
+        if not isinstance(equipment, dict):
+            raise ValueError("equipment must be an object")
+        for key in ("unit", "layout"):
+            if key in equipment and not isinstance(equipment[key], str):
+                raise ValueError(f"equipment.{key} must be a string")
+        modules = data.get("modules", [])
+        if not isinstance(modules, list):
+            raise ValueError("modules must be an array")
+        for module in modules:
+            if not isinstance(module, dict):
+                raise ValueError("each module must be an object")
+            for key in ("id", "module_type"):
+                if not isinstance(module.get(key), str) or not module[key].strip():
+                    raise ValueError(f"module.{key} must be a nonempty string")
+            if not isinstance(module.get("params", {}), dict):
+                raise ValueError("module.params must be an object")
+        for key in ("description", "saved_at"):
+            if key in data and not isinstance(data[key], str):
+                raise ValueError(f"{key} must be a string")
         return cls(
-            method_id=str(data.get("method_id", "")),
-            version=int(data.get("version", 1)),
-            name=str(data.get("name", "")),
+            method_id=data["method_id"],
+            version=version,
+            name=data["name"],
             description=str(data.get("description", "")),
             equipment_unit=str(equipment.get("unit", "")),
             equipment_layout=str(equipment.get("layout", "")),
-            modules=tuple(data.get("modules") or ()),
+            modules=tuple(modules),
             saved_at=str(data.get("saved_at", "")),
             path=path,
         )
@@ -163,9 +207,14 @@ class MethodLibrary:
         if not modules:
             raise ValueError("저장할 구간이 없습니다.")
 
-        identifier = method_id or _slug(name)
+        identifier = method_id or self._id_for_name(name)
         version = self.latest_version_number(identifier) + 1
         path = self.root / identifier / f"v{version:04d}.json"
+        # A skipped, damaged version is still a user's file. Reserve its name
+        # rather than overwriting it when the next valid version is saved.
+        while path.exists() or path.is_symlink():
+            version += 1
+            path = self.root / identifier / f"v{version:04d}.json"
         entry = MethodVersion(
             method_id=identifier,
             version=version,
@@ -182,6 +231,24 @@ class MethodLibrary:
         )
         _atomic_write(path, json.dumps(entry.to_dict(), ensure_ascii=False, indent=2))
         return entry
+
+    def _id_for_name(self, name: str) -> str:
+        identifier = _slug(name)
+        normalized = _normalized_name(name)
+        existing = self.versions(identifier)
+        if not existing and not _SLUG_UNSAFE.sub("-", normalized).strip("-"):
+            # Before hashed fallback ids, every symbol-only name was filed as
+            # "method". Keep an unambiguous existing id without extending an
+            # already mixed history or moving any old files.
+            legacy = self.versions("method")
+            if legacy and all(_normalized_name(entry.name) == normalized for entry in legacy):
+                return "method"
+        if existing and any(_normalized_name(entry.name) != normalized for entry in existing):
+            identifier = _hashed_id(name, identifier)
+            existing = self.versions(identifier)
+            if existing and any(_normalized_name(entry.name) != normalized for entry in existing):
+                raise ValueError("방법 이름의 ID가 충돌합니다. 다른 이름이나 명시적 ID를 지정하세요.")
+        return identifier
 
     # ------------------------------------------------------------- reading
 
@@ -220,11 +287,17 @@ class MethodLibrary:
     def _read(self, path: Path) -> MethodVersion | None:
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
+            if not isinstance(data, dict) or data.get("schema") != LIBRARY_SCHEMA:
+                raise ValueError("unsupported method schema")
+            entry = MethodVersion.from_dict(data, path=path)
+            if entry.method_id != path.parent.name:
+                raise ValueError("method_id does not match its directory")
+            if path.name != f"v{entry.version:04d}.json":
+                raise ValueError("version does not match its filename")
+        except (OSError, UnicodeError, ValueError, TypeError) as exc:
+            LOG.warning("저장된 방법 파일을 건너뜁니다: %s (%s)", path, exc)
             return None
-        if not isinstance(data, dict) or data.get("schema") != LIBRARY_SCHEMA:
-            return None
-        return MethodVersion.from_dict(data, path=path)
+        return entry
 
     # ------------------------------------------------------------- loading
 

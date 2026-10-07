@@ -45,6 +45,7 @@ async function get<T>(path: string): Promise<T> {
 }
 
 export const api = {
+  openProject: (data: Json) => post<{ project: Json; repairs: string[]; migratedFrom: string | null }>("/api/project/open", { data }),
   views: (project: Json, selected?: string) =>
     post<{ views: Views }>("/api/views", { project, selected }),
 
@@ -53,16 +54,19 @@ export const api = {
   // every edit.
   steps: (project: Json) => post<{ steps: Record<string, string>[] }>("/api/steps", { project }),
 
+  moduleContent: (project: Json, moduleId: string, childIndex?: number) =>
+    post<ModuleContent>("/api/module-content", { project, moduleId, childIndex }),
+
   edit: (action: string, project: Json, args: Json = {}, selected?: string) =>
     post<EditResult>(`/api/edit/${action}`, { project, args, selected }),
 
   plan: <T>(action: string, project: Json, args: Json = {}) =>
-    post<T>(`/api/plan/${action}`, { project, args }),
+    post<T>(`/api/plan/${action}`, { project, args }, true),
 
   library: () => get<{ methods: MethodSummary[] }>("/api/library"),
 
-  saveMethod: (project: Json, name: string, description = "") =>
-    post<{ method: MethodSummary }>("/api/library", { project, name, description }),
+  saveMethod: (project: Json, name: string, description = "", moduleIds?: string[]) =>
+    post<{ method: MethodSummary }>("/api/library", { project, name, description, moduleIds }),
 
   loadMethod: (project: Json, methodId: string, replace = false) =>
     post<EditResult & { warnings: string[] }>("/api/library/load", {
@@ -92,7 +96,7 @@ export const api = {
     }),
 
   planCellBatch: (project: Json, args: Json) =>
-    post<CellBatchPlan>("/api/plan/cellBatch", { project, args }),
+    post<CellBatchPlan>("/api/plan/cellBatch", { project, args }, true),
 
   exportCellBatch: (project: Json, args: Json, token: string, outDir: string) =>
     post<{ ok: true; paths: string[]; note: string }>("/api/export/cell-batch", {
@@ -105,7 +109,23 @@ export const api = {
     post<{ ok: true; inserted: number; alreadyPresent: number }>("/api/storage/import-legacy", { records }),
   completeStorage: (id: string, completed: boolean) =>
     post<{ ok: true }>(`/api/storage/${encodeURIComponent(id)}/complete`, { completed }),
+  storageNotifications: (id: string, enabled: boolean) =>
+    post<{ ok: true }>(`/api/storage/${encodeURIComponent(id)}/notifications`, { enabled }),
+  acknowledgeStorageAlert: (id: string, alertId: string) =>
+    post<{ ok: true }>(`/api/storage/${encodeURIComponent(id)}/alerts/${encodeURIComponent(alertId)}/acknowledge`, {}),
+  snoozeStorageAlert: (id: string, alertId: string, until: string) =>
+    post<{ ok: true }>(`/api/storage/${encodeURIComponent(id)}/alerts/${encodeURIComponent(alertId)}/snooze`, { until }),
 };
+
+export interface StorageAlert {
+  id: string;
+  kind: "checkpoint" | "final";
+  checkpointDay: number | null;
+  dueAt: string;
+  acknowledgedAt: string | null;
+  snoozedUntil: string | null;
+  notifiedAt: string | null;
+}
 
 export interface StorageRecord {
   id: string;
@@ -114,9 +134,11 @@ export interface StorageRecord {
   startedAt: string;
   targetDays: number;
   dueAt: string;
+  checkpointDays: number[];
   notifyEnabled: boolean;
   completedAt: string | null;
   notifiedAt: string | null;
+  alerts: StorageAlert[];
 }
 
 export interface StorageResponse {
@@ -137,7 +159,7 @@ export interface CellBatchPlan {
     selectedCapacityMah: number | null;
     basis: string;
     oneCmA: number | null;
-    maxCurrentmA: number;
+    maxCurrentmA: number | null;
     fixedCurrentSteps: number;
     allowed: boolean;
     blockers: string[];
@@ -152,6 +174,8 @@ export interface FormFieldView {
   kind: string;
   unit: string;
   value: string;
+  numericValue?: number | null;
+  numericValues?: number[] | null;
   detail: string;
   help: string;
   basis: string;
@@ -165,6 +189,37 @@ export interface FormFieldView {
   notes: string[];
   issues: string[];
   hasError: boolean;
+}
+
+export interface ModuleContentStep {
+  index: number;
+  number: number;
+  stepType: string;
+  mode: string;
+  title: string;
+  summary: string;
+  fields: { key: string; label: string; kind: string; text: string; numericValue?: number | null; detail: string }[];
+}
+
+export interface ModuleContent {
+  ok: true;
+  moduleId: string;
+  childIndex: number | null;
+  moduleType: string;
+  title: string;
+  customized: boolean;
+  stepCount: number;
+  steps: ModuleContentStep[];
+  children: {
+    index: number;
+    moduleId: string;
+    moduleType: string;
+    title: string;
+    summary: string;
+    repeatCount: number;
+    stepCount: number;
+    form: Views["form"];
+  }[];
 }
 
 export interface SetupFieldView {
@@ -190,6 +245,7 @@ export interface ReleaseOption {
 }
 
 export interface Views {
+  groupChildren: { index: number; form: Views["form"] }[];
   title: string;
   dirty: boolean;
   selectedModule: string;
@@ -250,7 +306,7 @@ export interface Views {
     derived: { label: string; text: string; severity: string; help: string }[];
     sections: { title: string; fields: FormFieldView[] }[];
   };
-  procedure: { durationSeconds: number | null; durationExact: boolean; stepCount: number };
+  procedure: { durationSeconds: number | null; durationExact: boolean; durationComplete?: boolean; durationUpperBoundSeconds?: number | null; stepCount: number };
   steps: Record<string, string>[];
   canEditSteps: boolean;
   customSteps: {
@@ -259,7 +315,7 @@ export interface Views {
     stepType: string;
     mode: string;
     label: string;
-    fields: { key: string; label: string; kind: string; text: string; detail: string }[];
+    fields: { key: string; label: string; kind: string; text: string; numericValue?: number | null; detail: string }[];
   }[];
   validation: {
     severity: string;
@@ -278,7 +334,12 @@ export interface Views {
 export interface EditResult {
   project: Json;
   label: string;
-  diff: { headline: string } | null;
+  diff: {
+    headline: string;
+    beforeCount?: number;
+    afterCount?: number;
+    changes?: { kind: string; label: string; fields: { field: string; before: unknown; after: unknown }[] }[];
+  } | null;
   views: Views;
 }
 
@@ -300,7 +361,7 @@ export interface ImportInfo {
   sha256: string;
   schVersion: string;
   stepCount: number;
-  editableFields: { name: string; offset: number; dtype: string; evidence: string }[];
+  editableFields: { name: string; offset: number; dtype: string; evidence: string; label?: string; unit?: string }[];
   dropIfCloned: string[];
   explanation: string;
 }

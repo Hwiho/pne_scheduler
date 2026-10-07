@@ -49,6 +49,10 @@ def validate_project(
     purpose: Purpose = "preview",
 ) -> PreflightResult:
     issues: list[PreflightIssue] = []
+    from ..ir.procedure import linear_order
+    from ..protocol.module_state import module_boundary_issues
+    for boundary in module_boundary_issues(linear_order(project)):
+        issues.append(PreflightIssue(boundary.code, "error" if purpose == "production" else boundary.severity, boundary.message, boundary.module_id, "start_soc", remediation="RPT/DC-IR 진입 상태를 확인하고 필요한 준비 충전을 별도 모듈로 구성하세요."))
     cell = project.cell_profile
     # The binding current limit is the smaller of the cell's own limit and the
     # target cycler's rating, so naming an under-rated unit is caught here and
@@ -75,7 +79,24 @@ def validate_project(
             _error("CELL_MAX_CURRENT", "max_current_mA must be finite and positive", field="max_current_mA")
         )
 
+    nodes = []
     for node in project.modules:
+        nodes.append(node)
+        if node.module_type == "sequence":
+            from ..ir.project import ModuleNode
+            # Child trust/limitations must not disappear when boxes are grouped.
+            for child in node.params.get("children", []) if isinstance(node.params.get("children"), list) else []:
+                if isinstance(child, dict) and isinstance(child.get("params", {}), dict):
+                    nodes.append(ModuleNode(node.id, str(child.get("module_type", "")), child.get("params", {})))
+
+    for node in nodes:
+        if node.module_type == "qpeed":
+            variant = node.params.get("variant", "full")
+            dod_key = "soc_dod_percent" if variant == "soc_setting" else "high_rate_dod_percent"
+            if variant in {"full", "soc_setting"} and dod_key in node.params:
+                dod_value = node.params[dod_key]
+                if not _finite(dod_value) or not 0 < dod_value <= 100:
+                    issues.append(_error("DOD_RANGE", "DOD/SOC percent must be in (0, 100]", object_id=node.id, field=dod_key))
         spec = get_module_spec(node.module_type)
         if spec is None:
             issues.append(_error("MODULE_UNCATALOGED", f"No catalog metadata for {node.module_type!r}", object_id=node.id))

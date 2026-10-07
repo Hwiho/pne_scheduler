@@ -8,6 +8,7 @@ the knowledge with it.
 
 from __future__ import annotations
 
+import math
 from typing import Any
 
 from ..edit.diff import StepDiff
@@ -100,6 +101,17 @@ def field_json(field: Any) -> dict[str, Any]:
         "kind": spec.kind,
         "unit": spec.unit_label,
         "value": field.view.text,
+        "numericValue": (
+            field.value if isinstance(field.value, (int, float))
+            and not isinstance(field.value, bool) and math.isfinite(field.value)
+            else None
+        ),
+        "numericValues": (
+            list(field.value) if isinstance(field.value, (list, tuple))
+            and all(isinstance(value, (int, float)) and not isinstance(value, bool)
+                    and math.isfinite(value) for value in field.value)
+            else None
+        ),
         "detail": field.view.detail,
         "help": spec.help,
         "basis": spec.basis,
@@ -194,6 +206,16 @@ def views_json(
     module_id = selected if selected in modules else (modules[0] if modules else "")
     form = model.form(module_id) if module_id else None
     procedure = model.procedure()
+    selected_node = next((node for node in model.project.modules if node.id == module_id), None)
+    group_children = []
+    if selected_node and selected_node.module_type == "sequence":
+        from ..spec.form import build_module_form
+        for index, child in enumerate(selected_node.params.get("children", [])):
+            if not isinstance(child, dict) or not isinstance(child.get("params", {}), dict):
+                continue
+            child_type = str(child.get("module_type", ""))
+            child_form = build_module_form(child_type, child.get("params", {}), cell=model.project.cell_profile, current_limit_mA=model.current_limit_mA)
+            group_children.append({"index": index, "form": form_json(child_form, module_id, 1)})
 
     return {
         "title": model.document.title,
@@ -257,9 +279,12 @@ def views_json(
             for position, row in enumerate(model.module_rows(), start=1)
         ],
         "form": form_json(form, module_id, len(model.modules_of_type(form.module_type)) if form else 0),
+        "groupChildren": group_children,
         "procedure": {
             "durationSeconds": procedure.duration_seconds,
             "durationExact": procedure.duration_exact,
+            "durationComplete": procedure.duration_complete,
+            "durationUpperBoundSeconds": procedure.duration_upper_bound_seconds,
             "stepCount": len(model.step_rows()),
         },
         "steps": list(model.display_step_rows()) if include_steps else [],
@@ -278,6 +303,7 @@ def views_json(
                             "label": view.label,
                             "kind": view.kind,
                             "text": view.text,
+                            "numericValue": view.numeric_value,
                             "detail": view.detail,
                         }
                         for view in row["fields"]

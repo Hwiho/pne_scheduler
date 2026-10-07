@@ -65,7 +65,7 @@ def test_gate_d_rpt_pipeline(tmp_path: Path) -> None:
         params={
             "soc_fractions": [0.8, 0.5],
             "rest_s": 10.0,
-            "dcir_pulse_s": 2.0,
+            "dcir_pulse_s": 10.0,
         },
     )
     assert report.passed, report.mismatches
@@ -79,7 +79,12 @@ def test_gate_d_dcir_pipeline_warns_dcr_ir_only(tmp_path: Path) -> None:
         "dcir",
         cell=CELL,
         output_path=tmp_path / "dcir.sch",
-        params={"soc_fractions": [0.8], "rest_s": 10.0, "pulse_s": 2.0},
+        params={
+            "soc_fractions": [0.8],
+            "rest_s": 10.0,
+            "pulse_s": 2.0,
+            "dcr_end_s": 2.0,
+        },
     )
     assert report.passed, report.mismatches
     assert any("dcr_start_s" in w for w in report.warnings)
@@ -88,7 +93,12 @@ def test_gate_d_dcir_pipeline_warns_dcr_ir_only(tmp_path: Path) -> None:
         ModuleNode(
             id="d1",
             module_type="dcir",
-            params={"soc_fractions": [0.8], "rest_s": 10.0, "pulse_s": 2.0},
+            params={
+                "soc_fractions": [0.8],
+                "rest_s": 10.0,
+                "pulse_s": 2.0,
+                "dcr_end_s": 2.0,
+            },
         ),
         CELL,
     )

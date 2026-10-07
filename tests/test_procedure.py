@@ -66,6 +66,7 @@ def test_detaching_a_preset_preserves_the_exact_expansion() -> None:
     assert project.modules[1].module_type == "custom_steps"
     assert project.modules[1].params["source_module_type"] == "cycle_life"
     assert [step.to_dict() for step in project.expand_steps()] == before
+    assert build_procedure(project).phases[1].title == "Cycle life · 사용자 수정"
 
 
 def test_step_rows_name_the_phase_each_step_belongs_to() -> None:

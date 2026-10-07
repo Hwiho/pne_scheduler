@@ -39,6 +39,7 @@ def _rest(
     advanced: bool = False,
     maximum: float = 604800.0,
     recommended_max: float | None = 7200.0,
+    visible_when: tuple[tuple[str, tuple[str, ...]], ...] = (),
 ) -> ParameterSpec:
     return ParameterSpec(
         key=key,
@@ -55,6 +56,7 @@ def _rest(
         affects=affects,
         verification="software-checked",
         advanced=advanced,
+        visible_when=visible_when,
     )
 
 
@@ -154,12 +156,12 @@ def _variant(*choices: Choice, default: str) -> ParameterSpec:
 
 
 _SOC_LIST = dict(
-    kind="fraction_list",
+    kind="soc_percent_list",
     group=G_REFERENCE,
     minimum=0.0,
     maximum=1.0,
-    help="측정할 SOC 지점을 0–1 비율로 입력합니다. 예: 0.8, 0.5, 0.2",
-    basis="직전 SOC 에서의 차이만큼 방전하여 SOC 를 맞춥니다.",
+    help="측정할 잔량을 %로 입력합니다. 예: 80, 50, 20 (쉼표로 구분). 100%는 완충, 0%는 완전 방전 기준입니다.",
+    basis="입력한 기준용량과 시작 SOC를 바탕으로 각 지점까지의 방전량을 계산합니다. 실제 SOC 측정값이 아닙니다.",
     verification="unverified",
 )
 
@@ -251,6 +253,27 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
         ),
     ),
     "rpt": (
+        ParameterSpec(
+            "preparation_policy", "시작 상태 준비", "choice", G_METHOD,
+            "preparation_policy", default="unconfirmed_entry",
+            choices=(
+                Choice("unconfirmed_entry", "미확인 진입 상태", "기존 출력은 유지하되 시작 SOC 확인 경고를 냅니다."),
+                Choice("user_confirmed_start_soc", "사용자 확인 시작 SOC", "사용자가 확인한 시작 SOC를 계산 기준으로 씁니다."),
+                Choice("charge_to_full", "완전 충전 후 시작", "사용자가 선택한 경우에만 CCCV 충전과 휴지를 앞에 추가합니다."),
+            ),
+            help="기본값은 충전을 추가하지 않습니다. charge_to_full을 고른 경우에만 0.05C CV 종료의 준비 충전을 추가합니다.",
+            affects="SOC ladder의 진입 상태 경고",
+            risk="caution", verification="software-checked",
+        ),
+        ParameterSpec(
+            "start_soc", "시작 SOC", "soc_percent", G_REFERENCE, "start_soc",
+            default=1.0, minimum=0.0, maximum=1.0,
+            help="이 실험을 시작할 때의 셀 잔량입니다. 완충 셀은 100%를 입력하세요. 예: 100%→80%이면 기준용량의 20%를 먼저 방전합니다.",
+            basis="기본값 100%는 계산 가정일 뿐 실제 잔량을 측정한 값이 아닙니다. 시작 상태를 직접 확인하거나 완충 준비를 선택하세요.",
+            affects="첫 SOC 조정 방전 용량",
+            risk="caution", verification="unverified",
+            visible_when=(("include_dcir_pulses", ("True",)),),
+        ),
         _c_rate(
             "reference_c_rate", "기준 방전율", 1.0 / 3.0, group=G_REFERENCE,
             basis="RPT 표준 C/3 방전", affects="SOC 조정 방전 스텝",
@@ -262,35 +285,68 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
             default=[1.5], minimum=0.0, maximum=30.0,
             recommended_min=0.05, recommended_max=2.5,
             help="SOC 지점마다 이 전류들로 차례로 펄스를 겁니다. "
-                 "여러 개를 넣으면 (예: 1C, 1.5C, 2C) 전류별 저항을 한 번에 얻습니다.",
+                 "기본은 전류 한 개 (1.5C)이며 기존 복수 전류 프로젝트도 유지됩니다.",
             basis="랩 표준 1.0–1.5C 펄스. 여러 rate 는 사용자가 지정합니다.",
             affects="각 SOC 지점의 펄스 스텝 수 (rate 개수 × 2 스텝)",
             verification="software-checked",
+            visible_when=(("include_dcir_pulses", ("True",)),),
         ),
         ParameterSpec(
             "dcir_pulse_s", "DC-IR 펄스 길이", "duration_s", G_REFERENCE, "dcir_pulse_s",
             default=10.0, minimum=1.0, maximum=600.0, recommended_max=60.0,
             help="저항 계산에 쓰는 펄스 인가 시간입니다.",
-            basis="랩 표준 10초 펄스",
+            basis="기존 기본값 10초를 유지합니다. 공개 시험에는 10초와 30초 등 서로 다른 조건이 있으므로 시험 목적에 맞게 선택하세요.",
             affects="각 SOC 지점의 펄스 스텝 길이",
             verification="software-checked",
+            visible_when=(("include_dcir_pulses", ("True",)),),
         ),
-        _rest("rest_s", "SOC 안정화 휴지", 1800.0, affects="SOC 조정 후 휴지"),
+        _rest(
+            "rest_s", "휴지 시간", 1800.0,
+            help="펄스를 포함하면 SOC 조정·펄스 후 휴지에, 제외하면 연속 방전 후 휴지에 적용됩니다. 기본값은 30분입니다.",
+            affects="각 측정 구간 또는 연속 방전 뒤의 휴지",
+        ),
         ParameterSpec(
             "soc_fractions", "측정 SOC 지점", **_SOC_LIST,  # type: ignore[arg-type]
             label_en="soc_fractions", default=[0.8, 0.5, 0.2],
             affects="SOC 지점 수 × 4 스텝",
             risk="caution",
+            visible_when=(("include_dcir_pulses", ("True",)),),
         ),
         ParameterSpec(
             "include_dcir_pulses", "DC-IR 펄스 포함", "bool", G_METHOD, "include_dcir_pulses",
             default=True,
-            help="끄면 SOC 조정 방전만 남기고 저항 펄스는 생성하지 않습니다.",
+            help="끄면 SOC별 분할 없이 기준 방전율(C/3 기본값)로 셀 최저 전압까지 한 번 연속 방전합니다.",
             affects="펄스 스텝 생성 여부",
             verification="software-checked",
         ),
     ),
     "dcir": (
+        ParameterSpec(
+            "preparation_policy", "시작 상태 준비", "choice", G_METHOD,
+            "preparation_policy", default="unconfirmed_entry",
+            choices=(
+                Choice("unconfirmed_entry", "미확인 진입 상태", "기존 출력은 유지하되 시작 SOC 확인 경고를 냅니다."),
+                Choice("user_confirmed_start_soc", "사용자 확인 시작 SOC", "사용자가 확인한 시작 SOC를 계산 기준으로 씁니다."),
+                Choice("charge_to_full", "완전 충전 후 시작", "사용자가 선택한 경우에만 CCCV 충전과 휴지를 앞에 추가합니다."),
+            ),
+            help="기본값은 충전을 추가하지 않습니다. charge_to_full을 고른 경우에만 0.05C CV 종료의 준비 충전을 추가합니다.",
+            affects="SOC ladder의 진입 상태 경고",
+            risk="caution", verification="software-checked",
+        ),
+        ParameterSpec(
+            "start_soc", "시작 SOC", "soc_percent", G_REFERENCE, "start_soc",
+            default=1.0, minimum=0.0, maximum=1.0,
+            help="이 실험을 시작할 때의 셀 잔량입니다. 완충 셀은 100%를 입력하세요. 예: 100%→80%이면 기준용량의 20%를 먼저 방전합니다.",
+            basis="기본값 100%는 계산 가정일 뿐 실제 잔량을 측정한 값이 아닙니다. 시작 상태를 직접 확인하거나 완충 준비를 선택하세요.",
+            affects="첫 SOC 조정 방전 용량",
+            risk="caution", verification="unverified",
+        ),
+        _c_rate(
+            "reference_c_rate", "기준 충·방전율", 1.0 / 3.0, group=G_REFERENCE,
+            basis="DC-IR SOC 조정 기본 C/3",
+            affects="SOC 조정 방전과 사용자가 선택한 준비 충전",
+            recommended_max=1.0,
+        ),
         ParameterSpec(
             "soc_fractions", "측정 SOC 지점", **_SOC_LIST,  # type: ignore[arg-type]
             label_en="soc_fractions", default=[0.8, 0.5, 0.2],
@@ -304,7 +360,7 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
         ParameterSpec(
             "pulse_s", "펄스 길이", "duration_s", G_REFERENCE, "pulse_s",
             default=10.0, minimum=1.0, maximum=600.0, recommended_max=60.0,
-            basis="랩 표준 10초", affects="펄스 스텝 길이",
+            basis="기존 기본값 10초를 유지하며, 30초 등 원하는 시간으로 지정할 수 있습니다. 펄스 길이가 다르면 저항값도 달라질 수 있습니다.", affects="펄스 스텝 길이",
             verification="software-checked",
         ),
         _rest("rest_s", "SOC 안정화 휴지", 1800.0, affects="SOC 조정 후 휴지"),
@@ -326,8 +382,10 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
     ),
     "hppc": (
         _variant(
-            Choice("full", "전 구간 (62 스텝)", "잠긴 골든 62스텝 전 구간 HPPC 형태입니다."),
-            Choice("legacy_soc_pulse", "SOC 펄스 (구버전)", "SOC 지점마다 충·방전 펄스를 넣는 단순 형태입니다."),
+            Choice("full", "랩 전체 평가", "종료(END)를 포함한 기존 골든 파일의 62스텝 구성입니다. 모듈 박스에서는 공통 END를 제외한 61스텝을 표시합니다. SOC별 펄스 모드와 다른 랩 레시피입니다."),
+            Choice("legacy_soc_pulse", "SOC별 충전·방전 펄스", "각 SOC에서 방전 후 충전 펄스를 인가합니다. 기존 파일 구성은 유지됩니다."),
+            Choice("discharge_soc_pulse", "SOC별 방전 펄스만", "SOC 조정·안정화 후 방전 펄스만 측정합니다."),
+            Choice("charge_soc_pulse", "SOC별 충전 펄스만", "SOC 조정·안정화 후 충전 펄스만 측정합니다. 목표 SOC로 맞추기 위한 방전은 별도입니다."),
             default="legacy_soc_pulse",
         ),
         _c_rate(
@@ -337,8 +395,9 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
         ),
         _c_rate(
             "reference_c_rate", "기준 충방전율", 1.0 / 3.0, group=G_REFERENCE,
-            basis="골든 62스텝의 C/3 기준 구간", affects="기준 사이클 스텝",
-            recommended_max=1.0, visible_when=(("variant", ("full",)),),
+            basis="랩 기본 C/3", affects="전체 평가의 기준 사이클 또는 SOC 조정 방전",
+            recommended_max=1.0,
+            visible_when=(("variant", ("full", "discharge_soc_pulse", "charge_soc_pulse")),),
         ),
         _c_rate(
             "full_pulse_c_rate", "펄스 전류", 1.0, group=G_REFERENCE,
@@ -358,43 +417,92 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
         ParameterSpec(
             "soc_fractions", "측정 SOC 지점", **_SOC_LIST,  # type: ignore[arg-type]
             label_en="soc_fractions", default=[0.9, 0.5, 0.1],
-            visible_when=(("variant", ("legacy_soc_pulse",)),),
+            visible_when=(("variant", ("legacy_soc_pulse", "discharge_soc_pulse", "charge_soc_pulse")),),
             affects="SOC 지점마다 4스텝", risk="caution",
         ),
         _c_rate(
-            "pulse_c_rate", "펄스 전류 (구버전)", 1.0, group=G_LEGACY,
-            affects="구버전 형태의 펄스 스텝", recommended_max=2.0,
-            visible_when=(("variant", ("legacy_soc_pulse",)),),
+            "pulse_c_rate", "펄스 전류", 1.0, group=G_REFERENCE,
+            affects="선택한 방향의 측정 펄스", recommended_max=2.0,
+            visible_when=(("variant", ("legacy_soc_pulse", "discharge_soc_pulse", "charge_soc_pulse")),),
         ),
         ParameterSpec(
-            "pulse_s", "펄스 길이 (구버전)", "duration_s", G_LEGACY, "pulse_s",
+            "pulse_s", "펄스 길이", "duration_s", G_REFERENCE, "pulse_s",
             default=10.0, minimum=1.0, maximum=600.0,
-            visible_when=(("variant", ("legacy_soc_pulse",)),),
+            visible_when=(("variant", ("legacy_soc_pulse", "discharge_soc_pulse", "charge_soc_pulse")),),
+            help="인가할 펄스 시간입니다. 충전·방전 모드에서는 두 펄스에 동일하게 적용됩니다. DOE/INL EV 예시의 방전 30초·충전 10초와는 다른 사용자 레시피입니다.",
             verification="software-checked",
         ),
         ParameterSpec(
-            "rest_between_s", "펄스 사이 휴지 (구버전)", "duration_s", G_LEGACY, "rest_between_s",
+            "rest_between_s", "펄스 후 휴지", "duration_s", G_REST, "rest_between_s",
             default=40.0, minimum=0.0, maximum=86400.0,
-            visible_when=(("variant", ("legacy_soc_pulse",)),),
+            visible_when=(("variant", ("legacy_soc_pulse", "discharge_soc_pulse", "charge_soc_pulse")),),
             verification="software-checked",
+        ),
+        _rest(
+            "soc_rest_s", "SOC 안정화 휴지", 1800.0,
+            help="목표 SOC로 조정한 뒤 측정 전 기다리는 시간입니다. 기본 30분은 랩 설정이며 필요하면 1시간 이상으로 조정하세요.",
+            affects="SOC 조정 뒤·펄스 앞 휴지",
+            visible_when=(("variant", ("discharge_soc_pulse", "charge_soc_pulse")),),
+        ),
+        ParameterSpec(
+            "start_soc", "시작 SOC", "soc_percent", G_REFERENCE, "start_soc",
+            default=1.0, minimum=0.0, maximum=1.0,
+            help="실험을 시작할 때의 셀 잔량입니다. 완충 셀은 100%입니다. 입력한 기준용량으로 SOC 조정량을 계산합니다.",
+            basis="기본 100%는 계산 가정이며 실제 잔량은 직접 확인해야 합니다.",
+            affects="첫 SOC 조정량", risk="caution", verification="unverified",
+            visible_when=(("variant", ("discharge_soc_pulse", "charge_soc_pulse")),),
+        ),
+        ParameterSpec(
+            "preparation_policy", "시작 상태 준비", "choice", G_METHOD,
+            "preparation_policy", default="unconfirmed_entry",
+            choices=(
+                Choice("unconfirmed_entry", "시작 잔량 미확인", "계산 가정으로 진행하며 시작 잔량 확인이 필요합니다."),
+                Choice("user_confirmed_start_soc", "시작 잔량 직접 확인", "사용자가 확인한 시작 SOC를 사용합니다."),
+                Choice("charge_to_full", "완충·휴지 후 시작", "명시적으로 준비 충전·휴지를 추가합니다."),
+            ),
+            help="펄스 측정 전에 시작 상태를 어떻게 준비할지 고릅니다.",
+            affects="준비 충전과 시작 SOC 확인", risk="caution", verification="unverified",
+            visible_when=(("variant", ("discharge_soc_pulse", "charge_soc_pulse")),),
         ),
     ),
     "qpeed": (
         _variant(
-            Choice("full", "QPEED-2 전체 (167 스텝)", "1.5C 부터 단계적으로 올리는 고율 충전 평가 전체입니다."),
-            Choice("soc_setting", "SOC 설정만 (11 스텝)", "고율 구간 없이 SOC 를 맞추는 준비 스케줄입니다."),
+            Choice("full", "QPEED-2 전체", "입력한 단계 수에 따라 구성되는 고율 충전 평가 전체입니다. 실제 스텝 수는 자동 계산에서 확인하세요."),
+            Choice("soc_setting", "SOC 설정만", "고율 구간 없이 SOC 를 맞추는 준비 스케줄입니다."),
             Choice("legacy_pulse", "구버전 펄스", "예전 .schproj 호환용 HPPC 형태 펄스입니다."),
             default="full",
         ),
         _c_rate(
             "condition_c_rate", "컨디셔닝 충방전율", 1.0, group=G_CHARGE,
+            help="고율 시험 전과 각 단계 사이에 셀 상태를 맞추는 저율 방전·완충·재방전·SOC 설정 충전에 쓰는 전류입니다. 컨디셔닝은 대기 시간이 아니라 준비 충방전 묶음입니다.",
             basis="골든 QPEED-2 컨디셔닝 1C", affects="컨디셔닝 충전·방전 스텝 전체",
             recommended_max=1.5,
         ),
         ParameterSpec(
+            "soc_control", "시작 SOC 맞춤 방식", "choice", G_REFERENCE, "soc_control",
+            default="voltage", visible_when=(("variant", ("full", "soc_setting")),),
+            choices=(Choice("voltage", "측정 전압 기준 (기존 레시피)", "SOC setting에서 얻은 대응 전압으로 종료합니다. 전압만으로 실제 SOC가 보장되지는 않습니다."),
+                     Choice("capacity", "입력 기준용량의 %로 설정", "방전 후 입력 기준용량의 시작 SOC %만큼 충전합니다. 실제 잔량 측정이 아니며 용량 종료 필드의 CTSPro 확인이 필요합니다.")),
+            help="기존 레시피는 전압 기준입니다. 시작 SOC를 직접 정하려면 기준용량 방식을 선택하세요.",
+            verification="unverified", risk="caution", affects="SOC 설정 충전의 종료 기준",
+        ),
+        ParameterSpec(
+            "start_soc_percent", "시작 SOC", "percent", G_REFERENCE, "start_soc_percent",
+            default=10.0, minimum=0.01, maximum=99.99,
+            visible_when=(("variant", ("full", "soc_setting")), ("soc_control", ("capacity",))),
+            help="하한 전압까지 방전한 뒤, 입력 기준용량의 이 비율만큼 충전해 고율 시험을 시작합니다. 예: 시작 SOC 20%, 고율 충전량 1%는 각 단계에서 20%→약 21%로 충전합니다. 실제 SOC를 직접 측정한 값이 아닙니다.",
+            verification="unverified", risk="critical", affects="처음과 각 고율 단계 뒤의 SOC 재설정 충전",
+        ),
+        ParameterSpec(
+            "soc_voltage_source", "SOC 전압 데이터 출처", "text", G_REFERENCE, "soc_voltage_source",
+            default="", advanced=True, visible_when=(("soc_control", ("__metadata_only__",)),),
+            help="사용자가 선택해 불러온 결과 파일과 행의 출처입니다.",
+        ),
+        ParameterSpec(
             "soc_voltage_v", "SOC 설정 전압", "voltage_v", G_REFERENCE, "soc_voltage_v",
             default=3.318, minimum=2.0, maximum=5.0,
-            help="이 전압까지 충전해 다음 고율 구간의 시작 SOC 를 맞춥니다.",
+            visible_when=(("variant", ("full", "soc_setting")), ("soc_control", ("voltage",))),
+            help="SOC setting 결과에서 선택한 대응 전압까지 충전합니다. 같은 전압이라도 셀·온도·이력에 따라 SOC가 달라질 수 있습니다.",
             basis="골든 QPEED-2 의 3.318 V",
             affects="컨디셔닝 마지막 충전 스텝의 종료 전압",
             risk="caution", verification="software-checked",
@@ -411,6 +519,7 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
         ParameterSpec(
             "condition_time_limit_s", "컨디셔닝 시간 제한", "duration_s", G_LIMIT,
             "condition_time_limit_s", default=21600.0, minimum=60.0, maximum=604800.0,
+            help="각 준비 충방전 스텝이 너무 오래 진행되지 않도록 둔 최대 시간입니다. 6시간 대기하라는 뜻이 아니며 전압·용량·CV 종료 조건에 먼저 도달하면 일찍 끝납니다.",
             basis="골든 파일 6시간", affects="컨디셔닝 스텝의 시간 종료 조건",
             risk="caution", verification="software-checked",
         ),
@@ -445,6 +554,7 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
             "high_rate_time_limit_s", "고율 스텝 시간 제한", "duration_s", G_LIMIT,
             "high_rate_time_limit_s", default=57600.0, minimum=60.0, maximum=604800.0,
             visible_when=(("variant", ("full",)),),
+            help="고율 충전 한 스텝의 최대 시간입니다. 기본 16시간은 실제 충전 예정 시간이 아닙니다. 지정한 용량이나 상한 전압에 먼저 도달하면 종료합니다.",
             basis="골든 파일 16시간", affects="고율 충전 스텝의 시간 종료 조건",
             risk="caution", verification="software-checked",
         ),
@@ -465,10 +575,10 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
             risk="critical", verification="unverified",
         ),
         ParameterSpec(
-            "high_rate_dod_percent", "고율 종료 DOD", "percent", G_REFERENCE,
+            "high_rate_dod_percent", "고율 충전량 (DOD)", "percent", G_REFERENCE,
             "high_rate_dod_percent", default=1.0, minimum=0.0, maximum=100.0,
             visible_when=(("variant", ("full",)),),
-            help="고율 충전을 용량 기준 대비 몇 % 지점에서 끝낼지 지정합니다.",
+            help="용량 기준 방식에서는 한 고율 단계에서 추가로 충전할 기준용량 비율(ΔQ)입니다. 시작 SOC와 별개입니다. 전압 기준 기존 레시피의 DOD 필드는 장비 해석이 미검증이며 실제 잔량 1%라는 뜻으로 간주하지 않습니다.",
             basis="골든 QPEED-2 의 1%",
             affects="각 고율 충전 스텝의 DOD 종료 조건",
             risk="critical", verification="unverified",
@@ -601,7 +711,7 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
         _c_rate(
             "c_rate", "전류", 0.5, group=G_CHARGE,
             basis="사용자 지정", affects="이 스텝의 전류",
-            visible_when=(("kind", ("cc_charge", "cccv_charge", "cc_discharge")),),
+            visible_when=(("kind", ("cc_charge", "cccv_charge", "cv_charge", "cc_discharge")),),
         ),
         ParameterSpec(
             "voltage_v", "목표 전압", "voltage_v", G_CHARGE, "voltage_v",
@@ -637,6 +747,7 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
         ),
         _rest(
             "duration_s", "시간", 600.0, affects="이 스텝의 시간 종료 조건",
+            visible_when=(("kind", ("rest", "ocv", "cv_charge")),),
         ),
         ParameterSpec(
             "repeat_count", "반복 횟수", "count", G_METHOD, "repeat_count",
@@ -655,6 +766,29 @@ MODULE_PARAMETER_SPECS: dict[str, tuple[ParameterSpec, ...]] = {
             help="이 스텝 목록이 어느 모듈에서 분리되었는지 기록합니다.",
             affects="표시용이며 스케줄에는 영향이 없습니다.",
             verification="software-checked", advanced=True,
+        ),
+    ),
+    "sequence": (
+        ParameterSpec(
+            "name", "블록 이름", "text", G_METHOD, "name",
+            default="내 블록",
+            help="재사용 블록을 구분하는 사용자 이름입니다.",
+            affects="표시 이름",
+            verification="software-checked",
+        ),
+        _count(
+            "repeat_count", "블록 반복 횟수", 1, maximum=10000,
+            recommended_max=1000,
+            help="자식 모듈 묶음을 몇 번 반복할지 정합니다.",
+            affects="sequence LOOP 반복 횟수",
+        ),
+        ParameterSpec(
+            "children", "자식 모듈", "text", G_METHOD, "children",
+            default=[],
+            visible_when=(("children", ("__structured_editor_only__",)),),
+            help="구조 편집기가 관리하는 중첩 모듈 목록입니다.",
+            affects="sequence 내부 모듈 구성",
+            risk="caution", verification="unverified", advanced=True,
         ),
     ),
 }

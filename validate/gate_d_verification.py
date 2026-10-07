@@ -55,7 +55,7 @@ GATE_D_MODULE_MATRIX: tuple[dict[str, Any], ...] = (
         "params": {
             "soc_fractions": [0.8, 0.5],
             "rest_s": 10.0,
-            "dcir_pulse_s": 2.0,
+            "dcir_pulse_s": 10.0,
         },
         "required_tokens": ("discharge", "rest", "end"),
         "required_warning_substrings": ("dcr_start_s", "fEndC"),
@@ -63,7 +63,12 @@ GATE_D_MODULE_MATRIX: tuple[dict[str, Any], ...] = (
     {
         "id": "dcir",
         "module_type": "dcir",
-        "params": {"soc_fractions": [0.8], "rest_s": 10.0, "pulse_s": 2.0},
+        "params": {
+            "soc_fractions": [0.8],
+            "rest_s": 10.0,
+            "pulse_s": 2.0,
+            "dcr_end_s": 2.0,
+        },
         "required_tokens": ("discharge", "rest", "end"),
         "required_warning_substrings": ("dcr_start_s", "fEndC"),
     },

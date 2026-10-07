@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import math
 
 from ..ir.cell_profile import CellProfile
 from ..ir.step_intent import StepIntent
@@ -33,6 +34,9 @@ class QpeedModule:
     cv_cutoff_c_rate: float = 0.3
     soc_dod_percent: float = 10.0
     high_rate_dod_percent: float = 1.0
+    soc_control: str = "voltage"
+    start_soc_percent: float = 10.0
+    soc_voltage_source: str = ""
     # Backward-compatible legacy pulse parameters.
     soc_fractions: list[float] = field(default_factory=lambda: [0.5])
     pulse_c_rate: float = 1.0
@@ -48,15 +52,57 @@ class QpeedModule:
         errors: list[str] = []
         if self.variant not in {"full", "soc_setting", "legacy_pulse"}:
             errors.append("variant must be full, soc_setting, or legacy_pulse")
-        if self.high_rate_levels < 1:
-            errors.append("high_rate_levels must be >= 1")
-        if self.condition_c_rate <= 0 or self.high_rate_start_c <= 0:
-            errors.append("C-rates must be positive")
-        if not (cell.v_min < self.soc_voltage_v <= cell.v_max):
-            errors.append("soc_voltage_v must be within the cell voltage window")
         if self.variant == "legacy_pulse" and not self.soc_fractions:
             errors.append("soc_fractions must not be empty")
+        if self.variant == "legacy_pulse":
+            return errors
+        if self.soc_control not in {"voltage", "capacity"}:
+            errors.append("soc_control must be voltage or capacity")
+        def finite(value):
+            return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+        for name in ("condition_c_rate", "condition_time_limit_s", "cv_cutoff_c_rate"):
+            value = getattr(self, name)
+            if not finite(value) or value <= 0:
+                errors.append(f"{name} must be finite and positive")
+        for name in ("initial_rest_s", "rest_s"):
+            value = getattr(self, name)
+            if not finite(value) or value < 0:
+                errors.append(f"{name} must be finite and nonnegative")
+        if self.soc_control == "voltage":
+            if not finite(self.soc_voltage_v) or not (cell.v_min < self.soc_voltage_v <= cell.v_max):
+                errors.append("soc_voltage_v must be within the cell voltage window")
+        if not finite(self.start_soc_percent) or not 0 < self.start_soc_percent < 100:
+            errors.append("start_soc_percent must be between 0 and 100 (exclusive)")
+        if self.variant == "full":
+            if isinstance(self.high_rate_levels, bool) or not isinstance(self.high_rate_levels, int) or not 1 <= self.high_rate_levels <= 40:
+                errors.append("high_rate_levels must be an integer between 1 and 40")
+            for name in ("high_rate_start_c", "high_rate_time_limit_s", "high_rate_dod_percent"):
+                value = getattr(self, name)
+                if not finite(value) or value <= 0:
+                    errors.append(f"{name} must be finite and positive")
+            for name in ("high_rate_step_c", "short_rest_s"):
+                value = getattr(self, name)
+                if not finite(value) or value < 0:
+                    errors.append(f"{name} must be finite and nonnegative")
+            if finite(self.high_rate_dod_percent) and self.high_rate_dod_percent > 100:
+                errors.append("high_rate_dod_percent must not exceed 100")
+            if self.soc_control == "capacity" and finite(self.start_soc_percent) and finite(self.high_rate_dod_percent) and self.start_soc_percent + self.high_rate_dod_percent > 100:
+                errors.append("시작 SOC + 고율 충전량(DOD)은 100%를 넘을 수 없습니다.")
+        elif self.variant == "soc_setting" and (not finite(self.soc_dod_percent) or not 0 <= self.soc_dod_percent <= 100):
+            errors.append("soc_dod_percent must be between 0 and 100")
         return errors
+
+    def _soc_charge(self, cell: CellProfile, dod_percent=None) -> StepIntent:
+        capacity_mode = self.soc_control == "capacity"
+        return StepIntent(
+            step_type="charge", mode="CC", label="QPEED SOC voltage setting" if not capacity_mode else f"QPEED nominal start SOC {self.start_soc_percent:g}% setting",
+            c_rate=self.condition_c_rate, voltage_v=cell.v_max,
+            end_voltage_v=cell.v_max if capacity_mode else self.soc_voltage_v,
+            end_time_s=self.condition_time_limit_s,
+            end_capacity_fraction=self.start_soc_percent / 100 if capacity_mode else None,
+            dod_percent=None if capacity_mode else dod_percent,
+            extra={"cap_ref_step": 7} if dod_percent is not None and not capacity_mode else {},
+        )
 
     def expand(self, cell: CellProfile) -> list[StepIntent]:
         if self.variant == "soc_setting":
@@ -115,17 +161,7 @@ class QpeedModule:
                 end_time_s=self.condition_time_limit_s,
             ),
             StepIntent(step_type="rest", end_time_s=self.rest_s),
-            StepIntent(
-                step_type="charge",
-                mode="CC",
-                label="QPEED SOC voltage setting",
-                c_rate=self.condition_c_rate,
-                voltage_v=cell.v_max,
-                end_voltage_v=self.soc_voltage_v,
-                end_time_s=self.condition_time_limit_s,
-                dod_percent=dod_percent,
-                extra={"cap_ref_step": 7} if dod_percent is not None else {},
-            ),
+            self._soc_charge(cell, dod_percent),
             StepIntent(step_type="rest", end_time_s=self.rest_s),
             StepIntent(
                 step_type="loop",
@@ -160,8 +196,9 @@ class QpeedModule:
                         voltage_v=cell.v_max + 0.1,
                         end_voltage_v=cell.v_max,
                         end_time_s=self.high_rate_time_limit_s,
-                        dod_percent=self.high_rate_dod_percent,
-                        extra={"cap_ref_step": 7},
+                        dod_percent=self.high_rate_dod_percent if self.soc_control == "voltage" else None,
+                        end_capacity_fraction=self.high_rate_dod_percent / 100 if self.soc_control == "capacity" else None,
+                        extra={"cap_ref_step": 7} if self.soc_control == "voltage" else {},
                     ),
                     StepIntent(step_type="rest", end_time_s=self.short_rest_s),
                     StepIntent(step_type="rest", end_time_s=self.rest_s),
@@ -190,14 +227,11 @@ class QpeedModule:
                         end_time_s=self.condition_time_limit_s,
                     ),
                     StepIntent(step_type="rest", end_time_s=self.rest_s),
-                    StepIntent(
-                        step_type="charge",
-                        mode="CC",
-                        c_rate=self.condition_c_rate,
-                        voltage_v=cell.v_max,
-                        end_voltage_v=self.soc_voltage_v,
+                    (self._soc_charge(cell) if self.soc_control == "capacity" else StepIntent(
+                        step_type="charge", mode="CC", c_rate=self.condition_c_rate,
+                        voltage_v=cell.v_max, end_voltage_v=self.soc_voltage_v,
                         end_time_s=self.condition_time_limit_s,
-                    ),
+                    )),
                     StepIntent(step_type="rest", end_time_s=self.rest_s),
                     StepIntent(
                         step_type="loop",

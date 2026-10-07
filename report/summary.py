@@ -68,16 +68,35 @@ def module_headline(node: ModuleNode, cell: CellProfile) -> str:
         cycles = int(params.get("measurement_cycles", 1))
         return f"{rate('initial_c_rate')} 확인 후 {rate('measurement_c_rate')} 측정 {cycles}회"
     if module_type == "rpt":
-        socs = _soc_text(params.get("soc_fractions"))
         if not params.get("include_dcir_pulses", True):
-            return f"{rate('reference_c_rate')} 기준 방전 · SOC {socs} (펄스 없음)"
-        return f"{rate('reference_c_rate')} 기준 · SOC {socs} 에서 {rate('dcir_pulse_c_rate')} DC-IR"
+            return (
+                f"{rate('reference_c_rate')} 기준 CC 방전 → "
+                f"{units.format_voltage(cell.v_min)} (DC-IR·SOC 계단 없음)"
+            )
+        socs = _soc_text(params.get("soc_fractions"))
+        pulse_rates = params.get("dcir_pulse_c_rates") or []
+        pulse_text = " · ".join(units.format_c_rate(float(value)) for value in pulse_rates)
+        return f"{rate('reference_c_rate')} 기준 · SOC {socs} 에서 {pulse_text or '—'} DC-IR"
+    if module_type == "sequence":
+        children = params.get("children") or []
+        labels = [
+            module_headline(ModuleNode.from_dict(child), cell)
+            if child.get("module_type") in {"primitive", "rest"}
+            else get_module_spec_title(child.get("module_type", ""))
+            for child in children
+        ]
+        return f"{' → '.join(labels)} · 전체 {params.get('repeat_count', 1)}회 반복"
     if module_type == "dcir":
         return f"SOC {_soc_text(params.get('soc_fractions'))} 에서 {rate('pulse_c_rate')} {seconds('pulse_s')} 펄스"
     if module_type == "hppc":
-        if params.get("variant") == "full":
+        variant = params.get("variant", "legacy_soc_pulse")
+        if variant == "full":
             return f"전 구간 HPPC · 기준 {rate('reference_c_rate')} · 펄스 {rate('full_pulse_c_rate')}"
-        return f"SOC {_soc_text(params.get('soc_fractions'))} 펄스 (구버전)"
+        if variant == "discharge_soc_pulse":
+            return f"SOC {_soc_text(params.get('soc_fractions'))} 방전 전용 측정 펄스 (재열기 확인 전)"
+        if variant == "charge_soc_pulse":
+            return f"SOC {_soc_text(params.get('soc_fractions'))} 충전 전용 측정 펄스 (재열기 확인 전)"
+        return f"SOC {_soc_text(params.get('soc_fractions'))} 충·방전 쌍 펄스"
     if module_type == "qpeed":
         variant = params.get("variant")
         if variant == "full":
@@ -103,7 +122,34 @@ def module_headline(node: ModuleNode, cell: CellProfile) -> str:
     if module_type == "custom_steps":
         origin = params.get("source_module_type") or "프리셋"
         return f"{origin} 에서 분리한 {len(params.get('steps') or [])} 스텝 (직접 편집)"
+    if module_type == "primitive":
+        from ..modules.primitive import PRIMITIVE_KINDS, PrimitiveModule
+        primitive = PrimitiveModule.from_params(params)
+        if primitive.kind not in PRIMITIVE_KINDS:
+            return "스텝 종류 확인 필요"
+        step = primitive.build_step()
+        parts = []
+        if step.c_rate is not None:
+            parts.append(f"{units.format_c_rate(step.c_rate)} = {units.format_current_mA(current_mA_from_c_rate(step.c_rate, cell))}")
+        if step.voltage_v is not None:
+            parts.append(f"목표 {units.format_voltage(step.voltage_v)}")
+        if step.end_voltage_v is not None:
+            parts.append(f"종료 {units.format_voltage(step.end_voltage_v)}")
+        if step.end_time_s is not None:
+            parts.append(units.format_duration_ko(step.end_time_s))
+        if step.cv_cutoff_c_rate is not None:
+            parts.append(f"종료 전류 {units.format_c_rate(step.cv_cutoff_c_rate)}")
+        if primitive.repeat_count > 1:
+            parts.append(f"{primitive.repeat_count:,}회 반복")
+        return " · ".join(parts)
     return module_type
+
+
+def get_module_spec_title(module_type: str) -> str:
+    from ..modules.catalog import get_module_spec
+
+    spec = get_module_spec(module_type)
+    return spec.title if spec else module_type
 
 
 def summarize_project(
@@ -144,7 +190,7 @@ def summarize_project(
             phase_lines.append(f"{phase.position}. {phase.title} — 확장 실패: {phase.error}")
             continue
         duration = (
-            units.format_duration_ko(phase.duration_seconds)
+            units.format_duration_ko(phase.duration_seconds) + (" · 부분 합계" if not phase.duration_complete else "")
             if phase.duration_seconds
             else "시간 미정"
         )
@@ -161,15 +207,21 @@ def summarize_project(
         if procedure.duration_seconds
         else "미정"
     )
-    if procedure.duration_seconds and not procedure.duration_exact:
+    if not procedure.duration_complete:
+        duration_text += " (부분 합계 · 전체 시간 미정)"
+    elif procedure.duration_seconds and not procedure.duration_exact:
         duration_text += " (근사)"
     finish_text = ""
-    if procedure.duration_seconds:
+    if procedure.duration_seconds and procedure.duration_complete:
         finish_text = "지금 시작하면 " + _finish_label(
             (start or datetime.now()) + timedelta(seconds=procedure.duration_seconds)
         ) + " 종료 예정"
+        if not procedure.duration_exact:
+            finish_text += " (근사 · CV/장비 지연 제외)"
 
     warnings: list[str] = []
+    if not procedure.duration_complete:
+        warnings.append("SOC 전압/DOD만으로 시간을 알 수 없는 스텝이 있습니다. 부분 합계로 종료 시각을 예측하지 않습니다.")
     peak = _peak_current(procedure.steps, cell)
     if peak and limit and peak > limit + 1e-6:
         warnings.append(

@@ -8,7 +8,9 @@ an inverse-operation stack would be easy to get subtly wrong.
 
 from __future__ import annotations
 
+import hashlib
 import json
+import logging
 import os
 import tempfile
 import uuid
@@ -26,6 +28,7 @@ T = TypeVar("T")
 
 AUTOSAVE_SCHEMA = "pne_scheduler.autosave/v1"
 UNDO_LIMIT = 100
+LOG = logging.getLogger(__name__)
 
 
 def default_autosave_dir() -> Path:
@@ -90,6 +93,7 @@ class ProjectDocument:
         self._redo: list[UndoEntry] = []
         self._saved_snapshot = project.to_dict()
         self._autosaved_snapshot: dict[str, Any] | None = None
+        self._recovered_snapshot: tuple[Path, str] | None = None
 
     # ----------------------------------------------------------- lifecycle
 
@@ -224,7 +228,26 @@ class ProjectDocument:
         self._saved_snapshot = self.project.to_dict()
         self.load_repairs = ()
         self.clear_autosave()
+        self._consume_recovered_snapshot()
         return target
+
+    def _consume_recovered_snapshot(self) -> None:
+        recovered = self._recovered_snapshot
+        if recovered is None:
+            return
+        self._recovered_snapshot = None
+        source, digest = recovered
+        try:
+            if hashlib.sha256(source.read_bytes()).hexdigest() != digest:
+                LOG.warning("복구 이후 바뀐 복구본을 보존했습니다: %s", source)
+                return
+            source.unlink()
+        except FileNotFoundError:
+            pass
+        except OSError as exc:
+            # The project itself was saved successfully; cleanup trouble must
+            # leave the recovery copy intact without reporting a failed save.
+            LOG.warning("저장 후 복구본을 정리하지 못했습니다: %s (%s)", source, exc)
 
     # ----------------------------------------------------------- autosave
 
@@ -299,7 +322,9 @@ class ProjectDocument:
         *,
         autosave_dir: Path | None = None,
     ) -> ProjectDocument:
-        payload = json.loads(snapshot.autosave_path.read_text(encoding="utf-8"))
+        source = snapshot.autosave_path.absolute()
+        raw = source.read_bytes()
+        payload = json.loads(raw)
         from ..ir.loader import repair_project_dict
 
         load = repair_project_dict(payload.get("project") or {})
@@ -311,6 +336,9 @@ class ProjectDocument:
         )
         # Recovered content is by definition unsaved work.
         document._saved_snapshot = {}
+        # Bind cleanup to the exact bytes used for recovery, not merely the
+        # filename: another session may replace that file before this save.
+        document._recovered_snapshot = (source, hashlib.sha256(raw).hexdigest())
         return document
 
     @staticmethod

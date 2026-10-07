@@ -306,6 +306,10 @@ def test_an_import_session_offers_only_proven_fields(client):
     session_id = opened["sessionId"]
     assert opened["stepCount"] > 0
     assert all(field["evidence"] for field in opened["editableFields"])
+    fields = {field["name"]: field for field in opened["editableFields"]}
+    assert (fields["fVref"]["label"], fields["fVref"]["unit"]) == ("설정 전류", "mA")
+    assert fields["fIref"]["unit"] == "초"
+    assert fields["fEndV"]["unit"] == "mV"
 
     good = client.post(
         f"/api/import/{session_id}/stage",
@@ -457,10 +461,32 @@ def test_the_dangerous_paths_are_not_reachable_by_one_post(client, project, tmp_
     assert response.status_code == 404
 
 
-def test_a_missing_output_directory_is_refused_before_anything_runs(client, project):
+def test_a_new_absolute_output_directory_is_created(client, project, tmp_path):
+    output = tmp_path / "new" / "preview"
     response = client.post(
         "/api/export",
-        json={"project": project, "kind": "preview", "outDir": "/no/such/dir"},
+        json={"project": project, "kind": "preview", "outDir": str(output)},
     )
+    assert response.status_code == 200
+    assert (output / "steps.csv").is_file()
+    assert (output / "project.schproj").is_file()
+
+
+@pytest.mark.parametrize("output", ["", "relative-output"])
+def test_export_requires_an_absolute_output_directory(client, project, output):
+    response = client.post("/api/export", json={"project": project, "kind": "preview", "outDir": output})
     assert response.status_code == 400
-    assert "출력 폴더가 없습니다" in response.get_json()["error"]
+    assert "절대 경로" in response.get_json()["error"]
+
+
+def test_open_project_returns_canonical_copy_without_mutating_input(client, project):
+    response = client.post("/api/project/open", json={"data": project})
+    assert response.status_code == 200
+    assert response.get_json()["project"]["modules"] == project["modules"]
+    assert response.get_json()["project"]["cell_profile"] == project["cell_profile"]
+
+
+@pytest.mark.parametrize("data", [[], {"name": "not a project"}, {"schema": "future/v9", "cell_profile": {}, "modules": []}])
+def test_open_project_rejects_unrelated_or_unsupported_json(client, data):
+    response = client.post("/api/project/open", json={"data": data})
+    assert response.status_code == 400

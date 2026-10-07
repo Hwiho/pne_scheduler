@@ -88,6 +88,10 @@ def create_app(library_root: Path | None = None, storage_db_path: Path | None = 
 
     # ---- derive ----------------------------------------------------------
 
+    @app.post("/api/project/open")
+    def _open_project():
+        return jsonify(routes.open_project(body()))
+
     @app.post("/api/views")
     def _views():
         return jsonify(routes.views(body()))
@@ -96,11 +100,15 @@ def create_app(library_root: Path | None = None, storage_db_path: Path | None = 
     def _steps():
         return jsonify(routes.steps(body()))
 
+    @app.post("/api/module-content")
+    def _module_content():
+        return jsonify(routes.module_content(body()))
+
     # ---- transform -------------------------------------------------------
 
     @app.post("/api/edit/<action>")
     def _edit(action: str):
-        return jsonify(routes.transform(action, body()))
+        return jsonify(routes.transform(action, body(), library=store))
 
     # ---- plan ------------------------------------------------------------
 
@@ -227,6 +235,34 @@ def create_app(library_root: Path | None = None, storage_db_path: Path | None = 
             storage.complete(record_id, completed=payload["completed"])
         except ValueError as exc:
             raise ApiError(str(exc), status=404) from exc
+        return jsonify({"ok": True})
+
+    @app.post("/api/storage/<record_id>/notifications")
+    def _storage_notifications(record_id: str):
+        enabled = body().get("enabled")
+        if not isinstance(enabled, bool):
+            raise ApiError("알림 설정은 true 또는 false여야 합니다.")
+        try:
+            storage.set_notifications(record_id, enabled)
+        except ValueError as exc:
+            raise ApiError(str(exc), status=404) from exc
+        return jsonify({"ok": True})
+
+    @app.post("/api/storage/<record_id>/alerts/<alert_id>/acknowledge")
+    def _storage_acknowledge_alert(record_id: str, alert_id: str):
+        try:
+            storage.acknowledge_alert(record_id, alert_id)
+        except ValueError as exc:
+            raise ApiError(str(exc), status=404) from exc
+        return jsonify({"ok": True})
+
+    @app.post("/api/storage/<record_id>/alerts/<alert_id>/snooze")
+    def _storage_snooze_alert(record_id: str, alert_id: str):
+        try:
+            storage.snooze_alert(record_id, alert_id, body().get("until"))
+        except ValueError as exc:
+            status = 404 if "찾을 수" in str(exc) else 400
+            raise ApiError(str(exc), status=status) from exc
         return jsonify({"ok": True})
 
     @app.get("/api/health")

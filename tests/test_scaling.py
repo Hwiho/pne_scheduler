@@ -26,7 +26,8 @@ def _campaign(cycles: int = 2000, every: int = 25) -> WorkspaceModel:
     model = WorkspaceModel(ProjectDocument.detached(source))
     model.add_campaign(
         model.plan_campaign(
-            total_cycles=cycles, rpt_every=every, charge_c_rate=0.5, discharge_c_rate=0.5
+            total_cycles=cycles, rpt_every=every, charge_c_rate=0.5, discharge_c_rate=0.5,
+            dcir_pulse_c_rates=[1.0, 1.5, 2.0],
         )
     )
     return model

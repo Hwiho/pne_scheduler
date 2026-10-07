@@ -158,7 +158,19 @@ def parse_number(text: str) -> float:
 
 
 def parse_voltage(text: str) -> float:
-    return parse_number(str(text).strip().rstrip("VvＶ").strip())
+    raw = str(text).strip()
+    if raw.lower().endswith("mv"):
+        return parse_number(raw[:-2].strip()) / 1000.0
+    return parse_number(raw.rstrip("VvＶ").strip())
+
+
+def parse_current_mA(text: str) -> float:
+    raw = str(text).strip()
+    if raw.lower().endswith("ma"):
+        return parse_number(raw[:-2].strip())
+    if raw.lower().endswith("a"):
+        return parse_number(raw[:-1].strip()) * 1000.0
+    return parse_number(raw)
 
 
 def parse_percent(text: str) -> float:
@@ -226,6 +238,7 @@ __all__ = [
     "format_voltage",
     "parse_bool",
     "parse_c_rate",
+    "parse_current_mA",
     "parse_duration_s",
     "parse_number",
     "parse_percent",

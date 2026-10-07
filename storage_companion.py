@@ -19,14 +19,29 @@ from .storage_records import StorageStore, default_storage_db
 LOG = logging.getLogger(__name__)
 
 
+def require_interactive_windows_session() -> None:
+    """Reject services/session 0; notifications belong to this logged-in user session."""
+    if sys.platform != "win32":
+        raise RuntimeError("Windows 사용자 세션에서만 알림을 보낼 수 있습니다.")
+    import ctypes
+    from ctypes import wintypes
+
+    session_id = wintypes.DWORD()
+    if not ctypes.windll.kernel32.ProcessIdToSessionId(
+        ctypes.windll.kernel32.GetCurrentProcessId(), ctypes.byref(session_id)
+    ):
+        raise OSError("현재 Windows 사용자 세션을 확인하지 못했습니다.")
+    if session_id.value == 0:
+        raise RuntimeError("서비스 세션에서는 알림을 실행하지 않습니다. 로그인한 사용자 세션에서 실행하세요.")
+
+
 def send_windows_balloon(title: str, message: str) -> None:
     """Show a Windows notification-area balloon from the current user session.
 
     Shell_NotifyIcon acceptance is not proof the OS displayed it; Focus Assist,
     notification policy, or session state may suppress the visual notification.
     """
-    if sys.platform != "win32":
-        raise RuntimeError("Windows 사용자 세션에서만 알림을 보낼 수 있습니다.")
+    require_interactive_windows_session()
 
     import ctypes
     from ctypes import wintypes
@@ -83,16 +98,21 @@ def process_due(store: StorageStore, notify: Callable[[str, str], None],
     """Claim, send, and record due alerts; failed sends remain retryable."""
     moment = now or datetime.now(timezone.utc)
     sent = 0
-    for record in store.claim_due(now=moment):
+    for alert in store.claim_due(now=moment):
         try:
-            title = "고온저장 목표 시각 도달"
-            message = f"{record['sample']} · {record['temperatureC']:g}°C · 목표 {record['targetDays']:g}일"
+            if alert["kind"] == "checkpoint":
+                title = "고온저장 중간 확인일 도달"
+                milestone = f"중간 확인 {alert['checkpointDay']:g}일"
+            else:
+                title = "고온저장 최종 목표 시각 도달"
+                milestone = f"최종 목표 {alert['targetDays']:g}일"
+            message = f"{alert['sample']} · {alert['temperatureC']:g}°C · {milestone}"
             notify(title, message)
-            store.mark_delivered(record["id"], now=moment)
+            store.mark_delivered(alert["id"], now=moment)
             sent += 1
         except Exception:
-            store.release_claim(record["id"])
-            LOG.exception("Storage notification failed for %s", record["id"])
+            store.release_claim(alert["id"])
+            LOG.exception("Storage notification failed for %s", alert["id"])
     return sent
 
 
@@ -103,6 +123,10 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if sys.platform != "win32":
         parser.error("이 알림 실행기는 Windows 사용자 세션에서만 실행됩니다.")
+    try:
+        require_interactive_windows_session()
+    except (OSError, RuntimeError) as exc:
+        parser.error(str(exc))
     if not 5 <= args.poll_seconds <= 3600:
         parser.error("--poll-seconds는 5–3600 범위여야 합니다.")
     # Windows file lock prevents a second login/startup process from claiming

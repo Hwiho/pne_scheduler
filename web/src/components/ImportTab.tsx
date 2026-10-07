@@ -16,6 +16,7 @@ export function ImportTab() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const explanationParts = info?.explanation.split("\n\n") ?? [];
+  const selectedField = info?.editableFields.find((item) => item.name === field);
 
   async function run(action: () => Promise<void>) {
     setBusy(true);
@@ -32,9 +33,14 @@ export function ImportTab() {
   return (
     <div className="col">
       <div className="card">
-        <h2>기존 SCH 열기</h2>
-        <p className="muted">API가 실행 중인 PC의 .sch 파일 절대 경로를 입력하세요.</p>
-        <form className="row import-path" onSubmit={(event) => {
+        <div className="resource-heading">
+          <div>
+            <span className="eyebrow">SCH INSPECTOR</span>
+            <h2>기존 SCH 열기</h2>
+            <p className="resource-description">API가 실행 중인 PC의 SCH 파일을 열어 구조와 편집 가능 필드를 먼저 검토합니다. 원본 파일은 이 단계에서 변경하지 않습니다.</p>
+          </div>
+        </div>
+        <form className="action-row import-path" onSubmit={(event) => {
           event.preventDefault();
           void run(async () => {
             setInfo(null);
@@ -55,6 +61,7 @@ export function ImportTab() {
 
       {info && <>
         <div className="card">
+          <span className="eyebrow">OPENED SCH</span>
           <h2 className="import-file">{info.path.split(/[\\/]/).pop()}</h2>
           <p className="muted import-file">{info.path}</p>
           <p className="muted">{info.schVersion} · {info.stepCount}스텝 · SHA-256 {info.sha256.slice(0, 12)}…</p>
@@ -69,7 +76,13 @@ export function ImportTab() {
         </div>
 
         <div className="card">
-          <h2>원본 바이트를 보존하는 편집</h2>
+          <div className="resource-heading">
+            <div>
+              <span className="eyebrow">BOUNDED EDIT</span>
+              <h2>원본 바이트를 보존하는 편집</h2>
+              <p className="resource-description">검증된 위치의 숫자 필드만 단계별로 제안하고, 원본과 다른 경로에 새 분석용 SCH를 저장합니다.</p>
+            </div>
+          </div>
           {info.editableFields.length === 0 ? (
             <p className="warn import-note">이 SCH 형식은 쓰기 검증 근거가 없어 편집할 수 없습니다. 설명과 검토는 계속 사용할 수 있습니다.</p>
           ) : <>
@@ -88,16 +101,19 @@ export function ImportTab() {
             }}>
               <label>스텝 <input type="number" min="1" max={info.stepCount} value={stepNo} onChange={(event) => setStepNo(event.target.value)} /></label>
               <label>필드 <select value={field} onChange={(event) => setField(event.target.value)}>
-                {info.editableFields.map((item) => <option key={item.name} value={item.name}>{item.name}</option>)}
+                {info.editableFields.map((item) => <option key={item.name} value={item.name}>{item.label ?? item.name}{item.unit ? ` (${item.unit})` : ""}</option>)}
               </select></label>
-              <label>값 <input type="number" step="any" value={value} onChange={(event) => setValue(event.target.value)} /></label>
-              <button type="submit" disabled={busy}>편집 추가</button>
-              <button type="button" disabled={busy || !proposal} onClick={() => void run(async () => {
-                setProposal(await api.clearImport(info.sessionId));
-                setResult(null);
-              })}>편집 지우기</button>
+              <label>값{selectedField?.unit ? ` (${selectedField.unit})` : ""} <input type="number" step="any" value={value} onChange={(event) => setValue(event.target.value)} /></label>
+              <div className="action-row">
+                <button type="submit" disabled={busy}>편집 추가</button>
+                <button type="button" disabled={busy || !proposal} onClick={() => void run(async () => {
+                  setProposal(await api.clearImport(info.sessionId));
+                  setResult(null);
+                })}>편집 지우기</button>
+              </div>
             </form>
-            <p className="muted">허용된 필드: {info.editableFields.map((item) => item.name).join(", ")}</p>
+            <p className="muted">현재 편집: {selectedField?.label ?? field} · 내부 필드 {field}{selectedField?.unit ? ` · 숫자만 입력 (${selectedField.unit})` : ""}. 종료 전압은 mV 단위입니다 (예: 4200 = 4.2 V).</p>
+            <details><summary>허용된 필드와 검증 근거</summary>{info.editableFields.map((item) => <p className="muted" key={item.name}>{item.label ?? item.name} · {item.name} @+{item.offset}: {item.evidence}</p>)}</details>
             {proposal && <>
               <p>적용 예정: {proposal.accepted.map((item) => `${item.stepNo}:${item.field}=${item.value}`).join(", ") || "없음"}</p>
               {proposal.rejected.map((item, index) => <p className="danger" key={index}>{item.stepNo}:{item.field} — {item.reason}</p>)}
@@ -105,10 +121,10 @@ export function ImportTab() {
             </>}
             <label className="import-output">출력 파일 절대 경로 <input value={outputPath} onChange={(event) => setOutputPath(event.target.value)} /></label>
             <label className="row" style={{ flexWrap: "wrap" }}><input type="checkbox" checked={acknowledged} onChange={(event) => setAcknowledged(event.target.checked)} /> 이 결과물은 분석용이며 장비 실행용이 아님을 확인했습니다.</label>
-            <button className="primary" disabled={busy || !acknowledged || !proposal?.ok || !!proposal.rejected.length || !outputPath.trim()} onClick={() => void run(async () => {
+            <div className="action-row"><button className="primary" disabled={busy || !acknowledged || !proposal?.ok || !!proposal.rejected.length || !outputPath.trim()} onClick={() => void run(async () => {
               setResult(await api.patchImport(info.sessionId, outputPath.trim()));
-            })}>새 SCH 파일 저장</button>
-            {result && <p className="import-note import-file" role="status">저장: {result.outputPath}<br />검증 기록: {result.manifestPath}<br />변경된 바이트: {result.changedByteCount} · 장비 실행 불가</p>}
+            })}>새 SCH 파일 저장</button></div>
+            {result && <div className="import-note status-note status-note-success" role="status"><span aria-hidden="true">✓</span><div><strong>새 분석용 SCH를 저장했습니다.</strong><ul className="file-output-list"><li>저장: <span className="import-file">{result.outputPath}</span></li><li>검증 기록: <span className="import-file">{result.manifestPath}</span></li><li>변경된 바이트: {result.changedByteCount} · 장비 실행 불가</li></ul></div></div>}
           </>}
         </div>
       </>}

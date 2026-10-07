@@ -8,6 +8,7 @@ without a display.
 from __future__ import annotations
 
 from collections.abc import Sequence
+from copy import deepcopy
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
@@ -316,6 +317,134 @@ class WorkspaceModel:
         """Preview a cycle/RPT campaign without touching the project."""
         return build_cycle_rpt_campaign(**options)
 
+    def group_modules(self, module_ids: list[str], name: str, repeat_count: int = 1) -> str:
+        """Wrap consecutive modules, retaining their parameters in one undo edit."""
+        from ..modules.sequence import SequenceModule
+
+        ordered = self.project.copy()
+        adopt_connection_order(ordered)
+        ids = [node.id for node in ordered.modules]
+        if not isinstance(module_ids, list) or len(module_ids) < 2 or len(set(module_ids)) != len(module_ids):
+            raise ValueError("연속된 모듈을 2개 이상 선택하세요.")
+        if any(module_id not in ids for module_id in module_ids):
+            raise ValueError("선택한 모듈이 없습니다.")
+        positions = sorted(ids.index(module_id) for module_id in module_ids)
+        if positions != list(range(positions[0], positions[-1] + 1)):
+            raise ValueError("사이에 빠진 모듈 없이 연속된 박스를 선택하세요.")
+        children = [node.to_dict() for node in ordered.modules[positions[0]:positions[-1] + 1]]
+        group = SequenceModule(name=name.strip(), children=children, repeat_count=repeat_count)
+        errors = group.validate(self.project.cell_profile)
+        if errors:
+            raise ValueError("; ".join(errors))
+        group.expand(self.project.cell_profile)
+        identifier = self._next_id("sequence")
+
+        def mutate(project: ScheduleProject) -> None:
+            adopt_connection_order(project)
+            project.modules[positions[0]:positions[-1] + 1] = [ModuleNode(identifier, "sequence", deepcopy(group.__dict__))]
+            linearize(project)
+
+        self.document.apply(f"{group.name} · {repeat_count}회 반복 블록 생성", mutate)
+        return identifier
+
+    def ungroup_module(self, module_id: str) -> None:
+        from ..modules.sequence import SequenceModule
+
+        node = self._node(module_id)
+        if node.module_type != "sequence":
+            raise ValueError("반복 블록이 아닙니다.")
+        group = SequenceModule.from_params(node.params)
+        errors = group.validate(self.project.cell_profile)
+        if errors:
+            raise ValueError("; ".join(errors))
+        if len(group.children) * group.repeat_count > 500:
+            raise ValueError("풀면 500개를 넘습니다. 먼저 반복 횟수를 줄이세요.")
+        taken = {item.id for item in self.project.modules}
+        children = []
+        for _ in range(group.repeat_count):
+            for raw in group.children:
+                child_id = self._next_id(raw["module_type"], taken)
+                taken.add(child_id)
+                children.append(ModuleNode(child_id, raw["module_type"], deepcopy(raw.get("params", {}))))
+
+        def mutate(project: ScheduleProject) -> None:
+            adopt_connection_order(project)
+            position = next(index for index, item in enumerate(project.modules) if item.id == module_id)
+            project.modules[position:position + 1] = children
+            linearize(project)
+
+        self.document.apply(f"{group.name} 블록 풀기 ({group.repeat_count}회 보존)", mutate)
+
+    def set_group_child_param(self, module_id: str, index: int, key: str, text: Any) -> None:
+        node = self._node(module_id)
+        if node.module_type != "sequence":
+            raise ValueError("반복 블록이 아닙니다.")
+        params = deepcopy(node.params)
+        children = params.get("children", [])
+        if index < 0 or index >= len(children):
+            raise ValueError("블록 내부 모듈 위치가 잘못되었습니다.")
+        child = children[index]
+        child["params"] = apply_field_edit(child["module_type"], child.get("params", {}), key, text)
+
+        def mutate(project: ScheduleProject) -> None:
+            next(item for item in project.modules if item.id == module_id).params = params
+
+        self.document.apply(f"{module_id} 내부 {index + 1}.{key} 변경", mutate)
+
+    def detach_group_child(self, module_id: str, index: int) -> None:
+        """Explicitly freeze one retained sequence child into custom steps."""
+        from ..modules.base import expand_module
+        from ..modules.custom_steps import CustomStepsModule
+
+        node, child = self._group_child(module_id, index)
+        if child.module_type == "custom_steps":
+            raise ValueError("이미 개별 스텝으로 분리된 내부 모듈입니다.")
+        detached = CustomStepsModule.from_steps(
+            expand_module(child, self.project.cell_profile),
+            source_module_type=child.module_type,
+        )
+        params = deepcopy(node.params)
+        params["children"][index] = ModuleNode(
+            child.id, "custom_steps", detached.as_params()
+        ).to_dict()
+
+        def mutate(project: ScheduleProject) -> None:
+            next(item for item in project.modules if item.id == module_id).params = params
+
+        self.document.apply(
+            f"{module_id} 내부 {index + 1} 개별 스텝으로 분리", mutate
+        )
+
+    def set_group_child_step_field(
+        self, module_id: str, child_index: int, index: int, key: str, text: Any
+    ) -> StepDiff:
+        """Edit one field only after that sequence child was explicitly frozen."""
+        node, child = self._group_child(module_id, child_index)
+        if child.module_type != "custom_steps":
+            raise StepEditError(
+                "이 내부 모듈은 프리셋입니다. 개별 스텝을 고치려면 먼저 분리하세요."
+            )
+        raw_steps = child.params.get("steps") or []
+        if not isinstance(raw_steps, list):
+            raise StepEditError("내부 모듈의 스텝 형식이 잘못되었습니다.")
+        steps = set_step_field(list(raw_steps), index, key, text)
+        params = deepcopy(node.params)
+        child_params = deepcopy(child.params)
+        child_params["steps"] = steps
+        params["children"][child_index] = ModuleNode(
+            child.id, "custom_steps", child_params
+        ).to_dict()
+        before = self.project.copy()
+
+        def mutate(project: ScheduleProject) -> None:
+            next(item for item in project.modules if item.id == module_id).params = params
+
+        self.document.apply(
+            f"{module_id} 내부 {child_index + 1} 스텝 {index + 1}.{key} 변경",
+            mutate,
+        )
+        return diff_projects(before, self.project)
+
     def add_campaign(self, plan: CampaignPlan) -> tuple[str, ...]:
         """Append a planned campaign as ordinary modules, in one undo entry.
 
@@ -360,12 +489,23 @@ class WorkspaceModel:
         return self._library
 
     def save_method(
-        self, name: str, *, description: str = "", method_id: str | None = None
+        self, name: str, *, description: str = "", method_id: str | None = None,
+        module_ids: list[str] | None = None,
     ) -> MethodVersion:
         """Store the current module list as a new library version."""
+        project = self.project
+        if module_ids is not None:
+            if not module_ids or len(set(module_ids)) != len(module_ids):
+                raise ValueError("저장할 블록을 선택하세요.")
+            if any(identifier not in {node.id for node in project.modules} for identifier in module_ids):
+                raise ValueError("저장할 모듈이 없습니다.")
+            project = project.copy()
+            adopt_connection_order(project)
+            project.modules[:] = [node for node in project.modules if node.id in module_ids]
+            linearize(project)
         return save_project_as_method(
             self.library(),
-            self.project,
+            project,
             name=name,
             description=description,
             method_id=method_id,
@@ -373,6 +513,12 @@ class WorkspaceModel:
 
     def saved_methods(self) -> tuple[MethodVersion, ...]:
         return self.library().methods()
+
+    def load_saved_method(self, method_id: str) -> tuple[str, ...]:
+        entry = self.library().latest(method_id)
+        if entry is None:
+            raise ValueError("저장된 방법을 찾을 수 없습니다.")
+        return self.load_method(self.plan_method_load(entry))
 
     def method_versions(self, method_id: str) -> tuple[MethodVersion, ...]:
         return self.library().versions(method_id)
@@ -441,7 +587,7 @@ class WorkspaceModel:
             adopt_connection_order(project)
             index = [n.id for n in project.modules].index(module_id)
             project.modules.insert(
-                index + 1, ModuleNode(new_id, node.module_type, dict(node.params))
+                index + 1, ModuleNode(new_id, node.module_type, deepcopy(node.params))
             )
             linearize(project)
 
@@ -461,7 +607,7 @@ class WorkspaceModel:
                     step_count=phase.step_count,
                     step_range=phase.step_range_text,
                     duration=(
-                        units.format_duration_ko(phase.duration_seconds)
+                        units.format_duration_ko(phase.duration_seconds) + (" · 부분" if not phase.duration_complete else "")
                         if phase.duration_seconds
                         else "—"
                     ),
@@ -520,6 +666,26 @@ class WorkspaceModel:
             voltages_v=params["fast_voltages_v"],
             times_s=params["fast_times_s"],
         )
+
+    def apply_qpeed_voltage(self, module_id: str, voltage_v: float, source: str,
+                            soc_percent: float | None = None) -> StepDiff:
+        """Commit one explicitly selected result voltage and provenance atomically."""
+        from ..modules.qpeed import QpeedModule
+        node = self._node(module_id)
+        if node.module_type != "qpeed" or node.params.get("variant", "full") == "legacy_pulse":
+            raise ValueError("전체/SOC 설정 QPEED 모듈에만 전압을 불러올 수 있습니다.")
+        params = resolve_params("qpeed", dict(node.params))
+        params.update(soc_control="voltage", soc_voltage_v=voltage_v, soc_voltage_source=source)
+        if soc_percent is not None and 0 < soc_percent < 100:
+            params["start_soc_percent"] = soc_percent
+        errors = QpeedModule.from_params(params).validate(self.project.cell_profile)
+        if errors:
+            raise ValueError("; ".join(errors))
+        before = self.project.copy()
+        def mutate(project):
+            next(candidate for candidate in project.modules if candidate.id == module_id).params = params
+        self.document.apply(f"{module_id} SOC 전압 불러오기", mutate)
+        return diff_projects(before, self.project)
 
     def apply_qc_fast_charge(self, module_id: str, plan: FastChargePlan) -> StepDiff:
         """Commit a fast-charge plan — all three lists together, in one step."""
@@ -598,8 +764,9 @@ class WorkspaceModel:
         """How many cycles fit in a time budget, asked of the real estimator.
 
         The count is varied on a copy and the whole schedule re-estimated each
-        time, so RPT blocks, rests and CV tapers are counted rather than assumed
-        proportional to the cycle count.
+        time, so RPT blocks and rests are counted rather than assumed
+        proportional to the cycle count. CV taper remains excluded, and a
+        partial estimate must never be treated as a complete budget.
         """
         target = module_id or next(
             (
@@ -627,7 +794,8 @@ class WorkspaceModel:
                 if candidate.id == target:
                     candidate.params = {**candidate.params, "loop_count": count}
                     break
-            return build_procedure(probe).duration_seconds
+            procedure = build_procedure(probe)
+            return procedure.duration_seconds if procedure.duration_complete else None
 
         return cycles_within(budget_seconds, estimate, step=step)
 
@@ -926,6 +1094,22 @@ class WorkspaceModel:
         if node is None:
             raise ValueError(f"알 수 없는 구간입니다: {module_id}")
         return node
+
+    def _group_child(self, module_id: str, index: int) -> tuple[ModuleNode, ModuleNode]:
+        node = self._node(module_id)
+        if node.module_type != "sequence":
+            raise ValueError("반복 블록이 아닙니다.")
+        children = node.params.get("children", [])
+        if not isinstance(children, list) or not 0 <= index < len(children):
+            raise ValueError("블록 내부 모듈 위치가 잘못되었습니다.")
+        raw = children[index]
+        if not isinstance(raw, dict):
+            raise ValueError("블록 내부 모듈 형식이 잘못되었습니다.")
+        try:
+            child = ModuleNode.from_dict(deepcopy(raw))
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("블록 내부 모듈 형식이 잘못되었습니다.") from exc
+        return node, child
 
     def _next_id(self, module_type: str, reserved: set[str] | None = None) -> str:
         """Next free id, honouring ids already handed out in the same batch."""

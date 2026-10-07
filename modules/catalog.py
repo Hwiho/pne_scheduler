@@ -32,45 +32,53 @@ class ModuleSpec:
 
 MODULE_CATALOG: dict[str, ModuleSpec] = {
     "formation": ModuleSpec(
-        "formation", "Formation", "conditioning", "Initial low-rate formation cycles.",
+        "formation", "Formation", "conditioning", "초기 저율 충·방전 컨디셔닝",
         "software-checked", limitations=("Corpus variants are not all parameterized yet.",),
     ),
     "rest": ModuleSpec(
-        "rest", "Rest", "primitive", "Time-bounded open-circuit rest.",
+        "rest", "Rest", "primitive", "전류 없이 지정 시간 휴지",
         "software-checked",
     ),
     "cycle_life": ModuleSpec(
-        "cycle_life", "Cycle life", "cycling", "Repeated CCCV/rest/discharge cycle.",
+        "cycle_life", "Cycle life", "cycling", "CCCV 충전·휴지·방전 반복",
         "software-checked", limitations=("Checkpoint/RPT insertion is not modeled.",),
     ),
     "insitu_cycle": ModuleSpec(
-        "insitu_cycle", "In-situ cycle", "cycling", "Cycle block without an RPT insert.",
+        "insitu_cycle", "In-situ cycle", "cycling", "RPT 없이 이어지는 사이클",
         "software-checked",
     ),
     "capacheck": ModuleSpec(
-        "capacheck", "Capacity check", "diagnostic", "0.1C then C/3 capacity check.",
+        "capacheck", "Capacity check", "diagnostic", "기준율에 따른 용량 확인",
         "software-checked", limitations=("Golden step order is family-checked only.",),
     ),
     "rpt": ModuleSpec(
-        "rpt", "RPT", "diagnostic", "SOC ladder and DCIR pulse sequence.",
+        "rpt", "RPT", "diagnostic", "SOC 구간별 기준 방전·DC-IR",
         "prototype", limitations=("Capacity cutoff and DCR window need controlled pairs.",),
     ),
     "dcir": ModuleSpec(
-        "dcir", "DC-IR", "diagnostic", "SOC-adjusted DC resistance pulses.",
+        "dcir", "DC-IR", "diagnostic", "한 전류의 저항 측정 펄스",
         "prototype", limitations=("DCR window is retained in IR but not written.",),
     ),
     "hppc": ModuleSpec(
-        "hppc", "HPPC", "diagnostic", "62-step full-range or legacy SOC pulse ladder.",
-        "software-checked", variants=("full", "legacy_soc_pulse"),
-        limitations=("Full topology is reproduced; DOD and CC mode-limit display still require CTSPro review.",),
+        "hppc", "HPPC", "diagnostic", "전 구간 또는 SOC별 펄스 평가",
+        "software-checked", variants=(
+            "full",
+            "legacy_soc_pulse",
+            "discharge_soc_pulse",
+            "charge_soc_pulse",
+        ),
+        limitations=(
+            "Full topology is reproduced; DOD and CC mode-limit display still require CTSPro review.",
+            "Discharge-only and charge-only SOC pulse recipes are unverified and reopen-only.",
+        ),
     ),
     "qpeed": ModuleSpec(
-        "qpeed", "QPEED", "fast-charge", "QPEED-2 and SOC-setting candidates.",
+        "qpeed", "QPEED", "fast-charge", "단계별 고율 충전 레시피",
         "software-checked", variants=("full", "soc_setting", "legacy_pulse"),
         limitations=("DOD/SOC semantics still need CTSPro controlled-pair verification.",),
     ),
     "qc": ModuleSpec(
-        "qc", "QC charge", "fast-charge", "QC cycle, 1N1Q, and 1-charge candidates.",
+        "qc", "QC charge", "fast-charge", "QC 사이클·1N1Q·단일 충전",
         "software-checked", variants=("cycle", "1n1q", "1_charge"),
         limitations=("Set-specific voltage/time values require user reopen review.",),
     ),
@@ -92,6 +100,11 @@ MODULE_CATALOG: dict[str, ModuleSpec] = {
             "사용자가 직접 편집한 스텝이므로 골든 토폴로지 보장이 없습니다.",
             "장비 내보내기 전에 CTSPro 재검토가 반드시 필요합니다.",
         ),
+    ),
+    "sequence": ModuleSpec(
+        "sequence", "반복 블록", "saved", "여러 모듈을 순서대로 묶어 재사용하고 반복합니다.",
+        "prototype", advanced_only=True,
+        limitations=("블록·중첩 LOOP 출력은 CTSPro 재열기 및 장비 검증 전까지 검토용입니다.",),
     ),
     "smoke_rest_cc_end": ModuleSpec(
         "smoke_rest_cc_end", "Smoke test", "internal", "Gate C writer smoke fixture.",

@@ -144,6 +144,9 @@ MODULE_STYLES: dict[str, ModuleStyle] = {
         "#3f3117",
         "#7d6435",
     ),
+    "sequence": ModuleStyle(
+        "Repeated block", "↻", "#e2eee8", "#f1f8f4", "#5a9975", "#234435", "#537965",
+    ),
     "smoke_rest_cc_end": ModuleStyle(
         "Smoke test",
         "🧪",

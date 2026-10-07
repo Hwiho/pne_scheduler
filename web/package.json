@@ -6,8 +6,11 @@
     "dev": "next dev -H 127.0.0.1 -p 3000",
     "build": "next build",
     "start": "next start -H 127.0.0.1 -p 3000",
-    "lint": "next lint",
-    "test:ui": "node tests/ui-smoke.cjs"
+    "lint": "tsc --noEmit",
+    "test": "node --test tests/document-session.cjs tests/unit-input.cjs",
+    "test:ui": "node tests/ui-smoke.cjs",
+    "test:session": "node --test tests/document-session.cjs",
+    "test:units": "node --test tests/unit-input.cjs"
   },
   "dependencies": {
     "next": "15.5.4",

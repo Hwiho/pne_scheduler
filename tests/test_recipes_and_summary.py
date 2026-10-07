@@ -53,7 +53,7 @@ def test_module_headline_speaks_in_lab_terms() -> None:
     assert "432 mA" in qpeed and "12단계" in qpeed
 
 
-def test_summary_reports_cell_equipment_phases_and_finish_time() -> None:
+def test_summary_reports_cell_equipment_phases_and_unknown_finish_time() -> None:
     summary = summarize_project(_project(), start=datetime(2026, 9, 9, 9, 0))
     text = summary.as_text()
 
@@ -61,8 +61,17 @@ def test_summary_reports_cell_equipment_phases_and_finish_time() -> None:
     assert "PNE02" in text
     assert "1. Formation" in text
     assert "2. QPEED" in text
-    assert "종료 예정" in summary.finish_text
+    assert summary.finish_text == ""
+    assert "전체 시간 미정" in summary.duration_text
     assert summary.total_steps > 100
+
+
+def test_capacity_control_summary_can_show_a_nominal_finish_time() -> None:
+    project = _project()
+    project.modules[1].params["soc_control"] = "capacity"
+    summary = summarize_project(project, start=datetime(2026, 9, 9, 9, 0))
+    assert "종료 예정" in summary.finish_text
+    assert "근사" in summary.duration_text
 
 
 def test_summary_warns_when_the_peak_current_passes_the_limit() -> None:

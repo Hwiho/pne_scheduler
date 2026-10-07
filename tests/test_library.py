@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import logging
+import unicodedata
 from pathlib import Path
 
 import pytest
@@ -92,8 +94,138 @@ def test_korean_names_get_distinct_ids(library):
 
 def test_a_name_that_slugs_to_nothing_still_saves(library):
     entry = library.save(name="!!!", modules=MODULES)
-    assert entry.method_id == "method"
+    assert entry.method_id.startswith("method-")
+    assert len(entry.method_id) == len("method-") + 12
     assert library.latest(entry.method_id) is not None
+    assert library.save(name="!!!", modules=MODULES).method_id == entry.method_id
+    assert [version.version for version in library.versions(entry.method_id)] == [1, 2]
+
+
+@pytest.mark.parametrize("name, expected_id", [("수명 표준", "수명-표준"), ("Rest 01", "rest-01")])
+def test_existing_nonfallback_ids_are_preserved(library, name, expected_id):
+    first = library.save(name=name, modules=MODULES)
+    assert first.method_id == expected_id
+    original_bytes = first.path.read_bytes()
+
+    # Different Unicode composition and outer whitespace still name the same method.
+    second = library.save(name=f"  {unicodedata.normalize('NFD', name)}  ", modules=MODULES)
+
+    assert second.method_id == expected_id and second.version == 2
+    assert first.path.read_bytes() == original_bytes
+
+
+def test_unambiguous_legacy_fallback_id_is_preserved(library):
+    legacy = library.save(name="🔥", modules=MODULES, method_id="method")
+    original_bytes = legacy.path.read_bytes()
+
+    same = library.save(name="🔥", modules=MODULES)
+    different = library.save(name="⚡", modules=MODULES)
+
+    assert same.method_id == "method" and same.version == 2
+    assert different.method_id.startswith("method-") and different.version == 1
+    assert legacy.path.read_bytes() == original_bytes
+    assert {entry.method_id for entry in library.methods()} == {"method", different.method_id}
+
+
+def test_mixed_legacy_fallback_history_is_not_extended_or_rewritten(library):
+    first = library.save(name="🔥", modules=MODULES, method_id="method")
+    second = library.save(name="⚡", modules=MODULES, method_id="method")
+    originals = {entry.path: entry.path.read_bytes() for entry in (first, second)}
+
+    fire = library.save(name="🔥", modules=MODULES)
+    bolt = library.save(name="⚡", modules=MODULES)
+
+    assert fire.method_id != bolt.method_id
+    assert fire.method_id != "method" and bolt.method_id != "method"
+    assert fire.version == bolt.version == 1
+    assert [entry.version for entry in library.versions("method")] == [1, 2]
+    assert all(path.read_bytes() == raw for path, raw in originals.items())
+
+
+def test_existing_hashed_fallback_id_keeps_priority_if_legacy_files_are_added(library):
+    hashed = library.save(name="🔥", modules=MODULES)
+    legacy = library.save(name="🔥", modules=MODULES, method_id="method")
+
+    saved = library.save(name="🔥", modules=MODULES)
+
+    assert saved.method_id == hashed.method_id and saved.version == 2
+    assert library.versions(legacy.method_id) == (legacy,)
+
+
+@pytest.mark.parametrize(
+    "first_name, second_name",
+    [("Rest + 01", "Rest - 01"), ("a" * 60 + "1", "a" * 60 + "2")],
+)
+def test_normal_slug_collisions_keep_the_first_id_and_separate_new_names(
+    library, first_name, second_name
+):
+    first = library.save(name=first_name, modules=MODULES)
+    second = library.save(name=second_name, modules=MODULES)
+
+    assert first.method_id != second.method_id
+    assert first.version == second.version == 1
+    assert library.save(name=first_name, modules=MODULES).method_id == first.method_id
+    assert library.save(name=second_name, modules=MODULES).method_id == second.method_id
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"version": "not-a-number"},
+        {"version": True},
+        {"version": 1.5},
+        {"version": 0},
+        {"version": None},
+        {"equipment": []},
+        {"equipment": {"unit": []}},
+        {"modules": "broken"},
+        {"modules": [None]},
+        {"modules": [{"id": "bad", "module_type": "rest", "params": []}]},
+        {"name": []},
+        {"description": []},
+        {"saved_at": {}},
+        {"method_id": "wrong-directory"},
+        {"version": 2},
+    ],
+)
+def test_malformed_entries_are_skipped_with_path_and_reason(library, caplog, changes):
+    valid = library.save(name="정상 방법", modules=MODULES)
+    damaged = library.root / "damaged" / "v0001.json"
+    damaged.parent.mkdir(parents=True)
+    data = {**valid.to_dict(), "method_id": "damaged", **changes}
+    damaged.write_text(json.dumps(data), encoding="utf-8")
+
+    with caplog.at_level(logging.WARNING, logger="pne_scheduler.library"):
+        methods = library.methods()
+
+    assert [entry.method_id for entry in methods] == [valid.method_id]
+    messages = [record.getMessage() for record in caplog.records]
+    assert any(str(damaged) in message and "건너뜁니다" in message for message in messages)
+    assert any("(" in message for message in messages), "the diagnostic must explain why"
+
+
+def test_invalid_utf8_is_skipped_with_diagnostics(library, caplog):
+    valid = library.save(name="정상 방법", modules=MODULES)
+    damaged = valid.path.parent / "v0002.json"
+    damaged.write_bytes(b"\xff\xfe\x00")
+
+    with caplog.at_level(logging.WARNING, logger="pne_scheduler.library"):
+        assert library.versions(valid.method_id) == (valid,)
+
+    assert str(damaged) in caplog.text
+
+
+def test_saving_after_a_damaged_version_preserves_its_file(library):
+    first = library.save(name="정상 방법", modules=MODULES)
+    damaged = first.path.parent / "v0002.json"
+    damaged.write_text("{keep this recoverable data", encoding="utf-8")
+    original_bytes = damaged.read_bytes()
+
+    saved = library.save(name="정상 방법", modules=MODULES)
+
+    assert saved.version == 3
+    assert damaged.read_bytes() == original_bytes
+    assert [entry.version for entry in library.versions(first.method_id)] == [1, 3]
 
 
 # --- loading ----------------------------------------------------------------
@@ -133,7 +265,8 @@ def test_a_round_trip_reproduces_the_procedure(tmp_path, library):
 
     assert [node.module_type for node in target.project.modules] == ["cycle_life", "rpt"]
     assert target.project.modules[0].params["loop_count"] == 40
-    assert not [row for row in target.validation_rows() if row.severity == "error"]
+    errors = [row for row in target.validation_rows() if row.severity == "error"]
+    assert {row.code for row in errors} == {"ENTRY_SOC_CHAIN_CONFLICT"}
 
 
 def test_loaded_ids_never_collide_with_what_is_already_there(tmp_path, library):

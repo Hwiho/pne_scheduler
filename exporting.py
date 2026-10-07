@@ -42,6 +42,8 @@ STEP_COLUMNS_KO = (
     ("end_time_ko", "시간 종료"),
     ("cv_cutoff_c_rate", "CV 종료 전류"),
     ("dod_percent", "DOD(%)"),
+    ("end_capacity_percent", "용량 종료(%)"),
+    ("end_capacity_mAh", "용량 종료(mAh)"),
     ("loop_target", "LOOP 대상"),
     ("loop_count", "LOOP 횟수"),
 )
@@ -104,6 +106,8 @@ def write_step_table(project: ScheduleProject, path: Path) -> Path:
                     else units.format_c_rate(step.cv_cutoff_c_rate)
                 ),
                 "dod_percent": "" if step.dod_percent is None else step.dod_percent,
+                "end_capacity_percent": ("" if step.end_capacity_fraction is None else round(step.end_capacity_fraction * 100, 8)),
+                "end_capacity_mAh": ("" if step.end_capacity_fraction is None else round(step.end_capacity_fraction * cell.nominal_capacity_mAh, 8)),
                 "loop_target": "" if step.loop_goto_step is None else step.loop_goto_step,
                 "loop_count": "" if step.loop_count is None else step.loop_count,
             }
@@ -148,7 +152,11 @@ def export_review_candidate(
     candidate = build_pne02_reopen_candidate(project, timestamp=stamp)
     sch_path = out_dir / REVIEW_CANDIDATE_NAME
     sch_path.write_bytes(candidate.data)
-    parsed = read_sch(sch_path)
+    try:
+        parsed = read_sch(sch_path)
+    except (OSError, ValueError) as exc:
+        sch_path.unlink(missing_ok=True)
+        raise ExportBlocked("생성한 SCH를 다시 읽을 수 없어 후보 파일을 제거했습니다. 다른 출력 폴더에서 재시도하세요.") from exc
     steps = list(project.expand_steps())
     checks = [
         {
@@ -244,7 +252,7 @@ def export_review_candidate(
     )
     return ExportResult(
         "review_candidate",
-        (sch_path, project_path, steps_path, checklist_path),
+        (sch_path, project_path, steps_path, checklist_path, out_dir / f"{REVIEW_CANDIDATE_NAME}.manifest.json"),
         f"SHA-256 {digest[:16]}… · CTSPro 에서 열어보기 전용입니다. 절대 실행하지 마세요.",
     )
 

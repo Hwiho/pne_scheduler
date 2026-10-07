@@ -86,15 +86,102 @@ python run_pne_scheduler_api.py     # API, 127.0.0.1:8000
 cd web; npm run dev                 # screens, localhost:3000
 ```
 
-One page with five steps, in the order the work actually happens:
+One workspace with five tabs:
 
 | Tab | What it is for |
 |------|------|
 | **1. 설정** | PNE unit, CTSPro build, SCH layout, cell capacity and voltage window |
 | **2. 프로토콜** | Pick an experiment by purpose, build a cycle+RPT campaign, edit as a structured form |
-| **3. 절차** | The run order, a deadline solver, per-step editing of detached modules |
-| **4. 검증** | Errors, warnings, and unverified evidence |
-| **5. 내보내기** | The draft → software-checked → CTSPro → equipment ladder, each path gated separately |
+| **3. 내보내기** | Experiment summary, inline checks, direct-capacity cell batches and optional C-rate combinations |
+| **4. 기존 SCH** | Explain and stage evidence-gated edits to an existing schedule |
+| **5. 고온저장** | Elapsed time, intermediate checkpoints, acknowledgement and snooze |
+
+The protocol tab includes a **vertical START → modules → END editor**, a searchable
+palette with primitive shortcuts, and consecutive-box selection to create a named
+repeating block. Blocks retain their child parameters, can be saved separately to
+the method library, and can be added to another project. The palette separates
+**Basic steps** (CC, CCCV, discharge, rest, OCV) from **Experiment presets**
+(Formation, Cycle Life, QPEED, etc.). A preset's actual steps can be inspected with
+**구성 펼치기**, collapsed back to its condition summary, or opened in **크게 보기**
+(Escape closes it). Editing an individual preset step first converts that preset
+to a clearly labelled user-customized copy; the initial conversion preserves its
+actual steps and LOOP targets. Group children can be edited independently. Any
+selected module or group can be saved through **내 프리셋으로 저장** and reused.
+Condition forms sit alongside the flow on desktop and open as a panel on narrow
+screens; detailed step fields load only when opened. Nested groups are not yet
+supported. Ungrouping preserves repetitions by creating individual boxes (up to 500).
+Nested LOOP files remain review-only until CTSPro/equipment verification.
+
+Cycle/RPT campaigns default to **one DC-IR current**. Pulse charge consumption is
+included in subsequent nominal SOC intervals. The entry SOC is an explicit assumption:
+preparation charge is added only when the user selects `charge_to_full`. A known
+discharged-to-RPT boundary without preparation is blocked; resting does not restore SOC.
+
+SOC forms use **0–100%** (for example `80, 50, 20`), while saved projects retain
+their existing 0–1 representation. **시작 SOC** is the assumed remaining charge
+at entry: 100% → 80% removes 20% of the entered reference capacity, not a measured
+SOC reading. Time inputs have a separate **초 / 분 / 시간 / 일** selector; changing
+the display unit preserves the physical amount. Voltage/current inputs use V/mV
+and mA/A, and QC's list inputs share one selected unit. Turning RPT's **DC-IR 펄스
+포함** off produces one continuous reference-rate CC discharge to the lower cell
+voltage and a final rest (C/3 by default), without SOC segmentation. Explicit
+charge-to-full preparation is still optional.
+
+Numeric fields need only the number: use `6` with **시간**, `30` with **분**, or
+`1` with **초**, without typing a suffix. Older formatted scalar API values also
+fall back to this value/unit layout rather than showing a second misleading unit.
+
+QPEED keeps the existing **measured-voltage recipe** as its default. Its optional
+**입력 기준용량의 %로 설정** mode independently takes the starting SOC and high-rate
+charge amount (DOD/ΔQ). For example, starting at 20% and adding 1% means a nominal
+20% → 21% charge relative to the entered reference capacity, not a measured SOC.
+The capacity-cutoff encoding still needs CTSPro/equipment verification. Every
+SOC reset uses the selected starting fraction. The maximum high-rate current is
+displayed as `start + increment × (levels − 1)` and converted to mA/A; the separate
+peak-current item includes conditioning steps as well.
+
+Root QPEED full/SOC-setting modules can preview CSV/TSV result files (up to 2 MB,
+50,000 rows, 500 displayed candidates), map voltage/SOC/cell/step/cycle columns,
+and apply a manually selected last valid sample. V/mV and percent/fraction units
+must be identified; voltage alone is never converted into SOC or declared OCV.
+Charge-capacity-derived SOC is optional and explicitly nominal. The selected
+file/row provenance is saved with the project, and applying mode/voltage/source
+is one undo operation. Synthetic CSV tests cover this workflow; native XLS/MDB
+formats and real lab exports need representative samples before support is claimed.
+
+QPEED's conditioning is a preparation charge/discharge sequence, not a waiting
+period. The default 6 h conditioning and 16 h high-rate timeouts are **per-step
+safety ceilings**, not expected durations. Nominal capacity/C-rate estimates,
+configured rests, and maximum time limits are now separated. Unknown voltage/DOD
+durations produce a partial total with no predicted finish time. CCCV remains an
+approximation excluding CV taper and equipment delay; these are not measured runtimes.
+Period-to-cycle planning rejects incomplete schedules rather than using a partial
+total. The desktop condition inspector has its own column beside both the flow and
+auxiliary controls, so it does not cover the campaign or period-calculation buttons.
+
+HPPC's former “old/new” names described different recipes, not standard revisions:
+
+| Current name | Actual recipe |
+|------|------|
+| **SOC별 충전·방전 펄스** | The unchanged compatibility recipe: C/3 SOC adjustment, discharge pulse, rest, charge pulse; default pulse 10 s and rest 40 s |
+| **랩 전체 평가** | The existing lab recipe with capacity checks, 30 s charge/discharge pulses and repeat control; 62 original steps including END (61 in the module box, with END owned by the composer) |
+| **SOC별 방전 펄스만 / SOC별 충전 펄스만** | New one-direction measurement modes; configurable SOC, pulse and independent pre/post-pulse rests. Charge-only measurement still needs reference-rate discharge to reach lower SOC targets |
+
+The 10 s and 30 s quick choices are not interchangeable resistance definitions.
+The [DOE/INL 2015 EV manual](https://inldigitallibrary.inl.gov/sites/sti/sti/6492291.pdf)
+uses a 30 s discharge, 40 s rest and 10 s regenerative-charge pair; neither existing
+app recipe is automatically certified as that standard. Defaults and legacy outputs
+are preserved. New single-direction recipes and SOC capacity cutoffs remain
+**reopen-only**, pending exact-file CTSPro review and separate equipment approval.
+
+Batch export still takes `cell ID, reference capacity (mAh)` directly. Optional charge
+and discharge rate lists generate every selected combination for Formation/Cycle/In-situ,
+including those inside one repeating block. Fixed-mA steps are not rescaled. At most
+25 rate combinations and 500 cell/combination outputs are allowed per batch.
+
+Windows notification checkpoints use the local SQLite database and a user-session
+companion. A running companion does not prove that Windows displayed the alert; verify
+notification settings on the actual Windows lab PC. This feature never controls equipment.
 
 Design rules the workspace follows:
 
@@ -289,6 +376,9 @@ pne_scheduler/
 - `example/analysis/` — batch analysis JSON reports
 
 ## Tests
+
+Human-style browser and actual-file audit: [planning/HUMAN_TEST_AUDIT.md](planning/HUMAN_TEST_AUDIT.md).
+It separates local software checks from Windows and CTSPro/equipment acceptance.
 
 ```powershell
 python -m pytest tests/ -q

@@ -29,6 +29,13 @@ def test_qpeed_full_hides_legacy_only_parameters() -> None:
     assert "soc_dod_percent" not in keys
 
 
+def test_qpeed_variant_labels_do_not_claim_a_fixed_step_count() -> None:
+    choices = spec_for("qpeed", "variant").choices
+
+    assert choices
+    assert all("스텝" not in choice.label for choice in choices)
+
+
 def test_qpeed_soc_setting_shows_its_own_dod() -> None:
     keys = {spec.key for spec in visible_parameter_specs("qpeed", {"variant": "soc_setting"})}
 
@@ -119,3 +126,27 @@ def test_a_detached_module_reports_no_errors_of_its_own(tmp_path):
 
     model.detach(module_id)
     assert not [row for row in model.validation_rows() if row.severity == "error"]
+
+
+def test_sequence_specs_keep_structured_children_out_of_the_generated_form() -> None:
+    specs = {spec.key: spec for spec in visible_parameter_specs("sequence", {})}
+    form = build_module_form(
+        "sequence",
+        {"name": "내 블록", "children": [], "repeat_count": 1},
+        include_advanced=False,
+    )
+
+    assert {"name", "repeat_count"} <= set(specs)
+    assert form.hidden_keys == ("children",)
+
+
+@pytest.mark.parametrize("kind", ["cc_charge", "cccv_charge", "cc_discharge"])
+def test_primitive_form_hides_duration_when_step_does_not_use_it(kind):
+    form = build_module_form("primitive", {"kind": kind}, cell=CELL)
+    assert form.field_for("duration_s") is None
+
+
+@pytest.mark.parametrize("kind", ["rest", "ocv", "cv_charge"])
+def test_timed_primitive_form_keeps_duration(kind):
+    form = build_module_form("primitive", {"kind": kind}, cell=CELL)
+    assert form.field_for("duration_s") is not None

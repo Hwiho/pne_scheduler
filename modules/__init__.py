@@ -13,6 +13,7 @@ from .qc import QcModule
 from .smoke_rest_cc_end import SmokeRestCcEndModule
 from .smoke_writer_probe import SmokeWriterProbeModule
 from .rpt import RptModule
+from .sequence import SequenceModule
 
 __all__ = [
     "CapacheckModule",
@@ -27,6 +28,7 @@ __all__ = [
     "QcModule",
     "RestModule",
     "RptModule",
+    "SequenceModule",
     "SmokeRestCcEndModule",
     "SmokeWriterProbeModule",
     "expand_module",

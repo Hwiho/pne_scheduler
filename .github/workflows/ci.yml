@@ -22,10 +22,28 @@ jobs:
         run: ruff check .
       - name: Pytest
         run: python -m pytest tests/ -q --tb=short
-      # tests/test_workspace_qt.py skips itself on a missing PySide6, so a failed
-      # install would hide the default UI's only coverage behind a green run.
-      # That import is the sole skip condition, so asserting it closes the hole.
+      # API tests must run, not silently skip because Flask was absent.
       - name: Assert Flask is installed (the API tests must not skip)
         run: python -c "import flask; print('flask', flask.__version__)"
       - name: Corpus report smoke (in-repo zips)
         run: python tools/compare_pne_units.py
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install web dependencies
+        run: npm ci
+      - name: Web unit and session tests
+        run: npm test
+      - name: Typecheck
+        run: npm run lint
+      - name: Production build
+        run: npm run build

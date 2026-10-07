@@ -35,6 +35,8 @@ class PhaseView:
     trust_status: str
     advanced: bool = False
     error: str = ""
+    duration_complete: bool = True
+    duration_upper_bound_seconds: float | None = None
 
     @property
     def step_range_text(self) -> str:
@@ -53,6 +55,8 @@ class ProcedureView:
     duration_seconds: float | None
     duration_exact: bool
     errors: tuple[str, ...] = ()
+    duration_complete: bool = True
+    duration_upper_bound_seconds: float | None = None
 
     @property
     def is_expandable(self) -> bool:
@@ -167,6 +171,14 @@ def build_procedure(project: ScheduleProject) -> ProcedureView:
     for position, node in enumerate(ordered, start=1):
         spec = get_module_spec(node.module_type)
         title = spec.title if spec else node.module_type
+        if node.module_type == "sequence":
+            title = str(node.params.get("name") or title)
+        elif node.module_type == "primitive":
+            from ..modules.primitive import PrimitiveModule
+            title = PrimitiveModule.from_params(node.params).title()
+        elif node.module_type == "custom_steps":
+            origin = get_module_spec(str(node.params.get("source_module_type", "")))
+            title = f"{origin.title if origin else '내 모듈'} · 사용자 수정"
         try:
             # Compose the single module so its LOOP refs resolve; an unresolved
             # loop would otherwise make the phase look shorter than it runs.
@@ -208,6 +220,8 @@ def build_procedure(project: ScheduleProject) -> ProcedureView:
                 last_step=cursor + len(fragment) - 1 if fragment else cursor,
                 duration_seconds=estimate.estimated_seconds,
                 duration_exact=estimate.is_exact,
+                duration_complete=estimate.is_complete,
+                duration_upper_bound_seconds=estimate.upper_bound_seconds,
                 trust_status=spec.trust_status if spec else "prototype",
                 advanced=bool(spec and spec.advanced_only),
             )
@@ -220,6 +234,8 @@ def build_procedure(project: ScheduleProject) -> ProcedureView:
     steps: tuple[StepIntent, ...] = ()
     duration_seconds: float | None = None
     duration_exact = False
+    duration_complete = False
+    duration_upper_bound_seconds = None
     if not errors:
         try:
             composed = compose_module_steps(ordered, cell)
@@ -230,6 +246,8 @@ def build_procedure(project: ScheduleProject) -> ProcedureView:
             total = estimate_steps_duration(list(composed))
             duration_seconds = total.estimated_seconds
             duration_exact = total.is_exact
+            duration_complete = total.is_complete
+            duration_upper_bound_seconds = total.upper_bound_seconds
     if not steps:
         steps = tuple(all_steps)
 
@@ -240,6 +258,8 @@ def build_procedure(project: ScheduleProject) -> ProcedureView:
         duration_seconds=duration_seconds,
         duration_exact=duration_exact,
         errors=tuple(errors),
+        duration_complete=duration_complete,
+        duration_upper_bound_seconds=duration_upper_bound_seconds,
     )
 
 

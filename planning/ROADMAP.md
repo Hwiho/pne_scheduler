@@ -4,6 +4,10 @@
 
 | Date | Summary |
 |------|---------|
+| 2026-10-08 | Release follow-up includes the previously local authoring/export changes and human-audit fixes. Refined visual hierarchy, compact project tools, navigation icons, readable preset details, explicit storage completion state and resource success panels. Re-tested 320–1440px layouts and real protocol/batch files; 902 Python passes / one skip (Mac Tk file excluded), 18 web tests, Ruff, typecheck and production build passed. Added frontend CI. Actual Windows delivery, CTSPro approval and equipment execution remain separate open gates. |
+| 2026-10-07 | QPEED input/time follow-up implemented locally with parallel test reviews: numeric-only scalar inputs with explicit units and old-response fallback; optional reference-capacity starting SOC and independent high-rate ΔQ; explicit maximum C-rate formula; manually selected CSV/TSV SOC-setting voltage import with provenance, stale-preview rejection and atomic undo. Safety timeouts no longer count as expected runtime; unknown voltage/DOD steps give partial totals without a finish prediction. Existing default voltage recipes preserved; no equipment approval or commit/push. |
+| 2026-10-07 | SOC forms use 0–100% without migrating stored fractions; scalar and QC list inputs separate values from selectable time/voltage/current units. Pulse-off RPT becomes one continuous reference discharge plus rest. HPPC names now describe paired SOC pulses vs the lab full recipe; new charge-only/discharge-only measurement modes account for signed pulse capacity and independent SOC/post-pulse rests. Existing full/paired recipes retained. Local software/UI verification only; no commit/push or equipment approval. |
+| 2026-10-07 | Composable preset UX implemented locally: Basic steps / Experiment presets palette, compact condition summaries, retained groups, expand/collapse, large-view dialog, explicit single-preset or child-preset customization, adjacent condition inspector, and save/reuse for any selected module. Read-only `/api/module-content` derives the actual schedule steps; per-step fields load when opened. Browser checks covered Formation editing/atomic undo, primitive grouping/child edits, 166-step QPEED, Escape/focus return and 390px layouts. No commit/push. |
 | 2026-10-03 | Replaced unreliable native HTML drag/drop in the method flow with pointer-captured palette/box dragging and a full-canvas nearest-connector target. Browser-tested insertion, box reordering, step-range updates and reload persistence on an isolated draft; still a linear execution model. Local only; no commit/push. |
 | 2026-10-03 | Clarified the intended Nova-style authoring UX: the primary web interaction is a **visible linear chain of box modules and connectors**, with insertion at connection points, drag/button reordering and box selection for parameters. Implemented locally in `web/src/components/ModuleFlow.tsx` using existing module-order/rewiring semantics; not yet committed or released. |
 | 2026-10-03 | Gate H: user chose directly entered per-cell reference capacity; the batch UI/API and local Windows storage companion code are in the uncommitted worktree. Automatic activation/derating result import is optional future scope, not a prerequisite. UI smoke and Python tests cover the local slice, not Windows delivery or equipment approval. Detail: [`GATE_H_PLAN.md`](GATE_H_PLAN.md). |
@@ -43,6 +47,135 @@
 ---
 
 ## 1. Goal
+
+### 2026-10-08 human-user audit, visual refinement and release checks
+
+See [HUMAN_TEST_AUDIT.md](HUMAN_TEST_AUDIT.md) for manual browser coverage,
+generated file paths, reproducible defects and remaining acceptance work.
+Parallel audits covered all 17 preset variants and six primitive kinds, writing
+and internally reopening 28 SCH files. The live UI produced two-capacity ×
+two-rate batches (13 preview files and 21 reopen-only files), reopened a downloaded
+project, patched a generated SCH without changing its header, and exercised
+campaign, budget, QPEED/QC and storage flows in isolated local resources.
+
+Fixed silent malformed-QC-stage omission and stale preview application,
+two-step REST parsing, explicit CV current limits/form visibility, project-name
+editing, new export-directory creation, missing capacity-cutoff CSV columns,
+malformed-library isolation, symbol-name collisions and consumed-recovery cleanup.
+Added project open/download/new with atomic undo, automatic library refresh,
+inline error handling, mobile save-message wrapping, output path disclosure,
+evidence-based import-field units and storage notification toggles.
+
+Visual refinement preserves the green lab theme with compact project tools,
+navigation icons, readable palette/preset details and explicit storage completion
+state. Responsive browser checks cover 320, 390, 768, 1024, 1280 and 1440px.
+Post-refinement file regeneration and binary/hash checks also passed. GitHub CI
+now runs web unit/session tests, TypeScript and the production build.
+
+Verification: 902 Python passes / one existing skip (Mac Tk file excluded),
+18 document/unit/QC tests and Ruff passed. Software verification does not establish
+equipment readiness. The user's original 7-module / 56-step draft is retained.
+Next: actual Windows toast/reboot checks; exact-file CTSPro approval; storage
+schedule-edit policy and reversible archival; library version picker; real-result
+sample intake and Korean explanation improvements. Do not infer measured capacity
+or enable 720-byte writes without supporting evidence.
+
+### 2026-10-07 implementation follow-up (historical local snapshot; included in 2026-10-08 release work)
+
+- Implemented: vertical searchable module editor; consecutive groups with retained
+  child settings, repetition, ungrouping and library reuse; serialized browser edits,
+  stale-response protection and safe recovery; per-cell capacity × C-rate combinations;
+  experiment/last-edit summaries; storage checkpoints, acknowledgement and snooze.
+- Preset composition: Formation/Cycle Life/QPEED remain reusable module recipes but
+  expose their actual CC/CCCV/discharge/rest/control steps. Expand/collapse and large
+  view are presentation-only. Explicit customization preserves the initial step
+  fragment and marks it as a user-edited recipe; one group child can be customized
+  without changing its siblings. Selected single modules are now library-saveable.
+  Compact cards show current/voltage/time; the condition inspector stays beside
+  the flow or opens as a mobile panel. No ineffective CC duration input is shown.
+- Corrected: DC-IR single-current campaign default, nominal pulse-capacity accounting,
+  explicit RPT/DCIR entry SOC/preparation and known Cycle→RPT state-conflict checks.
+- Input clarity: SOC 100%, 80/50/20% rather than fractions; canonical raw numeric
+  metadata prevents rounded display strings from changing currents. Unit selection
+  changes presentation only, with seconds/V/mA preserved at the API boundary.
+  QC list fields also share one unit. RPT without DC-IR has no SOC segmentation;
+  it keeps an optional explicit preparation charge and one reference-rate discharge.
+- HPPC terminology: `legacy_soc_pulse` is paired charge/discharge measurement;
+  `full` is the existing lab capacity/pulse/repetition recipe, not a newer standard.
+  Two new single-direction measurement modes add explicit entry SOC/preparation,
+  nominal signed pulse-capacity accounting and independently adjustable pre/post
+  pulse rest. Charge-only measurement still uses discharge for SOC preparation.
+  Legacy recipes remain unchanged. The full box displays 61 steps because END
+  belongs to the protocol composer; the original standalone recipe has 62.
+- QPEED controls: default voltage recipes retain their original topology and
+  termination fields. Opt-in capacity mode separately sets starting SOC and the
+  added high-rate charge fraction (ΔQ); repeated SOC resets use that same starting
+  fraction. These are nominal reference-capacity targets, not actual SOC readings.
+  The maximum-rate formula and converted current are visible beside the conditions.
+  Numeric inputs never require manually typed units, including older scalar responses.
+- SOC-setting import: root full/SOC-setting QPEED modules accept CSV/TSV text;
+  explicit column/unit mapping, per-cell/cycle/step last-valid-row candidates,
+  manual selection, project-bound preview tokens, saved provenance and atomic undo
+  are implemented. No SOC-from-voltage or OCV inference. Limits: 2 MB, 50,000 rows,
+  500 preview candidates. Group-child import and native XLS/MDB result import are
+  future work requiring actual result samples; synthetic CSV verification is not
+  evidence that every laboratory export is compatible.
+- Time correction: charge/discharge safety ceilings (including QPEED 6 h/16 h)
+  are not treated as planned elapsed time. Capacity/C-rate estimates and rests
+  are separated from upper bounds; nested LOOP bounds propagate. Unknown
+  voltage/DOD durations mark partial totals, suppress finish predictions, and
+  block period-to-cycle inversion rather than recommending from a partial total.
+  Known CCCV estimates still exclude CV taper and equipment delays.
+  The desktop inspector now owns its column across flow and tools, preventing
+  the sticky condition panel from covering campaign/budget controls on scroll.
+- Locally verified: 826 Python tests passed, one existing test skipped, and
+  `tests/test_tk_tools.py` excluded on this Mac; fifteen document-state/unit tests,
+  Ruff, TypeScript and production web build passed. Desktop/390px browser checks
+  covered group editing/undo and capacity × rate previews. The UI generated four
+  preview sets (13 files); API tests generated and reparsed four SCH candidates,
+  checking both inner/outer LOOP targets and stale-export rejection.
+  Further browser checks covered preset expansion/large view, Formation current
+  0.1C→0.2C (8→16 mA) and one-operation undo, CC+rest grouping/repetition, child
+  duration edits with open-panel retention, QPEED's 166 lazy-field step cards,
+  Escape/focus return, and no page-wide horizontal overflow at 390px. Isolated
+  library tests saved/reloaded Formation, Cycle Life, full QPEED and a customized
+  repeating group while preserving all actual steps, LOOP targets and a single END.
+  SOC/unit checks covered 30 min ↔ 0.5 h, 0.75 h → 45 min and single-operation undo,
+  pulse-off RPT's two actual steps, 80/50/20% targets, 30 s pulse selection, and
+  charge/discharge-only measurement steps with 30 min stabilization and 40 s
+  post-pulse rest. New single-direction HPPC and pulse-off RPT candidates were
+  written and reparsed through the internal pipeline; this is not equipment evidence.
+  Browser checks used the connected in-app browser. The separate `test:ui` script
+  requires an installed/configured Playwright module and was not runnable in this
+  checkout; use `test:session` / `test:units` for the browser-independent tests.
+  Additional live browser checks covered QPEED 12→4 levels (18C→6C), starting
+  SOC 20%, numeric-only 45 min rest, manual synthetic CSV row selection (3.450 V),
+  atomic restoration of prior SOC mode/value after import, and 1440px/390px unit
+  and import-column layouts without page-wide horizontal overflow. The user's
+  original 7-module/56-step draft was left unchanged; temporary QA edits were undone.
+- Verification remains split: software tests/build/UI checks do not establish CTSPro
+  or equipment execution. Nested LOOP groups and SOC capacity cutoffs remain reopen-only.
+- Next acceptance: actual Windows alert display and restart recovery; exact group
+  SCH reopen review in CTSPro; calibrated result-file ingestion only after representative
+  samples are provided. No automatic activation/derating capacity substitution.
+- Deferred: arbitrary branching, nested user groups, live equipment control, and
+  standardized evaluation recipes without lab-approved conditions.
+
+### Suggested next evaluation presets (proposals, not implemented)
+
+| Priority | Preset | Reusable composition / acceptance boundary |
+|----------|--------|--------------------------------------------|
+| 1 | Rate capability | CCCV charge → rest → discharge at a user-entered rate list → recovery-rate cycle. Keep cell capacity, voltage limits and reference rate explicit; inspect every generated current before CTSPro acceptance. |
+| 2 | Storage residual/recovery capacity | Set SOC → storage checkpoint/reminder → residual-capacity discharge → recharge → recovered-capacity discharge. Storage time tracking is not chamber control; distinguish irreversible loss from self-discharge. |
+| 3 | OCV–SOC curve | User-entered SOC points with reference-rate adjustment and rest → OCV observation. Require stated rest/equilibrium criteria and verified SOC cutoff/OCV equipment support. |
+| 4 | GITT (research) | Small current pulse → long relaxation repeated in one group. Scheduling is distinct from diffusion-coefficient analysis; record geometry, active mass and equilibrium assumptions before adding analysis. |
+
+The [DOE/INL 2015 EV test manual](https://inldigitallibrary.inl.gov/sites/sti/sti/6492291.pdf)
+supports capacity, self-discharge, thermal, HPPC and calendar-life workflows. Its
+HPPC pair is discharge 30 s → rest 40 s → regenerative charge 10 s, not a claim
+that all DC-IR tests use 30 s or that the app's old/full recipe implements that
+standard. Keep pulse durations user-configurable. GITT analysis needs separate
+assumption review ([original critical study](https://www.sciencedirect.com/science/article/pii/S0378775322008321)).
 
 Enable creation of `.sch` binary schedule files for PNE cyclers **without using the native CTSEditorPro workflow as the primary authoring tool**.
 
@@ -910,7 +1043,7 @@ against 6,561 lines of shell-free logic that carries over.
 
 | | |
 |---|---|
-| **Status** | 🔄 **Partial local implementation, uncommitted 2026-10-03**: direct per-cell reference-capacity batch preview/export, local SQLite storage and Windows notification companion code. Automatic result import is optional future work, not a batch prerequisite. Windows real-session delivery and Gate F artifact approval remain open |
+| **Status** | 🔄 **Software implemented and release-checked 2026-10-08**: direct per-cell reference-capacity batch preview/export, local SQLite storage, single-current DC-IR and Windows companion code. Human-style UI/file auditing and regression tests pass. Automatic result import is optional future work. Windows real-session delivery and Gate F artifact approval remain open |
 | **Depends on** | Gate G API/export boundary and the existing explicit-Q safety contract. Direct-input batch needs no activation/derating result sample. DC-IR intent and Windows deployment conditions remain open; Gate F artifact approval is separate |
 | **Exit criteria** | For at least three cells with different manually entered reference capacities: preview currents matching generated files, complete per-cell manifest/hash/gate results, explicit blocking on missing/invalid capacity and failed batch; standalone DC-IR rule tested; Windows due/overdue alert verified on a real Windows session, including restart/catch-up |
 | **Release boundary** | Every generated SCH remains draft/reopen-only until exact-file CTSPro review and relevant F approval. Windows alerts report stored deadlines, not verified chamber conditions |
@@ -985,7 +1118,7 @@ run_pne_scheduler.py             # root launcher
 
 Gate G already removed the Qt/Tk shells. Gate H's manual cell-batch exporter,
 durable local storage-record service, and Windows-only notification companion now
-exist in the uncommitted worktree. The capacity-result importer and versioned
+are included in the 2026-10-08 release changes. The capacity-result importer and versioned
 resolver do **not** exist yet. Keep disk writes outside pure derive/transform
 operations and route all equipment
 files through `release.py` and the local-resource API.
@@ -1012,7 +1145,7 @@ tests to be skipped.
 | Cell identity and measured-result selection | Optional future H0/H1 | Obtain actual activation/derating export examples only if automatic import is later requested; direct reference input requires no channel match |
 | Different capacities across one batch | H2 direct-input slice implemented | Per-cell input previews currents and emits gated artifacts/manifests. No filename-only assignment or partial-success claim |
 | Background Windows reminder reliability | H4 code implemented; Windows test pending | Browser storage is not a background notifier; local persistent records + Windows companion, opt-in startup, overdue catch-up, test sleep/offline/clock changes. No promise while PC is off |
-| DC-IR one vs many pulse currents | H0/H3 open | Standalone module has one, RPT/campaign have many; confirm intended rule before changing existing recipe topology |
+| DC-IR one vs many pulse currents | H3 single-current default aligned locally | Standalone/campaign default to one measurement current; retain existing RPT list recipes for compatibility rather than rewriting saved files |
 | Internal structure of `FILE_GRADE`, `STRUCT_EIS_SET` | Only names are present in Excel | Defer 0x00010007 to Phase 4 |
 | Recommended Δt/ΔV/ΔQ values | UNKNOWN in cyclediag | Reverse-extract from internal standard sch samples |
 | Writer validation on physical equipment | **Closed — C5** | PNE02 2026-09-08; checklist signed |
@@ -1029,12 +1162,12 @@ tests to be skipped.
 
 ## 9. Current focus (active gate)
 
-**Active:** Gate F exact-artifact lab/release evidence; **Gate H partial local software**, with H0 data
-samples and terminology pending. Gate G is complete and is the current web platform;
+**Active:** Gate F exact-artifact lab/release evidence; **Gate H software implemented and release-checked**, with real Windows and lab acceptance pending. H0 result
+samples remain optional for automatic import. Gate G is complete and is the current web platform;
 Qt/Tk shells were removed. Gate E's core software path shipped, while E2.2 lab
-acceptance and optional E5–E7 remain open. The 2026-10-03 browser UX,
-storage-tracker and box-and-connector method-flow changes in the working tree
-are **local and uncommitted**; the Windows companion exists as separate code but
+acceptance and optional E5–E7 remain open. The browser UX,
+storage tracker, preset composition and box-and-connector method flow are included
+in the 2026-10-08 release changes; the Windows companion exists as separate code but
 has not been checked on Windows. The flow uses the existing linear module semantics; branch wiring
 has not been added.
 
@@ -1042,7 +1175,7 @@ has not been added.
 |----------|------|-------------|
 | 1 | H2 / H5 | Confirm direct reference-capacity values and per-cell generated currents on the intended Windows/lab workflow; keep SCH candidates reopen-only pending approval |
 | 2 | H0 / H1 (optional) | Request activation/derating result samples only if automatic import is later desired; preserve the direct-input workflow |
-| 3 (parallel) | H3 / H4 | Align standalone DC-IR after intent confirmed; verify implemented local reminders on a Windows user session, including restart and sleep |
+| 3 (parallel) | H3 / H4 | Check the single-current workflow and new pulse modes on the intended lab recipe; verify implemented local reminders on a Windows user session, including restart and sleep |
 | 4 | H5 | Check three different-capacity cells end-to-end and SCH reparse/current parity; do not promote unsupported binary fields |
 | Lab parallel | PV1/PV4 / F1–F4 | Controlled SOC/capacity field evidence and CTSPro reopen/save-as for exact candidate files; run approval is a separate checkpoint |
 
