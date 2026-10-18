@@ -120,3 +120,10 @@ Python 수치는 비-GUI와 Tk를 **분리 실행한 결과**다. 사용자 작�
   TypeScript·Ruff·diff 검사 통과. wheel을 별도 환경에 설치하고 checkout 밖에서
   `python -I -m pne_scheduler.desktop --self-test ...` 통과. Windows 실행 파일 및
   GUI 결과는 해당 커밋의 원격 Actions 실행으로 확인한다.
+- 강화한 30회 반복 검사에서 `cfc1486`은 Tcl 자체의 `init.tcl` 읽기 오류
+  (`couldn't read file ...: No error`)도 재현했다. 따라서 finder 준비만으로는
+  충분하지 않다. pytest의 기본 OS 파일 디스크립터 교체 대신 `--capture=sys`로
+  Python 출력만 수집한다. Windows Tcl 채널/pytest fd capture 충돌의 선행 사례:
+  [ttkbootstrap 설정](https://github.com/israel-dryer/ttkbootstrap/blob/master/pyproject.toml),
+  [pytest 수집 모드](https://docs.pytest.org/en/stable/how-to/capture-stdout-stderr.html).
+  실패한 반복 검사를 제거/건너뛰지 않고 그대로 두 번 연속 실행한다.
