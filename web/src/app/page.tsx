@@ -48,6 +48,7 @@ export default function Workspace() {
     apply: doc.apply,
     select: doc.select,
     busy: doc.busy,
+    inputError: doc.error,
     libraryRevision,
     plan,
     openImport: () => setTab(3),
@@ -131,7 +132,9 @@ export default function Workspace() {
 
       {tab === 0 && <SetupTab {...props} />}
       {tab === 1 && <ProtocolTab {...props} />}
-      {tab === 2 && <ExportTab {...props} />}
+      {/* Keep the cell table while visiting protocol conditions; project edits
+          still invalidate its preview through BatchExport's existing guard. */}
+      <div hidden={tab !== 2}><ExportTab {...props} /></div>
       {tab === 3 && <ImportTab />}
       {tab === 4 && <StorageTracker />}
 

@@ -166,6 +166,9 @@ class ProtocolPanel(ttk.Frame):
         self._group_name = tk.StringVar(value="내 모듈")
         self._group_repeat = tk.StringVar(value="1")
         self._step_kind = tk.StringVar(value="rest")
+        self._core_child = None
+        self._core_module = None
+        self._core_selectors = []
 
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
@@ -187,6 +190,9 @@ class ProtocolPanel(ttk.Frame):
     def set_busy(self, busy: bool) -> None:
         self._busy = bool(busy)
         state = "disabled" if self._busy else "normal"
+        for widget in self._core_selectors:
+            if _alive(widget):
+                widget.configure(state="disabled" if self._busy else "readonly")
         for widget in tuple(self._buttons):
             try:
                 widget.configure(state=state)
@@ -273,7 +279,17 @@ class ProtocolPanel(ttk.Frame):
             text = str(values[0]) if values else widget.get()
             self._drafts.pop(draft_key, None)
             self._committing_drafts.add(draft_key)
-            self.app.perform(action, {**base_args, "key": field.get("key", ""), "text": text})
+            args = {**base_args, "key": field.get("key", ""), "text": text}
+            def failed(error):
+                self._committing_drafts.discard(draft_key)
+                self._drafts[draft_key] = widget.draft()
+                if _alive(widget):
+                    widget.show_issue(str(error))
+            accepted = self.app.submit(lambda: self.app.controller.edit(action, args),
+                                       message="조건 변경 적용", on_error=failed)
+            if not accepted:
+                self._committing_drafts.discard(draft_key)
+                widget.show_issue("다른 작업이 진행 중입니다. 완료 후 다시 적용하세요.")
 
         widget = FieldInput(parent, normalized, on_commit=commit)
         holder["widget"] = widget
@@ -646,24 +662,83 @@ class ProtocolPanel(ttk.Frame):
 
     # -- selected module inspector ---------------------------------------
 
+    def _render_core(self, body, form):
+        module_id = form.get("moduleId", "")
+        if self._core_module != module_id:
+            self._core_child = None
+            self._core_module = module_id
+        self._core_selectors = []
+        box = ttk.LabelFrame(body, text="실험 핵심 조건", padding=8)
+        box.grid(row=0, column=0, sticky="ew", padx=8, pady=8)
+        box.columnconfigure(0, weight=1)
+        self._label(box, "기준용량·전압은 프로젝트 전체, 아래 조건은 선택한 구간에만 적용됩니다.").grid(row=0, column=0, sticky="ew")
+        row = 1
+        for setup in self._views.get("setupFields", []):
+            if setup["key"] not in {"nominal_capacity_mAh", "v_max", "v_min"}:
+                continue
+            field = {**setup, "kind": "text", "choices": [], "hasError": bool(setup.get("issue")),
+                     "issues": [setup["issue"]] if setup.get("issue") else []}
+            if setup.get("numericValue") is not None:
+                field["value"] = str(setup["numericValue"])
+            if setup["key"] == "nominal_capacity_mAh":
+                field["label"] = "기준용량 (mAh)"
+            else:
+                field["label"] += " (V)"
+            self._field(box, field, ("setup", setup["key"]), "setCellValue", {}).grid(row=row, column=0, sticky="ew")
+            row += 1
+        modules = self._views.get("modules", [])
+        labels = [f"{m['position']}. {m['title']}" for m in modules]
+        picker = ttk.Combobox(box, state="readonly", values=labels)
+        picker.grid(row=row, column=0, sticky="ew", pady=6)
+        self._core_selectors.append(picker)
+        if modules:
+            picker.current(next((i for i, m in enumerate(modules) if m["moduleId"] == module_id), 0))
+            picker.bind("<<ComboboxSelected>>", lambda _e: self.app.select(modules[picker.current()]["moduleId"]))
+        row += 1
+        children = self._views.get("groupChildren", [])
+        chosen = next((c for c in children if c["index"] == self._core_child), None)
+        if chosen is None:
+            self._core_child = None
+        if children:
+            child_picker = ttk.Combobox(box, state="readonly", values=["그룹 전체 설정", *[f"{c['index'] + 1}. {c['form']['title']}" for c in children]])
+            child_picker.current(children.index(chosen) + 1 if chosen else 0)
+            child_picker.grid(row=row, column=0, sticky="ew", pady=4)
+            self._core_selectors.append(child_picker)
+            def choose(_event):
+                self._core_child = children[child_picker.current() - 1]["index"] if child_picker.current() else None
+                self.refresh()
+            child_picker.bind("<<ComboboxSelected>>", choose)
+            row += 1
+        chosen_form = chosen["form"] if chosen else form
+        for section in chosen_form.get("sections", []):
+            for field in section.get("fields", []):
+                if not field.get("keyCondition"):
+                    continue
+                key = ((module_id, "group-param", chosen["index"], field["key"]) if chosen else (module_id, "param", field["key"]))
+                args = {"moduleId": module_id, **({"index": chosen["index"]} if chosen else {})}
+                self._field(box, field, key, "setGroupChildParam" if chosen else "setParam", args).grid(row=row, column=0, sticky="ew")
+                row += 1
+        self._label(box, self._views.get("summary", {}).get("durationText", "") + " · 안전 시간제한은 예상 시간이 아닙니다.").grid(row=row, column=0, sticky="ew", pady=4)
+
     def _render_inspector(self) -> None:
         body = self._inspector_scroll.body
         _clear(body)
         body.columnconfigure(0, weight=1)
         form = self._views.get("form", {})
         module_id = str(form.get("moduleId", ""))
-        ttk.Label(body, text="선택한 모듈", font=("TkDefaultFont", 13, "bold")).grid(row=0, column=0, sticky="w", padx=9, pady=(8, 0))
+        self._render_core(body, form)
+        ttk.Label(body, text="선택한 모듈 상세", font=("TkDefaultFont", 13, "bold")).grid(row=1, column=0, sticky="w", padx=9, pady=(8, 0))
         if not module_id:
-            self._label(body, "흐름에서 편집할 모듈을 선택하세요.").grid(row=1, column=0, sticky="ew", padx=9, pady=8)
-            self._render_tools(body, 2)
+            self._label(body, "흐름에서 편집할 모듈을 선택하세요.").grid(row=2, column=0, sticky="ew", padx=9, pady=8)
+            self._render_tools(body, 3)
             return
 
-        ttk.Label(body, text=str(form.get("title", "")), font=("TkDefaultFont", 11, "bold")).grid(row=1, column=0, sticky="w", padx=9)
+        ttk.Label(body, text=str(form.get("title", "")), font=("TkDefaultFont", 11, "bold")).grid(row=2, column=0, sticky="w", padx=9)
         trust = str(form.get("trust", ""))
         limitations = _join_lines(form.get("limitations", []))
         if trust or limitations:
-            self._label(body, f"검증 상태: {trust}\n{limitations}".strip(), wrap=430).grid(row=2, column=0, sticky="ew", padx=9, pady=(2, 6))
-        row = 3
+            self._label(body, f"검증 상태: {trust}\n{limitations}".strip(), wrap=430).grid(row=3, column=0, sticky="ew", padx=9, pady=(2, 6))
+        row = 4
 
         actions = ttk.Frame(body)
         actions.grid(row=row, column=0, sticky="ew", padx=8, pady=3)
@@ -685,10 +760,13 @@ class ProtocolPanel(ttk.Frame):
             row += 1
 
         for section in form.get("sections", []):
+            visible_fields = [f for f in section.get("fields", []) if self._core_child is not None or not f.get("keyCondition")]
+            if not visible_fields:
+                continue
             box = ttk.LabelFrame(body, text=str(section.get("title", "조건")), padding=6)
             box.grid(row=row, column=0, sticky="ew", padx=8, pady=4)
             box.columnconfigure(0, weight=1)
-            for field_row, field in enumerate(section.get("fields", [])):
+            for field_row, field in enumerate(visible_fields):
                 key = (module_id, "param", field.get("key"))
                 widget = self._field(box, field, key, "setParam", {"moduleId": module_id})
                 widget.grid(row=field_row, column=0, sticky="ew", pady=2)
@@ -704,6 +782,8 @@ class ProtocolPanel(ttk.Frame):
                 ttk.Label(box, text=str(section.get("title", "")), font=("TkDefaultFont", 9, "bold")).grid(row=field_row, column=0, sticky="w")
                 field_row += 1
                 for field in section.get("fields", []):
+                    if self._core_child == child.get("index") and field.get("keyCondition"):
+                        continue
                     key = (module_id, "group-param", child.get("index"), field.get("key"))
                     widget = self._field(box, field, key, "setGroupChildParam", {"moduleId": module_id, "index": child.get("index")})
                     widget.grid(row=field_row, column=0, sticky="ew", pady=2)

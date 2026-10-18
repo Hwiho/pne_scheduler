@@ -139,7 +139,7 @@ class FieldInput(ttk.Frame):
             from ..spec.units import format_duration_ko
             if detail == format_duration_ko(field_dict["numericValue"]):
                 detail = ""
-        issues = field_dict.get("issues") or []
+        issues = [] if field_dict.get("hasError") else field_dict.get("issues") or []
         if detail or issues:
             ttk.Label(self, text="\n".join([str(detail), *map(str, issues)]).strip(), wraplength=350, style="Muted.TLabel").grid(row=2, column=0, columnspan=3, sticky="w", pady=(3, 2))
         help_text = "\n".join(str(field_dict.get(k, "")) for k in ("help", "basis", "affects", "range") if field_dict.get(k))
@@ -148,6 +148,17 @@ class FieldInput(ttk.Frame):
             self.help_button = ttk.Button(self, text="입력 도움말 ▸", command=self._toggle_help)
             self.help_button.grid(row=3, column=0, columnspan=3, sticky="w", pady=(0, 5))
         self.bind("<Configure>", self._wrap)
+        self.issue_text = tk.StringVar()
+        self.issue_label = ttk.Label(self, textvariable=self.issue_text, foreground="#a32b36", wraplength=350)
+        self.issue_button = ttk.Button(self, text="이 값 바로 수정", command=self.entry.focus_set)
+        self._controls.append(self.issue_button)
+        if field_dict.get("hasError"):
+            self.show_issue("\n".join(field_dict.get("issues", [])))
+
+    def show_issue(self, message):
+        self.issue_text.set(str(message))
+        self.issue_label.grid(row=5, column=0, columnspan=3, sticky="ew", pady=3)
+        self.issue_button.grid(row=6, column=0, columnspan=3, sticky="w")
 
     def _wrap(self, event):
         if event.width <= 1:

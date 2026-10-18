@@ -1,13 +1,17 @@
 # What you need to do (lab / decisions)
 
 Gate C **exited 2026-09-08** (C5 PNE02); Gate D software and Gate G web port are
-complete. Gate F exact-artifact lab evidence remains open. Gate H has a local,
-uncommitted direct-reference-capacity batch implementation and unfinished Windows
-verification: see [`GATE_H_PLAN.md`](GATE_H_PLAN.md).
+complete. Gate F exact-artifact lab evidence remains open. Gate H direct-capacity
+batch and local reminder code are published. Windows native and offline-package CI
+passed at `eb97af9`; actual notifications and lab acceptance remain open:
+see [`GATE_H_PLAN.md`](GATE_H_PLAN.md).
 
-The previous desktop workspace instructions below are historical. The current editor
-is the web workspace; Qt/Tk shells were removed. A local browser high-temperature
-storage tracker is not a Windows background notification service.
+Both web and offline Tk now use the shared core. The historical Qt shell remains
+removed. Reminders use a separate Windows user-session companion, not just a browser.
+Next software work is [v2 roadmap R1a/R2](V2_IMPROVEMENT_ROADMAP.md): safe companion
+shutdown and verified backup/restore. These do not require private result samples.
+The user-selected U1–U3 usability slice (cell table, key conditions, direct error
+correction) is implemented for web and Tk; it does not require measured-result samples.
 
 ---
 
@@ -20,15 +24,15 @@ the lab data policy.
 1. For the current batch workflow, enter each cell's **reference capacity (mAh)**
    directly; activation/derating result samples are **not required**. Supply such
    samples only if you later want automatic import and cell/channel matching.
-2. Confirm whether “DC-IR uses only one current” means **add multiple selectable
-   pulse C-rates to standalone DC-IR**, or instead **limit RPT/campaign DC-IR to one**.
-   Existing standalone recipes remain one-rate until this is clear.
+2. DC-IR defaults to one selected current. Legacy multi-current RPT/campaign projects
+   are preserved; no additional decision is required unless you want to change those recipes.
 3. State the Windows version, whether the lab PC is logged in/allowed to start a
    local companion at sign-in, and the desired warning schedule (due only or before
    due). A powered-off PC cannot show a real-time toast; late notices can be caught up.
 
-The direct-input batch does not wait for an importer. DC-IR intent and Windows
-environment still determine their respective follow-up work.
+The direct-input batch does not wait for an importer. Before real-session acceptance,
+agree a Windows test session that will not interrupt your current work. Release publication,
+signing and institutional security approval are separate from preparing the software.
 
 ---
 
@@ -101,7 +105,10 @@ CTS Type dropdown의 **Ocv / Impedance / Balance / Pattern** stubs는
 
 ## 5. Software next
 
-- **Gate H2** — directly entered reference capacity per cell is implemented locally;
+- **Next implementation** — R1a companion lifecycle → R2 backup/restore; R3 distribution
+  preparation in parallel, then R4 batch history and R5 editor/performance. This is a plan,
+  not a request to provide all lab samples now.
+- **Gate H2** — directly entered reference capacity per cell is implemented and published;
   verify resulting currents and exact SCH candidates in the lab. H1 result import is optional.
 - **Pattern acceptance PV1/PV4 + Gate F** — exact-artifact release remains a separate
   lab track; a successful batch export is not an execution approval.

@@ -153,6 +153,7 @@ def test_actual_batch_buttons_write_files_and_invalidate_preview(root, tmp_path,
     panel = app.panels[2]
     app.notebook.select(panel)
     panel.cells_text.insert("1.0", "CELL01,80\nCELL02,90")
+    panel.cell_table.operate("paste")
     panel.out_dir.set(str(tmp_path / "batch"))
     root.update()
     panel.batch_plan_button.invoke()
@@ -225,7 +226,7 @@ def test_preset_parameter_edits_update_duration_and_history(root, tmp_path, monk
     app.perform("addModule", {"moduleType": "rest"})
     drain(root, app)
     panel = app.panels[0]
-    field = next(iter(panel._field_widgets.values()))
+    field = next(widget for key, widget in panel._field_widgets.items() if key[-1] == "duration_s")
     field.variable.set("30")
     field.apply_button.invoke()
     drain(root, app)
@@ -237,4 +238,52 @@ def test_preset_parameter_edits_update_duration_and_history(root, tmp_path, monk
     app.redo()
     drain(root, app)
     assert app.project["modules"][0]["params"]["duration_s"] == 1800
+    app._shutdown()
+
+
+def test_cell_table_edit_error_focus_and_copy(root):
+    from pne_scheduler.ui.tk_cell_table import CellTable
+    changes = []
+    table = CellTable(root, lambda: changes.append(True))
+    table.pack(fill="both", expand=True)
+    table.set_rows([{"cellId": "A01", "referenceCapacityMah": ""}])
+    table.focus_issue(0, "referenceCapacityMah")
+    assert table._index == 0
+    table.capacity_var.set("80")
+    assert table.get_rows()[0]["referenceCapacityMah"] == "80"
+    assert table.check["ok"]
+    table.operate("duplicate")
+    assert [r["cellId"] for r in table.rows] == ["A01", "A02"]
+    assert table.rows[1]["referenceCapacityMah"] == "80"
+    table.focus_issue(1, "cellId")
+    table.id_var.set("a01")
+    assert len(table.check["issues"]) == 2
+    table.set_enabled(False)
+    assert table.capacity_entry.instate(["disabled"])
+    assert changes
+
+
+def test_key_conditions_error_is_inline_and_can_be_corrected(root, tmp_path, monkeypatch):
+    errors = []
+    monkeypatch.setattr("pne_scheduler.ui.tk_workspace.messagebox.showerror", lambda *a, **k: errors.append(a))
+    app = WorkspaceApp(root, NativeController(data_dir=tmp_path))
+    drain(root, app)
+    app.perform("addModule", {"moduleType": "formation"})
+    drain(root, app)
+    panel = app.panels[0]
+    module_id = app.project["modules"][0]["id"]
+    field = panel._field_widgets[(module_id, "param", "charge_c_rate")]
+    field.variable.set("invalid")
+    field.apply_button.invoke()
+    drain(root, app)
+    assert field.issue_text.get()
+    assert not errors
+    field.variable.set("0.2")
+    field.apply_button.invoke()
+    drain(root, app)
+    assert app.project["modules"][0]["params"]["charge_c_rate"] == .2
+    assert ("setup", "nominal_capacity_mAh") in panel._field_widgets
+    app.undo()
+    drain(root, app)
+    assert app.project["modules"][0]["params"].get("charge_c_rate", .1) == .1
     app._shutdown()

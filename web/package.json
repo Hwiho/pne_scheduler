@@ -9,6 +9,7 @@
     "lint": "tsc --noEmit",
     "test": "node --test tests/document-session.cjs tests/unit-input.cjs tests/storage-view.cjs",
     "test:ui": "node tests/ui-smoke.cjs",
+    "test:usability": "node tests/usability-ui.cjs",
     "test:session": "node --test tests/document-session.cjs",
     "test:units": "node --test tests/unit-input.cjs"
   },

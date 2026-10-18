@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { api, type CellBatchPlan, type Json } from "@/lib/api";
+import { CellTable } from "./CellTable";
 
 const MAX_MATRIX_VARIANTS = 25;
 
@@ -12,20 +13,6 @@ type MatrixPreviewRow = CellBatchPlan["rows"][number] & {
   chargeCurrentmA?: number | null;
   dischargeCurrentmA?: number | null;
 };
-
-function parseCells(text: string): Json[] {
-  return text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).filter((line, index) => {
-    if (index > 0) return true;
-    const first = line.split(/[,\t]/)[0].trim().toLowerCase().replace(/\s/g, "");
-    return !["cellid", "cell_id", "셀id", "셀아이디"].includes(first);
-  }).map((line) => {
-    const columns = line.split(/[,\t]/).map((part) => part.trim());
-    const [cellId = "", referenceCapacityMah = ""] = columns;
-    return columns.length > 2
-      ? { cellId, referenceCapacityMah, extraColumns: columns.length - 2 }
-      : { cellId, referenceCapacityMah };
-  });
-}
 
 function parseRates(text: string, label: string): number[] {
   const normalized = text.trim();
@@ -46,7 +33,7 @@ function parseRates(text: string, label: string): number[] {
 export function BatchExport({ project }: { project: Json }) {
   const [phase, setPhase] = useState("formation");
   const [kind, setKind] = useState("preview");
-  const [cellsText, setCellsText] = useState("");
+  const [cells, setCells] = useState<Json[]>([]);
   const [matrixEnabled, setMatrixEnabled] = useState(false);
   const [chargeRatesText, setChargeRatesText] = useState("0.5");
   const [dischargeRatesText, setDischargeRatesText] = useState("0.5");
@@ -62,9 +49,9 @@ export function BatchExport({ project }: { project: Json }) {
     setPaths([]);
     setError("");
     setBusy(false);
-  }, [project, phase, kind, cellsText, matrixEnabled, chargeRatesText, dischargeRatesText]);
+  }, [project, phase, kind, cells, matrixEnabled, chargeRatesText, dischargeRatesText]);
   const args = (): Json => {
-    const base: Json = { phase, basis: "manual_reference", kind, rows: parseCells(cellsText) };
+    const base: Json = { phase, basis: "manual_reference", kind, rows: cells };
     if (!matrixEnabled) return base;
     const chargeRates = parseRates(chargeRatesText, "충전 C-rate");
     const dischargeRates = parseRates(dischargeRatesText, "방전 C-rate");
@@ -134,9 +121,7 @@ export function BatchExport({ project }: { project: Json }) {
         <option value="review_candidate">PNE02 재열기 전용 SCH (실행 금지)</option>
       </select></label>
     </div>
-    <label className="batch-data-label" htmlFor="batch-cells">셀 목록 · 한 줄에 한 셀</label>
-    <p className="muted">한 줄에 셀 ID와 기준용량(mAh)을 입력하세요. 쉼표 또는 탭으로 구분합니다. 예: A01,80 → 1C = 80 mA</p>
-    <textarea id="batch-cells" rows={5} value={cellsText} onChange={(event) => { setCellsText(event.target.value); setPreview(null); }} placeholder={"A01,80\nA02,82\nA03,79.5"} spellCheck={false} />
+    <CellTable project={project} rows={cells} disabled={busy} onChange={(rows) => { ++requestVersion.current; setCells(rows); setPreview(null); }} />
     <div className="action-row"><button type="button" aria-expanded={matrixEnabled} onClick={() => { setMatrixEnabled((enabled) => !enabled); setPreview(null); setError(""); }}>
       {matrixEnabled ? "C-rate 조합 닫기" : "고급: C-rate 조합"}
     </button></div>
@@ -148,7 +133,7 @@ export function BatchExport({ project }: { project: Json }) {
     <div className="batch-controls batch-output">
       <label>새 출력 폴더의 절대 경로<input value={outDir} onChange={(event) => setOutDir(event.target.value)} placeholder="예: C:\\PNE\\batch-01 또는 /tmp/pne-batch-01" /></label>
       <div className="action-row">
-        <button type="button" disabled={busy || !cellsText.trim()} onClick={() => void plan()}>셀별 전류 미리보기</button>
+        <button type="button" disabled={busy || !cells.length} onClick={() => void plan()}>셀별 전류 미리보기</button>
         <button type="button" className="primary" disabled={busy || !preview?.ok || !outDir.trim()} onClick={() => void generate()}>일괄 생성</button>
       </div>
     </div>

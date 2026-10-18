@@ -16,6 +16,7 @@ from ..modules.catalog import get_module_spec
 from ..release import ReleaseState
 from ..report.summary import ProjectSummary
 from ..spec.form import ModuleForm
+from ..spec.key_conditions import KEY_CONDITIONS
 from ..ui.workspace_model import WorkspaceModel
 
 
@@ -96,6 +97,7 @@ def field_json(field: Any) -> dict[str, Any]:
     spec = field.spec
     return {
         "key": spec.key,
+        "keyCondition": spec.key in KEY_CONDITIONS,
         "label": spec.label,
         "labelEn": spec.label_en,
         "kind": spec.kind,
@@ -224,7 +226,9 @@ def views_json(
         "summary": summary_json(model.summary()),
         "release": release_json(model.release()),
         "setupFields": [
-            setup_field_json(item, model.unit_choices())
+            {**setup_field_json(item, model.unit_choices()),
+             "numericValue": getattr(model.project.cell_profile, item.key, None)
+             if item.key in {"nominal_capacity_mAh", "v_max", "v_min"} else None}
             for item in model.setup_fields()
         ],
         "unitChoices": list(model.unit_choices()),

@@ -465,13 +465,13 @@ class ExportPanel(ttk.Frame):
         phase.bind("<<ComboboxSelected>>", self._invalidate_batch)
         kind.bind("<<ComboboxSelected>>", self._invalidate_batch)
 
-        ttk.Label(batch, text="셀 ID, 기준용량(mAh) · 한 줄에 한 셀").grid(
+        ttk.Label(batch, text="셀 목록 표 · 수동 기준용량").grid(
             row=3, column=0, columnspan=3, sticky="w", padx=8, pady=(8, 2)
         )
-        self.cells_text = tk.Text(batch, height=5, wrap="none")
-        self.cells_text.grid(row=4, column=0, columnspan=3, sticky="ew", padx=8, pady=4)
-        self.cells_text.bind("<<Modified>>", self._batch_text_changed)
-        self._interactive.append(self.cells_text)
+        from .tk_cell_table import CellTable
+        self.cell_table = CellTable(batch, self._invalidate_batch)
+        self.cell_table.grid(row=4, column=0, columnspan=3, sticky="ew", padx=8, pady=4)
+        self.cells_text = self.cell_table.paste_text
 
         self.matrix_enabled = tk.BooleanVar(value=False)
         matrix_check = ttk.Checkbutton(
@@ -632,25 +632,6 @@ class ExportPanel(ttk.Frame):
         self.app.status("기존 SCH 탭을 찾을 수 없습니다.")
 
     @staticmethod
-    def _parse_cells(text: str) -> list[dict[str, Any]]:
-        lines = [line.strip() for line in text.splitlines() if line.strip()]
-        if lines:
-            first = lines[0].replace(" ", "").split(",")[0].split("\t")[0].lower()
-            if first in {"cellid", "cell_id", "셀id", "셀아이디"}:
-                lines = lines[1:]
-        rows: list[dict[str, Any]] = []
-        for line in lines:
-            columns = [part.strip() for part in line.replace("\t", ",").split(",")]
-            row: dict[str, Any] = {
-                "cellId": columns[0] if columns else "",
-                "referenceCapacityMah": columns[1] if len(columns) > 1 else "",
-            }
-            if len(columns) > 2:
-                row["extraColumns"] = len(columns) - 2
-            rows.append(row)
-        return rows
-
-    @staticmethod
     def _parse_rates(text: str, label: str) -> list[float]:
         normalized = text.strip()
         if not normalized:
@@ -671,7 +652,7 @@ class ExportPanel(ttk.Frame):
             "phase": BATCH_PHASES[self.phase_var.get()],
             "basis": "manual_reference",
             "kind": BATCH_KINDS[self.kind_var.get()],
-            "rows": self._parse_cells(self.cells_text.get("1.0", "end-1c")),
+            "rows": self.cell_table.get_rows(),
         }
         if self.matrix_enabled.get():
             charge = self._parse_rates(self.charge_rates.get(), "충전 C-rate")
@@ -780,11 +761,6 @@ class ExportPanel(ttk.Frame):
 
         self.app.submit(work, exported, message="검토한 셀 배치를 새 폴더에 생성하는 중…")
 
-    def _batch_text_changed(self, _event: object | None = None) -> None:
-        if self.cells_text.edit_modified():
-            self.cells_text.edit_modified(False)
-            self._invalidate_batch()
-
     def _matrix_toggled(self) -> None:
         if self.matrix_enabled.get():
             self.matrix_frame.grid()
@@ -802,6 +778,7 @@ class ExportPanel(ttk.Frame):
 
     def _update_controls(self) -> None:
         locked = self._busy or bool(getattr(self.app, "busy", False))
+        self.cell_table.set_enabled(not locked)
         for widget in self._interactive:
             try:
                 if isinstance(widget, ttk.Combobox):

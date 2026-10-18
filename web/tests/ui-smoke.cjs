@@ -29,13 +29,13 @@ async function main() {
       assert.ok(before > 0, "seed modules are available");
       const first = flow.locator("article.flow-node").first();
       await first.getByRole("button", { name: /추가 작업/ }).click();
-      await first.getByRole("button", { name: "이 박스 복제" }).click();
+      await first.getByRole("button", { name: "복제", exact: true }).click();
       await page.waitForFunction((n) => document.querySelectorAll(".flow-node").length === n + 1, before);
       await page.getByRole("button", { name: /되돌리기/ }).click();
       await page.waitForFunction((n) => document.querySelectorAll(".flow-node").length === n, before);
       page.once("dialog", (dialog) => dialog.accept());
       await flow.locator("article.flow-node").first().getByRole("button", { name: /추가 작업/ }).click();
-      await flow.getByRole("button", { name: "이 박스 삭제" }).click();
+      await flow.getByRole("button", { name: "삭제", exact: true }).click();
       await page.waitForFunction((n) => document.querySelectorAll(".flow-node").length === n - 1, before);
       await page.getByRole("button", { name: /되돌리기/ }).click();
       await page.waitForFunction((n) => document.querySelectorAll(".flow-node").length === n, before);
@@ -44,7 +44,10 @@ async function main() {
       await page.getByRole("navigation", { name: "작업 단계" }).getByRole("button", { name: /내보내기/ }).click();
       await page.getByRole("heading", { name: "셀별 파일 일괄 생성" }).waitFor();
       assert.equal(await page.getByText("전류 계산 기준", { exact: true }).count(), 0, "direct reference input has no basis picker");
+      await page.getByText("엑셀·텍스트에서 여러 셀 추가", { exact: true }).click();
       await page.getByLabel("셀 목록 · 한 줄에 한 셀").fill("A01,80\nA02,82\nA03,84");
+      await page.getByRole("button", { name: "표에 추가", exact: true }).click();
+      await page.getByLabel("3행 기준용량", { exact: true }).waitFor();
       await page.getByRole("button", { name: "셀별 전류 미리보기" }).click();
       await page.getByText("3셀 생성 가능").waitFor();
       assert.equal(await page.getByRole("table").last().locator("tbody tr").count(), 3, "three direct-capacity rows");

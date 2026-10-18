@@ -128,21 +128,21 @@ class WorkspaceApp(ttk.Frame):
             self.toolbar[3].state(["!disabled"] if self.controller.document.can_undo else ["disabled"])
             self.toolbar[4].state(["!disabled"] if self.controller.document.can_redo else ["disabled"])
 
-    def submit(self, work: Callable, on_success=None, message=""):
+    def submit(self, work: Callable, on_success=None, message="", on_error=None):
         if self.busy or self._closed:
             return False
         self._set_busy(True)
         self.status(message or "처리 중…")
         future = self._pool.submit(work)
         # Future callbacks run in the worker: only Queue is touched here.
-        future.add_done_callback(lambda result: self._results.put((result, on_success, message)))
+        future.add_done_callback(lambda result: self._results.put((result, on_success, message, on_error)))
         return True
 
     def _poll(self):
         if self._closed:
             return
         try:
-            future, callback, message = self._results.get_nowait()
+            future, callback, message, on_error = self._results.get_nowait()
         except queue.Empty:
             pass
         else:
@@ -157,7 +157,10 @@ class WorkspaceApp(ttk.Frame):
                     self.status(self.controller.notice or (message + " · 완료" if message else "완료"))
             except Exception as exc:
                 self.status(f"처리하지 못했습니다: {exc}")
-                messagebox.showerror("작업 확인", str(exc), parent=self.root)
+                if on_error:
+                    on_error(exc)
+                else:
+                    messagebox.showerror("작업 확인", str(exc), parent=self.root)
         if not self._closed:
             if self.exit_requested.is_set() and not self.busy:
                 self.exit_requested.clear()

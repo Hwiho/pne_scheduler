@@ -6,6 +6,13 @@
 
 export type Json = Record<string, unknown>;
 
+export interface CellTableCheck {
+  ok: boolean;
+  inputRows: Json[];
+  rows: { cellId: string; oneCmA: number | null }[];
+  issues: { row: number | null; field: string; message: string }[];
+}
+
 export interface ApiFailure {
   ok: false;
   error: string;
@@ -177,6 +184,7 @@ export interface CellBatchPlan {
 
 export interface FormFieldView {
   key: string;
+  keyCondition?: boolean;
   label: string;
   kind: string;
   unit: string;
@@ -233,6 +241,7 @@ export interface SetupFieldView {
   key: string;
   label: string;
   value: string;
+  numericValue?: number | null;
   detail: string;
   issue: string;
   readOnly: boolean;

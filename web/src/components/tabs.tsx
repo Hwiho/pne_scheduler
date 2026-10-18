@@ -12,6 +12,7 @@ import { BatchExport } from "./BatchExport";
 import { UnitInput } from "./UnitInput";
 import { QpeedVoltageImport } from "./QpeedVoltageImport";
 import { SavedMethods } from "./SavedMethods";
+import { KeyConditions } from "./KeyConditions";
 
 interface TabProps {
   views: Views;
@@ -21,6 +22,7 @@ interface TabProps {
   plan: <T>(action: string, args?: Json) => Promise<T>;
   openImport?: () => void;
   busy?: boolean;
+  inputError?: string;
   libraryRevision?: number;
 }
 
@@ -75,7 +77,7 @@ export function SetupTab({ views, apply, busy }: TabProps) {
 
 // --- 2. 프로토콜 -----------------------------------------------------------
 
-export function ProtocolTab({ views, project, apply, select, plan, busy, libraryRevision = 0 }: TabProps) {
+export function ProtocolTab({ views, project, apply, select, plan, busy, inputError, libraryRevision = 0 }: TabProps) {
   const [goalsOpen, setGoalsOpen] = useState(false);
   const [days, setDays] = useState("14");
   const [step, setStep] = useState("50");
@@ -144,6 +146,7 @@ export function ProtocolTab({ views, project, apply, select, plan, busy, library
         <div><strong className="duration-stat" title={views.summary.durationText}>{views.summary.durationText.replace(/\s*\(근사\)/, "")}</strong><span>예상 시간 · 근사</span></div>
       </div>
     </div>
+    <KeyConditions key={views.selectedModule} views={views} apply={apply} select={select} busy={busy} inputError={inputError} />
     <div className="protocol-editor">
     <ModuleFlow views={views} project={project} apply={apply} select={select} onEdit={editModule} busy={busy} />
     <div className="protocol-grid">

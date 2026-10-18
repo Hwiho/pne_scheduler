@@ -22,7 +22,7 @@ from typing import Any, Callable
 
 from ..edit.steps import StepEditError
 from ..edit.diff import diff_projects, StepDiff
-from ..batch import export_cell_batch as write_cell_batch, plan_cell_batch
+from ..batch import cell_table, export_cell_batch as write_cell_batch, plan_cell_batch
 from ..exporting import ExportBlocked, export_preview, export_review_candidate
 from ..import_session import ImportSession
 from ..io.template_writer import apply_sch_patch
@@ -340,6 +340,9 @@ def _budget(model: WorkspaceModel, args: dict[str, Any]) -> dict[str, Any]:
 
 
 PLANS: dict[str, Callable[[WorkspaceModel, dict[str, Any]], dict[str, Any]]] = {
+    "cellTable": lambda m, a: cell_table(a.get("rows", []), action=a.get("action", "inspect"),
+                                       text=a.get("text", ""), selected=a.get("selected"),
+                                       prefix=a.get("prefix", "A")),
     "qpeedVoltage": _qpeed_voltage_preview,
     "cellBatch": lambda m, a: plan_cell_batch(
         m.project, phase=str(a.get("phase", "")), basis=str(a.get("basis", "manual_reference")),

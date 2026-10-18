@@ -4,6 +4,7 @@
 
 | Date | Summary |
 |------|---------|
+| 2026-10-18 | Product evolution review: verified `master@eb97af9` and successful Windows native/offline-package CI `39125000686`. Reconciled stale web-only/uncommitted status. [V2 roadmap](V2_IMPROVEMENT_ROADMAP.md) R1–R7 is the next-work priority source: reminder lifecycle → backup/restore → durable distribution → batch ledger and compact editor → sample-gated capacity lineage/presets. Research, acceptance criteria and self-review added; documentation only, not new feature completion. |
 | 2026-10-18 | Offline requirement supersedes the historical web-only shell decision. Added a native Tk workspace using the same application operations, forms, export gates and local stores as web; retained v2 changes. See [native parity roadmap](NATIVE_WORKSPACE_ROADMAP.md) for implementation, tests and remaining Windows/distribution acceptance. |
 | 2026-10-18 | Reconfirmed that fork `Taeyong94/pne_scheduler_v2` master `2ba3aed` is already an ancestor of upstream master `02df0ef`; there was no separate fork delta to merge. Added the [v2 improvement roadmap](V2_IMPROVEMENT_ROADMAP.md). First local implementation covers saved-method version comparison/reviewed loading, concurrent-save protection, and searchable reversible storage archival. Verification and remaining Windows/equipment acceptance are tracked separately. |
 | 2026-10-08 | Release follow-up includes the previously local authoring/export changes and human-audit fixes. Refined visual hierarchy, compact project tools, navigation icons, readable preset details, explicit storage completion state and resource success panels. Re-tested 320–1440px layouts and real protocol/batch files; 902 Python passes / one skip (Mac Tk file excluded), 18 web tests, Ruff, typecheck and production build passed. Added frontend CI. Actual Windows delivery, CTSPro approval and equipment execution remain separate open gates. |
@@ -59,25 +60,29 @@ Gate G decision to remove duplicate shells is historical: the new client does
 not restore the Qt stack or duplicate protocol arithmetic. Existing SCH safety
 gates, direct reference capacity and explicit preview/apply boundaries remain.
 
-The next delivery gate is Windows initialization and offline distribution:
-explicit Tcl bootstrap, repeated native tests, an unsigned Windows x64 ZIP with
-bundled runtime/data, and extracted-executable checks before artifact upload.
-See [WINDOWS_OFFLINE_GUIDE.md](WINDOWS_OFFLINE_GUIDE.md). Signing, actual lab-PC
+Windows initialization and offline-package CI passed at `eb97af9` in
+[run 39125000686](https://github.com/Hwiho/pne_scheduler/actions/runs/39125000686):
+repeated native tests and the extracted unsigned Windows x64 executable were checked.
+N3/N4a are software-verified, not N4b lab acceptance. See
+[WINDOWS_OFFLINE_GUIDE.md](WINDOWS_OFFLINE_GUIDE.md). Signing, actual lab-PC
 notifications/DPI and CTSPro/equipment approval remain separate acceptance gates.
 
 ### 2026-10-18 v2 follow-up
 
 The current software improvement plan is [V2_IMPROVEMENT_ROADMAP.md](V2_IMPROVEMENT_ROADMAP.md).
-Phase 1 addresses reusable method history and storage record management without
-requiring private result samples or equipment. Later phases cover schedule-edit
-policy, export job tracking, result-file intake and real Windows/lab acceptance.
-The v2 and offline Tk follow-ups are packaged together for publication at the
-user's request on 2026-10-18; hosted CI and equipment acceptance remain separate.
-Phase 1 is locally implemented and verified: 934 Python passes / one private-sample
-skip (Mac Tk file excluded), 22 web tests, production build and responsive UI/file
-smoke checks. The library version picker and reversible archival listed in the
-historical next-items below are covered by this phase; remaining work stays in
-the v2 roadmap's later phases.
+Phase 1 method history/review and reversible storage archival are published.
+R1–R7 there now define dependencies, code evidence, primary-source research and
+acceptance criteria. The user-selected U1–U3 slice implements the cell table (R4a),
+key conditions and direct error correction (R5a) in both web and Tk using shared
+operations. Local checks are headless; native widgets and Windows packaging are
+verified on the pushed commit's CI, not on the user's active desktop.
+The next operational slice remains R1a (safe reminder stop/status) and R2
+(verified backup/restore); R3 release-channel preparation can proceed in parallel.
+R4 persistent batch history and R5 large-project performance follow, while R6 needs actual result samples.
+R7 presets are proposals, not approved equipment recipes. Direct manual capacity,
+single-current DC-IR by default and shared web/Tk calculations remain unchanged.
+Older next-item lists below are historical proposals; do not schedule them as
+independent duplicate work. U1–U3 do not complete all of R4/R5 or R1–R7.
 
 ### 2026-10-08 human-user audit, visual refinement and release checks
 
@@ -1074,30 +1079,30 @@ against 6,561 lines of shell-free logic that carries over.
 
 | | |
 |---|---|
-| **Status** | 🔄 **Software implemented and release-checked 2026-10-08**: direct per-cell reference-capacity batch preview/export, local SQLite storage, single-current DC-IR and Windows companion code. Human-style UI/file auditing and regression tests pass. Automatic result import is optional future work. Windows real-session delivery and Gate F artifact approval remain open |
-| **Depends on** | Gate G API/export boundary and the existing explicit-Q safety contract. Direct-input batch needs no activation/derating result sample. DC-IR intent and Windows deployment conditions remain open; Gate F artifact approval is separate |
+| **Status** | 🔄 **Software published and checked through `eb97af9` (2026-10-18)**: direct per-cell reference-capacity batch, local SQLite storage, single-current DC-IR and companion code; shared web/Tk UI and Windows extracted-package CI passed. Automatic result import is optional. Actual Windows notification delivery and Gate F artifact approval remain open |
+| **Depends on** | Gate G API/export boundary and the existing explicit-Q safety contract. Direct-input batch needs no activation/derating result sample. Single-current DC-IR is the default; legacy multi-rate recipes are preserved. Windows deployment conditions and Gate F artifact approval remain separate |
 | **Exit criteria** | For at least three cells with different manually entered reference capacities: preview currents matching generated files, complete per-cell manifest/hash/gate results, explicit blocking on missing/invalid capacity and failed batch; standalone DC-IR rule tested; Windows due/overdue alert verified on a real Windows session, including restart/catch-up |
 | **Release boundary** | Every generated SCH remains draft/reopen-only until exact-file CTSPro review and relevant F approval. Windows alerts report stored deadlines, not verified chamber conditions |
 | **Detailed plan** | [`GATE_H_PLAN.md`](GATE_H_PLAN.md) |
 
 | # | Task | Order | Evidence / exit |
 |---|------|-------|-----------------|
-| H0 | Confirm optional real-data automation and open lab policies | Optional for batch; needed only if later adding result import | Result samples and cell/lot/channel mapping for any future importer; separate DC-IR policy and Windows notification environment |
+| H0 | Confirm optional real-data automation and open lab policies | Optional for batch; needed only if later adding result import | Result samples and cell/lot/channel mapping for any future importer; actual Windows notification environment |
 | H1 | Optional measured-result provenance/resolver | Only if result import is requested later | `.schproj` migration, discharge-capacity reading or current/time integration, source/units/quality checks; direct-entry output remains unchanged |
-| H2 | Per-cell batch preview/export | Direct-reference input implemented locally | Three-cell distinct 1C/current preview and batch file generation covered by `tests/test_batch.py`; per-file manifests and no-overwrite checks. Entered values remain unverified |
-| H3 | Standalone DC-IR rate reconciliation | After policy confirmation; parallel with H1/H2 | Existing one-rate projects unchanged; multi-rate only if requested; SOC/pulse/rest and current-limit tests |
-| H4 | Durable high-temp records + Windows background companion | Local code implemented; real Windows verification open | SQLite records, explicit non-destructive browser migration, due/overdue claiming and retry covered by `tests/test_storage_records.py`; notification-area delivery and login startup **not yet tested on Windows** |
+| H2 | Per-cell batch preview/export | Direct-reference input implemented and published | Three-cell distinct 1C/current preview and batch file generation covered by `tests/test_batch.py`; per-file manifests and no-overwrite checks. Entered values remain unverified |
+| H3 | Standalone DC-IR rate reconciliation | Single-current default retained; no new multi-rate expansion | Existing one-rate projects unchanged; preserve legacy multi-rate projects; SOC/pulse/rest and current-limit tests |
+| H4 | Durable high-temp records + Windows background companion | Code published; real notification acceptance open | SQLite records, migration, due/overdue claiming and retry covered by tests; packaged companion dispatch checked in CI. Actual notification display/login acceptance remains open; lifecycle and backup follow-ups are R1/R2 |
 | H-UX | User-friendly box workflow and automated UI regression | Implemented locally, continue iterating | Palette/connector insert, select/edit, duplicate/delete, move/undo; scrollable goal selection; inline duration; clear export/storage states. `web/tests/ui-smoke.cjs` tests 1280/390 px, picker, box duplication/undo, batch preview and storage status |
-| H5 | End-to-end review | After H1–H4 | Three-cell lifecycle, UI/export numeric parity, safety regressions; F approval still per artifact |
+| H5 | End-to-end review | H2/H4 software checks; H1 optional, lab evidence parallel | Three-cell lifecycle, UI/export numeric parity, safety regressions; F approval still per artifact |
 
 **Gate rule:** The 2026-09-09 Gate G stateless derive/transform/plan API remains intact.
 Measurement import, if added later, plus persistent reminders and batch disk writes
 belong only to the local-resource boundary. Direct reference-capacity input is
 explicit and cannot be silently replaced by a guessed channel match or lab metric.
 
-**Next usability pass:** add keyboard-first reordering, clear selected-box focus, per-cell
-inline capacity validation/import preview, and a storage companion diagnostic panel. Keep
-the linear execution graph explicit; do not imply branching instrument control.
+**Next usability pass:** follow R1/R4/R5 in the [v2 roadmap](V2_IMPROVEMENT_ROADMAP.md),
+reusing existing connection status and module-editing controls. Keep the linear execution
+graph explicit; do not imply branching instrument control.
 
 ---
 
@@ -1193,26 +1198,25 @@ tests to be skipped.
 
 ## 9. Current focus (active gate)
 
-**Active:** Gate F exact-artifact lab/release evidence; **Gate H software implemented and release-checked**, with real Windows and lab acceptance pending. H0 result
-samples remain optional for automatic import. Gate G is complete and is the current web platform;
-Qt/Tk shells were removed. Gate E's core software path shipped, while E2.2 lab
-acceptance and optional E5–E7 remain open. The browser UX,
-storage tracker, preset composition and box-and-connector method flow are included
-in the 2026-10-08 release changes; the Windows companion exists as separate code but
-has not been checked on Windows. The flow uses the existing linear module semantics; branch wiring
-has not been added.
+**Active software plan:** [V2_IMPROVEMENT_ROADMAP.md](V2_IMPROVEMENT_ROADMAP.md) R1–R7.
+Web and offline Tk share the same application core; the removed historical Qt shell
+is not restored. At `eb97af9`, Windows native and extracted-executable CI passed;
+actual notification display, lab security/DPI and Gate F exact-artifact approval remain open.
+H0/H1 result samples remain optional. Existing box groups are a linear execution model,
+not arbitrary branch wiring. The following is a summary, not a second backlog.
 
 | Priority | Gate | Next action |
 |----------|------|-------------|
-| 1 | H2 / H5 | Confirm direct reference-capacity values and per-cell generated currents on the intended Windows/lab workflow; keep SCH candidates reopen-only pending approval |
-| 2 | H0 / H1 (optional) | Request activation/derating result samples only if automatic import is later desired; preserve the direct-input workflow |
-| 3 (parallel) | H3 / H4 | Check the single-current workflow and new pulse modes on the intended lab recipe; verify implemented local reminders on a Windows user session, including restart and sleep |
-| 4 | H5 | Check three different-capacity cells end-to-end and SCH reparse/current parity; do not promote unsupported binary fields |
+| P0 next | R1a / R2; H4 | Safe companion stop/status and verified backup/restore; no automatic startup |
+| P0 parallel preparation | R3 / N4b | Durable versioned distribution and update/rollback checks; Release/signing and real Windows acceptance require separate authorization/evidence |
+| P1 | R4 / R5 / R1b; H2 / N5 | Batch job ledger, compact editor and measured performance, then reviewed storage schedule edits |
+| P2 conditional | R6 / R7; H1 / N6 | Sample-backed capacity provenance and selected preset compositions; direct manual capacity stays default |
 | Lab parallel | PV1/PV4 / F1–F4 | Controlled SOC/capacity field evidence and CTSPro reopen/save-as for exact candidate files; run approval is a separate checkpoint |
 
 Completed: Gate A, B (`gate_b_passed`), C (C5 signed), D (software), G (web
-port); E core software. **Not completed:** Gate H, F lab release, E2.2 lab
-acceptance/optional items, PV1/PV4.
+port); E core software; N3/N4a automated Windows checks. **Not completed:** R1–R7,
+N4b, Gate H real notification acceptance, F lab release, E2.2 lab acceptance/optional items,
+PV1/PV4. Tests and build success are not exact-artifact equipment approval.
 
 Process: use §5.6 lessons checklist on every future gate claim.
 

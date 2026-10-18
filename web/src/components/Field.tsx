@@ -56,7 +56,7 @@ export function Field({
   const showDetail = Boolean(field.detail && !isRepeatedUnitDetail(field.kind, field.value, field.detail));
 
   return (
-    <div style={{ padding: "6px 0", borderBottom: "1px solid var(--line)" }}>
+    <div data-field-key={field.key} style={{ padding: "6px 0", borderBottom: "1px solid var(--line)" }}>
       <div className="field-row">
         <label
           htmlFor={inputId}
@@ -183,6 +183,7 @@ export function Field({
           className={`field-help ${field.hasError ? "danger" : "warn"}`}
         >
           {field.issues.join("\n")}
+          {field.hasError && <button type="button" className="issue-link" disabled={disabled} onClick={() => document.getElementById(inputId)?.focus()}>이 값 바로 수정</button>}
         </div>
       )}
     </div>

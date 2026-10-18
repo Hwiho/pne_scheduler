@@ -107,6 +107,95 @@ def _capacity(value: Any, label: str) -> float:
     return result
 
 
+def inspect_cell_rows(rows: Any) -> dict[str, Any]:
+    """Cheap, shared input diagnostics; never substitutes for export gates."""
+    issues: list[dict[str, Any]] = []
+    if not isinstance(rows, list) or not 1 <= len(rows) <= MAX_CELLS:
+        return {"ok": False, "rows": [], "issues": [{"row": None, "field": "cellId",
+                "message": f"셀은 1개 이상 {MAX_CELLS}개 이하로 입력하세요."}]}
+    ids = [str(row.get("cellId", "")).strip()
+           if isinstance(row, dict) and row.get("cellId") is not None and not isinstance(row.get("cellId"), bool)
+           else "" for row in rows]
+    counts: dict[str, int] = {}
+    for cell_id in ids:
+        counts[cell_id.casefold()] = counts.get(cell_id.casefold(), 0) + 1
+    readings = []
+    for index, (raw, cell_id) in enumerate(zip(rows, ids)):
+        raw = raw if isinstance(raw, dict) else {}
+        def issue(field: str, message: str) -> None:
+            issues.append({"row": index, "field": field, "message": message})
+        if not CELL_ID.fullmatch(cell_id):
+            issue("cellId", "셀 ID는 영문/숫자로 시작하는 1–50자 영문·숫자·_·-만 허용합니다.")
+        elif counts[cell_id.casefold()] > 1:
+            issue("cellId", "셀 ID가 중복됩니다. 다른 ID를 입력하세요.")
+        if set(raw) - {"cellId", "referenceCapacityMah"}:
+            issue("extraColumns", "셀 ID와 기준용량 두 열만 입력하세요. 추가 열을 확인한 뒤 제거하세요.")
+        capacity = None
+        try:
+            capacity = _capacity(raw.get("referenceCapacityMah"), "기준용량")
+        except ValueError as exc:
+            issue("referenceCapacityMah", str(exc))
+        readings.append({"cellId": cell_id, "oneCmA": capacity})
+    return {"ok": not issues, "rows": readings, "issues": issues}
+
+
+def cell_table(rows: Any, *, action: str = "inspect", text: str = "",
+               selected: Any = None, prefix: str = "A") -> dict[str, Any]:
+    """Input-table operations shared by web/Tk; no project/filesystem mutation."""
+    from copy import deepcopy
+
+    if not isinstance(rows, list) or len(rows) > MAX_CELLS or any(not isinstance(r, dict) for r in rows):
+        raise ValueError(f"셀 목록은 {MAX_CELLS}행 이하의 표여야 합니다.")
+    result = deepcopy(rows)
+    if action not in {"inspect", "paste", "add", "duplicate", "number", "remove"}:
+        raise ValueError("알 수 없는 셀 표 작업입니다.")
+    indexes = selected if selected is not None else []
+    if (not isinstance(indexes, list) or any(type(i) is not int or not 0 <= i < len(rows) for i in indexes)
+            or len(set(indexes)) != len(indexes)):
+        raise ValueError("선택한 셀 행을 다시 확인하세요.")
+    indexes = sorted(indexes)
+    if action in {"duplicate", "number", "remove"} and not indexes:
+        raise ValueError("먼저 작업할 셀 행을 선택하세요.")
+    if action == "paste":
+        if not isinstance(text, str) or len(text) > 100_000:
+            raise ValueError("붙여넣을 셀 목록이 너무 큽니다.")
+        lines = [line for line in text.splitlines() if line.strip()]
+        if lines and re.split(r"[,\t]", lines[0])[0].lower().replace(" ", "") in {"cellid", "cell_id", "셀id", "셀아이디"}:
+            lines = lines[1:]
+        for line in lines:
+            columns = [part.strip() for part in re.split(r"[,\t]", line)]
+            raw = {"cellId": columns[0], "referenceCapacityMah": columns[1] if len(columns) > 1 else ""}
+            if len(columns) > 2:
+                raw["extraColumns"] = len(columns) - 2
+            result.append(raw)
+    if action in {"add", "duplicate", "number"}:
+        if not isinstance(prefix, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,39}", prefix):
+            raise ValueError("연번 접두어는 1–40자 영문·숫자·_·-로 입력하세요.")
+        occupied = {str(row.get("cellId", "")).strip().casefold() for i, row in enumerate(result)
+                    if action != "number" or i not in indexes}
+        number = 1
+        def next_id() -> str:
+            nonlocal number
+            while f"{prefix}{number:02d}".casefold() in occupied:
+                number += 1
+            value = f"{prefix}{number:02d}"
+            occupied.add(value.casefold())
+            return value
+        if action == "add":
+            result.append({"cellId": next_id(), "referenceCapacityMah": ""})
+        elif action == "duplicate":
+            for index in indexes:
+                result.append({**result[index], "cellId": next_id()})
+        else:
+            for index in indexes:
+                result[index]["cellId"] = next_id()
+    elif action == "remove":
+        result = [row for index, row in enumerate(result) if index not in indexes]
+    if len(result) > MAX_CELLS:
+        raise ValueError(f"최대 {MAX_CELLS}셀입니다. 일부 행만 넣지 않습니다.")
+    return {"inputRows": result, **inspect_cell_rows(result)}
+
+
 def _rate(value: Any, label: str) -> float:
     if isinstance(value, bool) or value is None or str(value).strip() == "":
         raise ValueError(f"{label} 값이 없습니다.")
@@ -256,6 +345,7 @@ def plan_cell_batch(
     seen: set[str] = set()
     prepared: list[PreparedCell] = []
     display_rows: list[dict[str, Any]] = []
+    input_check = inspect_cell_rows(rows) if basis == "manual_reference" else None
     for number, raw in enumerate(rows, start=1):
         row_errors: list[str] = []
         if not isinstance(raw, dict):
@@ -269,12 +359,8 @@ def plan_cell_batch(
         design = None
         selected = None
         if basis == "manual_reference":
-            if set(raw) - {"cellId", "referenceCapacityMah"}:
-                row_errors.append("셀 ID와 기준용량 두 열만 입력하세요. 이전 4열 형식은 사용할 수 없습니다.")
-            try:
-                selected = _capacity(raw.get("referenceCapacityMah"), "기준용량")
-            except ValueError as exc:
-                row_errors.append(str(exc))
+            row_errors = [item["message"] for item in input_check["issues"] if item["row"] == number - 1]
+            selected = input_check["rows"][number - 1]["oneCmA"]
         else:
             try:
                 design = _capacity(raw.get("designCapacityMah"), "설계용량")
