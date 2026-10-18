@@ -11,6 +11,16 @@ QPEED, and others) and cell-geometry inference (FP, L-level, and xMyU).
 > step semantics and equipment smoke tests are still incomplete. Output is not
 > validated for CTSPro or equipment execution. Prefer `patch-sch` for evidence-gated edits.
 
+## Project collaboration
+
+- Original project and maintenance: [@Hwiho](https://github.com/Hwiho).
+- Fork maintenance and project collaboration: [@Taeyong94](https://github.com/Taeyong94)
+  ([pne_scheduler_v2](https://github.com/Taeyong94/pne_scheduler_v2)).
+
+This project-team listing is separate from GitHub repository permissions and the
+commit-based Contributors list. Merged contributions retain their original commit
+authorship; `Co-authored-by` credits are used for changes actually authored together.
+
 ## Installation
 
 ```powershell
