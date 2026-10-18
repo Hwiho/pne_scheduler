@@ -6,6 +6,7 @@ default bind is 127.0.0.1 and widening it is a deliberate argument.
 """
 
 import sys
+import argparse
 from pathlib import Path
 
 _root = Path(__file__).resolve().parent
@@ -16,5 +17,8 @@ from pne_scheduler.api.app import main
 
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8000
-    raise SystemExit(main(port=port))
+    parser = argparse.ArgumentParser(description="PNE local web API")
+    parser.add_argument("port", nargs="?", type=int, default=8000)
+    parser.add_argument("--data-dir", type=Path, help="복원/시험용 데이터 폴더")
+    args = parser.parse_args()
+    raise SystemExit(main(port=args.port, data_dir=args.data_dir))

@@ -5,6 +5,7 @@ import { api, type Json } from "@/lib/api";
 import { useDocument } from "@/lib/useDocument";
 import { ImportTab } from "@/components/ImportTab";
 import { StorageTracker } from "@/components/StorageTracker";
+import { DataSafety } from "@/components/DataSafety";
 import { ProjectTools } from "@/components/ProjectTools";
 import { WorkspaceIcon, type WorkspaceIconName } from "@/components/WorkspaceIcon";
 import {
@@ -13,8 +14,8 @@ import {
   SetupTab,
 } from "@/components/tabs";
 
-const TABS = ["설정", "프로토콜", "내보내기", "기존 SCH", "고온저장"] as const;
-const TAB_ICONS: WorkspaceIconName[] = ["settings", "flow", "export", "import", "clock"];
+const TABS = ["설정", "프로토콜", "내보내기", "기존 SCH", "고온저장", "데이터 관리"] as const;
+const TAB_ICONS: WorkspaceIconName[] = ["settings", "flow", "export", "import", "clock", "settings"];
 
 export default function Workspace() {
   const doc = useDocument();
@@ -137,6 +138,7 @@ export default function Workspace() {
       <div hidden={tab !== 2}><ExportTab {...props} /></div>
       {tab === 3 && <ImportTab />}
       {tab === 4 && <StorageTracker />}
+      <div hidden={tab !== 5}><DataSafety project={doc.project} /></div>
 
       <footer className="workspace-footer">
         {doc.views.summary.totalSteps} 스텝 · {doc.views.summary.durationText} ·{" "}

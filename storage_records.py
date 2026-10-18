@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 import json
 import math
 import re
@@ -12,6 +12,8 @@ import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterator
+
+from .data_safety import database_lock, file_lock
 
 ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,80}$")
 DAY_SECONDS = 86_400
@@ -136,6 +138,12 @@ class StorageStore:
 
     @contextmanager
     def _connect(self) -> Iterator[sqlite3.Connection]:
+        with file_lock(database_lock(self.path), timeout=10):
+            with self._connection() as connection:
+                yield connection
+
+    @contextmanager
+    def _connection(self) -> Iterator[sqlite3.Connection]:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         connection = sqlite3.connect(self.path, timeout=10)
         # sqlite3.Connection's context commits/rolls back but does NOT close.
@@ -377,14 +385,43 @@ class StorageStore:
             )
 
     def companion_status(self, *, now: datetime | None = None) -> dict[str, Any]:
+        from .companion_control import companion_status
+        return companion_status(self, now=now)
+
+    def runtime_meta(self) -> dict[str, str]:
+        # Frequent cooperative-stop polling must not backfill every alert or
+        # take a SQLite writer transaction. Initialize only for a new/old DB.
+        with file_lock(database_lock(self.path), timeout=10):
+            if self.path.is_file():
+                with closing(sqlite3.connect(self.path.resolve().as_uri() + "?mode=ro", uri=True)) as connection:
+                    try:
+                        return dict(connection.execute("SELECT key,value FROM storage_meta"))
+                    except sqlite3.OperationalError as exc:
+                        if "no such table" not in str(exc):
+                            raise
         with self._connect() as connection:
-            row = connection.execute(
-                "SELECT value FROM storage_meta WHERE key='lastHeartbeatAt'"
-            ).fetchone()
-        last = row["value"] if row else None
-        age = (now or datetime.now(timezone.utc)) - _parse_time(last, "heartbeat") if last else None
-        active = bool(age is not None and timedelta(0) <= age < timedelta(minutes=3))
-        return {"active": active, "lastHeartbeatAt": last}
+            return dict(connection.execute("SELECT key,value FROM storage_meta"))
+
+    def update_runtime(self, values: dict[str, str], *, expected_run: str | None = None) -> bool:
+        with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            row = connection.execute("SELECT value FROM storage_meta WHERE key='companionRunId'").fetchone()
+            if expected_run is not None and (row is None or row[0] != expected_run):
+                return False
+            connection.executemany("INSERT OR REPLACE INTO storage_meta(key,value) VALUES(?,?)", values.items())
+        return True
+
+    def pending_alert_count(self, *, now: datetime | None = None) -> int:
+        with self._connect() as connection:
+            settings = connection.execute("SELECT value FROM storage_meta WHERE key='restoreNotifySettings'").fetchone()
+            enabled = {k for k, v in json.loads(settings[0]).items() if v == 1} if settings else set()
+            rows = connection.execute("""SELECT r.id,r.notify_enabled FROM storage_alerts a
+                JOIN storage_records r ON r.id=a.record_id
+                WHERE r.completed_at IS NULL AND r.archived_at IS NULL
+                AND a.acknowledged_at IS NULL AND a.notified_at IS NULL
+                AND COALESCE(a.snoozed_until,a.due_at)<=?""",
+                (_utc_iso(now or datetime.now(timezone.utc)),)).fetchall()
+            return sum(bool(row[1] or row[0] in enabled) for row in rows)
 
     def claim_due(self, *, now: datetime | None = None, limit: int = 10) -> list[dict[str, Any]]:
         moment = now or datetime.now(timezone.utc)
@@ -392,6 +429,8 @@ class StorageStore:
         expired = _utc_iso(moment - timedelta(minutes=5))
         with self._connect() as connection:
             connection.execute("BEGIN IMMEDIATE")
+            if connection.execute("SELECT 1 FROM storage_meta WHERE key='restoreNotificationsPaused' AND value='1'").fetchone():
+                return []
             rows = connection.execute("""SELECT a.*, r.sample, r.temperature_c, r.target_days
                 FROM storage_alerts a JOIN storage_records r ON r.id=a.record_id
                 WHERE r.notify_enabled=1 AND r.completed_at IS NULL AND r.archived_at IS NULL

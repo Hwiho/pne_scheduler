@@ -119,13 +119,13 @@ def test_all_panels_edit_save_library_batch_and_storage(root, tmp_path, monkeypa
     monkeypatch.setattr("pne_scheduler.ui.tk_workspace.messagebox.showerror", lambda *a, **k: errors.append(a))
     app = WorkspaceApp(root, NativeController(data_dir=tmp_path / "data"))
     drain(root, app)
-    assert len(app.notebook.tabs()) == 6
+    assert len(app.notebook.tabs()) == 7
     app.perform("setEquipmentUnit", {"unit": "PNE02"})
     drain(root, app)
     app.perform("addModule", {"moduleType": "formation"})
     drain(root, app)
     assert app.controller.project["modules"]
-    protocol, library, export, imported, storage = app.panels
+    protocol, library, export, imported, storage, data = app.panels
     assert protocol._field_widgets
     for panel in app.panels:
         app.notebook.select(panel)
@@ -197,6 +197,45 @@ def test_storage_widgets_add_complete_archive_restore(root, tmp_path, monkeypatc
     drain(root, app)
     assert not storage._records[0]["archivedAt"]
     assert not errors
+    app._shutdown()
+
+
+def test_data_care_buttons_backup_restore_and_preserve_drafts(root, tmp_path):
+    app = WorkspaceApp(root, NativeController(data_dir=tmp_path / "data"))
+    drain(root, app)
+    app.perform("addModule", {"moduleType": "rest"})
+    drain(root, app)
+    panel = app.panels[5]
+    app.notebook.select(panel)
+    drain(root, app)
+    panel.output_path.set(str(tmp_path / "verified.zip"))
+    panel.external_stopped.set(True)
+    panel.preview_button.invoke()
+    drain(root, app)
+    assert panel._plan and panel.create_button.instate(["!disabled"])
+    app.perform("setProjectName", {"name": "changed"})
+    drain(root, app)
+    assert panel._plan is None and panel.create_button.instate(["disabled"])
+    assert panel.output_path.get() == str(tmp_path / "verified.zip")
+    panel.preview_button.invoke()
+    drain(root, app)
+    panel.create_button.invoke()
+    drain(root, app)
+    assert (tmp_path / "verified.zip").exists()
+    panel.inspect_button.invoke()
+    drain(root, app)
+    assert panel._inspection
+    panel.destination.set(str(tmp_path / "restore"))
+    panel.restore_button.invoke()
+    drain(root, app)
+    assert (tmp_path / "restore" / "restore-report.json").exists()
+    assert "복원 완료" in panel.result_text.get()
+    assert app.controller.data_dir == tmp_path / "data"
+    panel.archive_path.set(str(tmp_path / "missing.zip"))
+    panel.inspect_button.invoke()
+    drain(root, app)
+    assert "처리하지 못했습니다" in panel.result_text.get()
+    assert panel.archive_path.get() == str(tmp_path / "missing.zip")
     app._shutdown()
 
 

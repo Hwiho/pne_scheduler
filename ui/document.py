@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any, Callable, Iterator, TypeVar
 
 from ..atomic_files import atomic_write_text as _atomic_write
+from ..data_safety import directory_lock, project_lock, guard_paths
 from ..ir.cell_profile import CellProfile
 from ..ir.loader import ProjectLoad, load_project_lenient
 from ..ir.project import ScheduleProject
@@ -216,6 +217,9 @@ class ProjectDocument:
 
     # ------------------------------------------------------------- saving
 
+    @guard_paths(lambda self, path=None: [directory_lock(self.autosave_dir),
+                 *([directory_lock(self._recovered_snapshot[0].parent)] if self._recovered_snapshot else []),
+                 *([project_lock(path or self.path)] if path or self.path else [])])
     def save(self, path: Path | None = None) -> Path:
         """Write the project. Never blocked by validation — that gates export."""
         target = Path(path) if path else self.path
@@ -233,6 +237,7 @@ class ProjectDocument:
         self._consume_recovered_snapshot()
         return target
 
+    @guard_paths(lambda self: [directory_lock(self._recovered_snapshot[0].parent)] if self._recovered_snapshot else [])
     def _consume_recovered_snapshot(self) -> None:
         recovered = self._recovered_snapshot
         if recovered is None:
@@ -256,6 +261,7 @@ class ProjectDocument:
     def autosave_path(self) -> Path:
         return self.autosave_dir / f"autosave-{self.session_id}.json"
 
+    @guard_paths(lambda self, **_kwargs: [directory_lock(self.autosave_dir)] if self.record_history else [])
     def autosave(self, *, force: bool = False) -> Path | None:
         """Write a recovery copy when there is something new to recover."""
         if not self.record_history:
@@ -280,6 +286,7 @@ class ProjectDocument:
         self._autosaved_snapshot = snapshot
         return target
 
+    @guard_paths(lambda self: [directory_lock(self.autosave_dir)])
     def clear_autosave(self) -> None:
         target = self.autosave_path()
         try:
@@ -344,6 +351,7 @@ class ProjectDocument:
         return document
 
     @staticmethod
+    @guard_paths(lambda snapshot: [directory_lock(snapshot.autosave_path.parent)])
     def discard_recovery(snapshot: RecoverySnapshot) -> None:
         try:
             snapshot.autosave_path.unlink()

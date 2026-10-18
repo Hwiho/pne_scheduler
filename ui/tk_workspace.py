@@ -53,8 +53,9 @@ class WorkspaceApp(ttk.Frame):
         from .tk_protocol import ProtocolPanel
         from .tk_resources import ExportPanel, ImportPanel, LibraryPanel
         from .tk_storage import StoragePanel
+        from .tk_data_safety import DataSafetyPanel
         for cls, title in ((ProtocolPanel, "프로토콜"), (LibraryPanel, "내 블록"),
-                           (ExportPanel, "파일 · 배치 생성"), (ImportPanel, "기존 SCH"), (StoragePanel, "고온저장")):
+                           (ExportPanel, "파일 · 배치 생성"), (ImportPanel, "기존 SCH"), (StoragePanel, "고온저장"), (DataSafetyPanel, "데이터 관리")):
             panel = cls(self.notebook, self)
             self.panels.append(panel)
             self.notebook.add(panel, text=f"  {title}  ")

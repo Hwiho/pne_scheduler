@@ -33,6 +33,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from .data_safety import directory_lock, guard_paths
+
 LIBRARY_SCHEMA = "pne_scheduler.method/v1"
 LOG = logging.getLogger(__name__)
 
@@ -194,6 +196,7 @@ class MethodLibrary:
 
     # ------------------------------------------------------------- writing
 
+    @guard_paths(lambda self, **_kwargs: [directory_lock(self.root)])
     def save(
         self,
         *,

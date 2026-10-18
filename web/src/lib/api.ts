@@ -52,6 +52,7 @@ async function get<T>(path: string): Promise<T> {
 }
 
 export const api = {
+  dataAction: <T>(action: string, args: Json = {}) => post<T>(`/api/data/${action}`, args),
   openProject: (data: Json) => post<{ project: Json; repairs: string[]; migratedFrom: string | null }>("/api/project/open", { data }),
   views: (project: Json, selected?: string) =>
     post<{ views: Views }>("/api/views", { project, selected }),
@@ -158,7 +159,25 @@ export interface StorageRecord {
 export interface StorageResponse {
   ok: true;
   records: StorageRecord[];
-  companion: { active: boolean; lastHeartbeatAt: string | null };
+  companion: CompanionStatus;
+}
+
+export interface CompanionStatus {
+  active: boolean; state: string; label: string; runId: string; version: string;
+  lastHeartbeatAt: string | null; stoppedAt: string | null; lastError: string;
+  canStart: boolean; canStop: boolean; backupReady: boolean; restorePaused: boolean;
+  pendingCount: number; deliveryMeaning: string;
+}
+export interface DataStatus {
+  database: string; library: string; recovery: string; companion: CompanionStatus;
+}
+export interface BackupPlan {
+  token: string; files: { path: string; size: number; source: string }[];
+  totalBytes: number; excluded: string[];
+}
+export interface RestoreInspection {
+  token: string; createdAt: string; appVersion: string; files: BackupPlan["files"];
+  counts: Record<string, number>; note: string;
 }
 
 export interface CellBatchPlan {

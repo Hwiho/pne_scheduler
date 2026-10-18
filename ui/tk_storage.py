@@ -7,10 +7,8 @@ does not need Flask, HTTP, Node, or a browser.
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
 from tkinter import BooleanVar, StringVar, messagebox, ttk
 from typing import Any, Callable
 
@@ -163,7 +161,10 @@ class StoragePanel(ttk.Frame):
         if sys.platform == "win32":
             launch = ttk.Button(toolbar, text="Windows 알림 실행기 시작", command=self._launch_companion)
             launch.grid(row=0, column=5)
-            self._manage(launch)
+            self._manage(launch, lambda: self._companion.get("canStart", False))
+        stop = ttk.Button(toolbar, text="알림 안전 종료", command=self._stop_companion)
+        stop.grid(row=1, column=0, columnspan=2, sticky="w", pady=5)
+        self._manage(stop, lambda: self._companion.get("canStop", False) and self._companion.get("state") != "stopping")
 
         content = ttk.Panedwindow(self, orient="vertical")
         content.grid(row=2, column=0, sticky="nsew")
@@ -239,7 +240,7 @@ class StoragePanel(ttk.Frame):
         super().destroy()
 
     def _schedule_timer(self) -> None:
-        self._timer_id = self.after(60_000, self._timer_refresh)
+        self._timer_id = self.after(5000 if self._companion.get("active") else 60_000, self._timer_refresh)
 
     def _timer_refresh(self) -> None:
         self._timer_id = None
@@ -342,6 +343,8 @@ class StoragePanel(ttk.Frame):
             self.companion_var.set(f"Windows 알림 실행기 미연결 · 마지막 확인 {_local_text(heartbeat)}")
         else:
             self.companion_var.set("Windows 알림 실행기 미연결 · 이 화면만으로는 백그라운드 알림을 보내지 않습니다")
+        if self._companion.get("label"):
+            self.companion_var.set(f"{self._companion['label']} · 최근 확인 {_local_text(heartbeat)} · 알림 검토/백업은 데이터 관리 탭")
         self._render_detail()
 
     def _selection_changed(self, _event: Any = None) -> None:
@@ -615,40 +618,23 @@ class StoragePanel(ttk.Frame):
         self._submit_mutation(work, message)
 
     def _launch_companion(self) -> None:
-        if sys.platform != "win32":
-            messagebox.showerror("Windows 알림", "알림 실행기는 Windows 사용자 세션에서만 시작할 수 있습니다.", parent=self)
-            return
-        from ..desktop_runtime import companion_command
-        store = self.app.controller.storage
-        try:
-            command = companion_command(store.path)
-        except FileNotFoundError as exc:
-            messagebox.showerror(
-                "Windows 알림 실행기 없음",
-                str(exc),
-                parent=self,
-            )
-            return
-        package_parent = (str(Path(sys.executable).resolve().parent) if getattr(sys, "frozen", False)
-                          else str(Path(__file__).resolve().parents[2]))
+        self._control_companion("companionStart")
 
-        def work() -> dict[str, Any]:
-            flags = getattr(subprocess, "DETACHED_PROCESS", 0) | getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0)
-            subprocess.Popen(
-                command,
-                cwd=package_parent,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                creationflags=flags,
-                close_fds=True,
-            )
-            return {"records": store.list_records(include_archived=True), "companion": store.companion_status()}
+    def _stop_companion(self) -> None:
+        self._control_companion("companionStop")
 
-        self._submit_mutation(
-            work,
-            "Windows 알림 실행기를 시작했습니다. 연결 표시는 다음 heartbeat 후 갱신됩니다.",
-        )
+    def _control_companion(self, action):
+        run_id = self._companion.get("runId", "")
+        def work():
+            self.app.controller.data_action(action, {"runId": run_id})
+            return self._snapshot()
+        def finish(result):
+            self._accept_snapshot(result)
+            if self._timer_id is not None:
+                self.after_cancel(self._timer_id)
+            self._timer_id = self.after(500, self._timer_refresh)
+        self.app.submit(work, finish, message="알림 실행기 상태 변경",
+                        on_error=lambda exc: self.companion_var.set(str(exc)))
 
 
 __all__ = ["StoragePanel"]

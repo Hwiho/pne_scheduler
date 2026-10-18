@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { api, type StorageRecord, type StorageResponse } from "@/lib/api";
 import { filterStorageRecords, storageNeedsAttention, type StorageFilter } from "@/lib/storageView";
+import { CompanionControls } from "@/components/DataSafety";
 
 const LEGACY_KEY = "pne_scheduler.storage_tracker.v1";
 
@@ -118,7 +119,7 @@ export function StorageTracker() {
           <p className="resource-description">시료별 저장 시작 시각과 확인 일정을 기록합니다. 이 타이머는 장비 온도·로그를 읽지 않으므로 실제 챔버 상태는 별도로 확인하세요.</p>
         </div>
       </div>
-      <div className={`storage-companion ${data?.companion.active ? "online" : "offline"}`} role="status"><span className="status-dot" aria-hidden="true" />{data?.companion.active ? "Windows 알림 실행기 연결됨 · 실제 표시 여부는 시스템 설정에 따름" : "Windows 알림 실행기 미연결 · 브라우저를 닫으면 화면 알림 없음"}</div>
+      <CompanionControls />
       <form className="storage-form" onSubmit={addRecord}>
         <label htmlFor="storage-sample">시료명<input id="storage-sample" value={sample} onChange={(event) => setSample(event.target.value)} placeholder="예: Cell A-01" maxLength={120} disabled={busy || !data} required /></label>
         <label htmlFor="storage-temperature">저장 온도 (°C)<input id="storage-temperature" type="number" step="0.1" min="-100" max="300" value={temperatureC} onChange={(event) => setTemperatureC(event.target.value)} disabled={busy || !data} required /></label>

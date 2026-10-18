@@ -13,6 +13,7 @@ from ..edit.steps import step_fields
 from ..ir.project import ScheduleProject
 from ..library import MethodLibrary
 from ..storage_records import StorageStore, default_storage_db
+from ..data_backup import DataManager
 from .document import ProjectDocument
 
 
@@ -109,6 +110,13 @@ class NativeController:
         self.notice = ""
         self._metadata()
         return result
+
+    def data_action(self, action, args=None):
+        manager = DataManager(self.storage, self.library.root, self.document.autosave_dir)
+        payload = {**(args or {})}
+        if payload.get("includeCurrent"):
+            payload["project"] = self.project
+        return manager.action(action, payload)
 
     def recoveries(self):
         return ProjectDocument.recoveries(self.autosave_dir)

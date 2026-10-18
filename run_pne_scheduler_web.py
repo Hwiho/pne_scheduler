@@ -12,6 +12,7 @@ bug rather than a missing step.
 from __future__ import annotations
 
 import atexit
+import argparse
 import os
 import shutil
 import signal
@@ -46,6 +47,9 @@ def _wait(url: str, timeout: float, what: str) -> bool:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="PNE local web workspace")
+    parser.add_argument("--data-dir", type=Path, help="복원/시험용 데이터 폴더")
+    args = parser.parse_args()
     if not WEB.is_dir():
         print(f"web/ 폴더가 없습니다: {WEB}", file=sys.stderr)
         return 2
@@ -118,7 +122,8 @@ def main() -> int:
     signal.signal(signal.SIGTERM, _terminated)
 
     print(f"API  시작 http://127.0.0.1:{API_PORT}")
-    spawn([sys.executable, str(ROOT / "run_pne_scheduler_api.py"), str(API_PORT)])
+    spawn([sys.executable, str(ROOT / "run_pne_scheduler_api.py"), str(API_PORT),
+           *(["--data-dir", str(args.data_dir.expanduser().resolve())] if args.data_dir else [])])
     if not _wait(f"http://127.0.0.1:{API_PORT}/api/health", API_TIMEOUT, "API"):
         stop()
         return 1

@@ -151,22 +151,12 @@ def test_symlinks_cannot_load_external_method_versions(tmp_path):
     assert store.methods() == (entry,)
 
 
-def test_concurrent_saves_never_overwrite_a_version(tmp_path, monkeypatch):
-    from pne_scheduler import library as module
-
+def test_concurrent_saves_never_overwrite_a_version(tmp_path):
     store = MethodLibrary(tmp_path / "library")
-    original_write = module._atomic_write
     barrier = threading.Barrier(8)
-    state = threading.local()
-
-    def synchronized_write(path, text):
-        if not getattr(state, "started", False):
-            state.started = True
-            barrier.wait(timeout=10)
-        return original_write(path, text)
-
-    monkeypatch.setattr(module, "_atomic_write", synchronized_write)
     def save(index):
+        # Maintenance locking now serializes saves before version allocation.
+        barrier.wait(timeout=10)
         return store.save(name="shared", method_id="shared", modules=[rest(index + 1)])
     with ThreadPoolExecutor(max_workers=8) as workers:
         saved = list(workers.map(save, range(8)))

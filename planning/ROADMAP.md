@@ -76,8 +76,10 @@ acceptance criteria. The user-selected U1–U3 slice implements the cell table (
 key conditions and direct error correction (R5a) in both web and Tk using shared
 operations. Local checks are headless; native widgets and Windows packaging are
 verified on the pushed commit's CI, not on the user's active desktop.
-The next operational slice remains R1a (safe reminder stop/status) and R2
-(verified backup/restore); R3 release-channel preparation can proceed in parallel.
+R1a safe reminder stop/status and R2 verified backup/new-location restore are now
+implemented in both UIs through shared operations, including paused restored alerts.
+See the v2 roadmap's implementation/verification section for limits; actual Windows
+notification and lab recovery acceptance remain open. R3 release-channel preparation is next.
 R4 persistent batch history and R5 large-project performance follow, while R6 needs actual result samples.
 R7 presets are proposals, not approved equipment recipes. Direct manual capacity,
 single-current DC-IR by default and shared web/Tk calculations remain unchanged.
@@ -1207,14 +1209,14 @@ not arbitrary branch wiring. The following is a summary, not a second backlog.
 
 | Priority | Gate | Next action |
 |----------|------|-------------|
-| P0 next | R1a / R2; H4 | Safe companion stop/status and verified backup/restore; no automatic startup |
+| P0 acceptance | R1a / R2; H4 | Safe stop/status and verified backup/restore implemented; lab recovery and actual Windows notification acceptance remain; no automatic startup |
 | P0 parallel preparation | R3 / N4b | Durable versioned distribution and update/rollback checks; Release/signing and real Windows acceptance require separate authorization/evidence |
 | P1 | R4 / R5 / R1b; H2 / N5 | Batch job ledger, compact editor and measured performance, then reviewed storage schedule edits |
 | P2 conditional | R6 / R7; H1 / N6 | Sample-backed capacity provenance and selected preset compositions; direct manual capacity stays default |
 | Lab parallel | PV1/PV4 / F1–F4 | Controlled SOC/capacity field evidence and CTSPro reopen/save-as for exact candidate files; run approval is a separate checkpoint |
 
 Completed: Gate A, B (`gate_b_passed`), C (C5 signed), D (software), G (web
-port); E core software; N3/N4a automated Windows checks. **Not completed:** R1–R7,
+port); E core software; N3/N4a automated Windows checks; R1a safe-stop and R2 backup software slice. **Not completed:** full R1–R7 acceptance,
 N4b, Gate H real notification acceptance, F lab release, E2.2 lab acceptance/optional items,
 PV1/PV4. Tests and build success are not exact-artifact equipment approval.
 

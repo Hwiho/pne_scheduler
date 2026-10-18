@@ -10,11 +10,16 @@ import argparse
 import logging
 import sys
 import time
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
 
 from .storage_records import StorageStore, default_storage_db
+from .storage_records import _utc_iso
+from . import __version__
+from .companion_control import CONTROL_VERSION, notifier_lock
+from .data_safety import file_lock, ResourceBusyError
 
 LOG = logging.getLogger(__name__)
 
@@ -35,7 +40,7 @@ def require_interactive_windows_session() -> None:
         raise RuntimeError("서비스 세션에서는 알림을 실행하지 않습니다. 로그인한 사용자 세션에서 실행하세요.")
 
 
-def send_windows_balloon(title: str, message: str) -> None:
+def send_windows_balloon(title: str, message: str, *, wait=None) -> None:
     """Show a Windows notification-area balloon from the current user session.
 
     Shell_NotifyIcon acceptance is not proof the OS displayed it; Focus Assist,
@@ -87,18 +92,23 @@ def send_windows_balloon(title: str, message: str) -> None:
         if not shell32.Shell_NotifyIconW(1, ctypes.byref(icon)):  # NIM_MODIFY
             raise OSError("Windows 알림을 전달하지 못했습니다.")
         # Keep the notification owner alive long enough for the shell to show it.
-        time.sleep(10)
+        (wait or time.sleep)(10)
     finally:
         shell32.Shell_NotifyIconW(2, ctypes.byref(icon))  # NIM_DELETE
         user32.DestroyWindow(window)
 
 
 def process_due(store: StorageStore, notify: Callable[[str, str], None],
-                *, now: datetime | None = None) -> int:
+                *, now: datetime | None = None, checkpoint=lambda: False, on_error=None) -> int:
     """Claim, send, and record due alerts; failed sends remain retryable."""
     moment = now or datetime.now(timezone.utc)
     sent = 0
-    for alert in store.claim_due(now=moment):
+    alerts = store.claim_due(now=moment)
+    for index, alert in enumerate(alerts):
+        if checkpoint():
+            for pending in alerts[index:]:
+                store.release_claim(pending["id"])
+            break
         if not store.alert_can_notify(alert["id"]):
             store.release_claim(alert["id"])
             continue
@@ -113,16 +123,74 @@ def process_due(store: StorageStore, notify: Callable[[str, str], None],
             notify(title, message)
             store.mark_delivered(alert["id"], now=moment)
             sent += 1
-        except Exception:
+        except Exception as exc:
             store.release_claim(alert["id"])
+            if on_error:
+                on_error(exc)
             LOG.exception("Storage notification failed for %s", alert["id"])
     return sent
+
+
+def run_companion(store: StorageStore, *, notify=None, poll_seconds=30, run_id=None, stop_event=None):
+    """Run under the legacy-compatible OS lock; tests inject a silent notifier."""
+    reserved = run_id
+    run_id = run_id or uuid.uuid4().hex
+    with file_lock(notifier_lock(store)):
+        if store.runtime_meta().get("restoreNotificationsPaused") == "1":
+            raise ValueError("복원된 알림 목록을 검토한 뒤 알림 설정을 재개하세요.")
+        if reserved and store.runtime_meta().get("companionRunId") != reserved:
+            raise ValueError("시작 요청이 만료되거나 다른 실행기로 바뀌었습니다.")
+        stamp = _utc_iso(datetime.now(timezone.utc))
+        store.update_runtime({"companionRunId": run_id, "companionState": "running", "companionVersion": __version__,
+                              "companionControlVersion": CONTROL_VERSION, "companionStartedAt": stamp,
+                              "companionStoppedAt": "", "lastHeartbeatAt": stamp, "lastError": "",
+                              **({} if reserved else {"stopRequestedRunId": ""})})
+        last_tick = 0.0
+
+        def checkpoint():
+            nonlocal last_tick
+            if time.monotonic() - last_tick >= 15:
+                store.heartbeat()
+                last_tick = time.monotonic()
+            meta = store.runtime_meta()
+            return (meta.get("companionRunId") != run_id or meta.get("stopRequestedRunId") == run_id
+                    or bool(stop_event and stop_event.is_set()))
+
+        def wait(seconds):
+            deadline = time.monotonic() + seconds
+            while time.monotonic() < deadline:
+                if checkpoint():
+                    return True
+                time.sleep(min(.2, max(0, deadline - time.monotonic())))
+            return checkpoint()
+
+        def error(exc):
+            store.update_runtime({"lastError": str(exc)[:500]}, expected_run=run_id)
+
+        def deliver(title, message):
+            send_windows_balloon(title, message, wait=wait)
+
+        try:
+            while not checkpoint():
+                try:
+                    process_due(store, notify or deliver, checkpoint=checkpoint, on_error=error)
+                except Exception as exc:
+                    error(exc)
+                    LOG.exception("Storage notifier iteration failed")
+                if wait(poll_seconds):
+                    break
+        except BaseException as exc:
+            error(exc)
+            raise
+        finally:
+            store.update_runtime({"companionState": "stopped", "companionStoppedAt": _utc_iso(datetime.now(timezone.utc))}, expected_run=run_id)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="PNE Scheduler Windows storage alerts")
     parser.add_argument("--db", type=Path, default=default_storage_db())
     parser.add_argument("--poll-seconds", type=int, default=30)
+    parser.add_argument("--run-id", default=None)
     args = parser.parse_args(argv)
     if sys.platform != "win32":
         parser.error("이 알림 실행기는 Windows 사용자 세션에서만 실행됩니다.")
@@ -132,34 +200,18 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(str(exc))
     if not 5 <= args.poll_seconds <= 3600:
         parser.error("--poll-seconds는 5–3600 범위여야 합니다.")
-    # Windows file lock prevents a second login/startup process from claiming
-    # the same notifications. The DB can still be shared with the local API.
-    import msvcrt
-    lock_path = args.db.with_suffix(".notifier.lock")
-    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    args.db.parent.mkdir(parents=True, exist_ok=True)
     logging.basicConfig(
         filename=str(args.db.with_suffix(".notifier.log")),
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(message)s",
     )
-    with lock_path.open("a+b") as lock_file:
-        lock_file.seek(0)
-        lock_file.write(b"0")
-        lock_file.flush()
-        lock_file.seek(0)
-        try:
-            msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
-        except OSError:
-            LOG.error("보관 알림 실행기가 이미 실행 중입니다.")
-            return 2
-        store = StorageStore(args.db)
-        while True:
-            try:
-                store.heartbeat()
-                process_due(store, send_windows_balloon)
-            except Exception:
-                LOG.exception("Storage notifier iteration failed")
-            time.sleep(args.poll_seconds)
+    try:
+        run_companion(StorageStore(args.db), poll_seconds=args.poll_seconds, run_id=args.run_id)
+    except ResourceBusyError:
+        LOG.error("보관 알림 실행기가 이미 실행 중이거나 데이터 점검 중입니다.")
+        return 2
+    return 0
 
 
 if __name__ == "__main__":

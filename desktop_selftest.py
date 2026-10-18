@@ -26,7 +26,7 @@ def _exercise_gui(controller):
     root.report_callback_exception = lambda *args: errors.append(str(args))
     app = WorkspaceApp(root, controller)
     try:
-        _check(len(app.notebook.tabs()) == 6, "Six desktop panels missing")
+        _check(len(app.notebook.tabs()) == 7, "Seven desktop panels missing")
         _check(app.perform("addModule", {"moduleType": "rest"}), "UI edit was rejected")
         deadline = time.monotonic() + 30
         while app.busy and time.monotonic() < deadline:
@@ -59,7 +59,7 @@ def run_self_test(report: Path, *, gui=False):
     _check(bool(load_equipment_registry()), "Equipment registry missing from package")
     checks = ["network-denied", "equipment-resources"]
     with tempfile.TemporaryDirectory(prefix="pne-selftest-") as temporary:
-        work = Path(temporary) / "한글 경로 with spaces"
+        work = Path(temporary).resolve() / "한글 경로 with spaces"
         work.mkdir()
         controller = NativeController(data_dir=work / "data")
         controller.edit("setEquipmentUnit", {"unit": "PNE02"})
@@ -93,13 +93,24 @@ def run_self_test(report: Path, *, gui=False):
         controller.storage.set_archived(record["id"], False)
         _check(len(controller.storage.list_records()) == 1, "Storage persistence failed")
         checks.append("sqlite-storage-archive-restore")
+        plan = controller.data_action("backupPreview", {"includeCurrent": True})
+        backup = controller.data_action("backupCreate", {"includeCurrent": True, "token": plan["token"],
+            "outputPath": str(work / "backup.zip"), "externalWritesStopped": True})
+        inspection = controller.data_action("restoreInspect", {"archivePath": backup["path"]})
+        restored = controller.data_action("restoreApply", {"archivePath": backup["path"], "token": inspection["token"],
+            "destination": str(work / "restored")})
+        restored_controller = NativeController(data_dir=Path(restored["path"]))
+        _check(restored_controller.data_action("status")["companion"]["restorePaused"], "Restore did not pause alerts")
+        _check(len(restored_controller.storage.list_records()) == 1, "Backup record round-trip failed")
+        _check(len(restored_controller.library.methods()) == 1, "Backup method round-trip failed")
+        checks.append("verified-backup-new-location-restore-paused")
         if getattr(sys, "frozen", False):
             command = companion_command(controller.storage.path)
             _check(command[:2] == [sys.executable, "--storage-companion"], "Frozen notifier command mismatch")
             checks.append("frozen-notifier-dispatch-only")
         if gui:
             _exercise_gui(controller)
-            checks.append("actual-tk-six-panels-worker-edit")
+            checks.append("actual-tk-seven-panels-worker-edit")
         _check("flask" not in sys.modules, "Offline package imported Flask")
     with Path(report).open("x", encoding="utf-8") as stream:
         json.dump({"ok": True, "frozen": bool(getattr(sys, "frozen", False)),

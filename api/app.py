@@ -20,6 +20,8 @@ from typing import Any
 from ..import_session import ImportSession
 from ..library import MethodLibrary
 from ..storage_records import StorageStore, default_storage_db
+from ..data_backup import DataManager
+from ..data_safety import ResourceBusyError
 from . import routes
 from .errors import ApiError
 
@@ -59,17 +61,22 @@ class SessionRegistry:
         return found[1]
 
 
-def create_app(library_root: Path | None = None, storage_db_path: Path | None = None) -> Any:
+def create_app(library_root: Path | None = None, storage_db_path: Path | None = None, recovery_root: Path | None = None) -> Any:
     from flask import Flask, jsonify, request
 
     app = Flask(__name__)
     store = MethodLibrary(library_root)
     storage = StorageStore(storage_db_path or default_storage_db())
+    data_manager = DataManager(storage, store.root, recovery_root or storage.path.parent / "recovery")
     sessions = SessionRegistry()
 
     @app.errorhandler(ApiError)
     def _handle(error: ApiError):
         return jsonify(error.as_dict()), error.status
+
+    @app.errorhandler(ResourceBusyError)
+    def _busy(error):
+        return jsonify({"ok": False, "error": str(error)}), 409
 
     @app.errorhandler(Exception)
     def _unexpected(error: Exception):
@@ -115,6 +122,17 @@ def create_app(library_root: Path | None = None, storage_db_path: Path | None = 
         return jsonify(routes.plan(action, body()))
 
     # ---- local resources -------------------------------------------------
+
+    @app.post("/api/data/<action>")
+    def _data_action(action):
+        import zipfile
+        import sqlite3
+        try:
+            return jsonify(data_manager.action(action, body()))
+        except ResourceBusyError:
+            raise
+        except (ValueError, OSError, KeyError, TypeError, AttributeError, sqlite3.DatabaseError, zipfile.BadZipFile) as exc:
+            raise ApiError(f"데이터 작업을 완료하지 못했습니다: {exc}") from exc
 
     @app.get("/api/library")
     def _library():
@@ -243,14 +261,19 @@ def create_app(library_root: Path | None = None, storage_db_path: Path | None = 
     return app
 
 
-def main(host: str = "127.0.0.1", port: int = 8000) -> int:
+def main(host: str = "127.0.0.1", port: int = 8000, data_dir: Path | None = None) -> int:
     """Serve on localhost only.
 
     The lab PC holds the `.sch` originals and the CTSPro-authored templates; a
     server that can write those must not be reachable from the network. Binding
     to a routable address is a deliberate act, not a default.
     """
-    create_app().run(host=host, port=port)
+    if data_dir:
+        root = Path(data_dir).expanduser().resolve()
+        app = create_app(root / "library", root / "storage.sqlite3", root / "recovery")
+    else:
+        app = create_app()
+    app.run(host=host, port=port)
     return 0
 
 
