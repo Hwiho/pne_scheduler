@@ -84,6 +84,43 @@ for CTSPro display/Save-As review only and must not be started or run.
 
 ## Workspace
 
+### Offline desktop (Tk)
+
+```powershell
+python run_pne_scheduler_workspace.py
+# Optional: open the same project saved by the web workspace
+python run_pne_scheduler_workspace.py path\to\experiment.schproj
+# Optional: isolate library, storage and recovery data for testing
+python run_pne_scheduler_workspace.py --data-dir path\to\test-data
+```
+
+This is a native **Tk desktop application**, not an embedded browser. Python with
+Tcl/Tk is required; **Node, npm, Flask, Internet and a localhost server are not**.
+The source checkout can run directly without installing Python packages. On an
+air-gapped PC, transfer the checkout and install Python with Tcl/Tk ahead of time.
+Check the runtime with `python -m tkinter`. A standalone Windows executable is
+not supplied yet; CI widget checks do not replace testing the target lab PC.
+
+The six tabs cover cell/equipment, vertical protocol blocks, saved methods,
+exports/batches, existing SCH inspection and high-temperature storage. They call
+the **same Python operations and export gates as the web UI**. Numeric fields use
+one unit selector; press **Enter** or **적용** to commit. Use **파일 → 자동 복구 기록**
+after an interrupted session. Project files are interchangeable, while unsaved
+browser drafts must first be downloaded as `.schproj` to open in Tk.
+Opening/starting another native project begins a new document history; previous
+unsaved edits remain in recovery. A failed recovery write blocks that transition.
+
+The default library and storage database are shared on the same PC under
+`~/.pne_scheduler`. A `--data-dir` test database is separate from the normal
+Windows notification companion unless that companion is started for the same DB.
+The native storage tab starts the companion only on Windows after a button click;
+there is no automatic installation, startup registration or notification opt-in.
+
+See the [native parity and improvement roadmap](planning/NATIVE_WORKSPACE_ROADMAP.md)
+for acceptance criteria and remaining packaging/Windows/device checks.
+
+### Web workspace
+
 ```powershell
 # One command: starts the API and the screens, both on localhost
 python run_pne_scheduler_web.py     # → http://localhost:3000
@@ -121,6 +158,11 @@ Condition forms sit alongside the flow on desktop and open as a panel on narrow
 screens; detailed step fields load only when opened. Nested groups are not yet
 supported. Ungrouping preserves repetitions by creating individual boxes (up to 500).
 Nested LOOP files remain review-only until CTSPro/equipment verification.
+
+Saved methods retain their versions. Select a version and comparison baseline in
+**내 블록 · 저장된 방법**, inspect **방법 변경 미리보기**, then append or replace.
+Loading keeps the current cell capacity and equipment and can be undone as one change.
+Changing the project or selection invalidates the preview; it must be reviewed again.
 
 Cycle/RPT campaigns default to **one DC-IR current**. Pulse charge consumption is
 included in subsequent nominal SOC intervals. The entry SOC is an explicit assumption:
@@ -192,6 +234,12 @@ including those inside one repeating block. Fixed-mA steps are not rescaled. At 
 Windows notification checkpoints use the local SQLite database and a user-session
 companion. A running companion does not prove that Windows displayed the alert; verify
 notification settings on the actual Windows lab PC. This feature never controls equipment.
+
+The storage tab supports sample/ID search and status filters. **보관함으로 이동**
+hides a record and pauses notifications without deleting its schedule or alert history.
+Restore returns the original notification setting; overdue, unacknowledged reminders
+may then fire. Archiving is not experiment completion and cannot retract an OS alert
+already being delivered. See the [v2 follow-up roadmap](planning/V2_IMPROVEMENT_ROADMAP.md).
 
 Design rules the workspace follows:
 

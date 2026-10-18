@@ -435,6 +435,21 @@ tbody tr:hover { background: #f8fbf8; }
 .storage-success { color: var(--accent-strong); font-weight: 700; }
 .storage-record.completed { background: #f6f8f5; border-color: #dce3da; box-shadow: none; }
 .storage-record.completed::before { background: #a0b0a0; }
+.storage-record.archived { background: #f4f5f8; border-color: #d9dfe7; box-shadow: none; }
+.storage-record.archived::before { background: #8c94a6; }
+.method-browser-controls, .storage-toolbar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 14px 0; }
+.method-browser-controls label, .storage-toolbar label { display: grid; gap: 5px; color: var(--muted); font-size: 12px; font-weight: 650; }
+.method-browser-controls select, .storage-toolbar input, .storage-toolbar select { min-width: 0; width: 100%; }
+.method-preview { padding: 12px; margin-top: 12px; border: 1px solid #c9ddce; border-radius: 11px; background: #f7fbf7; font-size: 12px; overflow-wrap: anywhere; }
+.method-preview > p { margin: 7px 0; }
+.method-impact { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+.method-impact h3 { font-size: 13px; margin: 0 0 5px; }
+.method-impact p { margin: 5px 0; }
+.method-impact ul, .storage-history ul { padding-left: 18px; }
+.method-impact li, .storage-history li { margin-block: 5px; overflow-wrap: anywhere; }
+.saved-methods .action-row { margin-top: 12px; }
+.storage-archive-confirm { padding: 10px 12px; margin-top: 12px; border: 1px solid #dacdad; border-radius: 10px; background: #fffbef; color: #6e5725; font-size: 12px; }
+.storage-history { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 10px; font-size: 12px; color: var(--muted); }
 
 .import-file { overflow-wrap: anywhere; }
 .analysis-overview { background: var(--panel-alt); border: 1px solid var(--line); border-radius: 12px; padding: 17px; }
@@ -492,6 +507,7 @@ tbody tr:hover { background: #f8fbf8; }
 }
 
 @media (max-width: 600px) {
+  .method-browser-controls, .storage-toolbar { grid-template-columns: minmax(0, 1fr); }
   .workspace { padding: 18px 14px 24px; gap: 14px; }
   .workspace-header { gap: 16px; }
   .workspace-actions, .save-method { width: 100%; }

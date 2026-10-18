@@ -28,7 +28,7 @@ import os
 import re
 import tempfile
 import unicodedata
-from dataclasses import dataclass
+from dataclasses import dataclass, replace as dataclass_replace
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -77,7 +77,10 @@ def _atomic_write(path: Path, text: str) -> None:
         handle.flush()
         os.fsync(handle.fileno())
         handle.close()
-        os.replace(handle.name, path)
+        # Publish a complete file without ever replacing a concurrent save.
+        # The temporary file is on the same filesystem; link() is exclusive.
+        os.link(handle.name, path)
+        Path(handle.name).unlink()
     except BaseException:
         handle.close()
         Path(handle.name).unlink(missing_ok=True)
@@ -209,12 +212,13 @@ class MethodLibrary:
 
         identifier = method_id or self._id_for_name(name)
         version = self.latest_version_number(identifier) + 1
-        path = self.root / identifier / f"v{version:04d}.json"
+        directory = self._directory(identifier)
+        path = directory / f"v{version:04d}.json"
         # A skipped, damaged version is still a user's file. Reserve its name
         # rather than overwriting it when the next valid version is saved.
         while path.exists() or path.is_symlink():
             version += 1
-            path = self.root / identifier / f"v{version:04d}.json"
+            path = directory / f"v{version:04d}.json"
         entry = MethodVersion(
             method_id=identifier,
             version=version,
@@ -229,7 +233,14 @@ class MethodLibrary:
             saved_at=datetime.now().isoformat(timespec="seconds"),
             path=path,
         )
-        _atomic_write(path, json.dumps(entry.to_dict(), ensure_ascii=False, indent=2))
+        while True:
+            try:
+                _atomic_write(path, json.dumps(entry.to_dict(), ensure_ascii=False, indent=2))
+                break
+            except FileExistsError:
+                version += 1
+                path = directory / f"v{version:04d}.json"
+                entry = dataclass_replace(entry, version=version, path=path)
         return entry
 
     def _id_for_name(self, name: str) -> str:
@@ -252,12 +263,22 @@ class MethodLibrary:
 
     # ------------------------------------------------------------- reading
 
+    def _directory(self, method_id: str) -> Path:
+        if (not isinstance(method_id, str) or not method_id.strip()
+                or method_id in {".", ".."}
+                or any(character in method_id for character in "/\\:\x00")):
+            raise ValueError("저장된 방법 ID가 올바르지 않습니다.")
+        directory = self.root / method_id
+        if not directory.resolve().is_relative_to(self.root.resolve()):
+            raise ValueError("방법 라이브러리 밖의 경로는 사용할 수 없습니다.")
+        return directory
+
     def latest_version_number(self, method_id: str) -> int:
         versions = [entry.version for entry in self.versions(method_id)]
         return max(versions) if versions else 0
 
     def versions(self, method_id: str) -> tuple[MethodVersion, ...]:
-        directory = self.root / method_id
+        directory = self._directory(method_id)
         if not directory.is_dir():
             return ()
         found: list[MethodVersion] = []
@@ -271,21 +292,36 @@ class MethodLibrary:
         versions = self.versions(method_id)
         return versions[-1] if versions else None
 
+    def get(self, method_id: str, version: int | str | None = None) -> MethodVersion | None:
+        entries = self.versions(method_id)
+        if version is None:
+            return entries[-1] if entries else None
+        if (isinstance(version, bool) or not isinstance(version, (int, str))
+                or not re.fullmatch(r"[0-9]+", str(version)) or int(version) < 1):
+            raise ValueError("방법 버전은 1 이상의 정수여야 합니다.")
+        return next((entry for entry in entries if entry.version == int(version)), None)
+
     def methods(self) -> tuple[MethodVersion, ...]:
         """The newest version of every saved method, newest save first."""
         if not self.root.is_dir():
             return ()
-        latest = [
-            entry
-            for directory in sorted(self.root.iterdir())
-            if directory.is_dir()
-            for entry in (self.latest(directory.name),)
-            if entry is not None
-        ]
+        latest = []
+        for directory in sorted(self.root.iterdir()):
+            if not directory.is_dir() or directory.is_symlink():
+                continue
+            try:
+                entry = self.latest(directory.name)
+            except ValueError as exc:
+                LOG.warning("방법 디렉터리를 건너뜁니다: %s (%s)", directory, exc)
+                continue
+            if entry is not None:
+                latest.append(entry)
         return tuple(sorted(latest, key=lambda item: item.saved_at, reverse=True))
 
     def _read(self, path: Path) -> MethodVersion | None:
         try:
+            if path.is_symlink():
+                raise ValueError("symbolic links are not method versions")
             data = json.loads(path.read_text(encoding="utf-8"))
             if not isinstance(data, dict) or data.get("schema") != LIBRARY_SCHEMA:
                 raise ValueError("unsupported method schema")
@@ -349,6 +385,13 @@ class MethodLibrary:
             notes=tuple(notes),
             warnings=tuple(warnings),
         )
+
+
+def method_load_token(project: dict[str, Any], method: MethodVersion, *, replace: bool = False) -> str:
+    """Bind a reviewed load to the exact source, saved content, and load mode."""
+    payload = {"project": project, "method": method.to_dict(), "replace": replace}
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, ensure_ascii=False,
+                                     allow_nan=False).encode("utf-8")).hexdigest()
 
 
 def save_project_as_method(

@@ -4,13 +4,14 @@
 // payload the API returned — no screen recomputes a gate or a validation result.
 
 import { useEffect, useRef, useState } from "react";
-import { api, type Json, type MethodSummary, type Views } from "@/lib/api";
+import { api, type Json, type Views } from "@/lib/api";
 import { isRepeatedUnitDetail, parsePositiveRateList, supportsUnitInput } from "@/lib/unitInput";
 import { Field } from "./Field";
 import { ModuleFlow } from "./ModuleFlow";
 import { BatchExport } from "./BatchExport";
 import { UnitInput } from "./UnitInput";
 import { QpeedVoltageImport } from "./QpeedVoltageImport";
+import { SavedMethods } from "./SavedMethods";
 
 interface TabProps {
   views: Views;
@@ -99,18 +100,7 @@ export function ProtocolTab({ views, project, apply, select, plan, busy, library
   const [blockMessage, setBlockMessage] = useState("");
   const [planning, setPlanning] = useState(false);
   const [planError, setPlanError] = useState("");
-  const [methods, setMethods] = useState<MethodSummary[]>([]);
-  const [methodId, setMethodId] = useState("");
   const [savedBlockRevision, setSavedBlockRevision] = useState(0);
-  useEffect(() => {
-    let cancelled = false;
-    api.library().then((result) => {
-      if (cancelled) return;
-      setMethods(result.methods);
-      setMethodId((previous) => result.methods.some((method) => method.methodId === previous) ? previous : result.methods[0]?.methodId ?? "");
-    }).catch((error) => { if (!cancelled) setPlanError(error instanceof Error ? error.message : String(error)); });
-    return () => { cancelled = true; };
-  }, [libraryRevision, savedBlockRevision]);
   const [inspectorOpen, setInspectorOpen] = useState(false);
   const inspectorRef = useRef<HTMLDivElement>(null);
   const selectedRow = views.modules.find((module) => module.moduleId === views.selectedModule);
@@ -158,22 +148,7 @@ export function ProtocolTab({ views, project, apply, select, plan, busy, library
     <ModuleFlow views={views} project={project} apply={apply} select={select} onEdit={editModule} busy={busy} />
     <div className="protocol-grid">
       <div className="col protocol-tools">
-        <div className="card">
-          <h2>내 블록 · 저장된 방법</h2>
-          <p className="muted">저장된 블록을 현재 실험 끝에 추가합니다. 장비가 다르면 경고되므로 설정·전류 한계를 다시 확인하세요.</p>
-          <button disabled={busy || planning} onClick={async () => {
-            setPlanning(true); setPlanError("");
-            try { const result = await api.library(); setMethods(result.methods); setMethodId(result.methods[0]?.methodId ?? ""); }
-            catch (error) { setPlanError(error instanceof Error ? error.message : String(error)); }
-            finally { setPlanning(false); }
-          }}>저장 목록 새로고침</button>
-          {methods.length > 0 && <div className="col" style={{ marginTop: 10 }}>
-            <select aria-label="저장된 블록 선택" value={methodId} onChange={(event) => setMethodId(event.target.value)} disabled={busy || planning}>
-              {methods.map((method) => <option key={method.methodId} value={method.methodId}>{method.label} · {method.moduleCount}개 구간</option>)}
-            </select>
-            <button className="primary" disabled={busy || planning || !methodId} onClick={() => { void apply("loadMethod", { methodId }); }}>현재 실험에 추가</button>
-          </div>}
-        </div>
+        <SavedMethods project={project} apply={apply} busy={busy || planning} revision={`${libraryRevision}:${savedBlockRevision}`} />
         <div className="card">
           <h2>사이클 + RPT 캠페인</h2>
           {(

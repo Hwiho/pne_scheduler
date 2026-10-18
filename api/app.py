@@ -18,8 +18,6 @@ from pathlib import Path
 from typing import Any
 
 from ..import_session import ImportSession
-from ..io.template_writer import apply_sch_patch
-from ..io.validation_manifest import default_manifest_path, write_validation_manifest
 from ..library import MethodLibrary
 from ..storage_records import StorageStore, default_storage_db
 from . import routes
@@ -143,21 +141,11 @@ def create_app(library_root: Path | None = None, storage_db_path: Path | None = 
 
     @app.post("/api/import/<session_id>/stage")
     def _import_stage(session_id: str):
-        payload = body()
-        session = sessions.get(session_id)
-        try:
-            session.stage(
-                int(payload["stepNo"]), str(payload["field"]), float(payload["value"])
-            )
-        except (KeyError, TypeError, ValueError) as exc:
-            raise ApiError(f"편집 값이 잘못되었습니다: {exc}") from exc
-        return jsonify(routes.import_proposal(session))
+        return jsonify(routes.import_stage(sessions.get(session_id), body()))
 
     @app.post("/api/import/<session_id>/clear")
     def _import_clear(session_id: str):
-        session = sessions.get(session_id)
-        session.clear()
-        return jsonify(routes.import_proposal(session))
+        return jsonify(routes.import_clear(sessions.get(session_id)))
 
     @app.post("/api/import/<session_id>/plan")
     def _import_plan(session_id: str):
@@ -165,37 +153,7 @@ def create_app(library_root: Path | None = None, storage_db_path: Path | None = 
 
     @app.post("/api/import/<session_id>/patch")
     def _import_patch(session_id: str):
-        payload = body()
-        session = sessions.get(session_id)
-        output = Path(str(payload.get("outputPath", "")))
-        if payload.get("allowAnalysisOutput") is not True:
-            raise ApiError("분석용 파일임을 확인해야 저장할 수 있습니다.")
-        if not output.is_absolute() or output.suffix.lower() != ".sch":
-            raise ApiError("출력 경로는 .sch 확장자를 가진 절대 경로여야 합니다.")
-        manifest = default_manifest_path(output)
-        if output.exists() or manifest.exists():
-            raise ApiError("출력 파일이나 검증 기록이 이미 있습니다. 다른 이름을 지정하십시오.")
-        if not session.source_unchanged():
-            raise ApiError("원본 파일이 열린 뒤 바뀌었습니다. 다시 여십시오.")
-        proposal = session.propose_patch()
-        if proposal.rejected or proposal.plan is None:
-            raise ApiError("적용할 수 없는 편집이 있거나 유효한 패치 계획이 없습니다.")
-        try:
-            result = apply_sch_patch(
-                session.path, proposal.plan, output, allow_analysis_output=True
-            )
-            write_validation_manifest(manifest, result.report)
-        except (OSError, ValueError) as exc:
-            output.unlink(missing_ok=True)
-            manifest.unlink(missing_ok=True)
-            raise ApiError(f"SCH 패치에 실패했습니다: {exc}") from exc
-        return jsonify({
-            "ok": True,
-            "outputPath": str(output),
-            "manifestPath": str(manifest),
-            "equipmentExecutable": False,
-            "changedByteCount": result.report["changed_byte_count"],
-        })
+        return jsonify(routes.import_patch(sessions.get(session_id), body()))
 
     @app.post("/api/export")
     def _export():
@@ -207,8 +165,20 @@ def create_app(library_root: Path | None = None, storage_db_path: Path | None = 
 
     @app.get("/api/storage")
     def _storage_list():
-        return jsonify({"ok": True, "records": storage.list_records(),
+        return jsonify({"ok": True, "records": storage.list_records(
+                            include_archived=request.args.get("includeArchived") == "true"),
                         "companion": storage.companion_status()})
+
+    @app.post("/api/storage/<record_id>/archive")
+    def _storage_archive(record_id: str):
+        archived = body().get("archived")
+        if not isinstance(archived, bool):
+            raise ApiError("보관함 이동 여부는 true 또는 false여야 합니다.")
+        try:
+            storage.set_archived(record_id, archived)
+        except ValueError as exc:
+            raise ApiError(str(exc), status=404) from exc
+        return jsonify({"ok": True})
 
     @app.post("/api/storage")
     def _storage_add():
@@ -245,7 +215,8 @@ def create_app(library_root: Path | None = None, storage_db_path: Path | None = 
         try:
             storage.set_notifications(record_id, enabled)
         except ValueError as exc:
-            raise ApiError(str(exc), status=404) from exc
+            status = 404 if "찾을 수" in str(exc) else 400
+            raise ApiError(str(exc), status=status) from exc
         return jsonify({"ok": True})
 
     @app.post("/api/storage/<record_id>/alerts/<alert_id>/acknowledge")

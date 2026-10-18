@@ -7,6 +7,7 @@ an edit ahead of time is the cheapest way to stop a wrong one.
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 from typing import Any
@@ -19,6 +20,8 @@ _COMPARED_FIELDS = (
     "step_type", "mode", "c_rate", "cv_cutoff_c_rate", "current_mA",
     "cv_cutoff_mA", "voltage_v", "end_voltage_v", "end_time_s",
     "end_capacity_fraction", "dod_percent", "loop_goto_step", "loop_count",
+    "record_time_s", "record_dV_mV", "loop_reset_capacity", "goto_step_id",
+    "dcr_start_s", "dcr_end_s", "extra",
 )
 
 _FIELD_LABELS_KO = {
@@ -35,6 +38,13 @@ _FIELD_LABELS_KO = {
     "dod_percent": "DOD",
     "loop_goto_step": "LOOP 대상",
     "loop_count": "LOOP 횟수",
+    "record_time_s": "기록 시간 간격",
+    "record_dV_mV": "기록 전압 간격(mV)",
+    "loop_reset_capacity": "반복 시 용량 초기화",
+    "goto_step_id": "SOC 참조 스텝",
+    "dcr_start_s": "DC-IR 시작 시간",
+    "dcr_end_s": "DC-IR 종료 시간",
+    "extra": "추가 스텝 설정",
 }
 
 
@@ -116,10 +126,30 @@ class StepDiff:
 
 
 def diff_steps(before: list[StepIntent], after: list[StepIntent]) -> StepDiff:
-    """Align two step lists by shape, then report per-field differences."""
-    before_keys = [_signature(step) for step in before]
-    after_keys = [_signature(step) for step in after]
-    matcher = SequenceMatcher(a=before_keys, b=after_keys, autojunk=False)
+    """Anchor unchanged conditions before aligning changed regions by shape.
+
+    Shape-only alignment can match an existing rest to a newly appended rest,
+    misreporting both an insertion and a change to the existing step.
+    """
+    matcher = SequenceMatcher(a=[_condition_key(step) for step in before],
+                              b=[_condition_key(step) for step in after], autojunk=False)
+    changes: list[StepChange] = []
+    for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+        if tag != "equal":
+            changes.extend(_shape_changes(before[i1:i2], after[j1:j2], i1, j1))
+    changes.sort(key=lambda change: (change.after_index or change.before_index or 0))
+    return StepDiff(tuple(changes), len(before), len(after))
+
+
+def _condition_key(step: StepIntent) -> str:
+    return json.dumps([getattr(step, name) for name in _COMPARED_FIELDS],
+                      sort_keys=True, ensure_ascii=False, default=str)
+
+
+def _shape_changes(before: list[StepIntent], after: list[StepIntent],
+                   before_offset: int, after_offset: int) -> list[StepChange]:
+    matcher = SequenceMatcher(a=[_signature(step) for step in before],
+                              b=[_signature(step) for step in after], autojunk=False)
     changes: list[StepChange] = []
 
     for tag, i1, i2, j1, j2 in matcher.get_opcodes():
@@ -132,18 +162,19 @@ def diff_steps(before: list[StepIntent], after: list[StepIntent]) -> StepDiff:
                 fields = _field_changes(old, new)
                 if fields:
                     changes.append(
-                        StepChange("changed", i1 + offset + 1, j1 + offset + 1, _label(new), fields)
+                        StepChange("changed", before_offset + i1 + offset + 1,
+                                   after_offset + j1 + offset + 1, _label(new), fields)
                     )
             for index in range(i1 + paired, i2):
-                changes.append(StepChange("removed", index + 1, None, _label(before[index])))
+                changes.append(StepChange("removed", before_offset + index + 1, None, _label(before[index])))
             for index in range(j1 + paired, j2):
-                changes.append(StepChange("added", None, index + 1, _label(after[index])))
+                changes.append(StepChange("added", None, after_offset + index + 1, _label(after[index])))
         elif tag == "delete":
             for index in range(i1, i2):
-                changes.append(StepChange("removed", index + 1, None, _label(before[index])))
+                changes.append(StepChange("removed", before_offset + index + 1, None, _label(before[index])))
         elif tag == "insert":
             for index in range(j1, j2):
-                changes.append(StepChange("added", None, index + 1, _label(after[index])))
+                changes.append(StepChange("added", None, after_offset + index + 1, _label(after[index])))
 
     # Same shape, different values: SequenceMatcher reports these as equal
     # because the signature ignores magnitudes, so compare aligned pairs too.
@@ -155,11 +186,11 @@ def diff_steps(before: list[StepIntent], after: list[StepIntent]) -> StepDiff:
             fields = _field_changes(old, new)
             if fields:
                 changes.append(
-                    StepChange("changed", i1 + offset + 1, j1 + offset + 1, _label(new), fields)
+                    StepChange("changed", before_offset + i1 + offset + 1,
+                               after_offset + j1 + offset + 1, _label(new), fields)
                 )
 
-    changes.sort(key=lambda change: (change.after_index or change.before_index or 0))
-    return StepDiff(tuple(changes), len(before), len(after))
+    return changes
 
 
 def diff_projects(before: ScheduleProject, after: ScheduleProject) -> StepDiff:
@@ -233,8 +264,10 @@ def _render(field: str, value: Any) -> str:
         return units.format_current_mA(float(value))
     if field in {"voltage_v", "end_voltage_v"}:
         return units.format_voltage(float(value))
-    if field == "end_time_s":
+    if field in {"end_time_s", "record_time_s", "dcr_start_s", "dcr_end_s"}:
         return units.format_duration_ko(float(value))
+    if field == "end_capacity_fraction":
+        return units.format_percent(float(value) * 100)
     if field == "dod_percent":
         return units.format_percent(float(value))
     return str(value)

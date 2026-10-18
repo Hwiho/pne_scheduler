@@ -514,11 +514,22 @@ class WorkspaceModel:
     def saved_methods(self) -> tuple[MethodVersion, ...]:
         return self.library().methods()
 
-    def load_saved_method(self, method_id: str) -> tuple[str, ...]:
-        entry = self.library().latest(method_id)
+    def load_saved_method(
+        self, method_id: str, version: int | str | None = None, *,
+        replace: bool = False, preview_token: str | None = None,
+    ) -> tuple[str, ...]:
+        from ..library import method_load_token
+
+        if not isinstance(replace, bool):
+            raise ValueError("방법 교체 여부는 true 또는 false여야 합니다.")
+        entry = self.library().get(method_id, version)
         if entry is None:
-            raise ValueError("저장된 방법을 찾을 수 없습니다.")
-        return self.load_method(self.plan_method_load(entry))
+            raise ValueError("저장된 방법 또는 버전을 찾을 수 없습니다.")
+        if preview_token is not None and preview_token != method_load_token(
+            self.project.to_dict(), entry, replace=replace,
+        ):
+            raise ValueError("실험 또는 저장된 방법이 변경되었습니다. 다시 미리보기하세요.")
+        return self.load_method(self.plan_method_load(entry), replace=replace)
 
     def method_versions(self, method_id: str) -> tuple[MethodVersion, ...]:
         return self.library().versions(method_id)

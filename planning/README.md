@@ -13,6 +13,8 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 | [`PROJECT_STRUCTURE.md`](PROJECT_STRUCTURE.md) | Directory map, code rules, cleanup workflow |
 | [`LAB_DATA_POLICY.md`](LAB_DATA_POLICY.md) | PNE##.zip only, per-unit layout, CTS build |
 | [`ROADMAP.md`](ROADMAP.md) | SCH structure, gates, **§5.6 lessons checklist**, modular UX vision (§1.1 / §6.6) |
+| [`V2_IMPROVEMENT_ROADMAP.md`](V2_IMPROVEMENT_ROADMAP.md) | v2 baseline, method version review, reversible storage archive, and next implementation gates |
+| [`NATIVE_WORKSPACE_ROADMAP.md`](NATIVE_WORKSPACE_ROADMAP.md) | Offline Tk/web functional parity, shared operations, native acceptance and distribution plan |
 | [`GATE_H_PLAN.md`](GATE_H_PLAN.md) | **Planned** per-cell capacity lineage, batch SCH generation, DC-IR policy and Windows storage reminders; includes H0 inputs and exit tests |
 | [`LAB_CORPUS_REPORT.md`](LAB_CORPUS_REPORT.md) | **Generated** per-cycler zip analysis (human-readable) |
 

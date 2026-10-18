@@ -99,6 +99,9 @@ def process_due(store: StorageStore, notify: Callable[[str, str], None],
     moment = now or datetime.now(timezone.utc)
     sent = 0
     for alert in store.claim_due(now=moment):
+        if not store.alert_can_notify(alert["id"]):
+            store.release_claim(alert["id"])
+            continue
         try:
             if alert["kind"] == "checkpoint":
                 title = "고온저장 중간 확인일 도달"

@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { api, type StorageRecord, type StorageResponse } from "@/lib/api";
+import { filterStorageRecords, storageNeedsAttention, type StorageFilter } from "@/lib/storageView";
 
 const LEGACY_KEY = "pne_scheduler.storage_tracker.v1";
 
@@ -47,10 +48,21 @@ export function StorageTracker() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<StorageFilter>("current");
+  const [archiveAction, setArchiveAction] = useState<{ id: string; archived: boolean } | null>(null);
+  const refreshRequest = useRef(0);
 
   const refresh = useCallback(async () => {
-    try { setData(await api.storage()); }
-    catch (err) { setError(err instanceof Error ? err.message : String(err)); }
+    const ticket = ++refreshRequest.current;
+    try {
+      const result = await api.storage(true);
+      if (ticket !== refreshRequest.current) return false;
+      setData(result); return true;
+    } catch (err) {
+      if (ticket === refreshRequest.current) setError(err instanceof Error ? err.message : String(err));
+      return false;
+    }
   }, []);
 
   useEffect(() => {
@@ -61,12 +73,12 @@ export function StorageTracker() {
     if (previous.error) setError(previous.error);
     void refresh();
     const timer = window.setInterval(() => { setNow(Date.now()); void refresh(); }, 60_000);
-    return () => window.clearInterval(timer);
+    return () => { window.clearInterval(timer); refreshRequest.current += 1; };
   }, [refresh]);
 
   async function run(action: () => Promise<unknown>, success: string) {
     setBusy(true); setError(""); setMessage("");
-    try { await action(); await refresh(); setMessage(success); }
+    try { await action(); if (await refresh()) setMessage(success); }
     catch (err) { setError(err instanceof Error ? err.message : String(err)); }
     finally { setBusy(false); }
   }
@@ -92,6 +104,10 @@ export function StorageTracker() {
 
   const importedIds = new Set(data?.records.map((row) => row.id) ?? []);
   const pendingLegacy = legacy.filter((row) => !importedIds.has(row.id));
+  const records = data?.records ?? [];
+  const visibleRecords = filterStorageRecords(records, query, filter, now);
+  const archivedCount = records.filter((record) => record.archivedAt).length;
+  const attentionCount = records.filter((record) => storageNeedsAttention(record, now)).length;
 
   return <div className="col storage-tracker">
     <div className="card">
@@ -120,21 +136,31 @@ export function StorageTracker() {
       <div className="resource-heading">
         <div>
           <span className="eyebrow">STORAGE LOG</span>
-          <h2>보관 기록 · {data ? `${data.records.filter((row) => !row.completedAt).length}개 진행 중` : "불러오는 중"}</h2>
+          <h2>보관 기록 · {data ? `${records.filter((row) => !row.completedAt && !row.archivedAt).length}개 진행 중` : "불러오는 중"}</h2>
           <p className="resource-description">목표 시각과 중간 확인 일정을 시료별로 검토하고, 확인 이력을 남깁니다.</p>
         </div>
+        <button disabled={busy || !data} onClick={() => { setError(""); void refresh(); }}>보관 목록 새로고침</button>
       </div>
+      <div className="storage-toolbar">
+        <label>시료명·ID 검색<input type="search" value={query} onChange={(event) => { setQuery(event.target.value); setArchiveAction(null); }} placeholder="시료명 또는 셀 ID" /></label>
+        <label>기록 상태<select value={filter} onChange={(event) => { setFilter(event.target.value as StorageFilter); setArchiveAction(null); }}>
+          <option value="current">현재 목록</option><option value="active">진행 중</option><option value="attention">확인 필요</option>
+          <option value="completed">완료</option><option value="archived">보관함</option><option value="all">전체 · 보관함 포함</option>
+        </select></label>
+      </div>
+      {data && <p className="muted" role="status">표시 {visibleRecords.length}개 / 전체 {records.length}개 · 확인 필요 {attentionCount}개 · 보관함 {archivedCount}개</p>}
       {!data && <p className="muted" role="status">로컬 기록을 불러오는 중입니다.</p>}
-      {data?.records.length === 0 && <div className="empty-state"><span aria-hidden="true">◷</span><h3>등록된 보관 시료가 없습니다</h3><p>위 입력란에서 첫 시료의 시작 시각, 온도, 목표 기간을 기록하세요.</p></div>}
-      <div className="storage-records">{data?.records.map((record) => {
+      {data && records.length === 0 && <div className="empty-state"><span aria-hidden="true">◷</span><h3>등록된 보관 시료가 없습니다</h3><p>위 입력란에서 첫 시료의 시작 시각, 온도, 목표 기간을 기록하세요.</p></div>}
+      {data && records.length > 0 && visibleRecords.length === 0 && <div className="empty-state"><h3>조건에 맞는 기록이 없습니다</h3><p>검색어나 기록 상태를 바꿔 보세요. 보관함의 기록도 복원할 수 있습니다.</p><button onClick={() => { setQuery(""); setFilter("current"); }}>검색·필터 초기화</button></div>}
+      <div className="storage-records">{visibleRecords.map((record) => {
         const start = Date.parse(record.startedAt);
         const finish = Date.parse(record.dueAt) || start + record.targetDays * 86_400_000;
         const due = now >= finish;
         const elapsedUntil = record.completedAt ? Date.parse(record.completedAt) : now;
-        return <article className={`storage-record${record.completedAt ? " completed" : ""}`} key={record.id} aria-labelledby={`storage-record-${record.id}`}>
-          <div className="row storage-record-title"><strong id={`storage-record-${record.id}`}>{record.sample}</strong><span className={record.completedAt ? "stage-pill" : due ? "badge" : "stage-pill"}>{record.completedAt ? "완료" : due ? "목표 도달" : "보관 중"}</span></div>
+        return <article className={`storage-record${record.completedAt ? " completed" : ""}${record.archivedAt ? " archived" : ""}`} key={record.id} aria-labelledby={`storage-record-${record.id}`}>
+          <div className="row storage-record-title"><strong id={`storage-record-${record.id}`}>{record.sample}</strong><span className={record.completedAt || record.archivedAt ? "stage-pill" : due ? "badge" : "stage-pill"}>{record.archivedAt ? "보관함" : record.completedAt ? "완료" : due ? "목표 도달" : "보관 중"}</span></div>
           <div className="storage-elapsed">{record.completedAt ? "완료 시 경과" : "경과"} {duration(elapsedUntil - start)}</div>
-          <p className="muted">{record.temperatureC}°C · {record.notifyEnabled ? "Windows 알림 요청" : "알림 끔"}{record.notifiedAt ? " · 알림 전송됨" : ""}</p>
+          <p className="muted">{record.temperatureC}°C · {record.archivedAt ? "보관함 · 알림 중지" : record.notifyEnabled ? "Windows 알림 요청" : "알림 끔"}{record.notifiedAt ? " · 알림 전송 이력 있음" : ""}</p>
           <p className="muted">시작: <time dateTime={record.startedAt}>{new Date(start).toLocaleString("ko-KR")}</time></p>
           <p className="muted">목표: <time dateTime={record.dueAt}>{new Date(finish).toLocaleString("ko-KR")}</time> ({record.targetDays}일)</p>
           {record.completedAt ? <p className="muted">완료: <time dateTime={record.completedAt}>{new Date(elapsedUntil).toLocaleString("ko-KR")}</time> · 완료 기록은 알림을 보내지 않습니다.</p> : <p className="muted">{due ? `목표보다 ${duration(now - finish)} 지남` : `목표까지 ${duration(finish - now)} 남음`}</p>}
@@ -142,20 +168,29 @@ export function StorageTracker() {
             const effectiveDue = Date.parse(alert.snoozedUntil ?? alert.dueAt);
             const alertDue = now >= effectiveDue;
             const label = alert.kind === "final" ? `최종 목표 ${record.targetDays}일` : `중간 확인 ${alert.checkpointDay}일`;
-            const state = alert.acknowledgedAt ? "확인됨" : record.completedAt ? "보관 완료 · 알림 중지" : alert.snoozedUntil && !alertDue ? "다시 알림 대기" : alert.notifiedAt ? "알림 전송됨" : alertDue ? "확인 필요" : "예정";
+            const state = alert.acknowledgedAt ? "확인됨" : record.archivedAt ? "보관함 · 알림 중지" : record.completedAt ? "보관 완료 · 알림 중지" : alert.snoozedUntil && !alertDue ? "다시 알림 대기" : alert.notifiedAt ? "알림 전송됨" : alertDue ? "확인 필요" : "예정";
             return <div className="storage-migration" key={alert.id}>
               <strong>{label} · {state}</strong>
               <p className="muted"><time dateTime={alert.snoozedUntil ?? alert.dueAt}>{new Date(effectiveDue).toLocaleString("ko-KR")}</time>{alert.snoozedUntil ? " (다시 알림)" : ""}</p>
-              {!record.completedAt && alertDue && !alert.acknowledgedAt && <div className="action-row">
+              {!record.completedAt && !record.archivedAt && alertDue && !alert.acknowledgedAt && <div className="action-row">
                 <button type="button" className="chip" disabled={busy} onClick={() => void run(() => api.acknowledgeStorageAlert(record.id, alert.id), `${label} 알림을 확인했습니다.`)}>확인</button>
                 <button type="button" className="chip" disabled={busy} onClick={() => void run(() => api.snoozeStorageAlert(record.id, alert.id, new Date(Date.now() + 86_400_000).toISOString()), `${label} 알림을 1일 미뤘습니다.`)}>1일 후 다시 알림</button>
               </div>}
             </div>;
           })}</div>
           <div className="action-row">
-            <button type="button" className="chip" disabled={busy} onClick={() => void run(() => api.completeStorage(record.id, !record.completedAt), record.completedAt ? "보관 기록을 다시 진행 중으로 표시했습니다." : "보관 기록을 완료로 표시했습니다.")}>{record.completedAt ? "완료 취소" : "완료 표시"}</button>
-            <button type="button" className="chip" disabled={busy || !!record.completedAt} title={record.completedAt ? "완료 취소 후 알림을 설정할 수 있습니다." : undefined} onClick={() => void run(() => api.storageNotifications(record.id, !record.notifyEnabled), record.notifyEnabled ? "Windows 알림을 껐습니다. 일정과 확인 이력은 보존했습니다." : "Windows 알림을 켰습니다. 실행 중인 Windows 알림 프로그램이 확인 전 알림을 처리합니다.")}>{record.notifyEnabled ? "Windows 알림 끄기" : "Windows 알림 켜기"}</button>
+            <button type="button" className="chip" disabled={busy || !!record.archivedAt} onClick={() => void run(() => api.completeStorage(record.id, !record.completedAt), record.completedAt ? "보관 기록을 다시 진행 중으로 표시했습니다." : "보관 기록을 완료로 표시했습니다.")}>{record.completedAt ? "완료 취소" : "완료 표시"}</button>
+            <button type="button" className="chip" disabled={busy || !!record.completedAt || !!record.archivedAt} title={record.archivedAt ? "보관함에서 복원한 후 알림을 설정할 수 있습니다." : record.completedAt ? "완료 취소 후 알림을 설정할 수 있습니다." : undefined} onClick={() => void run(() => api.storageNotifications(record.id, !record.notifyEnabled), record.notifyEnabled ? "Windows 알림을 껐습니다. 일정과 확인 이력은 보존했습니다." : "Windows 알림을 켰습니다. 실행 중인 Windows 알림 프로그램이 확인 전 알림을 처리합니다.")}>{record.notifyEnabled ? "Windows 알림 끄기" : "Windows 알림 켜기"}</button>
+            <button type="button" className="chip" disabled={busy} onClick={() => setArchiveAction({ id: record.id, archived: !record.archivedAt })}>{record.archivedAt ? "보관함에서 복원" : "보관함으로 이동"}</button>
           </div>
+          {archiveAction?.id === record.id && archiveAction.archived !== !!record.archivedAt && <div className="storage-archive-confirm" role="region" aria-label="보관함 작업 확인">
+            <p>{archiveAction.archived ? "삭제하지 않고 보관함으로 옮깁니다. 일정과 확인 이력은 유지하고 새 알림 전송을 중지합니다. 실제 실험 종료를 의미하지 않으며 이미 전송 중인 알림은 취소되지 않을 수 있습니다." : "원래 일정과 확인 이력을 유지해 복원합니다. 알림이 켜져 있고 진행 중인 기록이면, 기한이 지난 미확인 알림이 실행기에서 발송될 수 있습니다."}</p>
+            <div className="action-row"><button disabled={busy} onClick={() => {
+              const action = archiveAction;
+              void run(async () => { await api.archiveStorage(action.id, action.archived); setArchiveAction(null); }, action.archived ? "보관함으로 옮겼습니다. 기록·일정·확인 이력은 보존했습니다." : "보관함에서 복원했습니다. 원래 알림 설정과 이력을 유지했습니다.");
+            }}>{archiveAction.archived ? "보관함 이동 확인" : "복원 확인"}</button><button disabled={busy} onClick={() => setArchiveAction(null)}>취소</button></div>
+          </div>}
+          {!!record.archiveHistory?.length && <details className="storage-history"><summary>보관함 이동·복원 이력 ({record.archiveHistory.length})</summary><ul>{record.archiveHistory.map((event, index) => <li key={index}>{event.action === "archived" ? "보관함 이동" : "복원"} · <time dateTime={event.at}>{new Date(event.at).toLocaleString("ko-KR")}</time></li>)}</ul></details>}
         </article>;
       })}</div>
     </div>

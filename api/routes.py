@@ -21,10 +21,13 @@ import json
 from typing import Any, Callable
 
 from ..edit.steps import StepEditError
+from ..edit.diff import diff_projects, StepDiff
 from ..batch import export_cell_batch as write_cell_batch, plan_cell_batch
 from ..exporting import ExportBlocked, export_preview, export_review_candidate
 from ..import_session import ImportSession
-from ..library import MethodLibrary, MethodVersion
+from ..io.template_writer import apply_sch_patch
+from ..io.validation_manifest import default_manifest_path, write_validation_manifest
+from ..library import MethodLibrary, MethodVersion, method_load_token
 from ..protocol.explain import explain_schedule, format_explanation
 from ..protocol.module_content import derive_module_content
 from ..spec.form import build_module_form
@@ -209,7 +212,10 @@ TRANSFORMS: dict[str, Callable[[WorkspaceModel, dict[str, Any]], Any]] = {
     "removeModule": lambda m, a: m.remove_module(a["moduleId"]),
     "duplicateModule": lambda m, a: m.duplicate_module(a["moduleId"]),
     "groupModules": lambda m, a: m.group_modules(a["moduleIds"], a["name"], a.get("repeatCount", 1)),
-    "loadMethod": lambda m, a: m.load_saved_method(a["methodId"]),
+    "loadMethod": lambda m, a: m.load_saved_method(
+        a["methodId"], a.get("version"), replace=a.get("replace", False),
+        preview_token=a.get("previewToken"),
+    ),
     "ungroupModule": lambda m, a: m.ungroup_module(a["moduleId"]),
     "setGroupChildParam": lambda m, a: m.set_group_child_param(a["moduleId"], int(a["index"]), a["key"], a["text"]),
     "detachGroupChild": lambda m, a: m.detach_group_child(
@@ -393,10 +399,13 @@ def library_list(store: MethodLibrary) -> dict[str, Any]:
 
 
 def library_versions(store: MethodLibrary, method_id: str) -> dict[str, Any]:
-    return {
-        "ok": True,
-        "versions": [_method_json(e) for e in store.versions(method_id)],
-    }
+    try:
+        return {
+            "ok": True,
+            "versions": [_method_json(e) for e in store.versions(method_id)],
+        }
+    except ValueError as exc:
+        raise ApiError(str(exc)) from exc
 
 
 def library_save(store: MethodLibrary, payload: dict[str, Any]) -> dict[str, Any]:
@@ -409,31 +418,71 @@ def library_save(store: MethodLibrary, payload: dict[str, Any]) -> dict[str, Any
     return {"ok": True, "method": _method_json(entry)}
 
 
+def _load_impact(diff: StepDiff) -> dict[str, Any]:
+    return {"headline": diff.headline(), "beforeCount": diff.before_count,
+            "afterCount": diff.after_count, "note": diff.note,
+            "lines": list(diff.preview_lines(20))}
+
+
 def library_load(store: MethodLibrary, payload: dict[str, Any]) -> dict[str, Any]:
     model = _model(payload, library=store)
-    entry = store.latest(str(payload.get("methodId", "")))
+    replace = payload.get("replace", False)
+    preview = payload.get("preview", False)
+    if not isinstance(replace, bool) or not isinstance(preview, bool):
+        raise ApiError("미리보기와 교체 여부는 true 또는 false여야 합니다.")
+    try:
+        entry = store.get(payload.get("methodId", ""), payload.get("version"))
+    except ValueError as exc:
+        raise ApiError(str(exc)) from exc
     if entry is None:
-        raise ApiError("저장된 방법을 찾을 수 없습니다.", status=404)
-    version = payload.get("version")
-    if version is not None:
-        entry = next(
-            (v for v in store.versions(entry.method_id) if v.version == int(version)),
-            None,
-        )
-        if entry is None:
-            raise ApiError("그 버전을 찾을 수 없습니다.", status=404)
+        raise ApiError("저장된 방법 또는 버전을 찾을 수 없습니다.", status=404)
 
     load_plan = model.plan_method_load(entry)
-    if payload.get("preview"):
+    if preview:
+        source = model.project.copy()
+        impact = None
+        version_diff = None
+        if load_plan.ok:
+            try:
+                model.load_method(load_plan, replace=replace)
+                impact = _load_impact(diff_projects(source, model.project))
+                compare_version = payload.get("compareVersion")
+                if compare_version is None:
+                    older = [item for item in store.versions(entry.method_id) if item.version < entry.version]
+                    baseline = older[-1] if older else None
+                else:
+                    baseline = store.get(entry.method_id, compare_version)
+                    if baseline is None:
+                        raise ApiError("비교할 버전을 찾을 수 없습니다.", status=404)
+                if baseline is not None:
+                    comparison = _model({"project": source.to_dict()}, library=store)
+                    comparison.load_method(comparison.plan_method_load(baseline), replace=True)
+                    before = comparison.project.copy()
+                    comparison.load_method(comparison.plan_method_load(entry), replace=True)
+                    version_diff = {
+                        "baseVersion": baseline.version, "headVersion": entry.version,
+                        **_load_impact(diff_projects(before, comparison.project)),
+                        "metadataChanges": [label for key, label in (
+                            ("name", "이름 변경"), ("description", "설명 변경"),
+                            ("equipment_unit", "저장 장비 변경"),
+                            ("equipment_layout", "저장 레이아웃 변경"),
+                        ) if getattr(baseline, key) != getattr(entry, key)],
+                    }
+            except ValueError as exc:
+                raise ApiError(str(exc)) from exc
         return {
             "ok": load_plan.ok,
             "method": _method_json(entry),
             "notes": list(load_plan.notes),
             "warnings": list(load_plan.warnings),
             "errors": list(load_plan.errors),
+            "token": method_load_token(source.to_dict(), entry, replace=replace),
+            "impact": impact,
+            "versionDiff": version_diff,
         }
     try:
-        model.load_method(load_plan, replace=bool(payload.get("replace")))
+        model.load_saved_method(entry.method_id, entry.version, replace=replace,
+                                preview_token=payload.get("previewToken"))
     except ValueError as exc:
         raise ApiError(str(exc)) from exc
     return {
@@ -589,6 +638,45 @@ def import_proposal(session: ImportSession) -> dict[str, Any]:
         "warnings": list(proposal.warnings),
         "plan": proposal.plan.to_dict() if proposal.plan else None,
     }
+
+
+def import_stage(session: ImportSession, payload: dict[str, Any]) -> dict[str, Any]:
+    try:
+        session.stage(int(payload["stepNo"]), str(payload["field"]), float(payload["value"]))
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ApiError(f"편집 값이 잘못되었습니다: {exc}") from exc
+    return import_proposal(session)
+
+
+def import_clear(session: ImportSession) -> dict[str, Any]:
+    session.clear()
+    return import_proposal(session)
+
+
+def import_patch(session: ImportSession, payload: dict[str, Any]) -> dict[str, Any]:
+    """One guarded patch path for both native and HTTP clients."""
+    output = Path(str(payload.get("outputPath", "")))
+    if payload.get("allowAnalysisOutput") is not True:
+        raise ApiError("분석용 파일임을 확인해야 저장할 수 있습니다.")
+    if not output.is_absolute() or output.suffix.lower() != ".sch":
+        raise ApiError("출력 경로는 .sch 확장자를 가진 절대 경로여야 합니다.")
+    manifest = default_manifest_path(output)
+    if output.exists() or manifest.exists():
+        raise ApiError("출력 파일이나 검증 기록이 이미 있습니다. 다른 이름을 지정하십시오.")
+    if not session.source_unchanged():
+        raise ApiError("원본 파일이 열린 뒤 바뀌었습니다. 다시 여십시오.")
+    proposal = session.propose_patch()
+    if proposal.rejected or proposal.plan is None:
+        raise ApiError("적용할 수 없는 편집이 있거나 유효한 패치 계획이 없습니다.")
+    try:
+        result = apply_sch_patch(session.path, proposal.plan, output, allow_analysis_output=True)
+        write_validation_manifest(manifest, result.report)
+    except (OSError, ValueError) as exc:
+        output.unlink(missing_ok=True)
+        manifest.unlink(missing_ok=True)
+        raise ApiError(f"SCH 패치에 실패했습니다: {exc}") from exc
+    return {"ok": True, "outputPath": str(output), "manifestPath": str(manifest),
+            "equipmentExecutable": False, "changedByteCount": result.report["changed_byte_count"]}
 
 
 __all__ = [

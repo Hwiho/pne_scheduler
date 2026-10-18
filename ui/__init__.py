@@ -8,25 +8,17 @@ from .flow_model import (
 )
 
 
-def launch_workspace(initial_path=None) -> int:
-    """Point the user at the web workspace.
-
-    The Tk and Qt shells were removed in Gate G4: maintaining two of them was
-    already producing features that existed in only one. The workspace is now
-    `web/` over `api/`, which is two processes rather than one import, so this
-    says how to start them instead of pretending it can.
-    """
+def launch_workspace(initial_path=None, *, data_dir=None) -> int:
+    """Launch the offline Tk client over the shared web application services."""
     import sys
-
-    print(
-        "워크스페이스는 웹으로 옮겨졌습니다.\n"
-        "  1) python run_pne_scheduler_api.py\n"
-        "  2) cd web && npm run dev   → http://localhost:3000",
-        file=sys.stderr,
-    )
-    if initial_path is not None:
-        print(f"열려던 파일: {initial_path}", file=sys.stderr)
-    return 2
+    try:
+        from .tk_workspace import launch_workspace as launch
+    except ImportError as exc:
+        if exc.name not in {"tkinter", "_tkinter"}:
+            raise
+        print("Tcl/Tk가 포함된 Python을 설치하세요. 웹 서버는 필요하지 않습니다.", file=sys.stderr)
+        return 2
+    return launch(initial_path, data_dir=data_dir)
 
 
 def launch_flow_editor(*args, **kwargs):

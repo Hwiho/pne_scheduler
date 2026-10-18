@@ -11,8 +11,6 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-import os
-import tempfile
 import uuid
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -20,6 +18,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Iterator, TypeVar
 
+from ..atomic_files import atomic_write_text as _atomic_write
 from ..ir.cell_profile import CellProfile
 from ..ir.loader import ProjectLoad, load_project_lenient
 from ..ir.project import ScheduleProject
@@ -227,7 +226,10 @@ class ProjectDocument:
         self.path = target
         self._saved_snapshot = self.project.to_dict()
         self.load_repairs = ()
-        self.clear_autosave()
+        try:
+            self.clear_autosave()
+        except OSError as exc:
+            LOG.warning("프로젝트는 저장했지만 복구 기록을 정리하지 못했습니다: %s", exc)
         self._consume_recovered_snapshot()
         return target
 
@@ -347,20 +349,6 @@ class ProjectDocument:
             snapshot.autosave_path.unlink()
         except FileNotFoundError:
             pass
-
-
-def _atomic_write(path: Path, text: str) -> None:
-    handle, temp_name = tempfile.mkstemp(dir=str(path.parent), prefix=".autosave-")
-    try:
-        with os.fdopen(handle, "w", encoding="utf-8") as stream:
-            stream.write(text)
-        os.replace(temp_name, path)
-    except BaseException:
-        try:
-            os.unlink(temp_name)
-        except OSError:
-            pass
-        raise
 
 
 __all__ = [

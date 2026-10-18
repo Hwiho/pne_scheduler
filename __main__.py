@@ -38,6 +38,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Open the unified workspace (setup, protocol, procedure, validate, export)",
     )
     workspace.add_argument("project", type=Path, nargs="?", help="Optional .schproj to open")
+    workspace.add_argument("--data-dir", type=Path, help="Separate native library/storage/recovery directory")
 
     summary = sub.add_parser(
         "summary", help="Print a plain-language Korean summary of a project"
@@ -172,7 +173,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "workspace":
         from .ui import launch_workspace
 
-        return launch_workspace(args.project)
+        return launch_workspace(args.project, data_dir=args.data_dir)
 
     if args.command == "summary":
         from .ir.loader import ProjectLoadError, load_project_lenient

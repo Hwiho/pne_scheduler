@@ -1,9 +1,6 @@
-"""PNE Scheduler workspace launcher — now the web app.
+"""Offline Tk workspace launcher; no browser, Node, or HTTP server required."""
 
-Kept as a signpost rather than deleted: someone who learned this filename should
-be told where the workspace went, not met with "no such file".
-"""
-
+import argparse
 import sys
 from pathlib import Path
 
@@ -15,5 +12,8 @@ from pne_scheduler.ui import launch_workspace
 
 
 if __name__ == "__main__":
-    argument = Path(sys.argv[1]) if len(sys.argv) > 1 else None
-    raise SystemExit(launch_workspace(argument))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("project", type=Path, nargs="?", help="웹/Tk .schproj 파일")
+    parser.add_argument("--data-dir", type=Path, help="라이브러리·고온저장·자동 복구의 별도 폴더")
+    args = parser.parse_args()
+    raise SystemExit(launch_workspace(args.project, data_dir=args.data_dir))

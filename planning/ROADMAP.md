@@ -4,6 +4,8 @@
 
 | Date | Summary |
 |------|---------|
+| 2026-10-18 | Offline requirement supersedes the historical web-only shell decision. Added a native Tk workspace using the same application operations, forms, export gates and local stores as web; retained v2 changes. See [native parity roadmap](NATIVE_WORKSPACE_ROADMAP.md) for implementation, tests and remaining Windows/distribution acceptance. |
+| 2026-10-18 | Reconfirmed that fork `Taeyong94/pne_scheduler_v2` master `2ba3aed` is already an ancestor of upstream master `02df0ef`; there was no separate fork delta to merge. Added the [v2 improvement roadmap](V2_IMPROVEMENT_ROADMAP.md). First local implementation covers saved-method version comparison/reviewed loading, concurrent-save protection, and searchable reversible storage archival. Verification and remaining Windows/equipment acceptance are tracked separately. |
 | 2026-10-08 | Release follow-up includes the previously local authoring/export changes and human-audit fixes. Refined visual hierarchy, compact project tools, navigation icons, readable preset details, explicit storage completion state and resource success panels. Re-tested 320–1440px layouts and real protocol/batch files; 902 Python passes / one skip (Mac Tk file excluded), 18 web tests, Ruff, typecheck and production build passed. Added frontend CI. Actual Windows delivery, CTSPro approval and equipment execution remain separate open gates. |
 | 2026-10-07 | QPEED input/time follow-up implemented locally with parallel test reviews: numeric-only scalar inputs with explicit units and old-response fallback; optional reference-capacity starting SOC and independent high-rate ΔQ; explicit maximum C-rate formula; manually selected CSV/TSV SOC-setting voltage import with provenance, stale-preview rejection and atomic undo. Safety timeouts no longer count as expected runtime; unknown voltage/DOD steps give partial totals without a finish prediction. Existing default voltage recipes preserved; no equipment approval or commit/push. |
 | 2026-10-07 | SOC forms use 0–100% without migrating stored fractions; scalar and QC list inputs separate values from selectable time/voltage/current units. Pulse-off RPT becomes one continuous reference discharge plus rest. HPPC names now describe paired SOC pulses vs the lab full recipe; new charge-only/discharge-only measurement modes account for signed pulse capacity and independent SOC/post-pulse rests. Existing full/paired recipes retained. Local software/UI verification only; no commit/push or equipment approval. |
@@ -47,6 +49,29 @@
 ---
 
 ## 1. Goal
+
+### 2026-10-18 offline desktop requirement
+
+Web and Tk are now two presentation clients over one Python application core.
+Tk runs without Flask, Node, HTTP or Internet. The current priority and parity
+matrix is [NATIVE_WORKSPACE_ROADMAP.md](NATIVE_WORKSPACE_ROADMAP.md). The earlier
+Gate G decision to remove duplicate shells is historical: the new client does
+not restore the Qt stack or duplicate protocol arithmetic. Existing SCH safety
+gates, direct reference capacity and explicit preview/apply boundaries remain.
+
+### 2026-10-18 v2 follow-up
+
+The current software improvement plan is [V2_IMPROVEMENT_ROADMAP.md](V2_IMPROVEMENT_ROADMAP.md).
+Phase 1 addresses reusable method history and storage record management without
+requiring private result samples or equipment. Later phases cover schedule-edit
+policy, export job tracking, result-file intake and real Windows/lab acceptance.
+The v2 and offline Tk follow-ups are packaged together for publication at the
+user's request on 2026-10-18; hosted CI and equipment acceptance remain separate.
+Phase 1 is locally implemented and verified: 934 Python passes / one private-sample
+skip (Mac Tk file excluded), 22 web tests, production build and responsive UI/file
+smoke checks. The library version picker and reversible archival listed in the
+historical next-items below are covered by this phase; remaining work stays in
+the v2 roadmap's later phases.
 
 ### 2026-10-08 human-user audit, visual refinement and release checks
 

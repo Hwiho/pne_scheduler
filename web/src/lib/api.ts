@@ -64,6 +64,9 @@ export const api = {
     post<T>(`/api/plan/${action}`, { project, args }, true),
 
   library: () => get<{ methods: MethodSummary[] }>("/api/library"),
+  libraryVersions: (methodId: string) => get<{ versions: MethodSummary[] }>(`/api/library/${encodeURIComponent(methodId)}`),
+  previewMethod: (project: Json, methodId: string, version: number, replace = false, compareVersion?: number) =>
+    post<MethodPreview>("/api/library/load", { project, methodId, version, replace, compareVersion, preview: true }, true),
 
   saveMethod: (project: Json, name: string, description = "", moduleIds?: string[]) =>
     post<{ method: MethodSummary }>("/api/library", { project, name, description, moduleIds }),
@@ -103,7 +106,9 @@ export const api = {
       project, args, token, outDir,
     }),
 
-  storage: () => get<StorageResponse>("/api/storage"),
+  storage: (includeArchived = false) => get<StorageResponse>(`/api/storage${includeArchived ? "?includeArchived=true" : ""}`),
+  archiveStorage: (id: string, archived: boolean) =>
+    post<{ ok: true }>(`/api/storage/${encodeURIComponent(id)}/archive`, { archived }),
   addStorage: (record: Json) => post<{ ok: true; record: StorageRecord }>("/api/storage", record),
   importStorage: (records: StorageRecord[]) =>
     post<{ ok: true; inserted: number; alreadyPresent: number }>("/api/storage/import-legacy", { records }),
@@ -137,6 +142,8 @@ export interface StorageRecord {
   checkpointDays: number[];
   notifyEnabled: boolean;
   completedAt: string | null;
+  archivedAt?: string | null;
+  archiveHistory?: { action: "archived" | "restored"; at: string }[];
   notifiedAt: string | null;
   alerts: StorageAlert[];
 }
@@ -350,8 +357,28 @@ export interface MethodSummary {
   label: string;
   description: string;
   equipmentUnit: string;
+  equipmentLayout: string;
   moduleCount: number;
   savedAt: string;
+}
+
+export interface MethodImpact {
+  headline: string;
+  beforeCount: number;
+  afterCount: number;
+  note: string;
+  lines: string[];
+}
+
+export interface MethodPreview {
+  ok: boolean;
+  method: MethodSummary;
+  token: string;
+  notes: string[];
+  warnings: string[];
+  errors: string[];
+  impact: MethodImpact | null;
+  versionDiff: (MethodImpact & { baseVersion: number; headVersion: number; metadataChanges: string[] }) | null;
 }
 
 export interface ImportInfo {

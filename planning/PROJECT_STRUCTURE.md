@@ -69,7 +69,7 @@ rg "corpus|zip.*scan|analyze_pne" pne_scheduler/
 | 용도 | 진입점 |
 |------|--------|
 | 패키지 CLI | `python -m pne_scheduler` → [`__main__.py`](../__main__.py) |
-| GUI 런처 | 루트 `run_pne_scheduler_*.py` (창만 열고 `ui/` 호출; workspace만 Qt) |
+| GUI 런처 | 루트 `run_pne_scheduler_*.py` (native workspace는 Tk, web 런처는 별도) |
 | 오프라인 분석 | `python -m pne_scheduler.tools.<script>` 또는 `tools/*.py` 직접 실행 |
 | 테스트 | `pytest` → [`tests/`](../tests/) |
 
@@ -111,7 +111,7 @@ pne_scheduler/
 ├── release.py           # 내보내기 단계 게이트 (초안 → CTSPro → 장비)
 ├── edit/                # .schproj 벌크 편집 로직
 ├── resume/              # 중단 실험 재개 (checkpoint, splice)
-├── ui/                  # 워크스페이스(Qt/QML 기본, Tk 대체) + viewer/editor/flow/resume (Tk)
+├── ui/                  # 공유 workspace model + offline Tk + viewer/editor/flow/resume
 ├── validate/            # Gate B intake, ASSB 파서 diff, roundtrip
 ├── tools/               # 오프라인 분석·리포트 CLI (코퍼스, compare, fixture)
 ├── vendor/              # 외부 참조 코드 (ASSB parser, Ensol sch_maker) — 수정 최소화
@@ -207,8 +207,10 @@ pne_scheduler/
 
 - **`edit/bulk_edit.py`** — `.schproj` 모듈 파라미터 일괄 변경 (CLI `bulk-edit`).
 - **`resume/checkpoint.py`, `resume/splice.py`** — CSV/StepEnd에서 재개 지점 계산, 템플릿 splice.
-- **`ui/`** — 워크스페이스는 PySide6/QML(대체: Tk), 나머지 도구는 tkinter. 비즈니스 로직은
-  `ir/`, `resume/`, `io/`, `ui/workspace_model.py`에 두고 화면 계층은 호출만 한다.
+- **`ui/`** — `tk_workspace.py`는 오프라인 Tk 작업실, `native_controller.py`는
+  `api/routes.py`의 웹과 동일한 순수 Python 작업 함수를 호출한다. Qt는 복원하지 않는다.
+  비즈니스 로직은 `ir/`, `resume/`, `io/`, `ui/workspace_model.py`에 두고
+  웹(`web/`)과 Tk 화면 계층은 호출만 한다. `api/app.py`만 Flask 어댑터다.
 
 ### `validate/`
 

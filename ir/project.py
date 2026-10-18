@@ -7,6 +7,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from ..atomic_files import atomic_write_text
 from ..schema import DEFAULT_SCH_VERSION
 from .cell_profile import CellProfile
 from .equipment_profile import EquipmentProfile
@@ -114,9 +115,8 @@ class ScheduleProject:
 
     def save(self, path: Path) -> None:
         """Write the project. Always allowed — export is what safety gates."""
-        path.write_text(
+        atomic_write_text(path,
             json.dumps(self.to_dict(), indent=2, ensure_ascii=False) + "\n",
-            encoding="utf-8",
         )
 
     @classmethod
