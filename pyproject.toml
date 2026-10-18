@@ -19,6 +19,7 @@ mdb = ["access_parser"]
 
 [project.scripts]
 pne-scheduler = "pne_scheduler.__main__:main"
+pne-scheduler-desktop = "pne_scheduler.desktop:main"
 
 [tool.setuptools]
 packages = [
@@ -45,6 +46,17 @@ packages = [
 
 [tool.setuptools.package-dir]
 "pne_scheduler" = "."
+
+[tool.setuptools.package-data]
+"pne_scheduler" = [
+    "planning/EQUIPMENT_CURRENT_RATINGS.json",
+    "planning/EQUIPMENT_REGISTRY.json",
+    "planning/GOLDEN_FIXTURES_LOCKED.json",
+    "planning/Q_NOM_POLICY.json",
+    "example/training/signature_category_labels.json",
+    "example/training/verified_filename_labels.json",
+    "example/fixtures/capacheck_zip/9)Bimodal_SJ1300_6040_NCN_capacheck.sch",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

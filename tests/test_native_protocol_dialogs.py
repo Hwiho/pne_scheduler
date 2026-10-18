@@ -16,6 +16,7 @@ import pytest
 from pne_scheduler.protocol.qpeed_results import MAX_BYTES
 from pne_scheduler.ui.native_controller import NativeController
 from pne_scheduler.ui.tk_workspace import WorkspaceApp
+from pne_scheduler.ui.tk_runtime import create_root
 
 
 KINDS = ("campaign", "qc", "budget", "qpeed")
@@ -59,7 +60,7 @@ def invoke_command(widget):
 @pytest.fixture
 def desktop(tmp_path, monkeypatch):
     try:
-        root = tk.Tk()
+        root = create_root()
     except tk.TclError:
         if os.environ.get("PNE_REQUIRE_TK"):
             raise
@@ -92,9 +93,11 @@ def desktop(tmp_path, monkeypatch):
     app = WorkspaceApp(root, controller)
     root.deiconify()
     drain(app)
-    yield app, ids, plans, edits, csv_path, second_path
-    drain(app)
-    app._shutdown()
+    try:
+        yield app, ids, plans, edits, csv_path, second_path
+    finally:
+        drain(app)
+        app._shutdown()
     assert not errors, errors
 
 

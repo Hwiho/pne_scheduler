@@ -11,6 +11,7 @@ from tkinter import filedialog, messagebox, ttk
 from typing import Callable
 
 from .native_controller import NativeController
+from .tk_runtime import create_root
 from .tk_widgets import ScrollFrame
 
 
@@ -320,10 +321,16 @@ class WorkspaceApp(ttk.Frame):
         self._shutdown()
 
     def _shutdown(self):
+        if self._closed:
+            return
         self._closed = True
         if self._poll_id:
             self.after_cancel(self._poll_id)
-        self._pool.shutdown(wait=False, cancel_futures=True)
+        # Close is reached only after work finishes. Join the worker before
+        # destroying Tcl so callbacks cannot retain/release the old UI later.
+        self._pool.shutdown(wait=True, cancel_futures=True)
+        while not self._results.empty():
+            self._results.get_nowait()
         self.root.destroy()
 
 
@@ -341,7 +348,7 @@ def launch_workspace(initial_path=None, *, data_dir=None):
     try:
         controller = NativeController(Path(initial_path) if initial_path else None,
                                       data_dir=Path(data_dir) if data_dir else None)
-        root = tk.Tk()
+        root = create_root()
     except (OSError, ValueError, tk.TclError) as exc:
         import sys
         print(f"작업실을 열 수 없습니다: {exc}\nPython과 Tcl/Tk가 설치된 데스크톱 환경에서 실행하세요.", file=sys.stderr)

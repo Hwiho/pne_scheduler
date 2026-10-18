@@ -51,9 +51,13 @@ Tk에서 다른 프로젝트 열기/새 프로젝트는 새 문서의 undo 이�
    바이트 확인, 실제 Tk 위젯 테스트, 파일 생성/재읽기·undo·복구 테스트.
    Windows/Linux 네이티브 CI는 화면이 없으면 성공으로 건너뛰지 않게 설정.
    CI 정의 추가와 원격 실행 성공은 구분한다.
-4. **N4 배포와 실제 Windows 인수 — 미완료**: Python 없는 PC용 서명된 실행 파일,
-   설치/제거, 폐쇄망 반입 및 백신 검사, 한글 경로, 높은 DPI/다중 모니터,
-   Windows 실제 토스트·절전·재부팅·로그인 시 실행 선택을 검증한다.
+4. **N4a 시험 배포 준비 — 구현, 원격 빌드 확인 대상**: Python/Tcl/Tk를 포함한
+   미서명 Windows x64 one-folder ZIP, 출처 커밋/해시와 명시적 자원 목록,
+   Python 경로 없는 한글 경로에서 압축 해제본 자체 검사와 Tk 검사 후 Artifact 게시.
+   사용자 데이터는 기존 홈 폴더에 보존하고 frozen 실행기의 알림 진입점을 분리한다.
+   [Windows 안내](WINDOWS_OFFLINE_GUIDE.md)를 따른다.
+   **N4b 실제 Windows 인수 — 미완료**: 서명, 폐쇄망 반입/백신, 높은 DPI/다중 모니터,
+   실제 알림·절전·재부팅·로그인 시 실행 선택을 검증한다.
 5. **N5 대형 실험과 결과 추적 — 후속 계획**: 수백 모듈의 가상화 목록, 배치 작업
    진행률/완료 이력과 재시도, 내보내기 결과 검색. 취소는 원자적 staging 경계에서만.
 6. **N6 실측 용량 계보 — 샘플 필요**: 활성화/derating 실제 파일의 열·단위와
@@ -95,3 +99,24 @@ Python 수치는 비-GUI와 Tk를 **분리 실행한 결과**다. 사용자 작�
 2026-10-18 사용자 요청에 따라 기존 v2 후속 변경과 함께 커밋·게시한다.
 게시 전 재검사는 창 없는 테스트만 수행하며, 원격 CI·Windows 실기·장비 승인은
 위 로컬 검증 결과와 별도로 확인해야 한다.
+
+## Windows 초기화·배포 후속 — 2026-10-18
+
+- `ac9a804` 원격 CI: 웹·Python·Linux native 성공. Windows native는 71 passed,
+  1 error (`test_input_change_invalidates_preview_until_replanned[qc]`의 fixture에서
+  `tk.Tk()` → `invalid command name "tcl_findLibrary"`). QC 기능 코드 실행 전 오류다.
+  로그만으로 Windows OS/GC 등의 더 낮은 수준 원인을 확정하지 않는다.
+- Tcl과 Tk 초기화를 분리하고 Windows에서 **현재 Tcl의 auto.tcl**에 정의된
+  library finder를 명시적으로 준비한다. 환경변수나 다른 Python 설치를 추정하지 않는다.
+  관련 근거: [Tcl auto.tcl](https://github.com/tcltk/tcl/blob/core-8-6-branch/library/auto.tcl).
+  파손된 라이브러리는 실패로 남기며 재시도/skip으로 성공을 만들지 않는다.
+- 화면 종료 전에 작업 스레드를 합류시키고 결과 큐를 정리한다. GUI 테스트도 같은
+  초기화 함수를 사용하며 30회 반복 root 생성, Windows 전체 native 2회 연속 통과를 요구한다.
+- 사용자 작업 중인 macOS에서는 GUI 재검사를 하지 않는다. 창 없는 초기화 단위 검사,
+  패키지 자체 검사, 전체 비-GUI 회귀 검사 후 커밋·푸시하고 원격 결과를 확인한다.
+- 배포의 남은 경계는 N4b다. 서명·보안 우회, 자동 실행 등록, 정식 GitHub Release,
+  장비 승인은 이번 준비에 포함하지 않는다.
+- 게시 전 로컬 결과: 비-GUI 961 passed / 비공개 샘플 1 skipped, 웹 22 passed,
+  TypeScript·Ruff·diff 검사 통과. wheel을 별도 환경에 설치하고 checkout 밖에서
+  `python -I -m pne_scheduler.desktop --self-test ...` 통과. Windows 실행 파일 및
+  GUI 결과는 해당 커밋의 원격 Actions 실행으로 확인한다.

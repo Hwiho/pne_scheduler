@@ -15,10 +15,13 @@ working one from the outside.
 from __future__ import annotations
 
 import json
+import os
 import tkinter as tk
 from pathlib import Path
 
 import pytest
+
+from pne_scheduler.ui.tk_runtime import create_root
 
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLE_PROJECT = ROOT / "example" / "example.schproj"
@@ -31,12 +34,16 @@ SCH_FIXTURE = (
 @pytest.fixture()
 def root():
     try:
-        window = tk.Tk()
+        window = create_root()
     except tk.TclError as exc:  # headless CI
+        if os.environ.get("PNE_REQUIRE_TK"):
+            raise
         pytest.skip(f"Tk is unavailable: {exc}")
     window.withdraw()
-    yield window
-    window.destroy()
+    try:
+        yield window
+    finally:
+        window.destroy()
 
 
 # --- schedule viewer --------------------------------------------------------

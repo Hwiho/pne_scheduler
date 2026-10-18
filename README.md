@@ -94,12 +94,15 @@ python run_pne_scheduler_workspace.py path\to\experiment.schproj
 python run_pne_scheduler_workspace.py --data-dir path\to\test-data
 ```
 
-This is a native **Tk desktop application**, not an embedded browser. Python with
-Tcl/Tk is required; **Node, npm, Flask, Internet and a localhost server are not**.
-The source checkout can run directly without installing Python packages. On an
-air-gapped PC, transfer the checkout and install Python with Tcl/Tk ahead of time.
-Check the runtime with `python -m tkinter`. A standalone Windows executable is
-not supplied yet; CI widget checks do not replace testing the target lab PC.
+This is a native **Tk desktop application**, not an embedded browser.
+The source commands above require Python with Tcl/Tk; **Node, npm, Flask, Internet
+and a localhost server are not required**. Successful CI runs also build an
+**unsigned Windows x64 portable candidate** with Python/Tcl/Tk included. Extract
+the whole folder and launch `PNE-Scheduler.exe`; no Python installation is needed.
+See the [Windows offline guide](planning/WINDOWS_OFFLINE_GUIDE.md) for download,
+data locations, checksums, background self-checks and remaining lab-PC acceptance.
+An artifact exists only after its extracted executable passes the package job;
+CI widget checks do not replace testing the target lab PC.
 
 The six tabs cover cell/equipment, vertical protocol blocks, saved methods,
 exports/batches, existing SCH inspection and high-temperature storage. They call

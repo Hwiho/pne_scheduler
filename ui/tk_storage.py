@@ -618,24 +618,28 @@ class StoragePanel(ttk.Frame):
         if sys.platform != "win32":
             messagebox.showerror("Windows 알림", "알림 실행기는 Windows 사용자 세션에서만 시작할 수 있습니다.", parent=self)
             return
-        executable = Path(sys.executable)
-        pythonw = executable.with_name("pythonw.exe")
-        if not pythonw.is_file():
+        from ..desktop_runtime import companion_command
+        store = self.app.controller.storage
+        try:
+            command = companion_command(store.path)
+        except FileNotFoundError as exc:
             messagebox.showerror(
                 "Windows 알림 실행기 없음",
-                f"현재 Python 환경에서 pythonw.exe를 찾을 수 없습니다.\n{pythonw}",
+                str(exc),
                 parent=self,
             )
             return
-        store = self.app.controller.storage
-        db_path = str(store.path)
-        package_parent = str(Path(__file__).resolve().parents[2])
+        package_parent = (str(Path(sys.executable).resolve().parent) if getattr(sys, "frozen", False)
+                          else str(Path(__file__).resolve().parents[2]))
 
         def work() -> dict[str, Any]:
             flags = getattr(subprocess, "DETACHED_PROCESS", 0) | getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0)
             subprocess.Popen(
-                [str(pythonw), "-m", "pne_scheduler.storage_companion", "--db", db_path, "--poll-seconds", "30"],
+                command,
                 cwd=package_parent,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
                 creationflags=flags,
                 close_fds=True,
             )

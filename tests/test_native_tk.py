@@ -11,13 +11,14 @@ import pytest
 
 from pne_scheduler.ui.native_controller import NativeController
 from pne_scheduler.ui.tk_widgets import FieldInput
+from pne_scheduler.ui.tk_runtime import create_root
 from pne_scheduler.ui.tk_workspace import WorkspaceApp, run_event_loop
 
 
 @pytest.fixture
 def root():
     try:
-        window = tk.Tk()
+        window = create_root()
     except tk.TclError:
         if os.environ.get("PNE_REQUIRE_TK"):
             raise
@@ -28,6 +29,18 @@ def root():
         window.destroy()
     except tk.TclError:
         pass
+
+
+def test_repeated_runtime_startup_and_shutdown(root):
+    # Reproduce the old repeated-initialization boundary, not just one launch.
+    for _ in range(30):
+        window = create_root()
+        try:
+            window.withdraw()
+            assert window.tk.call("info", "commands", "tcl_findLibrary")
+            window.update_idletasks()
+        finally:
+            window.destroy()
 
 
 def drain(root, app):

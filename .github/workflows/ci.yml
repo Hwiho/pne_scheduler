@@ -53,7 +53,12 @@ jobs:
         run: xvfb-run -a python -m pytest tests/test_native_controller.py tests/test_native_tk.py tests/test_native_protocol_dialogs.py tests/test_tk_tools.py -q
       - name: Native widget and parity tests (Windows)
         if: runner.os == 'Windows'
-        run: python -m pytest tests/test_native_controller.py tests/test_native_tk.py tests/test_native_protocol_dialogs.py tests/test_tk_tools.py -q
+        # Two independent full runs, both required. Not a retry-on-failure.
+        run: |
+          1..2 | ForEach-Object {
+            python -m pytest tests/test_native_controller.py tests/test_native_tk.py tests/test_native_protocol_dialogs.py tests/test_tk_tools.py -q
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
   web:
     runs-on: ubuntu-latest
     defaults:
@@ -74,3 +79,43 @@ jobs:
         run: npm run lint
       - name: Production build
         run: npm run build
+  windows-package:
+    name: Offline Windows package
+    needs: [test, native, web]
+    runs-on: windows-latest
+    timeout-minutes: 15
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          architecture: x64
+      - name: Install build-only dependencies
+        run: python -m pip install -e . -r desktop-build-requirements.txt
+      - name: Build allowlisted unsigned portable archive
+        run: python tools/build_windows.py --output dist/windows
+      - name: Verify extracted executable outside checkout and without Python on PATH
+        run: |
+          $archive = Get-ChildItem dist/windows/PNE-Scheduler-Windows-x64-*.zip
+          if ($archive.Count -ne 1) { throw "Expected one package" }
+          python tools/check_windows_bundle.py $archive.FullName --reports dist/package-checks
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Upload verified offline candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: PNE-Scheduler-Windows-x64-${{ github.sha }}
+          path: |
+            dist/windows/*.zip
+            dist/windows/*.zip.sha256
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload package diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-package-checks-${{ github.sha }}
+          path: dist/package-checks/
+          if-no-files-found: ignore
+          retention-days: 30

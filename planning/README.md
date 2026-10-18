@@ -15,6 +15,7 @@ Index for policies, corpus reports, equipment registry, and roadmap.
 | [`ROADMAP.md`](ROADMAP.md) | SCH structure, gates, **§5.6 lessons checklist**, modular UX vision (§1.1 / §6.6) |
 | [`V2_IMPROVEMENT_ROADMAP.md`](V2_IMPROVEMENT_ROADMAP.md) | v2 baseline, method version review, reversible storage archive, and next implementation gates |
 | [`NATIVE_WORKSPACE_ROADMAP.md`](NATIVE_WORKSPACE_ROADMAP.md) | Offline Tk/web functional parity, shared operations, native acceptance and distribution plan |
+| [`WINDOWS_OFFLINE_GUIDE.md`](WINDOWS_OFFLINE_GUIDE.md) | Unsigned Windows x64 portable candidate, data preservation, build and acceptance checks |
 | [`GATE_H_PLAN.md`](GATE_H_PLAN.md) | **Planned** per-cell capacity lineage, batch SCH generation, DC-IR policy and Windows storage reminders; includes H0 inputs and exit tests |
 | [`LAB_CORPUS_REPORT.md`](LAB_CORPUS_REPORT.md) | **Generated** per-cycler zip analysis (human-readable) |
 

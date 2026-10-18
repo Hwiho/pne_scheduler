@@ -59,6 +59,12 @@ Gate G decision to remove duplicate shells is historical: the new client does
 not restore the Qt stack or duplicate protocol arithmetic. Existing SCH safety
 gates, direct reference capacity and explicit preview/apply boundaries remain.
 
+The next delivery gate is Windows initialization and offline distribution:
+explicit Tcl bootstrap, repeated native tests, an unsigned Windows x64 ZIP with
+bundled runtime/data, and extracted-executable checks before artifact upload.
+See [WINDOWS_OFFLINE_GUIDE.md](WINDOWS_OFFLINE_GUIDE.md). Signing, actual lab-PC
+notifications/DPI and CTSPro/equipment approval remain separate acceptance gates.
+
 ### 2026-10-18 v2 follow-up
 
 The current software improvement plan is [V2_IMPROVEMENT_ROADMAP.md](V2_IMPROVEMENT_ROADMAP.md).

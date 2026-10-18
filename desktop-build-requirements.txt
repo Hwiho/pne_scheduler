@@ -1,0 +1,2 @@
+# Build-time only. The extracted Windows bundle needs no pip or network.
+PyInstaller==6.22.3
