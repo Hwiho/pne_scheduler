@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 import json
 import math
 import re
@@ -10,7 +11,7 @@ import time
 import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]{1,80}$")
 DAY_SECONDS = 86_400
@@ -133,9 +134,21 @@ class StorageStore:
     def __init__(self, path: Path):
         self.path = Path(path)
 
-    def _connect(self) -> sqlite3.Connection:
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         connection = sqlite3.connect(self.path, timeout=10)
+        # sqlite3.Connection's context commits/rolls back but does NOT close.
+        # Closing must be deterministic, including initialization failures;
+        # otherwise Windows keeps DB/WAL files locked until cyclic GC runs.
+        try:
+            with connection:
+                self._initialize(connection)
+                yield connection
+        finally:
+            connection.close()
+
+    def _initialize(self, connection: sqlite3.Connection) -> None:
         connection.row_factory = sqlite3.Row
         # SQLite's journal-mode switch can return BUSY immediately instead of
         # using the connection timeout when two processes upgrade together.
@@ -146,7 +159,6 @@ class StorageStore:
                 break
             except sqlite3.OperationalError as exc:
                 if ("locked" not in str(exc).lower() or time.monotonic() >= deadline):
-                    connection.close()
                     raise
                 time.sleep(0.05)
         connection.execute("PRAGMA foreign_keys=ON")
@@ -189,7 +201,6 @@ class StorageStore:
         # Schema setup and alert backfill must finish before claim_due starts
         # its explicit IMMEDIATE transaction on this connection.
         connection.commit()
-        return connection
 
     @staticmethod
     def _sync_alerts(connection: sqlite3.Connection, record_id: str | None = None) -> None:

@@ -38,8 +38,13 @@ def check_bundle(archive: Path, reports: Path):
         # Windowed executable's exit code must be awaited, not assumed.
         for mode in ("self-test", "gui-self-test"):
             report = (reports / f"{mode}.json").resolve()
-            subprocess.run([str(executable), f"--{mode}", str(report)], cwd=folder,
-                           env=env, check=True, timeout=90)
+            result = subprocess.run([str(executable), f"--{mode}", str(report)], cwd=folder,
+                                    env=env, check=False, timeout=90)
+            if result.returncode:
+                for diagnostic in (report, reports / "logs" / "desktop.log"):
+                    if diagnostic.is_file():
+                        print(diagnostic.read_text(encoding="utf-8"))
+                raise RuntimeError(f"Packaged {mode} exited with {result.returncode}")
             data = json.loads(report.read_text(encoding="utf-8"))
             if not data.get("ok") or not data.get("frozen"):
                 raise RuntimeError(f"Packaged runtime failed: {data}")

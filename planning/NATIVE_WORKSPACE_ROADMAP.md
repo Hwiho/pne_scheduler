@@ -127,3 +127,8 @@ Python 수치는 비-GUI와 Tk를 **분리 실행한 결과**다. 사용자 작�
   [ttkbootstrap 설정](https://github.com/israel-dryer/ttkbootstrap/blob/master/pyproject.toml),
   [pytest 수집 모드](https://docs.pytest.org/en/stable/how-to/capture-stdout-stderr.html).
   실패한 반복 검사를 제거/건너뛰지 않고 그대로 두 번 연속 실행한다.
+- `fbde802`에서 Windows native **73 passed를 두 번 연속** 확인했다(원격 실행
+  `39124670075`). 실행 파일 빌드는 성공했지만 압축 해제본 검사에서 SQLite 연결이
+  닫히지 않아 Windows `WinError 32`가 재현되어 Artifact 게시를 차단했다.
+  `sqlite3.Connection`의 with문은 close가 아니므로 작업/오류/초기화 실패 모두
+  finally에서 연결을 닫도록 수정하고, GC와 무관한 연결 해제·rollback 회귀 검사를 추가한다.
